@@ -1,6 +1,6 @@
 package view
 
-import GameConfig
+import constants.GameConfig
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.extensions.box

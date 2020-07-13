@@ -1,6 +1,6 @@
 package view
 
-import GameConfig
+import constants.GameConfig
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.data.Size
@@ -32,7 +32,7 @@ class PlayView(tileGrid: TileGrid) : BaseView(tileGrid) {
         val logWidth = GameConfig.WINDOW_WIDTH - GameConfig.SIDEBAR_WIDTH
 
         val logArea = Components.logArea()
-            .withSize(Size.create(logWidth, GameConfig.LOG_HEIGHT))
+                .withSize(Size.create(logWidth, GameConfig.LOG_HEIGHT))
                 .withDecorations(box(boxType = BoxType.SINGLE, title = "Log"))
                 .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_RIGHT)
                 .build()

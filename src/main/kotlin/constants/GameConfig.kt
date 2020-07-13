@@ -1,4 +1,4 @@
-
+package constants
 import org.hexworks.zircon.api.CP437TilesetResources
 import org.hexworks.zircon.api.ColorThemes
 import org.hexworks.zircon.api.application.AppConfig
