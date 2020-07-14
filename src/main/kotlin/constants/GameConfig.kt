@@ -7,7 +7,7 @@ import org.hexworks.zircon.api.data.Size3D
 
 object GameConfig {
     val TILESET = CP437TilesetResources.tyr16x16()
-    val THEME = ColorThemes.solarizedDarkGreen()
+    val THEME = ColorThemes.monokaiGreen()
     val TITLE = "Reflections of Yggdrasil"
 
     const val DUNGEON_LEVEL_COUNT = 2
