@@ -12,7 +12,7 @@ fun Size3D.fetchPositionsForSlice(startPos: Position3D, width: Int, height: Int,
         (0 until depth).flatMap { z ->
             (0 until height).flatMap { y ->
                 (0 until width).map { x ->
-                    yield(Position3D.create(startPos.x + x, startPos.y + y, startPos.z + z))
+                    yield(startPos.withRelative(Position3D.create(x, y, z)))
                 }
             }
         }

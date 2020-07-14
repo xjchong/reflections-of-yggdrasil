@@ -21,6 +21,7 @@ class WorldBuilder(private val worldSize: Size3D) {
         fill(GameBlockFactory.wall())
         repeat(depth) { level ->
             placeRooms(level, 50, 6, 5, 2.0)
+            placeCorridors(level)
         }
         return this
 //        return randomizeTiles().smooth(8)
@@ -53,7 +54,7 @@ class WorldBuilder(private val worldSize: Size3D) {
             val roomWidth = getOdd(nextGaussian(meanWidth, standardDeviation).toInt())
             val roomHeight = getOdd(nextGaussian(meanHeight, standardDeviation).toInt())
 
-            if (isRoomSafe(level, x, y, roomWidth, roomHeight)) {
+            if (isRoomSafe(x, y, level, roomWidth, roomHeight)) {
                 forSlice(Position3D.create(x, y, level), roomWidth, roomHeight) { pos ->
                     blocks[pos] = GameBlockFactory.floor()
                 }
@@ -61,7 +62,7 @@ class WorldBuilder(private val worldSize: Size3D) {
         }
     }
 
-    private fun isRoomSafe(level: Int, x: Int, y: Int, roomWidth: Int, roomHeight: Int): Boolean {
+    private fun isRoomSafe(x: Int, y: Int, level: Int, roomWidth: Int, roomHeight: Int): Boolean {
         if (!blocks.containsKey(Position3D.create(x, y, level))) return false // Out of bounds.
         if (roomWidth < 2 || roomHeight < 2) return false // Room is too small.
         if ((x + roomWidth >= width) || (y + roomHeight >= height)) return false
@@ -71,6 +72,54 @@ class WorldBuilder(private val worldSize: Size3D) {
         }
 
         return true
+    }
+
+    private fun placeCorridors(level: Int) {
+        for (x in (1 until width) step 2) {
+            for (y in (1 until height) step 2) {
+                val pos = Position3D.create(x, y, level)
+
+                if (blocks[pos]?.isWall == true) {
+                    placeCorridorFrom(pos)
+                }
+            }
+        }
+    }
+
+    private fun placeCorridorFrom(startPos: Position3D) {
+        val directions = mutableListOf<Char>('e', 's', 'w', 'n').shuffled()
+        blocks[startPos] = GameBlockFactory.floor()
+
+        for (direction in directions) {
+            var midPos = startPos
+            var endPos = startPos
+
+            when (direction) {
+                'e' -> {
+                    midPos = startPos.withRelativeX(1)
+                    endPos = startPos.withRelativeX(2)
+                }
+                's' -> {
+                    midPos = startPos.withRelativeY(1)
+                    endPos = startPos.withRelativeY(2)
+                }
+                'w' -> {
+                    midPos = startPos.withRelativeX(-1)
+                    endPos = startPos.withRelativeX(-2)
+                }
+                'n' -> {
+                    midPos = startPos.withRelativeY(-1)
+                    endPos = startPos.withRelativeY(-2)
+                }
+            }
+
+            if (blocks[endPos]?.isWall == true) {
+                blocks[midPos] = GameBlockFactory.floor()
+                blocks[endPos] = GameBlockFactory.floor()
+
+                placeCorridorFrom(endPos)
+            }
+        }
     }
 
 
@@ -103,12 +152,12 @@ class WorldBuilder(private val worldSize: Size3D) {
                 }
                 newBlocks[Position3D.create(x, y, z)] = if (floors >= rocks) GameBlockFactory.floor() else GameBlockFactory.wall()
             }
-            blocks = newBlocks // 10
+            blocks = newBlocks
         }
         return this
     }
 
-    private fun forAllPositions(fn: (Position3D) -> Unit) { // 11
+    private fun forAllPositions(fn: (Position3D) -> Unit) {
         worldSize.fetchPositions().forEach(fn)
     }
 
