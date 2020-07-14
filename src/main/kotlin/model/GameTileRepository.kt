@@ -1,4 +1,4 @@
-package constants
+package model
 
 import GameColor
 import org.hexworks.zircon.api.data.CharacterTile
