@@ -2,6 +2,7 @@ package factory
 
 import GameBlock
 import World
+import extension.neighbours
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
 
@@ -12,8 +13,7 @@ class WorldBuilder(private val worldSize: Size3D) {
     private var blocks: MutableMap<Position3D, GameBlock> = mutableMapOf()
 
     fun makeCaves(): WorldBuilder {
-        return randomizeTiles()
-//                .smooth(8)
+        return randomizeTiles().smooth(8)
     }
 
     fun build(visibleSize: Size3D): World = World(blocks, visibleSize, worldSize)
@@ -34,6 +34,13 @@ class WorldBuilder(private val worldSize: Size3D) {
                 val (x, y, z) = pos
                 var floors = 0
                 var rocks = 0
+                pos.neighbours().plus(pos).forEach { neighbor ->
+                    blocks.whenPresent(neighbor) { block ->
+                        if (block.isFloor) {
+                            floors++
+                        } else rocks++
+                    }
+                }
                 newBlocks[Position3D.create(x, y, z)] = if (floors >= rocks) GameBlockFactory.floor() else GameBlockFactory.wall()
             }
             blocks = newBlocks // 10
