@@ -2,6 +2,7 @@ package factory
 
 import GameBlock
 import World
+import extension.fetchPositionsForSlice
 import extension.neighbours
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
@@ -18,7 +19,7 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     fun makeCaves(): WorldBuilder {
         fill(GameBlockFactory.wall())
-        for (level in 0 until depth) {
+        repeat(depth) { level ->
             placeRooms(level, 50, 6, 5, 2.0)
         }
         return this
@@ -46,17 +47,15 @@ class WorldBuilder(private val worldSize: Size3D) {
     }
 
     private fun placeRooms(level: Int, attempts: Int, meanWidth: Int, meanHeight: Int, standardDeviation: Double) {
-        for (attempt in (0..attempts)) {
+        repeat(attempts) {
             val x = getOdd((Math.random() * width).roundToInt())
             val y = getOdd((Math.random() * height).roundToInt())
             val roomWidth = getOdd(nextGaussian(meanWidth, standardDeviation).toInt())
             val roomHeight = getOdd(nextGaussian(meanHeight, standardDeviation).toInt())
 
             if (isRoomSafe(level, x, y, roomWidth, roomHeight)) {
-                for (column in x until x + roomWidth) {
-                    for (row in (y until y + roomHeight)) {
-                        blocks[Position3D.create(column, row, level)] = GameBlockFactory.floor()
-                    }
+                forSlice(Position3D.create(x, y, level), roomWidth, roomHeight) { pos ->
+                    blocks[pos] = GameBlockFactory.floor()
                 }
             }
         }
@@ -67,12 +66,8 @@ class WorldBuilder(private val worldSize: Size3D) {
         if (roomWidth < 2 || roomHeight < 2) return false // Room is too small.
         if ((x + roomWidth >= width) || (y + roomHeight >= height)) return false
 
-        for (column in x until x + roomWidth) {
-            for (row in y until y + roomHeight) {
-                if (blocks[Position3D.create(column, row, level)]?.isWall == false) {
-                    return false
-                }
-            }
+        for (pos in worldSize.fetchPositionsForSlice(Position3D.create(x, y, level), roomWidth, roomHeight, 1)) {
+            if (blocks[pos]?.isWall == false) return false
         }
 
         return true
@@ -115,6 +110,10 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     private fun forAllPositions(fn: (Position3D) -> Unit) { // 11
         worldSize.fetchPositions().forEach(fn)
+    }
+
+    private fun forSlice(startPos: Position3D, width: Int, height: Int, depth: Int = 1, fn: (Position3D) -> Unit) {
+        worldSize.fetchPositionsForSlice(startPos, width, height, depth).forEach(fn)
     }
 
     private fun MutableMap<Position3D, GameBlock>.whenPresent(pos: Position3D, fn: (GameBlock) -> Unit) { // 12
