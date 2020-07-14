@@ -29,7 +29,7 @@ class StartView(private val tileGrid: TileGrid) : BaseView(tileGrid) {
                 .build()
 
         startButton.handleMouseEvents(MouseEventType.MOUSE_RELEASED) { _, _ ->
-            replaceWith(PlayView(tileGrid))
+            PlayView(tileGrid).dock()
             UIEventResponse.processed()
         }
 

@@ -1,7 +1,7 @@
 package view
 
-import Game
-import GameBlock
+import world.Game
+import block.GameBlock
 import constants.GameConfig
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment

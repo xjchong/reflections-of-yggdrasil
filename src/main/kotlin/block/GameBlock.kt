@@ -1,4 +1,4 @@
-
+package block
 import kotlinx.collections.immutable.persistentMapOf
 import model.GameTileRepository
 import org.hexworks.zircon.api.data.BlockTileType

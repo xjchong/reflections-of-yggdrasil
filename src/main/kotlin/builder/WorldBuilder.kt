@@ -1,10 +1,11 @@
-package factory
+package builder
 
-import GameBlock
-import World
+import block.GameBlock
+import world.World
 import extension.adjacentNeighbors
 import extension.fetchPositionsForSlice
 import extension.neighbors
+import factory.GameBlockFactory
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
 import kotlin.math.roundToInt
@@ -49,7 +50,8 @@ class WorldBuilder(private val worldSize: Size3D) {
         }
     }
 
-    fun build(visibleSize: Size3D): World = World(blocks, visibleSize, worldSize)
+    fun build(visibleSize: Size3D): World =
+        World(blocks, visibleSize, worldSize)
 
     /**
      * DUNGEON MAKING ALGORITHMS

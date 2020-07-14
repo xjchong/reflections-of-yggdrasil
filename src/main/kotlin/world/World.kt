@@ -1,4 +1,5 @@
-
+package world
+import block.GameBlock
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
 import org.hexworks.zircon.api.data.Tile

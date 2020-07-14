@@ -1,6 +1,6 @@
 package factory
 
-import GameBlock
+import block.GameBlock
 import model.GameTileRepository
 
 object GameBlockFactory {
