@@ -18,3 +18,18 @@ fun Size3D.fetchPositionsForSlice(startPos: Position3D, width: Int, height: Int,
         }
     }
 }
+
+fun Size3D.fetchPositionsForSlice(posA: Position3D, posB: Position3D): Sequence<Position3D> {
+    val startPos = minOf(posA, posB)
+    val endPos = maxOf(posA, posB)
+
+    return sequence {
+        (startPos.z..endPos.z).flatMap { z ->
+            (startPos.y..endPos.y).flatMap { y ->
+                (startPos.x..endPos.x).map { x ->
+                    yield(Position3D.create(x, y, z))
+                }
+            }
+        }
+    }
+}

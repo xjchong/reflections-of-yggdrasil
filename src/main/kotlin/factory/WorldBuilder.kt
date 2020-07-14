@@ -80,6 +80,7 @@ class WorldBuilder(private val worldSize: Size3D) {
                 val pos = Position3D.create(x, y, level)
 
                 if (blocks[pos]?.isWall == true) {
+                    blocks[pos] = GameBlockFactory.floor()
                     placeCorridorFrom(pos)
                 }
             }
@@ -88,34 +89,19 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     private fun placeCorridorFrom(startPos: Position3D) {
         val directions = mutableListOf<Char>('e', 's', 'w', 'n').shuffled()
-        blocks[startPos] = GameBlockFactory.floor()
 
         for (direction in directions) {
-            var midPos = startPos
-            var endPos = startPos
-
-            when (direction) {
-                'e' -> {
-                    midPos = startPos.withRelativeX(1)
-                    endPos = startPos.withRelativeX(2)
-                }
-                's' -> {
-                    midPos = startPos.withRelativeY(1)
-                    endPos = startPos.withRelativeY(2)
-                }
-                'w' -> {
-                    midPos = startPos.withRelativeX(-1)
-                    endPos = startPos.withRelativeX(-2)
-                }
-                'n' -> {
-                    midPos = startPos.withRelativeY(-1)
-                    endPos = startPos.withRelativeY(-2)
-                }
+            val endPos = when (direction) {
+                'e' -> startPos.withRelativeX(2)
+                's' -> startPos.withRelativeY(2)
+                'w' -> startPos.withRelativeX(-2)
+                else -> startPos.withRelativeY(-2)
             }
 
             if (blocks[endPos]?.isWall == true) {
-                blocks[midPos] = GameBlockFactory.floor()
-                blocks[endPos] = GameBlockFactory.floor()
+                forSlice(startPos, endPos) { pos ->
+                    blocks[pos] = GameBlockFactory.floor()
+                }
 
                 placeCorridorFrom(endPos)
             }
@@ -163,6 +149,10 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     private fun forSlice(startPos: Position3D, width: Int, height: Int, depth: Int = 1, fn: (Position3D) -> Unit) {
         worldSize.fetchPositionsForSlice(startPos, width, height, depth).forEach(fn)
+    }
+
+    private fun forSlice(startPos: Position3D, endPos: Position3D, fn: (Position3D) -> Unit) {
+        worldSize.fetchPositionsForSlice(startPos, endPos).forEach(fn)
     }
 
     private fun MutableMap<Position3D, GameBlock>.whenPresent(pos: Position3D, fn: (GameBlock) -> Unit) { // 12
