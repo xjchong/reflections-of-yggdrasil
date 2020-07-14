@@ -8,4 +8,6 @@ object GameBlockFactory {
     fun floor() = GameBlock(GameTileRepository.FLOOR)
 
     fun wall() = GameBlock(GameTileRepository.WALL)
+
+    fun door() = GameBlock(GameTileRepository.DOOR)
 }

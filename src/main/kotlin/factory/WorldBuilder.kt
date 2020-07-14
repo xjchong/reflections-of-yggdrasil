@@ -2,8 +2,9 @@ package factory
 
 import GameBlock
 import World
+import extension.adjacentNeighbors
 import extension.fetchPositionsForSlice
-import extension.neighbours
+import extension.neighbors
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
 import kotlin.math.roundToInt
@@ -15,21 +16,30 @@ class WorldBuilder(private val worldSize: Size3D) {
     private val width = worldSize.xLength
     private val height = worldSize.yLength
     private val depth = worldSize.zLength
+
     private var blocks: MutableMap<Position3D, GameBlock> = mutableMapOf()
 
+    private var regionIds: MutableMap<Position3D, Int> = mutableMapOf()
+    private var nextRegionId: Int = 0
+    private val WALL_REGION_ID: Int = -1
+    private var mergedRegionIds: MutableSet<MutableSet<Int>> = mutableSetOf()
+    private var connectors: MutableList<Position3D> = mutableListOf()
+
     fun makeCaves(): WorldBuilder {
-        fill(GameBlockFactory.wall())
+        fill(GameBlockFactory.wall(), WALL_REGION_ID)
         repeat(depth) { level ->
-            placeRooms(level, 50, 6, 5, 2.0)
+            placeRooms(level, 200, 6, 5, 2.0)
             placeCorridors(level)
+            placeDoors(level, 5, 15)
         }
         return this
 //        return randomizeTiles().smooth(8)
     }
 
-    fun fill(block: GameBlock) {
+    fun fill(block: GameBlock, regionId: Int) {
         forAllPositions { pos ->
             blocks[pos] = block
+            regionIds[pos] = regionId
         }
     }
 
@@ -57,7 +67,9 @@ class WorldBuilder(private val worldSize: Size3D) {
             if (isRoomSafe(x, y, level, roomWidth, roomHeight)) {
                 forSlice(Position3D.create(x, y, level), roomWidth, roomHeight) { pos ->
                     blocks[pos] = GameBlockFactory.floor()
+                    regionIds[pos] = nextRegionId
                 }
+                nextRegionId++
             }
         }
     }
@@ -80,8 +92,8 @@ class WorldBuilder(private val worldSize: Size3D) {
                 val pos = Position3D.create(x, y, level)
 
                 if (blocks[pos]?.isWall == true) {
-                    blocks[pos] = GameBlockFactory.floor()
                     placeCorridorFrom(pos)
+                    nextRegionId++
                 }
             }
         }
@@ -89,6 +101,8 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     private fun placeCorridorFrom(startPos: Position3D) {
         val directions = mutableListOf<Char>('e', 's', 'w', 'n').shuffled()
+        blocks[startPos] = GameBlockFactory.floor()
+        regionIds[startPos] = nextRegionId
 
         for (direction in directions) {
             val endPos = when (direction) {
@@ -101,9 +115,55 @@ class WorldBuilder(private val worldSize: Size3D) {
             if (blocks[endPos]?.isWall == true) {
                 forSlice(startPos, endPos) { pos ->
                     blocks[pos] = GameBlockFactory.floor()
+                    regionIds[pos] = nextRegionId
                 }
 
                 placeCorridorFrom(endPos)
+            }
+        }
+    }
+
+    private fun placeDoors(level: Int, extraDoorPercent: Int, maxExtraDoors: Int) {
+        val positions = worldSize.fetchPositionsForSlice( // Get all the blocks on this level.
+                Position3D.create(1, 1, level), width - 2, height - 2, 1)
+                .toMutableList()
+                .filter{ pos -> blocks[pos]?.isWall == true } // Get only the walls (only walls connect regions).
+                .shuffled() // We want to choose the location of doors randomly.
+
+        var extraDoorsCount = 0
+
+        for (pos in positions) {
+            val adjacentRegions: MutableSet<Int> = mutableSetOf()
+
+            pos.adjacentNeighbors(shouldShuffle = false).forEach { neighbor ->
+                adjacentRegions.add(regionIds[neighbor]?: WALL_REGION_ID)
+            }
+
+            adjacentRegions.remove(WALL_REGION_ID)
+
+            if (adjacentRegions.size != 2) continue // Does not connect two different regions.
+
+            var needsMerge = true
+            var isDisjoint = true
+            val canCreateExtra = extraDoorsCount < maxExtraDoors
+                    && (Math.random() * 100).roundToInt() < extraDoorPercent
+
+            for (mergedSet in mergedRegionIds) {
+                val intersectionSize = mergedSet.intersect(adjacentRegions).size
+
+                if (intersectionSize == 2) needsMerge = false
+                if (intersectionSize == 1) {
+                    isDisjoint = false
+                    mergedSet.addAll(adjacentRegions)
+                }
+            }
+
+            if (needsMerge) {
+                blocks[pos] = GameBlockFactory.door()
+                if (isDisjoint) mergedRegionIds.add(adjacentRegions)
+            } else if (canCreateExtra) {
+                blocks[pos] = GameBlockFactory.door()
+                extraDoorsCount++
             }
         }
     }
@@ -129,7 +189,7 @@ class WorldBuilder(private val worldSize: Size3D) {
                 val (x, y, z) = pos
                 var floors = 0
                 var rocks = 0
-                pos.neighbours().plus(pos).forEach { neighbor ->
+                pos.neighbors().plus(pos).forEach { neighbor ->
                     blocks.whenPresent(neighbor) { block ->
                         if (block.isFloor) {
                             floors++
