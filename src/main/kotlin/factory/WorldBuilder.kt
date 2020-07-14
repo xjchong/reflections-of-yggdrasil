@@ -26,15 +26,20 @@ class WorldBuilder(private val worldSize: Size3D) {
     private var connectors: MutableList<Position3D> = mutableListOf()
 
     fun makeCaves(): WorldBuilder {
+        return randomizeTiles().smooth(8)
+    }
+
+    fun makeDungeon(): WorldBuilder {
         fill(GameBlockFactory.wall(), WALL_REGION_ID)
+
         repeat(depth) { level ->
             placeRooms(level, 200, 6, 5, 2.0)
             placeCorridors(level)
             placeDoors(level, 5, 15)
             removeDeadEnds(level)
         }
+
         return this
-//        return randomizeTiles().smooth(8)
     }
 
     fun fill(block: GameBlock, regionId: Int) {
