@@ -31,6 +31,7 @@ class WorldBuilder(private val worldSize: Size3D) {
             placeRooms(level, 200, 6, 5, 2.0)
             placeCorridors(level)
             placeDoors(level, 5, 15)
+            removeDeadEnds(level)
         }
         return this
 //        return randomizeTiles().smooth(8)
@@ -166,6 +167,31 @@ class WorldBuilder(private val worldSize: Size3D) {
                 extraDoorsCount++
             }
         }
+    }
+
+    private fun removeDeadEnds(level: Int) {
+        forSlice(Position3D.create(1, 1, level), width - 2, height - 2) { pos ->
+            removeDeadEnd(pos)
+        }
+    }
+
+    private fun removeDeadEnd(position: Position3D) {
+        if (!isDeadEnd(position)) return
+
+        blocks[position] = GameBlockFactory.wall()
+        regionIds[position] = WALL_REGION_ID
+
+        for (neighborPos in position.adjacentNeighbors(shouldShuffle = false)) {
+            removeDeadEnd(neighborPos)
+        }
+    }
+
+    private fun isDeadEnd(position: Position3D): Boolean {
+        if (blocks[position]?.isWall == true) return false
+
+        return position.adjacentNeighbors(shouldShuffle = false)
+                .filter { neighborPos -> blocks[neighborPos]?.isWall == true }
+                .size > 2
     }
 
 
