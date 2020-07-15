@@ -9,6 +9,10 @@ object GameTileRepository {
 
     val EMPTY: CharacterTile = Tile.empty()
 
+    /**
+     * ENVIRONMENT TILES
+     */
+
     val FLOOR: CharacterTile = Tile.newBuilder()
             .withCharacter(Symbols.INTERPUNCT)
             .withForegroundColor(GameColor.FLOOR_FOREGROUND)
@@ -26,4 +30,15 @@ object GameTileRepository {
             .withForegroundColor(GameColor.DOOR_FOREGROUND)
             .withBackgroundColor(GameColor.DOOR_BACKGROUND)
             .buildCharacterTile()
+
+
+    /**
+     * ACTOR TILES
+     */
+
+    val PLAYER = Tile.newBuilder()
+        .withCharacter('@')
+        .withForegroundColor(GameColor.PLAYER_COLOR)
+        .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+        .buildCharacterTile()
 }
