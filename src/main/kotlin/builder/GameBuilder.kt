@@ -4,7 +4,9 @@ import constants.GameConfig
 import entity.Player
 import extension.GameEntity
 import factory.EntityFactory
+import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Position3D
+import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.data.Size3D
 import world.Game
 
@@ -21,6 +23,7 @@ class GameBuilder(val worldSize: Size3D) {
 
     fun buildGame(): Game {
         prepareWorld()
+        addFungi()
 
         return Game.create(
             player = addPlayer(),
@@ -33,13 +36,27 @@ class GameBuilder(val worldSize: Size3D) {
     }
 
     private fun addPlayer(): GameEntity<Player> {
-        val player = EntityFactory.newPlayer()
+        return EntityFactory.newPlayer().addToWorld(
+            atLevel = GameConfig.DUNGEON_LEVEL_COUNT - 1
+        )
+    }
 
-        world.addAtEmptyPosition(
-            player,
-            offset = Position3D.defaultPosition().withZ(GameConfig.DUNGEON_LEVEL_COUNT - 1),
-            size = world.visibleSize.copy(zLength =  0))
+    private fun addFungi() = also {
+        repeat(world.actualSize.zLength) {level ->
+            repeat(GameConfig.FUNGI_PER_LEVEL) {
+                EntityFactory.newFungus().addToWorld(level)
+            }
+        }
+    }
 
-        return player
+
+    private fun <T : EntityType> GameEntity<T>.addToWorld(
+            atLevel: Int,
+            atArea: Size = world.actualSize.to2DSize()): GameEntity<T> {
+       world.addAtEmptyPosition(this,
+           offset = Position3D.defaultPosition().withZ(atLevel),
+           size = Size3D.from2DSize(atArea))
+
+        return this
     }
 }

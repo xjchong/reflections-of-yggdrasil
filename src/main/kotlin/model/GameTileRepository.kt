@@ -31,7 +31,6 @@ object GameTileRepository {
             .withBackgroundColor(GameColor.DOOR_BACKGROUND)
             .buildCharacterTile()
 
-
     /**
      * ACTOR TILES
      */
@@ -39,6 +38,12 @@ object GameTileRepository {
     val PLAYER = Tile.newBuilder()
         .withCharacter('@')
         .withForegroundColor(GameColor.PLAYER_COLOR)
+        .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+        .buildCharacterTile()
+
+    val FUNGUS = Tile.newBuilder()
+        .withCharacter(',')
+        .withForegroundColor(GameColor.FUNGUS_COLOR)
         .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
         .buildCharacterTile()
 }

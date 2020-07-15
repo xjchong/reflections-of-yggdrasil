@@ -6,6 +6,7 @@ import attribute.EntityTile
 import attribute.flag.Obstacle
 import behavior.InputReceiver
 import command.Dig
+import entity.Fungus
 import entity.Player
 import entity.Wall
 import facet.Diggable
@@ -29,6 +30,12 @@ object EntityFactory {
             EntityActions(Dig::class))
         behaviors(InputReceiver)
         facets(Movable)
+    }
+
+    fun newFungus() = newGameEntityOfType(Fungus) {
+        attributes(
+            EntityPosition(),
+            EntityTile(GameTileRepository.FUNGUS))
     }
 
     fun newWall() = newGameEntityOfType(Wall) {
