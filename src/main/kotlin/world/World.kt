@@ -9,6 +9,7 @@ import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.game.base.BaseGameArea
+import org.hexworks.zircon.api.screen.Screen
 
 class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, actualSize: Size3D)
     : BaseGameArea<Tile, GameBlock>(
@@ -27,6 +28,10 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
     }
 
+    fun update(screen: Screen, uiEvent: org.hexworks.zircon.api.uievent.UIEvent, game: Game) {
+        engine.update(GameContext(this, screen, uiEvent, game.player))
+    }
+
     /**
      * Adds the given [Entity] at the given [Position3D].
      * Has no effect if this world already contains the
@@ -38,6 +43,22 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         fetchBlockAt(position).map { block ->
             block.addEntity(entity)
         }
+    }
+
+    fun moveEntity(entity: AnyGameEntity, endPosition: Position3D): Boolean {
+        val startBlock = fetchBlockAt(entity.position)
+        val endBlock = fetchBlockAt(endPosition)
+        var isSuccess = false
+
+        if (startBlock.isPresent && endBlock.isPresent) {
+            startBlock.get().removeEntity(entity)
+            entity.position = endPosition
+            endBlock.get().addEntity(entity)
+
+            isSuccess = true
+        }
+
+        return isSuccess
     }
 
     fun addAtEmptyPosition(

@@ -13,6 +13,8 @@ import org.hexworks.zircon.api.extensions.box
 import org.hexworks.zircon.api.game.base.BaseGameArea
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.grid.TileGrid
+import org.hexworks.zircon.api.uievent.KeyboardEventType
+import org.hexworks.zircon.api.uievent.UIEventResponse
 import org.hexworks.zircon.api.view.base.BaseView
 import world.Game
 
@@ -29,6 +31,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         setupSideBar()
         setupLogArea()
         setupGameComponent()
+        setupInputHandlers()
 
         screen.theme = GameConfig.THEME
     }
@@ -62,5 +65,12 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                 .build()
 
         screen.addComponent(gameComponent)
+    }
+
+    private fun setupInputHandlers() {
+        screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, _ ->
+            game.world.update(screen, event, game)
+            UIEventResponse.processed()
+        }
     }
 }
