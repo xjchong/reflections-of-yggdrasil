@@ -13,10 +13,7 @@ import entity.Door
 import entity.Fungus
 import entity.Player
 import entity.Wall
-import facet.Attackable
-import facet.Diggable
-import facet.Movable
-import facet.Openable
+import facet.*
 import model.GameTileRepository
 import org.hexworks.amethyst.api.builder.EntityBuilder
 import org.hexworks.amethyst.api.entity.EntityType
@@ -33,7 +30,13 @@ object EntityFactory {
         attributes(
             EntityPosition(),
             EntityTile(GameTileRepository.PLAYER),
-            EntityActions(Open::class, Dig::class, Attack::class))
+            EntityActions(Open::class, Dig::class, Attack::class),
+
+            CombatStats.create(
+                maxHealth = 100,
+                attackRating = 10,
+                defenseRating = 5
+            ))
         behaviors(InputReceiver)
         facets(Movable)
     }
@@ -43,9 +46,15 @@ object EntityFactory {
             EntityPosition(),
             EntityTile(GameTileRepository.FUNGUS),
             Obstacle,
-            fungusSpread)
+            fungusSpread,
+
+            CombatStats.create(
+                maxHealth = 12,
+                attackRating = 0,
+                defenseRating = 0
+            ))
         behaviors(FungusGrowth)
-        facets(Attackable)
+        facets(Attackable, Destructible)
     }
 
     fun newWall() = newGameEntityOfType(Wall) {
