@@ -209,7 +209,7 @@ class WorldBuilder(private val worldSize: Size3D) {
     private fun randomizeTiles(): WorldBuilder {
         forAllPositions { pos ->
             blocks[pos] = if (Math.random() < 0.5) {
-                GameBlockFactory.wall()
+                GameBlockFactory.floor()
             } else GameBlockFactory.wall()
         }
         return this
