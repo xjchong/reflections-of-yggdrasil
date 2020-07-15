@@ -28,10 +28,7 @@ val AnyGameEntity.tile: Tile
 val AnyGameEntity.isObstacle: Boolean
     get() = findAttribute(Obstacle::class).isPresent
 
-fun <T : Attribute> AnyGameEntity.findAttribute(klass: KClass<T>): T =
-    findAttribute(klass).orElseThrow {
-        NoSuchElementException("Entity '$this' has no property with type '${klass.simpleName}'.")
-    }
+fun <T : Attribute> AnyGameEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
 
 fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Response {
     var result: Response = Pass

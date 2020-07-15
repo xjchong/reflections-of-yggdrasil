@@ -9,5 +9,5 @@ object GameBlockFactory {
 
     fun wall() = GameBlock.createWith(EntityFactory.newWall())
 
-    fun door() = GameBlock(GameTileRepository.DOOR)
+    fun door() = GameBlock.createWith(EntityFactory.newDoor())
 }
