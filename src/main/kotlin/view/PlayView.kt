@@ -1,7 +1,7 @@
 package view
 
-import world.Game
 import block.GameBlock
+import builder.GameBuilder
 import constants.GameConfig
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
@@ -14,6 +14,7 @@ import org.hexworks.zircon.api.game.base.BaseGameArea
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.grid.TileGrid
 import org.hexworks.zircon.api.view.base.BaseView
+import world.Game
 
 class CustomGameArea(
         visibleSize: Size3D, actualSize: Size3D
@@ -21,7 +22,7 @@ class CustomGameArea(
         initialVisibleSize = visibleSize, initialActualSize = actualSize
 )
 
-class PlayView(private val tileGrid: TileGrid, private val game: Game = Game.create()) : BaseView(tileGrid) {
+class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuilder.defaultGame()) : BaseView(tileGrid) {
     override fun onDock() {
         super.onDock()
 

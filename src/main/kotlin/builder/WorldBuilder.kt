@@ -1,13 +1,13 @@
 package builder
 
 import block.GameBlock
-import world.World
 import extension.adjacentNeighbors
 import extension.fetchPositionsForSlice
 import extension.neighbors
 import factory.GameBlockFactory
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
+import world.World
 import kotlin.math.roundToInt
 import kotlin.random.Random
 import kotlin.random.asJavaRandom
