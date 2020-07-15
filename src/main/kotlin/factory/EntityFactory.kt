@@ -5,10 +5,12 @@ import attribute.EntityPosition
 import attribute.EntityTile
 import attribute.flag.Obstacle
 import behavior.InputReceiver
+import command.Attack
 import command.Dig
 import entity.Fungus
 import entity.Player
 import entity.Wall
+import facet.Attackable
 import facet.Diggable
 import facet.Movable
 import model.GameTileRepository
@@ -27,7 +29,7 @@ object EntityFactory {
         attributes(
             EntityPosition(),
             EntityTile(GameTileRepository.PLAYER),
-            EntityActions(Dig::class))
+            EntityActions(Dig::class, Attack::class))
         behaviors(InputReceiver)
         facets(Movable)
     }
@@ -35,7 +37,9 @@ object EntityFactory {
     fun newFungus() = newGameEntityOfType(Fungus) {
         attributes(
             EntityPosition(),
-            EntityTile(GameTileRepository.FUNGUS))
+            EntityTile(GameTileRepository.FUNGUS),
+            Obstacle)
+        facets(Attackable)
     }
 
     fun newWall() = newGameEntityOfType(Wall) {
