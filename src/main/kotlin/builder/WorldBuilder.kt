@@ -5,8 +5,6 @@ import extension.adjacentNeighbors
 import extension.fetchPositionsForSlice
 import extension.neighbors
 import factory.GameBlockFactory
-import model.GameTileRepository
-import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
 import world.World
@@ -33,7 +31,7 @@ class WorldBuilder(private val worldSize: Size3D) {
     }
 
     fun makeDungeon(): WorldBuilder {
-        fill(GameTileRepository.WALL, WALL_REGION_ID)
+        fill(WALL_REGION_ID) { GameBlockFactory.wall() }
 
         repeat(depth) { level ->
             placeRooms(level, 200, 6, 5, 2.0)
@@ -45,9 +43,9 @@ class WorldBuilder(private val worldSize: Size3D) {
         return this
     }
 
-    fun fill(tile: CharacterTile, regionId: Int) {
+    fun fill(regionId: Int, fn: () -> GameBlock) {
         forAllPositions { pos ->
-            blocks[pos] = GameBlock(tile)
+            blocks[pos] = fn()
             regionIds[pos] = regionId
         }
     }
@@ -226,7 +224,7 @@ class WorldBuilder(private val worldSize: Size3D) {
                 var rocks = 0
                 pos.neighbors().plus(pos).forEach { neighbor ->
                     blocks.whenPresent(neighbor) { block ->
-                        if (block.isFloor) {
+                        if (!block.isObstructed) {
                             floors++
                         } else rocks++
                     }

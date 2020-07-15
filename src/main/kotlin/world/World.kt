@@ -45,6 +45,15 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
     }
 
+    fun removeEntity(entity: AnyGameEntity) {
+        fetchBlockAt(entity.position).map {
+            it.removeEntity(entity)
+        }
+
+        engine.removeEntity(entity)
+        entity.position = Position3D.unknown()
+    }
+
     fun moveEntity(entity: AnyGameEntity, endPosition: Position3D): Boolean {
         val startBlock = fetchBlockAt(entity.position)
         val endBlock = fetchBlockAt(endPosition)

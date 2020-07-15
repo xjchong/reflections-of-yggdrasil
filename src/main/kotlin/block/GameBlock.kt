@@ -10,7 +10,7 @@ import org.hexworks.zircon.api.data.BlockTileType
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
 
-class GameBlock(private var defaultTile: Tile = GameTileRepository.EMPTY,
+class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
                 private val currentEntities: MutableList<AnyGameEntity> = mutableListOf())
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
 
@@ -39,7 +39,7 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.EMPTY,
         get() = defaultTile == GameTileRepository.FLOOR
 
     val isWall: Boolean
-        get() = defaultTile == GameTileRepository.WALL
+        get() = Maybe.ofNullable(currentEntities.firstOrNull { it.tile == GameTileRepository.WALL }).isPresent
 
     val isUnoccupied: Boolean
         get() = currentEntities.isEmpty()

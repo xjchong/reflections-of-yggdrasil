@@ -1,10 +1,16 @@
 package extension
 
+import attribute.EntityActions
 import attribute.EntityPosition
 import attribute.EntityTile
 import attribute.flag.Obstacle
+import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Attribute
+import org.hexworks.amethyst.api.Consumed
+import org.hexworks.amethyst.api.Pass
+import org.hexworks.amethyst.api.Response
 import org.hexworks.zircon.api.data.Tile
+import world.GameContext
 import kotlin.reflect.KClass
 
 
@@ -26,4 +32,24 @@ fun <T : Attribute> AnyGameEntity.findAttribute(klass: KClass<T>): T =
     findAttribute(klass).orElseThrow {
         NoSuchElementException("Entity '$this' has no property with type '${klass.simpleName}'.")
     }
+
+fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Response {
+    var result: Response = Pass
+
+    findAttribute(EntityActions::class).map {
+        val actions = it.createActionsFor(context, this, target)
+
+        for (action in actions) {
+            runBlocking {
+                if (target.executeCommand(action) is Consumed) {
+                    result = Consumed
+                }
+            }
+
+            if (result == Consumed) break
+        }
+    }
+
+    return result
+}
 

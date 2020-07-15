@@ -1,11 +1,14 @@
 package factory
 
+import attribute.EntityActions
 import attribute.EntityPosition
 import attribute.EntityTile
 import attribute.flag.Obstacle
 import behavior.InputReceiver
+import command.Dig
 import entity.Player
 import entity.Wall
+import facet.Diggable
 import facet.Movable
 import model.GameTileRepository
 import org.hexworks.amethyst.api.builder.EntityBuilder
@@ -20,7 +23,10 @@ fun <T : EntityType> newGameEntityOfType(type: T, init: EntityBuilder<T, GameCon
 object EntityFactory {
 
     fun newPlayer() = newGameEntityOfType(Player) {
-        attributes(EntityPosition(), EntityTile(GameTileRepository.PLAYER))
+        attributes(
+            EntityPosition(),
+            EntityTile(GameTileRepository.PLAYER),
+            EntityActions(Dig::class))
         behaviors(InputReceiver)
         facets(Movable)
     }
@@ -29,7 +35,7 @@ object EntityFactory {
         attributes(
             EntityPosition(),
             EntityTile(GameTileRepository.WALL),
-            Obstacle
-        )
+            Obstacle)
+        facets(Diggable)
     }
 }
