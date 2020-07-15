@@ -3,7 +3,9 @@ package factory
 import attribute.EntityActions
 import attribute.EntityPosition
 import attribute.EntityTile
+import attribute.FungusSpread
 import attribute.flag.Obstacle
+import behavior.FungusGrowth
 import behavior.InputReceiver
 import command.Attack
 import command.Dig
@@ -34,11 +36,13 @@ object EntityFactory {
         facets(Movable)
     }
 
-    fun newFungus() = newGameEntityOfType(Fungus) {
+    fun newFungus(fungusSpread: FungusSpread = FungusSpread()) = newGameEntityOfType(Fungus) {
         attributes(
             EntityPosition(),
             EntityTile(GameTileRepository.FUNGUS),
-            Obstacle)
+            Obstacle,
+            fungusSpread)
+        behaviors(FungusGrowth)
         facets(Attackable)
     }
 
