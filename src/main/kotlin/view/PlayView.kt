@@ -54,7 +54,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         val logArea = Components.logArea()
                 .withSize(Size.create(logWidth, GameConfig.LOG_HEIGHT))
                 .withDecorations(box(boxType = BoxType.SINGLE, title = "Log"))
-                .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_RIGHT)
+                .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
                 .build()
 
         screen.addComponent(logArea)
@@ -74,7 +74,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         val gameComponent = Components.gameComponent<Tile, GameBlock>()
                 .withGameArea(game.world)
                 .withSize(game.world.visibleSize.to2DSize())
-                .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
+                .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_RIGHT)
                 .build()
 
         screen.addComponent(gameComponent)
