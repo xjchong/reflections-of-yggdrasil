@@ -25,10 +25,14 @@ class GameBuilder(val worldSize: Size3D) {
         prepareWorld()
         addFungi()
 
-        return Game.create(
+        val game = Game.create(
             player = addPlayer(),
             world = world
         )
+
+        world.addWorldEntity(EntityFactory.newFogOfWar(game))
+
+        return game
     }
 
     private fun prepareWorld() = also {

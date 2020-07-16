@@ -31,6 +31,12 @@ object GameTileRepository {
             .withBackgroundColor(GameColor.DOOR_BACKGROUND)
             .buildCharacterTile()
 
+    val UNREVEALED = Tile.newBuilder()
+        .withCharacter(' ')
+        .withForegroundColor(GameColor.FOG_OF_WAR)
+        .withBackgroundColor(GameColor.FOG_OF_WAR)
+        .buildCharacterTile()
+
     /**
      * ACTOR TILES
      */

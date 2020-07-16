@@ -2,6 +2,7 @@ package factory
 
 import attribute.*
 import attribute.flag.Obstacle
+import attribute.flag.Opaque
 import attribute.flag.Opened
 import behavior.Barrier
 import behavior.FungusGrowth
@@ -9,15 +10,13 @@ import behavior.InputReceiver
 import command.Attack
 import command.Dig
 import command.Open
-import entity.Door
-import entity.Fungus
-import entity.Player
-import entity.Wall
+import entity.*
 import facet.*
 import model.GameTileRepository
 import org.hexworks.amethyst.api.builder.EntityBuilder
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.amethyst.api.newEntityOfType
+import world.Game
 import world.GameContext
 
 
@@ -31,6 +30,7 @@ object EntityFactory {
             EntityPosition(),
             EntityTile(GameTileRepository.PLAYER),
             EntityActions(Open::class, Dig::class, Attack::class),
+            Vision(9),
 
             CombatStats.create(
                 maxHealth = 100,
@@ -61,7 +61,8 @@ object EntityFactory {
         attributes(
             EntityPosition(),
             EntityTile(GameTileRepository.WALL),
-            Obstacle)
+            Obstacle,
+            Opaque)
         facets(Diggable)
     }
 
@@ -75,10 +76,13 @@ object EntityFactory {
             baseAttributes.add(Opened)
         } else {
             baseAttributes.add(Obstacle)
+            baseAttributes.add(Opaque)
         }
 
         attributes(*baseAttributes.toTypedArray())
         behaviors(Barrier)
         facets(Openable)
     }
+
+    fun newFogOfWar(game: Game) = FogOfWar(game, needsUpdate = true)
 }

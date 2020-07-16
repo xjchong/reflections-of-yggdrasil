@@ -1,11 +1,10 @@
 package factory
 
 import block.GameBlock
-import model.GameTileRepository
 
 object GameBlockFactory {
 
-    fun floor() = GameBlock(GameTileRepository.FLOOR)
+    fun floor() = GameBlock()
 
     fun wall() = GameBlock.createWith(EntityFactory.newWall())
 

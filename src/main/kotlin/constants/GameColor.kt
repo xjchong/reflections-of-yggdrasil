@@ -10,6 +10,7 @@ object GameColor {
     val FLOOR_BACKGROUND = TileColor.fromString("#1E2320")
     val DOOR_FOREGROUND = TileColor.fromString("#3E3D32")
     val DOOR_BACKGROUND = TileColor.fromString("#2b1e0d")
+    val FOG_OF_WAR = TileColor.fromString("#000000")
 
     /**
      * ACTORS

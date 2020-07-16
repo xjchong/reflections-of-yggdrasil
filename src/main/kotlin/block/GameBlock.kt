@@ -10,8 +10,9 @@ import org.hexworks.zircon.api.data.BlockTileType
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
 
-class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
-                private val currentEntities: MutableList<AnyGameEntity> = mutableListOf())
+class GameBlock(private var defaultTile: Tile = GameTileRepository.EMPTY,
+                private val currentEntities: MutableList<AnyGameEntity> = mutableListOf(),
+                private var isRevealed: Boolean = false)
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
 
     companion object {
@@ -23,20 +24,20 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
 
     override var tiles: PersistentMap<BlockTileType, Tile> = persistentMapOf()
         get() {
+            val topTile = if (isRevealed) GameTileRepository.EMPTY else GameTileRepository.UNREVEALED
             val entityTiles = currentEntities.map { it.tile }
-            val topTile = when {
+            val contentTile = when {
                 entityTiles.contains(GameTileRepository.PLAYER) -> GameTileRepository.PLAYER
                 entityTiles.isNotEmpty() -> entityTiles.first()
                 else -> defaultTile
             }
 
             return persistentMapOf(
-                Pair(BlockTileType.TOP, topTile)
+                Pair(BlockTileType.TOP, topTile),
+                Pair(BlockTileType.CONTENT, contentTile),
+                Pair(BlockTileType.BOTTOM, GameTileRepository.FLOOR)
             )
         }
-
-    val isFloor: Boolean
-        get() = defaultTile == GameTileRepository.FLOOR
 
     val isWall: Boolean
         get() = Maybe.ofNullable(currentEntities.firstOrNull { it.tile == GameTileRepository.WALL }).isPresent
@@ -63,5 +64,9 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
 
     fun removeEntity(entity: AnyGameEntity) {
         currentEntities.remove(entity)
+    }
+
+    fun reveal() {
+        isRevealed = true
     }
 }

@@ -1,22 +1,25 @@
 package world
+import attribute.Vision
 import block.GameBlock
-import extension.AnyGameEntity
-import extension.position
-import org.hexworks.amethyst.api.Engine
-import org.hexworks.amethyst.api.Engines
+import extension.*
+import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.game.base.BaseGameArea
 import org.hexworks.zircon.api.screen.Screen
+import org.hexworks.zircon.api.shape.EllipseFactory
+import org.hexworks.zircon.api.shape.LineFactory
+
+
 
 class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, actualSize: Size3D)
     : BaseGameArea<Tile, GameBlock>(
         initialVisibleSize = visibleSize, initialActualSize = actualSize
 ) {
 
-    private val engine: Engine<GameContext> = Engines.newEngine()
+    private val engine: GameEngine<GameContext> = GameEngine()
 
     init {
         startingBlocks.forEach { (pos, block) ->
@@ -29,7 +32,9 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     fun update(screen: Screen, uiEvent: org.hexworks.zircon.api.uievent.UIEvent, game: Game) {
-        engine.update(GameContext(this, screen, uiEvent, game.player))
+        val context = GameContext(this, screen, uiEvent, game.player)
+
+        engine.update(context)
     }
 
     /**
@@ -38,11 +43,18 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
      * given [Entity].
      */
     fun addEntity(entity: AnyGameEntity, position: Position3D) {
+        val priority = if (entity.isPlayer) GameEngine.PRIORITY_HIGH else GameEngine.PRIORITY_DEFAULT
+
         entity.position = position
-        engine.addEntity(entity)
+        engine.addEntityWithPriority(entity, priority)
+
         fetchBlockAt(position).map { block ->
             block.addEntity(entity)
         }
+    }
+
+    fun addWorldEntity(entity: AnyGameEntity) {
+        engine.addEntityWithPriority(entity, GameEngine.PRIORITY_LOW)
     }
 
     fun removeEntity(entity: AnyGameEntity) {
@@ -100,12 +112,49 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
             )
 
             fetchBlockAt(pos).map { block ->
-                if (block.isUnoccupied && block.isFloor) position = Maybe.of(pos)
+                if (block.isUnoccupied) position = Maybe.of(pos)
             }
 
             currentTry++
         }
 
         return position
+    }
+
+    fun isVisionBlockedAt(position: Position3D): Boolean {
+        return fetchBlockAt(position).fold(whenEmpty = { false }, whenPresent = {
+            it.entities.any(AnyGameEntity::isOpaque)
+        })
+    }
+
+    fun findVisiblePositionFor(entity: AnyGameEntity): Iterable<Position3D> {
+        val radius = entity.getAttribute(Vision::class)?.radius ?: return listOf()
+        val centerPosition = entity.position.to2DPosition()
+        val level = entity.position.z
+
+        return EllipseFactory.buildEllipse(
+            fromPosition = centerPosition,
+            toPosition = centerPosition.withRelativeX(radius).withRelativeY(radius))
+            .positions
+            .flatMap { ringPosition ->
+                val it = LineFactory.buildLine(centerPosition, ringPosition).iterator()
+                val visiblePositions = mutableListOf<Position3D>()
+
+                do {
+                    val nextPosition = it.next()
+                    visiblePositions.add(Position3D.from2DPosition(nextPosition, level))
+                } while (it.hasNext()
+                    && isVisionBlockedAt(Position3D.from2DPosition(nextPosition, level)).not())
+
+                visiblePositions
+            }
+    }
+
+    fun updateFowAt(entity: AnyGameEntity) {
+        findVisiblePositionFor(entity).forEach { visiblePos ->
+            fetchBlockAt(visiblePos).ifPresent { block ->
+                block.reveal()
+            }
+        }
     }
 }

@@ -23,7 +23,9 @@ object Openable : BaseFacet<GameContext>() {
                 val entityTile = getAttribute(EntityTile::class)
                 val openAppearance = getAttribute(OpenAppearance::class)
 
-                openAppearance?.tile?.let { entityTile?.tile = it }
+                openAppearance?.tile?.let {
+                    entityTile?.tile = it
+                }
                 addAttribute(Opened)
 
                 Consumed

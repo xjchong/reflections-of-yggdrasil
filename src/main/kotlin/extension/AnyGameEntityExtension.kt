@@ -4,6 +4,7 @@ import attribute.EntityActions
 import attribute.EntityPosition
 import attribute.EntityTile
 import attribute.flag.Obstacle
+import attribute.flag.Opaque
 import entity.Player
 import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Attribute
@@ -31,6 +32,9 @@ val AnyGameEntity.isObstacle: Boolean
 
 val AnyGameEntity.isPlayer: Boolean
     get() = this.type == Player
+
+val AnyGameEntity.isOpaque: Boolean
+    get() = this.findAttribute(Opaque::class).isPresent
 
 fun <T : Attribute> AnyGameEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
 
