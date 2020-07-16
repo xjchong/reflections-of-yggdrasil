@@ -10,7 +10,7 @@ import org.hexworks.zircon.api.data.BlockTileType
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
 
-class GameBlock(private var defaultTile: Tile = GameTileRepository.EMPTY,
+class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
                 private val currentEntities: MutableList<AnyGameEntity> = mutableListOf(),
                 private var isRevealed: Boolean = false)
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
@@ -22,14 +22,23 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.EMPTY,
         )
     }
 
+    private var isRemembered = false
+
     override var tiles: PersistentMap<BlockTileType, Tile> = persistentMapOf()
         get() {
-            val topTile = if (isRevealed) GameTileRepository.EMPTY else GameTileRepository.UNREVEALED
             val entityTiles = currentEntities.map { it.tile }
             val contentTile = when {
                 entityTiles.contains(GameTileRepository.PLAYER) -> GameTileRepository.PLAYER
                 entityTiles.isNotEmpty() -> entityTiles.first()
                 else -> defaultTile
+            }
+
+            val topTile = when {
+                isRevealed -> GameTileRepository.EMPTY
+                isRemembered -> contentTile
+                    .withBackgroundColor(contentTile.backgroundColor.darkenByPercent(0.5))
+                    .withForegroundColor(contentTile.foregroundColor.darkenByPercent(0.5))
+                else -> GameTileRepository.UNREVEALED
             }
 
             return persistentMapOf(
@@ -68,5 +77,13 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.EMPTY,
 
     fun reveal() {
         isRevealed = true
+    }
+
+    fun hide() {
+        isRevealed = false
+    }
+
+    fun remember() {
+        isRemembered = true
     }
 }

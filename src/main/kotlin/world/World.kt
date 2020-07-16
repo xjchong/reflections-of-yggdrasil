@@ -20,6 +20,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 ) {
 
     private val engine: GameEngine<GameContext> = GameEngine()
+    private var lastVisiblePositions: MutableSet<Position3D> = mutableSetOf()
 
     init {
         startingBlocks.forEach { (pos, block) ->
@@ -151,10 +152,26 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     fun updateFowAt(entity: AnyGameEntity) {
+        val nextVisiblePositions: MutableSet<Position3D> = mutableSetOf()
+        val nextHiddenPositions: MutableSet<Position3D> = mutableSetOf()
+        nextHiddenPositions.addAll(lastVisiblePositions)
+
         findVisiblePositionFor(entity).forEach { visiblePos ->
+            nextVisiblePositions.add(visiblePos)
+            nextHiddenPositions.remove(visiblePos)
             fetchBlockAt(visiblePos).ifPresent { block ->
                 block.reveal()
+                block.remember()
             }
         }
+
+        nextHiddenPositions.forEach { hiddenPos ->
+            fetchBlockAt(hiddenPos).ifPresent { block ->
+                block.hide()
+            }
+        }
+
+        lastVisiblePositions.clear()
+        lastVisiblePositions.addAll(nextVisiblePositions)
     }
 }
