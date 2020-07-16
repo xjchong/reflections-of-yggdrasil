@@ -1,10 +1,10 @@
 package view
 
 import constants.GameConfig
+import org.hexworks.zircon.api.ComponentDecorations.box
+import org.hexworks.zircon.api.ComponentDecorations.shadow
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
-import org.hexworks.zircon.api.extensions.box
-import org.hexworks.zircon.api.extensions.shadow
 import org.hexworks.zircon.api.grid.TileGrid
 import org.hexworks.zircon.api.uievent.MouseEventType
 import org.hexworks.zircon.api.uievent.UIEventResponse

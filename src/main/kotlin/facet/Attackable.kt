@@ -4,6 +4,7 @@ import command.Attack
 import command.Destroy
 import entity.combatStats
 import entity.whenDead
+import event.logGameEvent
 import extension.isPlayer
 import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Command
@@ -23,6 +24,8 @@ object Attackable : BaseFacet<GameContext>() {
             val damage = Math.max(0, attacker.combatStats.attackRating - target.combatStats.defenseRating)
 
             target.combatStats.health -= damage
+
+            logGameEvent("The $attacker hits the $target for $damage!")
 
             target.whenDead {
                 runBlocking {

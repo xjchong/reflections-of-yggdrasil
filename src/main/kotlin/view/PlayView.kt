@@ -3,19 +3,22 @@ package view
 import block.GameBlock
 import builder.GameBuilder
 import constants.GameConfig
+import event.GameLogEvent
+import org.hexworks.cobalt.events.api.KeepSubscription
+import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.data.Block
 import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.data.Size3D
 import org.hexworks.zircon.api.data.Tile
-import org.hexworks.zircon.api.extensions.box
 import org.hexworks.zircon.api.game.base.BaseGameArea
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.grid.TileGrid
 import org.hexworks.zircon.api.uievent.KeyboardEventType
 import org.hexworks.zircon.api.uievent.UIEventResponse
 import org.hexworks.zircon.api.view.base.BaseView
+import org.hexworks.zircon.internal.Zircon
 import world.Game
 
 class CustomGameArea(
@@ -55,6 +58,16 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                 .build()
 
         screen.addComponent(logArea)
+
+        Zircon.eventBus.subscribeTo<GameLogEvent>(key = "GameLogEvent") { event ->
+            logArea.addParagraph(
+                paragraph = event.message,
+                withNewLine = false,
+                withTypingEffectSpeedInMs = 5
+            )
+
+            KeepSubscription
+        }
     }
 
     private fun setupGameComponent() {
