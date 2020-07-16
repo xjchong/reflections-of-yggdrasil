@@ -7,6 +7,7 @@ import attribute.flag.Opened
 import behavior.Barrier
 import behavior.FungusGrowth
 import behavior.InputReceiver
+import behavior.VisualRememberer
 import command.Attack
 import command.Dig
 import command.Open
@@ -31,13 +32,14 @@ object EntityFactory {
             EntityTile(GameTileRepository.PLAYER),
             EntityActions(Open::class, Dig::class, Attack::class),
             Vision(9),
+            VisualMemory(),
 
             CombatStats.create(
                 maxHealth = 100,
                 attackRating = 10,
                 defenseRating = 5
             ))
-        behaviors(InputReceiver)
+        behaviors(InputReceiver, VisualRememberer)
         facets(Movable)
     }
 

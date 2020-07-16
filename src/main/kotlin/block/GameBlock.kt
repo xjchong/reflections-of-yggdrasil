@@ -22,7 +22,7 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
         )
     }
 
-    private var isRemembered = false
+    private var memory: Tile = GameTileRepository.UNREVEALED
 
     override var tiles: PersistentMap<BlockTileType, Tile> = persistentMapOf()
         get() {
@@ -35,10 +35,7 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
 
             val topTile = when {
                 isRevealed -> GameTileRepository.EMPTY
-                isRemembered -> contentTile
-                    .withBackgroundColor(contentTile.backgroundColor.darkenByPercent(0.5))
-                    .withForegroundColor(contentTile.foregroundColor.darkenByPercent(0.5))
-                else -> GameTileRepository.UNREVEALED
+                else -> memory
             }
 
             return persistentMapOf(
@@ -83,7 +80,13 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
         isRevealed = false
     }
 
-    fun remember() {
-        isRemembered = true
+    fun rememberAs(tile: Tile?) {
+        if (tile != null) {
+            memory = tile
+                .withForegroundColor(tile.foregroundColor.darkenByPercent(0.5))
+                .withBackgroundColor(tile.backgroundColor.darkenByPercent(0.5))
+        } else {
+            memory = GameTileRepository.UNREVEALED
+        }
     }
 }

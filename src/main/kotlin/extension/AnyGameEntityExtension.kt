@@ -2,6 +2,7 @@ package extension
 
 import attribute.EntityActions
 import attribute.EntityPosition
+import attribute.EntitySnapshot
 import attribute.EntityTile
 import attribute.flag.Obstacle
 import attribute.flag.Opaque
@@ -35,6 +36,9 @@ val AnyGameEntity.isPlayer: Boolean
 
 val AnyGameEntity.isOpaque: Boolean
     get() = this.findAttribute(Opaque::class).isPresent
+
+val AnyGameEntity.snapshot: EntitySnapshot
+    get() = EntitySnapshot(type, getAttribute(EntityTile::class)?.tile)
 
 fun <T : Attribute> AnyGameEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
 

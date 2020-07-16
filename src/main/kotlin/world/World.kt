@@ -1,7 +1,10 @@
 package world
+import attribute.EntitySnapshot
 import attribute.Vision
+import attribute.VisualMemory
 import block.GameBlock
 import extension.*
+import model.GameTileRepository
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.Position3D
@@ -161,7 +164,13 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
             nextHiddenPositions.remove(visiblePos)
             fetchBlockAt(visiblePos).ifPresent { block ->
                 block.reveal()
-                block.remember()
+
+                entity.findAttribute(VisualMemory::class).ifPresent {
+                    val snapshots = it.memory.get(visiblePos)
+                    val tile = snapshots?.firstOrNull()?.tile ?: GameTileRepository.FLOOR
+
+                    block.rememberAs(tile)
+                }
             }
         }
 
@@ -173,5 +182,17 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
         lastVisiblePositions.clear()
         lastVisiblePositions.addAll(nextVisiblePositions)
+    }
+
+    fun getEntitySnapshotAt(position: Position3D): List<EntitySnapshot> {
+        val snapshots: MutableList<EntitySnapshot> = mutableListOf()
+
+        fetchBlockAt(position).ifPresent { block ->
+            block.entities.forEach { entity ->
+                snapshots.add(entity.snapshot)
+            }
+        }
+
+        return snapshots
     }
 }
