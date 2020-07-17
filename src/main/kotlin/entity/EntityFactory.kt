@@ -4,10 +4,7 @@ import attributes.*
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import attributes.flag.Opened
-import behaviors.Barrier
-import behaviors.FungusGrowth
-import behaviors.InputReceiver
-import behaviors.VisualRememberer
+import behaviors.*
 import commands.Attack
 import commands.Dig
 import commands.Open
@@ -38,6 +35,7 @@ object EntityFactory {
                         attackRating = 5,
                         defenseRating = 1
                 ))
+        behaviors(Wanderer)
         facets(Attackable, Destructible, Movable)
     }
 
@@ -46,6 +44,7 @@ object EntityFactory {
                 EntityPosition(),
                 EntityTile(GameTileRepository.PLAYER),
                 EntityActions(Open::class, Dig::class, Attack::class),
+                Obstacle,
                 Vision(5),
                 VisualMemory(),
 
@@ -55,7 +54,7 @@ object EntityFactory {
                         defenseRating = 5
                 ))
         behaviors(InputReceiver, VisualRememberer)
-        facets(Movable)
+        facets(Movable, Attackable)
     }
 
     fun newFungus(fungusSpread: FungusSpread = FungusSpread()) = newGameEntityOfType(Fungus) {
