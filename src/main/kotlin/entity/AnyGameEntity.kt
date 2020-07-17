@@ -1,4 +1,4 @@
-package extensions
+package entity
 
 import attributes.EntityActions
 import attributes.EntityPosition
@@ -6,16 +6,20 @@ import attributes.EntitySnapshot
 import attributes.EntityTile
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
-import entity.Player
+import extensions.optional
+import game.GameContext
 import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
 import org.hexworks.amethyst.api.Response
+import org.hexworks.amethyst.api.entity.Entity
+import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Tile
-import game.GameContext
 import kotlin.reflect.KClass
 
+
+typealias AnyGameEntity = Entity<EntityType, GameContext>
 
 var AnyGameEntity.position
     get() = findAttribute(EntityPosition::class).get().position
@@ -61,4 +65,3 @@ fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Res
 
     return result
 }
-

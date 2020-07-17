@@ -1,7 +1,7 @@
 package block
-import extensions.AnyGameEntity
-import extensions.isObstacle
-import extensions.tile
+import entity.AnyGameEntity
+import entity.isObstacle
+import entity.tile
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
 import constants.GameTileRepository

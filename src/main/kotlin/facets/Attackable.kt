@@ -5,7 +5,7 @@ import command.Destroy
 import entity.combatStats
 import entity.whenDead
 import event.logGameEvent
-import extensions.isPlayer
+import entity.isPlayer
 import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed

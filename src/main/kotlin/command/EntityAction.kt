@@ -1,7 +1,6 @@
 package command
 
-import extensions.GameCommand
-import extensions.GameEntity
+import entity.GameEntity
 import org.hexworks.amethyst.api.entity.EntityType
 
 interface EntityAction<S: EntityType, T: EntityType> : GameCommand<S> {

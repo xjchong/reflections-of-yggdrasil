@@ -1,7 +1,7 @@
 package game
 
 import entity.Player
-import extensions.GameEntity
+import entity.GameEntity
 import org.hexworks.amethyst.api.Context
 import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.api.uievent.UIEvent

@@ -1,6 +1,6 @@
 package game
 import entity.Player
-import extensions.GameEntity
+import entity.GameEntity
 
 class Game(val world: World,
            val player: GameEntity<Player>) {

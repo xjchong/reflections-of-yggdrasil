@@ -3,8 +3,8 @@ import attributes.EntitySnapshot
 import attributes.Vision
 import attributes.VisualMemory
 import block.GameBlock
-import extensions.*
 import constants.GameTileRepository
+import entity.*
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.Position3D
@@ -85,9 +85,9 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     fun addAtEmptyPosition(
-        entity: AnyGameEntity,
-        offset: Position3D = Position3D.defaultPosition(),
-        size: Size3D = actualSize): Boolean {
+            entity: AnyGameEntity,
+            offset: Position3D = Position3D.defaultPosition(),
+            size: Size3D = actualSize): Boolean {
 
         return findEmptyLocationWithin(offset, size).fold(
             whenEmpty = { false },

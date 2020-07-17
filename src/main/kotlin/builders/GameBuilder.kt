@@ -3,7 +3,7 @@ package builders
 import constants.GameConfig
 import entity.EntityFactory
 import entity.Player
-import extensions.GameEntity
+import entity.GameEntity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size

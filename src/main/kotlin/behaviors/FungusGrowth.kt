@@ -2,7 +2,7 @@ package behaviors
 
 import attributes.FungusSpread
 import constants.GameConfig
-import extensions.position
+import entity.position
 import entity.EntityFactory
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity

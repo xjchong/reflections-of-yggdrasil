@@ -1,8 +1,8 @@
 package behaviors
 
 import attributes.VisualMemory
-import extensions.getAttribute
-import extensions.position
+import entity.getAttribute
+import entity.position
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType

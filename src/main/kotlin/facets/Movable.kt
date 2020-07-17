@@ -1,7 +1,7 @@
 package facets
 
 import command.Move
-import extensions.tryActionsOn
+import entity.tryActionsOn
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
