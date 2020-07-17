@@ -12,9 +12,7 @@ import org.hexworks.zircon.api.data.Size3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.game.base.BaseGameArea
 import org.hexworks.zircon.api.screen.Screen
-import org.hexworks.zircon.api.shape.EllipseFactory
-import org.hexworks.zircon.api.shape.LineFactory
-
+import util.ShadowCasting
 
 
 class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, actualSize: Size3D)
@@ -131,27 +129,22 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         })
     }
 
-    fun findVisiblePositionFor(entity: AnyGameEntity): Iterable<Position3D> {
+    fun findVisiblePositionsFor(entity: AnyGameEntity): Iterable<Position3D> {
         val radius = entity.getAttribute(Vision::class)?.radius ?: return listOf()
-        val centerPosition = entity.position.to2DPosition()
-        val level = entity.position.z
+        val origin = entity.position
+        val visiblePositions = mutableListOf<Position3D>()
 
-        return EllipseFactory.buildEllipse(
-            fromPosition = centerPosition,
-            toPosition = centerPosition.withRelativeX(radius).withRelativeY(radius))
-            .positions
-            .flatMap { ringPosition ->
-                val it = LineFactory.buildLine(centerPosition, ringPosition).iterator()
-                val visiblePositions = mutableListOf<Position3D>()
-
-                do {
-                    val nextPosition = it.next()
-                    visiblePositions.add(Position3D.from2DPosition(nextPosition, level))
-                } while (it.hasNext()
-                    && isVisionBlockedAt(Position3D.from2DPosition(nextPosition, level)).not())
-
-                visiblePositions
+        ShadowCasting.computeFOV(origin.to2DPosition(), radius,
+            isBlocking = { position ->
+                val isBlocked = isVisionBlockedAt(position.to3DPosition(origin.z))
+                isBlocked
+            },
+            markVisible = { visiblePosition ->
+                visiblePositions.add(Position3D.from2DPosition(visiblePosition, origin.z))
             }
+        )
+
+        return visiblePositions
     }
 
     fun updateFowAt(entity: AnyGameEntity) {
@@ -159,7 +152,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         val nextHiddenPositions: MutableSet<Position3D> = mutableSetOf()
         nextHiddenPositions.addAll(lastVisiblePositions)
 
-        findVisiblePositionFor(entity).forEach { visiblePos ->
+        findVisiblePositionsFor(entity).forEach { visiblePos ->
             nextVisiblePositions.add(visiblePos)
             nextHiddenPositions.remove(visiblePos)
             fetchBlockAt(visiblePos).ifPresent { block ->

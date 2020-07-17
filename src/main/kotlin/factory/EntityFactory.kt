@@ -31,7 +31,7 @@ object EntityFactory {
             EntityPosition(),
             EntityTile(GameTileRepository.PLAYER),
             EntityActions(Open::class, Dig::class, Attack::class),
-            Vision(9),
+            Vision(5),
             VisualMemory(),
 
             CombatStats.create(

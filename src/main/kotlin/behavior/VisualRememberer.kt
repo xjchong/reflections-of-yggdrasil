@@ -15,7 +15,7 @@ object VisualRememberer : BaseBehavior<GameContext>() {
         val position = entity.position
         val visualMemory = entity.getAttribute(VisualMemory::class) ?: return false
 
-        world.findVisiblePositionFor(entity).forEach { visiblePos ->
+        world.findVisiblePositionsFor(entity).forEach { visiblePos ->
             visualMemory.memory[visiblePos] = world.getEntitySnapshotAt(visiblePos)
         }
 
