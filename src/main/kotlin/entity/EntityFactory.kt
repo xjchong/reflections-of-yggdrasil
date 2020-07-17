@@ -46,7 +46,9 @@ object EntityFactory {
                 EntityActions(Open::class, Dig::class, Attack::class),
                 Obstacle,
                 Vision(5),
-                VisualMemory(),
+                VisualMemory(
+                        excludedFacets = mutableSetOf(Movable)
+                ),
 
                 CombatStats.create(
                         maxHealth = 100,
