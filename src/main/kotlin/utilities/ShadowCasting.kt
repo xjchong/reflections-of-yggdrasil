@@ -72,10 +72,19 @@ class Row(val depth: Int, var startSlope: Double, var endSlope: Double) {
 object ShadowCasting {
 
     /**
-     * Within [computeFOV], we define some local functions that abstract away the details of [Quadrant]s
-     * from the `scan` function.
+     * Computes the field of view from an origin tile using a recursive implementation for symmetric shadow casting.
+     *
+     * @param origin      The position from which to calculate the FOV
+     * @param radius      The depth of the FOV from the origin
+     * @param isBlocking  A function that returns true if a position blocks FOV, false otherwise
+     * @param markVisible Positions that are determined to be in the FOV will be passed to this function
      */
     fun computeFOV(origin: Position, radius: Int, isBlocking: (Position) -> Boolean, markVisible: (Position) -> Unit) {
+        /**
+         * Within [computeFOV], we define some local functions that abstract away the details of [Quadrant]s
+         * from the `scan` function. The positions passed to `reveal` `isOpaque` and `isOpen` are relative to the
+         * current [Quadrant]. In contrast, the positions for `isBlocking` and `markVisible` are absolute positions.
+         */
         markVisible(origin)
 
         repeat(4) { i ->
