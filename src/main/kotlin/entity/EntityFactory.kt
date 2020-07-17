@@ -15,6 +15,8 @@ import game.GameContext
 import org.hexworks.amethyst.api.builder.EntityBuilder
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.amethyst.api.newEntityOfType
+import org.hexworks.zircon.api.GraphicalTilesetResources
+import org.hexworks.zircon.api.data.Tile
 
 
 fun <T : EntityType> newGameEntityOfType(type: T, init: EntityBuilder<T, GameContext>.() -> Unit) =
@@ -73,6 +75,16 @@ object EntityFactory {
                 ))
         behaviors(FungusGrowth)
         facets(Attackable, Destructible)
+    }
+
+    fun newEn() = newGameEntityOfType(En) {
+        attributes(
+                EntityPosition(),
+                EntityTile(GameTileRepository.EN),
+                ItemIcon(Tile.newBuilder()
+                        .withName("copper coin")
+                        .withTileset(GraphicalTilesetResources.nethack16x16())
+                        .buildGraphicalTile()))
     }
 
     fun newWall() = newGameEntityOfType(Wall) {

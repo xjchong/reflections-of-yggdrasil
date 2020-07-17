@@ -60,4 +60,15 @@ object GameTileRepository {
             .withForegroundColor(GameColor.FUNGUS)
             .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
             .buildCharacterTile()
+
+
+    /**
+     * ITEM TILES
+     */
+
+    val EN = Tile.newBuilder()
+            .withCharacter('$')
+            .withForegroundColor(GameColor.EN)
+            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .buildCharacterTile()
 }

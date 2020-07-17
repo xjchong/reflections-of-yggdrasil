@@ -4,21 +4,25 @@ import org.hexworks.amethyst.api.base.BaseEntityType
 
 
 object Bat : BaseEntityType(
-    name = "bat"
+        name = "bat"
 ), Combatant
 
 object Door : BaseEntityType(
-    name = "door"
+        name = "door"
+)
+
+object En : BaseEntityType(
+        name = "en"
 )
 
 object Fungus : BaseEntityType(
-    name = "fungus"
+        name = "fungus"
 ), Combatant
 
 object Player : BaseEntityType(
-    name = "player"
+        name = "player"
 ), Combatant
 
 object Wall : BaseEntityType(
-    name = "wall"
+        name = "wall"
 )

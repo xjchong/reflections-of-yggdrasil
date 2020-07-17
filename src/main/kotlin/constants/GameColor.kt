@@ -12,6 +12,7 @@ object GameColor {
     val DOOR_BACKGROUND = TileColor.fromString("#2b1e0d")
     val FOG_OF_WAR = TileColor.fromString("#000000")
 
+
     /**
      * ACTORS
      */
@@ -19,4 +20,11 @@ object GameColor {
     val BAT = TileColor.fromString("#2348b2")
     val FUNGUS = TileColor.fromString("#5e7561")
     val PLAYER = TileColor.fromString("#FFCD22")
+
+
+    /**
+     * ITEMS
+     */
+
+    val EN = TileColor.fromString("#a2b8a2")
 }

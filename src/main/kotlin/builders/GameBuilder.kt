@@ -24,6 +24,7 @@ class GameBuilder(val worldSize: Size3D) {
     fun buildGame(): Game {
         prepareWorld()
         addBats()
+        addEn()
         addFungi()
 
         val game = Game.create(
@@ -50,6 +51,14 @@ class GameBuilder(val worldSize: Size3D) {
         repeat(world.actualSize.zLength) { level ->
             repeat(GameConfig.BATS_PER_LEVEL) {
                 EntityFactory.newBat().addToWorld(level)
+            }
+        }
+    }
+
+    private fun addEn() = also {
+        repeat(world.actualSize.zLength) { level ->
+            repeat(GameConfig.EN_PER_LEVEL) {
+                EntityFactory.newEn().addToWorld(level)
             }
         }
     }
