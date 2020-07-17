@@ -1,12 +1,12 @@
-package command
+package commands
 
 import entity.AnyGameEntity
 import org.hexworks.amethyst.api.entity.EntityType
+import org.hexworks.zircon.api.data.Position3D
 import game.GameContext
 
-data class Destroy(
+
+data class Move(
         override val context: GameContext,
         override val source: AnyGameEntity,
-        val target: AnyGameEntity,
-        val cause: String = "natural causes."
-) : GameCommand<EntityType>
+        val position: Position3D) : GameCommand<EntityType>

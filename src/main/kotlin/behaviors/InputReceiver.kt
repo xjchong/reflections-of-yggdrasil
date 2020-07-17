@@ -1,6 +1,6 @@
 package behaviors
 
-import command.Move
+import commands.Move
 import entity.position
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity

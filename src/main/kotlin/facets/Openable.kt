@@ -3,7 +3,7 @@ package facets
 import attributes.EntityTile
 import attributes.OpenAppearance
 import attributes.flag.Opened
-import command.Open
+import commands.Open
 import entity.getAttribute
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed

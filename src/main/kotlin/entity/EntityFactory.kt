@@ -8,9 +8,9 @@ import behaviors.Barrier
 import behaviors.FungusGrowth
 import behaviors.InputReceiver
 import behaviors.VisualRememberer
-import command.Attack
-import command.Dig
-import command.Open
+import commands.Attack
+import commands.Dig
+import commands.Open
 import facets.*
 import constants.GameTileRepository
 import org.hexworks.amethyst.api.builder.EntityBuilder

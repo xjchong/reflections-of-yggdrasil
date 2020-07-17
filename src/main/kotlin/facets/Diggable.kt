@@ -1,6 +1,6 @@
 package facets
 
-import command.Dig
+import commands.Dig
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Response

@@ -1,11 +1,12 @@
-package command
+package commands
 
 import entity.AnyGameEntity
 import org.hexworks.amethyst.api.entity.EntityType
 import game.GameContext
 
-data class Dig(
+data class Destroy(
         override val context: GameContext,
         override val source: AnyGameEntity,
-        override val target: AnyGameEntity
-) : EntityAction<EntityType, EntityType>
+        val target: AnyGameEntity,
+        val cause: String = "natural causes."
+) : GameCommand<EntityType>

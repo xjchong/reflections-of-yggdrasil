@@ -1,7 +1,7 @@
 package facets
 
-import command.Attack
-import command.Destroy
+import commands.Attack
+import commands.Destroy
 import entity.combatStats
 import entity.whenDead
 import event.logGameEvent

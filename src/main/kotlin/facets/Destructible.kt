@@ -1,6 +1,6 @@
 package facets
 
-import command.Destroy
+import commands.Destroy
 import event.logGameEvent
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed

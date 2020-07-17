@@ -1,6 +1,6 @@
 package attributes
 
-import command.EntityAction
+import commands.EntityAction
 import entity.AnyGameEntity
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.entity.EntityType

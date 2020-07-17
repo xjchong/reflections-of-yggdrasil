@@ -1,4 +1,4 @@
-package command
+package commands
 
 import entity.GameEntity
 import org.hexworks.amethyst.api.entity.EntityType
