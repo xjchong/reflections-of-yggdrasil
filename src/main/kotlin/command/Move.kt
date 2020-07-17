@@ -1,10 +1,10 @@
 package command
 
-import extension.AnyGameEntity
-import extension.GameCommand
+import extensions.AnyGameEntity
+import extensions.GameCommand
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Position3D
-import world.GameContext
+import game.GameContext
 
 
 data class Move(

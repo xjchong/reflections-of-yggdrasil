@@ -1,8 +1,8 @@
 package command
 
 import entity.Combatant
-import extension.GameEntity
-import world.GameContext
+import extensions.GameEntity
+import game.GameContext
 
 data class Attack(
     override val context: GameContext,

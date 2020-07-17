@@ -1,9 +1,9 @@
 package command
 
-import extension.AnyGameEntity
-import extension.GameCommand
+import extensions.AnyGameEntity
+import extensions.GameCommand
 import org.hexworks.amethyst.api.entity.EntityType
-import world.GameContext
+import game.GameContext
 
 data class Destroy(
     override val context: GameContext,

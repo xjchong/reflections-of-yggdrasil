@@ -1,10 +1,10 @@
 package block
-import extension.AnyGameEntity
-import extension.isObstacle
-import extension.tile
+import extensions.AnyGameEntity
+import extensions.isObstacle
+import extensions.tile
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
-import model.GameTileRepository
+import constants.GameTileRepository
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.BlockTileType
 import org.hexworks.zircon.api.data.Tile

@@ -1,7 +1,7 @@
 
 import constants.GameConfig
 import org.hexworks.zircon.api.SwingApplications
-import view.StartView
+import views.StartView
 
 fun main(args: Array<String>) {
     val application = SwingApplications.startApplication(GameConfig.buildAppConfig())

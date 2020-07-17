@@ -1,7 +1,7 @@
 package entity
 
-import attribute.CombatStats
-import extension.GameEntity
+import attributes.CombatStats
+import extensions.GameEntity
 import org.hexworks.amethyst.api.entity.EntityType
 
 interface Combatant : EntityType

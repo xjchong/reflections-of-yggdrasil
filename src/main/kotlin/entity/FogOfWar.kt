@@ -2,8 +2,8 @@ package entity
 
 import org.hexworks.amethyst.api.base.BaseEntity
 import org.hexworks.amethyst.api.base.BaseEntityType
-import world.Game
-import world.GameContext
+import game.Game
+import game.GameContext
 
 object FogOfWarType : BaseEntityType()
 

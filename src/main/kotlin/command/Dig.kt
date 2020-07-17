@@ -1,8 +1,8 @@
 package command
 
-import extension.AnyGameEntity
+import extensions.AnyGameEntity
 import org.hexworks.amethyst.api.entity.EntityType
-import world.GameContext
+import game.GameContext
 
 data class Dig(
     override val context: GameContext,
