@@ -16,6 +16,7 @@ object GameConfig {
     const val WINDOW_WIDTH = 80
     const val WINDOW_HEIGHT = 50
 
+    const val BATS_PER_LEVEL = 6
     const val FUNGI_PER_LEVEL = 10
     const val FUNGI_MAX_SPREAD = 12
     const val FUNGI_SPREAD_PERCENT = 0.02

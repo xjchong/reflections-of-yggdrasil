@@ -16,6 +16,7 @@ object GameColor {
      * ACTORS
      */
 
-    val PLAYER_COLOR = TileColor.fromString("#FFCD22")
-    val FUNGUS_COLOR = TileColor.fromString("#5e7561")
+    val BAT = TileColor.fromString("#2348b2")
+    val FUNGUS = TileColor.fromString("#5e7561")
+    val PLAYER = TileColor.fromString("#FFCD22")
 }

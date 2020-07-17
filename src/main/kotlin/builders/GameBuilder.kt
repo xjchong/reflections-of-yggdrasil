@@ -2,13 +2,13 @@ package builders
 
 import constants.GameConfig
 import entity.EntityFactory
-import entity.Player
 import entity.GameEntity
+import entity.Player
+import game.Game
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.data.Size3D
-import game.Game
 
 class GameBuilder(val worldSize: Size3D) {
 
@@ -23,6 +23,7 @@ class GameBuilder(val worldSize: Size3D) {
 
     fun buildGame(): Game {
         prepareWorld()
+        addBats()
         addFungi()
 
         val game = Game.create(
@@ -45,14 +46,21 @@ class GameBuilder(val worldSize: Size3D) {
         )
     }
 
+    private fun addBats() = also {
+        repeat(world.actualSize.zLength) { level ->
+            repeat(GameConfig.BATS_PER_LEVEL) {
+                EntityFactory.newBat().addToWorld(level)
+            }
+        }
+    }
+
     private fun addFungi() = also {
-        repeat(world.actualSize.zLength) {level ->
+        repeat(world.actualSize.zLength) { level ->
             repeat(GameConfig.FUNGI_PER_LEVEL) {
                 EntityFactory.newFungus().addToWorld(level)
             }
         }
     }
-
 
     private fun <T : EntityType> GameEntity<T>.addToWorld(
             atLevel: Int,

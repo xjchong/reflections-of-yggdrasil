@@ -5,6 +5,7 @@ import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.graphics.Symbols
 
+
 object GameTileRepository {
 
     val EMPTY: CharacterTile = Tile.empty()
@@ -32,24 +33,31 @@ object GameTileRepository {
             .buildCharacterTile()
 
     val UNREVEALED = Tile.newBuilder()
-        .withCharacter(' ')
-        .withForegroundColor(GameColor.FOG_OF_WAR)
-        .withBackgroundColor(GameColor.FOG_OF_WAR)
-        .buildCharacterTile()
+            .withCharacter(' ')
+            .withForegroundColor(GameColor.FOG_OF_WAR)
+            .withBackgroundColor(GameColor.FOG_OF_WAR)
+            .buildCharacterTile()
+
 
     /**
      * ACTOR TILES
      */
 
+    val BAT = Tile.newBuilder()
+            .withCharacter('b')
+            .withForegroundColor(GameColor.BAT)
+            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .buildCharacterTile()
+
     val PLAYER = Tile.newBuilder()
-        .withCharacter('@')
-        .withForegroundColor(GameColor.PLAYER_COLOR)
-        .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
-        .buildCharacterTile()
+            .withCharacter('@')
+            .withForegroundColor(GameColor.PLAYER)
+            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .buildCharacterTile()
 
     val FUNGUS = Tile.newBuilder()
-        .withCharacter(',')
-        .withForegroundColor(GameColor.FUNGUS_COLOR)
-        .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
-        .buildCharacterTile()
+            .withCharacter(',')
+            .withForegroundColor(GameColor.FUNGUS)
+            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .buildCharacterTile()
 }

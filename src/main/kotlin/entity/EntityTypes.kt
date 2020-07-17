@@ -3,6 +3,10 @@ package entity
 import org.hexworks.amethyst.api.base.BaseEntityType
 
 
+object Bat : BaseEntityType(
+    name = "bat"
+), Combatant
+
 object Door : BaseEntityType(
     name = "door"
 )

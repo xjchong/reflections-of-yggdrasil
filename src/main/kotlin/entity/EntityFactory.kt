@@ -11,19 +11,35 @@ import behaviors.VisualRememberer
 import commands.Attack
 import commands.Dig
 import commands.Open
-import facets.*
 import constants.GameTileRepository
+import facets.*
+import game.Game
+import game.GameContext
 import org.hexworks.amethyst.api.builder.EntityBuilder
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.amethyst.api.newEntityOfType
-import game.Game
-import game.GameContext
 
 
 fun <T : EntityType> newGameEntityOfType(type: T, init: EntityBuilder<T, GameContext>.() -> Unit) =
     newEntityOfType<T, GameContext>(type, init)
 
 object EntityFactory {
+
+    fun newBat() = newGameEntityOfType(Bat) {
+        attributes(
+                EntityPosition(),
+                EntityTile(GameTileRepository.BAT),
+                EntityActions(Attack::class),
+                Obstacle,
+                Vision(3),
+
+                CombatStats.create(
+                        maxHealth = 20,
+                        attackRating = 5,
+                        defenseRating = 1
+                ))
+        facets(Attackable, Destructible, Movable)
+    }
 
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(
