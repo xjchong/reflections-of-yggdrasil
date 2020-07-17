@@ -15,13 +15,13 @@ data class EntitySnapshot(
 )
 
 class VisualMemory(
-        val memory: HashMap<Position3D, List<EntitySnapshot>> = hashMapOf(),
+        val memories: HashMap<Position3D, List<EntitySnapshot>> = hashMapOf(),
         val requiredAttributes: Set<Attribute> = mutableSetOf(),
         val excludedAttributes: Set<Attribute> = mutableSetOf(),
         val requiredBehaviors: Set<Behavior<GameContext>> = mutableSetOf(),
         val excludedBehaviors: Set<Behavior<GameContext>> = mutableSetOf(),
         val requiredFacets: Set<Facet<GameContext>> = mutableSetOf(),
         val excludedFacets: Set<Facet<GameContext>> = mutableSetOf(),
-        val requiredEntities: Set<KClass<EntityType>> = mutableSetOf(),
-        val excludedEntities: Set<KClass<EntityType>> = mutableSetOf()
+        val requiredEntityTypes: Set<KClass<EntityType>> = mutableSetOf(),
+        val excludedEntityTypes: Set<KClass<EntityType>> = mutableSetOf()
 ) : Attribute

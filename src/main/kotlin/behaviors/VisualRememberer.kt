@@ -28,7 +28,7 @@ object VisualRememberer : BaseBehavior<GameContext>() {
                     }
                 }
 
-                visualMemory.memory[visiblePos] = snapshots
+                visualMemory.memories[visiblePos] = snapshots
             }
         }
 
@@ -36,27 +36,35 @@ object VisualRememberer : BaseBehavior<GameContext>() {
     }
 
     private fun VisualMemory.canAccept(target: AnyGameEntity): Boolean {
-        val targetAttributes = target.attributes.toSet()
+        if (excludedAttributes.isNotEmpty() || requiredAttributes.isNotEmpty()) {
+            val targetAttributes = target.attributes.toSet()
 
-        if (excludedAttributes.intersect(targetAttributes).isNotEmpty()) return false
-        if (requiredAttributes.isNotEmpty()
-                && requiredAttributes.intersect(targetAttributes).isEmpty()) return false
+            if (excludedAttributes.intersect(targetAttributes).isNotEmpty()) return false
+            if (requiredAttributes.isNotEmpty()
+                    && requiredAttributes.intersect(targetAttributes).isEmpty()) return false
+        }
 
-        val targetBehaviors = target.behaviors.toSet()
+        if (excludedBehaviors.isNotEmpty() || requiredBehaviors.isNotEmpty()) {
+            val targetBehaviors = target.behaviors.toSet()
 
-        if (excludedBehaviors.intersect(targetBehaviors).isNotEmpty()) return false
-        if (requiredBehaviors.isNotEmpty()
-                && requiredBehaviors.intersect(targetAttributes).isEmpty()) return false
+            if (excludedBehaviors.intersect(targetBehaviors).isNotEmpty()) return false
+            if (requiredBehaviors.isNotEmpty()
+                    && requiredBehaviors.intersect(targetBehaviors).isEmpty()) return false
+        }
 
-        val targetFacets = target.facets.toSet()
+        if (excludedFacets.isNotEmpty() || requiredFacets.isNotEmpty()) {
+            val targetFacets = target.facets.toSet()
 
-        if (excludedFacets.intersect(targetFacets).isNotEmpty()) return false
-        if (requiredFacets.isNotEmpty()
-                && requiredFacets.intersect(targetFacets).isEmpty()) return false
+            if (excludedFacets.intersect(targetFacets).isNotEmpty()) return false
+            if (requiredFacets.isNotEmpty()
+                    && requiredFacets.intersect(targetFacets).isEmpty()) return false
+        }
 
-        if (excludedEntities.contains(target.type::class)) return false
-        if (requiredEntities.isNotEmpty()
-                && requiredEntities.contains(target.type::class).not()) return false
+        if (excludedEntityTypes.isNotEmpty()
+                && excludedEntityTypes.contains(target.type::class)) return false
+
+        if (requiredEntityTypes.isNotEmpty()
+                && requiredEntityTypes.contains(target.type::class).not()) return false
 
         return true
     }

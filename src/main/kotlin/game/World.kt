@@ -1,5 +1,4 @@
 package game
-import attributes.EntitySnapshot
 import attributes.Vision
 import attributes.VisualMemory
 import block.GameBlock
@@ -123,7 +122,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         return position
     }
 
-    fun isVisionBlockedAt(position: Position3D): Boolean {
+    private fun isVisionBlockedAt(position: Position3D): Boolean {
         return fetchBlockAt(position).fold(whenEmpty = { false }, whenPresent = {
             it.entities.any(AnyGameEntity::isOpaque)
         })
@@ -159,7 +158,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
                 block.reveal()
 
                 entity.findAttribute(VisualMemory::class).ifPresent {
-                    val snapshots = it.memory.get(visiblePos)
+                    val snapshots = it.memories.get(visiblePos)
                     val tile = snapshots?.firstOrNull()?.tile ?: GameTileRepository.FLOOR
 
                     block.rememberAs(tile)
@@ -175,17 +174,5 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
         lastVisiblePositions.clear()
         lastVisiblePositions.addAll(nextVisiblePositions)
-    }
-
-    fun getEntitySnapshotAt(position: Position3D): List<EntitySnapshot> {
-        val snapshots: MutableList<EntitySnapshot> = mutableListOf()
-
-        fetchBlockAt(position).ifPresent { block ->
-            block.entities.forEach { entity ->
-                snapshots.add(entity.snapshot)
-            }
-        }
-
-        return snapshots
     }
 }
