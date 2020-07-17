@@ -1,14 +1,15 @@
 package block
+import constants.GameTileRepository
 import entity.AnyGameEntity
 import entity.isObstacle
 import entity.tile
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
-import constants.GameTileRepository
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.BlockTileType
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
+import utilities.DebugConfig
 
 class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
                 private val currentEntities: MutableList<AnyGameEntity> = mutableListOf(),
@@ -34,6 +35,7 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
             }
 
             val topTile = when {
+                DebugConfig.shouldRevealWorld -> GameTileRepository.EMPTY
                 isRevealed -> GameTileRepository.EMPTY
                 else -> memory
             }

@@ -4,6 +4,7 @@ import block.GameBlock
 import builders.GameBuilder
 import constants.GameConfig
 import event.GameLogEvent
+import game.Game
 import org.hexworks.cobalt.events.api.KeepSubscription
 import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.Components
@@ -16,10 +17,9 @@ import org.hexworks.zircon.api.game.base.BaseGameArea
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.grid.TileGrid
 import org.hexworks.zircon.api.uievent.KeyboardEventType
-import org.hexworks.zircon.api.uievent.UIEventResponse
+import org.hexworks.zircon.api.uievent.Processed
 import org.hexworks.zircon.api.view.base.BaseView
 import org.hexworks.zircon.internal.Zircon
-import game.Game
 
 class CustomGameArea(
         visibleSize: Size3D, actualSize: Size3D
@@ -83,7 +83,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
     private fun setupInputHandlers() {
         screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, _ ->
             game.world.update(screen, event, game)
-            UIEventResponse.processed()
+            Processed
         }
     }
 }
