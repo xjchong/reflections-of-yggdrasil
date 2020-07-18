@@ -13,7 +13,7 @@ object Door : BaseEntityType(
 
 object En : BaseEntityType(
         name = "en"
-)
+), ItemType
 
 object Fungus : BaseEntityType(
         name = "fungus"
@@ -21,7 +21,7 @@ object Fungus : BaseEntityType(
 
 object Player : BaseEntityType(
         name = "player"
-), Combatant
+), Combatant, InventoryOwnerType
 
 object Wall : BaseEntityType(
         name = "wall"

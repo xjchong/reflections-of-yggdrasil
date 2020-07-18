@@ -7,10 +7,12 @@ import org.hexworks.zircon.api.data.GraphicalTile
 import org.hexworks.zircon.api.data.Tile
 
 
-interface Item: EntityType
+interface ItemType: EntityType
 
-val GameEntity<Item>.tile: Tile
+typealias Item = GameEntity<ItemType>
+
+val Item.tile: Tile
     get() = findAttribute(EntityTile::class).get().tile
 
-val GameEntity<Item>.iconTile: GraphicalTile
+val Item.iconTile: GraphicalTile
     get() = findAttribute(ItemIcon::class).get().iconTile

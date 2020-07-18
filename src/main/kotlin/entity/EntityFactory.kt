@@ -46,6 +46,7 @@ object EntityFactory {
                 EntityPosition(),
                 EntityTile(GameTileRepository.PLAYER),
                 EntityActions(Open::class, Dig::class, Attack::class),
+                Inventory(10),
                 Obstacle,
                 Vision(5),
                 VisualMemory(
@@ -85,6 +86,7 @@ object EntityFactory {
                         .withName("copper coin")
                         .withTileset(GraphicalTilesetResources.nethack16x16())
                         .buildGraphicalTile()))
+        facets(Takeable)
     }
 
     fun newWall() = newGameEntityOfType(Wall) {

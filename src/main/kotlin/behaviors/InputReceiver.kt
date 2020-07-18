@@ -1,9 +1,14 @@
 package behaviors
 
 import commands.Move
+import commands.Take
 import entity.AnyGameEntity
+import entity.InventoryOwner
 import entity.position
+import extensions.optional
 import game.GameContext
+import kotlinx.coroutines.runBlocking
+import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
@@ -20,10 +25,11 @@ object InputReceiver : BaseBehavior<GameContext>() {
 
         if (uiEvent is KeyboardEvent) {
             when (uiEvent.code) {
-                KeyCode.RIGHT -> player.executeMove(context, playerPos.withRelativeX(1))
-                KeyCode.DOWN -> player.executeMove(context, playerPos.withRelativeY(1))
-                KeyCode.LEFT -> player.executeMove(context, playerPos.withRelativeX(-1))
-                KeyCode.UP -> player.executeMove(context, playerPos.withRelativeY(-1))
+                KeyCode.RIGHT -> player.executeMove(playerPos.withRelativeX(1), context)
+                KeyCode.DOWN -> player.executeMove(playerPos.withRelativeY(1), context)
+                KeyCode.LEFT -> player.executeMove(playerPos.withRelativeX(-1), context)
+                KeyCode.UP -> player.executeMove(playerPos.withRelativeY(-1), context)
+                KeyCode.KEY_G -> player.tryTakeAt(playerPos, context)
 
                 KeyCode.BACKSLASH -> DebugConfig.apply { shouldRevealWorld = !shouldRevealWorld }
             }
@@ -32,7 +38,19 @@ object InputReceiver : BaseBehavior<GameContext>() {
         return true
     }
 
-    private suspend fun AnyGameEntity.executeMove(context: GameContext, nextPosition: Position3D) {
+    private suspend fun AnyGameEntity.executeMove(nextPosition: Position3D, context: GameContext) {
         executeCommand(Move(context, this, nextPosition))
+    }
+
+    private suspend fun InventoryOwner.tryTakeAt(position: Position3D, context: GameContext) {
+        val world = context.world
+        val block = world.fetchBlockAt(position).optional ?: return
+        val inventoryOwner = this
+
+        runBlocking {
+            for (item in block.items) {
+                if (item.executeCommand(Take(context, inventoryOwner, item)) is Consumed) break
+            }
+        }
     }
 }

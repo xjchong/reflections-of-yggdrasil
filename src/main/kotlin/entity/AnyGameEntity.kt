@@ -7,6 +7,7 @@ import attributes.EntityTile
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import extensions.optional
+import facets.Takeable
 import game.GameContext
 import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Attribute
@@ -17,6 +18,7 @@ import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Tile
 import kotlin.reflect.KClass
+import kotlin.reflect.full.isSuperclassOf
 
 
 typealias AnyGameEntity = Entity<EntityType, GameContext>
@@ -34,6 +36,9 @@ val AnyGameEntity.tile: Tile
 
 val AnyGameEntity.isObstacle: Boolean
     get() = findAttribute(Obstacle::class).isPresent
+
+val AnyGameEntity.isTakeable: Boolean
+    get() = findFacet(Takeable::class).isPresent
 
 val AnyGameEntity.isPlayer: Boolean
     get() = this.type == Player
@@ -64,4 +69,8 @@ fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Res
     }
 
     return result
+}
+
+inline fun <reified T : EntityType> Iterable<AnyGameEntity>.filterType() : List<Entity<T, GameContext>> {
+    return filter { T::class.isSuperclassOf(it.type::class) }.toList() as List<Entity<T, GameContext>>
 }
