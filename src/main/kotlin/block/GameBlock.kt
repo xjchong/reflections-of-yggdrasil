@@ -28,7 +28,7 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
             val entityTiles = currentEntities.map { it.tile }
             val contentTile = when {
                 entityTiles.contains(GameTileRepository.PLAYER) -> GameTileRepository.PLAYER
-                entityTiles.isNotEmpty() -> entityTiles.first()
+                entityTiles.isNotEmpty() -> entityTiles.last()
                 else -> defaultTile
             }
 
