@@ -6,7 +6,7 @@ import entity.combatStats
 import entity.executeBlockingCommand
 import entity.isPlayer
 import entity.whenDead
-import event.logGameEvent
+import events.logGameEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed

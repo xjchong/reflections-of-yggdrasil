@@ -2,7 +2,7 @@ package facets.passive
 
 import commands.Drop
 import entity.removeFromInventory
-import event.logGameEvent
+import events.logGameEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed

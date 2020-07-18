@@ -1,4 +1,4 @@
-package event
+package events
 
 import org.hexworks.cobalt.events.api.Event
 import org.hexworks.zircon.internal.Zircon

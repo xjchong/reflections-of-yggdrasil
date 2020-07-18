@@ -1,13 +1,14 @@
 package game
 
-import entity.Player
-import entity.GameEntity
+import events.input.InputEvent
+import events.input.InputEventType
 import org.hexworks.amethyst.api.Context
 import org.hexworks.zircon.api.screen.Screen
-import org.hexworks.zircon.api.uievent.UIEvent
 
 data class GameContext(
-    val world: World,
-    val screen: Screen,
-    val uiEvent: UIEvent,
-    val player: GameEntity<Player>) : Context
+        val world: World,
+        val screen: Screen,
+        val event: InputEvent) : Context {
+
+    val isBackground = event.type == InputEventType.BACKGROUND
+}

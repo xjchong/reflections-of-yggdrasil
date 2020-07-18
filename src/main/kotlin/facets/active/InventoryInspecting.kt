@@ -1,10 +1,10 @@
 package facets.active
 
-import commands.Drop
 import commands.InspectInventory
 import constants.GameConfig
-import entity.executeBlockingCommand
 import entity.inventory
+import events.input.DropInputEvent
+import events.input.InputEventType
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -28,7 +28,7 @@ object InventoryInspecting : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(InspectInventory::class) { (context, inventoryOwner, position) ->
-            val screen = context.screen
+            val (world, screen) = context
 
             val panel = Components.panel()
                     .withSize(DIALOG_SIZE)
@@ -36,7 +36,7 @@ object InventoryInspecting : BaseFacet<GameContext>() {
                     .build()
 
             val fragment = InventoryFragment(inventoryOwner.inventory, DIALOG_SIZE.width - 3) { item ->
-                inventoryOwner.executeBlockingCommand(Drop(context, inventoryOwner, item, position))
+                world.update(screen, DropInputEvent(type = InputEventType.FOREGROUND, item = item))
             }
 
             panel.addFragment(fragment)

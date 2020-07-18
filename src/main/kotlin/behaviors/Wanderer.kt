@@ -12,6 +12,8 @@ import org.hexworks.amethyst.api.entity.EntityType
 object Wanderer : BaseBehavior<GameContext>() {
 
     override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
+        if (context.isBackground) return true
+
         val position = entity.position
 
         if (!position.isUnknown) {

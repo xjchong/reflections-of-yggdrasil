@@ -3,23 +3,27 @@ package views
 import block.GameBlock
 import builders.GameBuilder
 import constants.GameConfig
-import event.GameLogEvent
+import events.GameLogEvent
+import events.input.InputEventType
+import events.input.InventoryInputEvent
+import events.input.MoveInputEvent
+import events.input.TakeInputEvent
 import game.Game
 import org.hexworks.cobalt.events.api.KeepSubscription
 import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
-import org.hexworks.zircon.api.data.Block
-import org.hexworks.zircon.api.data.Size
-import org.hexworks.zircon.api.data.Size3D
-import org.hexworks.zircon.api.data.Tile
+import org.hexworks.zircon.api.data.*
 import org.hexworks.zircon.api.game.base.BaseGameArea
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.grid.TileGrid
+import org.hexworks.zircon.api.uievent.KeyCode
 import org.hexworks.zircon.api.uievent.KeyboardEventType
+import org.hexworks.zircon.api.uievent.Pass
 import org.hexworks.zircon.api.uievent.Processed
 import org.hexworks.zircon.api.view.base.BaseView
 import org.hexworks.zircon.internal.Zircon
+import utilities.DebugConfig
 
 class CustomGameArea(
         visibleSize: Size3D, actualSize: Size3D
@@ -81,8 +85,25 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
     }
 
     private fun setupInputHandlers() {
-        screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, _ ->
-            game.world.update(screen, event, game)
+        screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { keyEvent, _ ->
+            // Debug command for revealing all tiles.
+            if (keyEvent.code == KeyCode.BACKSLASH) {
+                DebugConfig.apply { shouldRevealWorld = !shouldRevealWorld }
+                return@handleKeyboardEvents Processed
+            }
+
+            val inputEvent = when (keyEvent.code) {
+                KeyCode.RIGHT -> MoveInputEvent(relativePosition = Position3D.create(1, 0, 0))
+                KeyCode.DOWN -> MoveInputEvent(relativePosition = Position3D.create(0, 1, 0))
+                KeyCode.LEFT -> MoveInputEvent(relativePosition = Position3D.create(-1, 0, 0))
+                KeyCode.UP -> MoveInputEvent(relativePosition = Position3D.create(0, -1, 0))
+                KeyCode.PERIOD -> MoveInputEvent(relativePosition = Position3D.create(0, 0, 0))
+                KeyCode.KEY_G -> TakeInputEvent(InputEventType.FOREGROUND)
+                KeyCode.KEY_I  -> InventoryInputEvent(InputEventType.BACKGROUND)
+                else -> null
+            } ?: return@handleKeyboardEvents Pass
+
+            game.world.update(screen, inputEvent)
             Processed
         }
     }

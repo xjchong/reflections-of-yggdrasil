@@ -1,12 +1,14 @@
 package behaviors
 
+import commands.Drop
 import commands.InspectInventory
 import commands.Move
 import commands.Take
-import entity.AnyGameEntity
-import entity.InventoryOwner
-import entity.executeBlockingCommand
-import entity.position
+import entity.*
+import events.input.DropInputEvent
+import events.input.InventoryInputEvent
+import events.input.MoveInputEvent
+import events.input.TakeInputEvent
 import extensions.optional
 import game.GameContext
 import org.hexworks.amethyst.api.Consumed
@@ -14,26 +16,31 @@ import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Position3D
-import org.hexworks.zircon.api.uievent.KeyCode
-import org.hexworks.zircon.api.uievent.KeyboardEvent
-import utilities.DebugConfig
 
 object InputReceiver : BaseBehavior<GameContext>() {
 
     override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
-        val (_, _, uiEvent, player) = context
-        val playerPos = player.position
+        val event = context.event
+        val position = entity.position
 
-        if (uiEvent is KeyboardEvent) {
-            when (uiEvent.code) {
-                KeyCode.RIGHT -> player.executeMove(playerPos.withRelativeX(1), context)
-                KeyCode.DOWN -> player.executeMove(playerPos.withRelativeY(1), context)
-                KeyCode.LEFT -> player.executeMove(playerPos.withRelativeX(-1), context)
-                KeyCode.UP -> player.executeMove(playerPos.withRelativeY(-1), context)
-                KeyCode.KEY_G -> player.tryTakeAt(playerPos, context)
-                KeyCode.KEY_I -> player.executeBlockingCommand(InspectInventory(context, player, playerPos))
-
-                KeyCode.BACKSLASH -> DebugConfig.apply { shouldRevealWorld = !shouldRevealWorld }
+        when (event) {
+            is DropInputEvent -> {
+                entity.ifType<InventoryOwnerType> {
+                    executeCommand(Drop(context, this, event.item, position))
+                }
+            }
+            is InventoryInputEvent -> {
+                entity.ifType<InventoryOwnerType> {
+                    executeCommand(InspectInventory(context, this, position))
+                }
+            }
+            is MoveInputEvent -> {
+                entity.executeCommand(Move(context, entity, position.withRelative(event.relativePosition)))
+            }
+            is TakeInputEvent -> {
+                entity.ifType<InventoryOwnerType> {
+                    tryTakeAt(position, context)
+                }
             }
         }
 

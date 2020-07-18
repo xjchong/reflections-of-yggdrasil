@@ -4,7 +4,7 @@ import attributes.EntitySyntax
 import commands.Destroy
 import commands.Drop
 import entity.*
-import event.logGameEvent
+import events.logGameEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed

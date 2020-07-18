@@ -2,17 +2,19 @@ package behaviors
 
 import attributes.FungusSpread
 import constants.GameConfig
-import entity.position
 import entity.EntityFactory
+import entity.position
+import game.GameContext
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Size3D
-import game.GameContext
 
 object FungusGrowth : BaseBehavior<GameContext>(FungusSpread::class) {
 
     override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
+        if (context.isBackground) return true
+
         val world = context.world
         val fungusSpread = entity.findAttribute(FungusSpread::class).get()
         val spreadCount = fungusSpread.spreadCount
