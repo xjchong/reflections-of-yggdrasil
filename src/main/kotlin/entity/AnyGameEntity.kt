@@ -48,7 +48,7 @@ val AnyGameEntity.snapshot: EntitySnapshot
 
 fun <T : Attribute> AnyGameEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
 
-fun AnyGameEntity.execute(command: Command<out EntityType, GameContext>): Response {
+fun AnyGameEntity.executeBlockingCommand(command: Command<out EntityType, GameContext>): Response {
     return runBlocking { executeCommand(command) }
 }
 

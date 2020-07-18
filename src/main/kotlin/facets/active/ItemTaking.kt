@@ -1,6 +1,6 @@
 package facets.active
 
-import commands.Drop
+import commands.Take
 import entity.executeBlockingCommand
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -10,11 +10,11 @@ import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
 
-object ItemDropping : BaseFacet<GameContext>() {
+object ItemTaking : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Drop::class) { (context, inventoryOwner, item, position) ->
-            item.executeBlockingCommand(Drop(context, inventoryOwner, item, position))
+        return command.responseWhenCommandIs(Take::class) { (context, inventoryOwner, item) ->
+            item.executeBlockingCommand(Take(context, inventoryOwner, item))
 
             Consumed
         }

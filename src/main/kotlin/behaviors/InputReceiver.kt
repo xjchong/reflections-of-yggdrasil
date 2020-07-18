@@ -5,11 +5,10 @@ import commands.Move
 import commands.Take
 import entity.AnyGameEntity
 import entity.InventoryOwner
-import entity.execute
+import entity.executeBlockingCommand
 import entity.position
 import extensions.optional
 import game.GameContext
-import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity
@@ -32,7 +31,7 @@ object InputReceiver : BaseBehavior<GameContext>() {
                 KeyCode.LEFT -> player.executeMove(playerPos.withRelativeX(-1), context)
                 KeyCode.UP -> player.executeMove(playerPos.withRelativeY(-1), context)
                 KeyCode.KEY_G -> player.tryTakeAt(playerPos, context)
-                KeyCode.KEY_I -> player.execute(InspectInventory(context, player, playerPos))
+                KeyCode.KEY_I -> player.executeBlockingCommand(InspectInventory(context, player, playerPos))
 
                 KeyCode.BACKSLASH -> DebugConfig.apply { shouldRevealWorld = !shouldRevealWorld }
             }
@@ -48,11 +47,10 @@ object InputReceiver : BaseBehavior<GameContext>() {
     private suspend fun InventoryOwner.tryTakeAt(position: Position3D, context: GameContext) {
         val world = context.world
         val block = world.fetchBlockAt(position).optional ?: return
-        val inventoryOwner = this
 
-        runBlocking {
-            for (item in block.items) {
-                if (item.executeCommand(Take(context, inventoryOwner, item)) is Consumed) break
+        for (item in block.items) {
+            if (executeBlockingCommand(Take(context, this, item)) is Consumed) {
+                break
             }
         }
     }

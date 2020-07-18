@@ -3,7 +3,7 @@ package facets.active
 import commands.Drop
 import commands.InspectInventory
 import constants.GameConfig
-import entity.execute
+import entity.executeBlockingCommand
 import entity.inventory
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -36,7 +36,7 @@ object InventoryInspecting : BaseFacet<GameContext>() {
                     .build()
 
             val fragment = InventoryFragment(inventoryOwner.inventory, DIALOG_SIZE.width - 3) { item ->
-                inventoryOwner.execute(Drop(context, inventoryOwner, item, position))
+                inventoryOwner.executeBlockingCommand(Drop(context, inventoryOwner, item, position))
             }
 
             panel.addFragment(fragment)

@@ -11,6 +11,7 @@ import commands.Open
 import constants.GameTileRepository
 import facets.active.InventoryInspecting
 import facets.active.ItemDropping
+import facets.active.ItemTaking
 import facets.passive.*
 import game.Game
 import game.GameContext
@@ -61,7 +62,7 @@ object EntityFactory {
                         defenseRating = 5
                 ))
         behaviors(InputReceiver, VisualRememberer)
-        facets(Movable, Attackable, InventoryInspecting, ItemDropping)
+        facets(Attackable, InventoryInspecting, ItemDropping, ItemTaking, Movable)
     }
 
     fun newFungus(fungusSpread: FungusSpread = FungusSpread()) = newGameEntityOfType(Fungus) {
