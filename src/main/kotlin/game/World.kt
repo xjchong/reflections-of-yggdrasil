@@ -4,7 +4,7 @@ import attributes.VisualMemory
 import block.GameBlock
 import constants.GameTileRepository
 import entity.*
-import events.input.InputEvent
+import events.GameInputEvent
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.Position3D
@@ -33,7 +33,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
     }
 
-    fun update(screen: Screen, event: InputEvent) {
+    fun update(screen: Screen, event: GameInputEvent) {
         val context = GameContext(this, screen, event)
 
         engine.update(context)

@@ -13,7 +13,7 @@ import org.hexworks.zircon.api.data.Size3D
 object FungusGrowth : BaseBehavior<GameContext>(FungusSpread::class) {
 
     override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
-        if (context.isBackground) return true
+        if (context.inBackground) return true
 
         val world = context.world
         val fungusSpread = entity.findAttribute(FungusSpread::class).get()

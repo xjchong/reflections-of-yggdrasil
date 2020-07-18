@@ -11,7 +11,7 @@ import org.hexworks.amethyst.api.entity.EntityType
 object Barrier : BaseBehavior<GameContext>() {
 
     override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
-        if (context.isBackground) return true
+        if (context.inBackground) return true
 
         with(entity.asMutableEntity()) {
             findAttribute(Opened::class).ifPresent {

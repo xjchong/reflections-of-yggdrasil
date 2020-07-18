@@ -3,8 +3,7 @@ package facets.active
 import commands.InspectInventory
 import constants.GameConfig
 import entity.inventory
-import events.input.DropInputEvent
-import events.input.InputEventType
+import events.DropInputEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -36,7 +35,7 @@ object InventoryInspecting : BaseFacet<GameContext>() {
                     .build()
 
             val fragment = InventoryFragment(inventoryOwner.inventory, DIALOG_SIZE.width - 3) { item ->
-                world.update(screen, DropInputEvent(type = InputEventType.FOREGROUND, item = item))
+                world.update(screen, DropInputEvent(item = item))
             }
 
             panel.addFragment(fragment)

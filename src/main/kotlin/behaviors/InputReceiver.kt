@@ -5,10 +5,10 @@ import commands.InspectInventory
 import commands.Move
 import commands.Take
 import entity.*
-import events.input.DropInputEvent
-import events.input.InventoryInputEvent
-import events.input.MoveInputEvent
-import events.input.TakeInputEvent
+import events.DropInputEvent
+import events.InventoryInputEvent
+import events.MoveInputEvent
+import events.TakeInputEvent
 import extensions.optional
 import game.GameContext
 import org.hexworks.amethyst.api.Consumed

@@ -14,7 +14,7 @@ import org.hexworks.amethyst.api.entity.EntityType
 object VisualRememberer : BaseBehavior<GameContext>() {
 
     override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
-        if (context.isBackground) return true
+        if (context.inBackground) return true
 
         val world = context.world
         val position = entity.position

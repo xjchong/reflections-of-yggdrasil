@@ -4,10 +4,9 @@ import block.GameBlock
 import builders.GameBuilder
 import constants.GameConfig
 import events.GameLogEvent
-import events.input.InputEventType
-import events.input.InventoryInputEvent
-import events.input.MoveInputEvent
-import events.input.TakeInputEvent
+import events.InventoryInputEvent
+import events.MoveInputEvent
+import events.TakeInputEvent
 import game.Game
 import org.hexworks.cobalt.events.api.KeepSubscription
 import org.hexworks.zircon.api.ComponentDecorations.box
@@ -98,8 +97,8 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                 KeyCode.LEFT -> MoveInputEvent(relativePosition = Position3D.create(-1, 0, 0))
                 KeyCode.UP -> MoveInputEvent(relativePosition = Position3D.create(0, -1, 0))
                 KeyCode.PERIOD -> MoveInputEvent(relativePosition = Position3D.create(0, 0, 0))
-                KeyCode.KEY_G -> TakeInputEvent(InputEventType.FOREGROUND)
-                KeyCode.KEY_I  -> InventoryInputEvent(InputEventType.BACKGROUND)
+                KeyCode.KEY_G -> TakeInputEvent()
+                KeyCode.KEY_I  -> InventoryInputEvent()
                 else -> null
             } ?: return@handleKeyboardEvents Pass
 
