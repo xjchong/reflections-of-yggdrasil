@@ -10,10 +10,7 @@ import extensions.optional
 import facets.Takeable
 import game.GameContext
 import kotlinx.coroutines.runBlocking
-import org.hexworks.amethyst.api.Attribute
-import org.hexworks.amethyst.api.Consumed
-import org.hexworks.amethyst.api.Pass
-import org.hexworks.amethyst.api.Response
+import org.hexworks.amethyst.api.*
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Tile
@@ -50,6 +47,10 @@ val AnyGameEntity.snapshot: EntitySnapshot
     get() = EntitySnapshot(type, getAttribute(EntityTile::class)?.tile)
 
 fun <T : Attribute> AnyGameEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
+
+fun AnyGameEntity.execute(command: Command<out EntityType, GameContext>): Response {
+    return runBlocking { executeCommand(command) }
+}
 
 fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Response {
     var result: Response = Pass

@@ -59,7 +59,7 @@ object EntityFactory {
                         defenseRating = 5
                 ))
         behaviors(InputReceiver, VisualRememberer)
-        facets(Movable, Attackable)
+        facets(Movable, Attackable, InventoryInspecting, ItemDropping)
     }
 
     fun newFungus(fungusSpread: FungusSpread = FungusSpread()) = newGameEntityOfType(Fungus) {
@@ -83,10 +83,10 @@ object EntityFactory {
                 EntityPosition(),
                 EntityTile(GameTileRepository.EN),
                 ItemIcon(Tile.newBuilder()
-                        .withName("copper coin")
+                        .withName("white gem")
                         .withTileset(GraphicalTilesetResources.nethack16x16())
                         .buildGraphicalTile()))
-        facets(Takeable)
+        facets(Takeable, Droppable)
     }
 
     fun newWall() = newGameEntityOfType(Wall) {

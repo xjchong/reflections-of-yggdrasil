@@ -1,9 +1,11 @@
 package behaviors
 
+import commands.InspectInventory
 import commands.Move
 import commands.Take
 import entity.AnyGameEntity
 import entity.InventoryOwner
+import entity.execute
 import entity.position
 import extensions.optional
 import game.GameContext
@@ -30,6 +32,7 @@ object InputReceiver : BaseBehavior<GameContext>() {
                 KeyCode.LEFT -> player.executeMove(playerPos.withRelativeX(-1), context)
                 KeyCode.UP -> player.executeMove(playerPos.withRelativeY(-1), context)
                 KeyCode.KEY_G -> player.tryTakeAt(playerPos, context)
+                KeyCode.KEY_I -> player.execute(InspectInventory(context, player, playerPos))
 
                 KeyCode.BACKSLASH -> DebugConfig.apply { shouldRevealWorld = !shouldRevealWorld }
             }
