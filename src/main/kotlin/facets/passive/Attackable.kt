@@ -29,7 +29,7 @@ object Attackable : BaseFacet<GameContext>() {
             logGameEvent("The $attacker hits the $target for $damage!")
 
             target.whenDead {
-                target.executeBlockingCommand(Destroy(context, attacker, target, cause = "a mortal wound"))
+                target.executeBlockingCommand(Destroy(context, attacker, target, cause = "the $attacker"))
             }
 
             Consumed

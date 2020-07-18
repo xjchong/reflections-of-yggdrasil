@@ -29,9 +29,9 @@ object EntityFactory {
 
     fun newBat() = newGameEntityOfType(Bat) {
         attributes(
+                EntityActions(Attack::class),
                 EntityPosition(),
                 EntityTile(GameTileRepository.BAT),
-                EntityActions(Attack::class),
                 Obstacle,
                 Vision(3),
 

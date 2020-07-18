@@ -1,12 +1,10 @@
 package entity
 
-import attributes.EntityActions
-import attributes.EntityPosition
-import attributes.EntitySnapshot
-import attributes.EntityTile
+import attributes.*
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import extensions.optional
+import facets.passive.AdaptableSyntax
 import facets.passive.Takeable
 import game.GameContext
 import kotlinx.coroutines.runBlocking
@@ -47,6 +45,11 @@ val AnyGameEntity.snapshot: EntitySnapshot
     get() = EntitySnapshot(type, getAttribute(EntityTile::class)?.tile)
 
 fun <T : Attribute> AnyGameEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
+
+fun AnyGameEntity.syntaxFor(owner: AdaptableSyntax, subKey: String? = null): String {
+    val syntax = getAttribute(EntitySyntax::class)?.getFor(owner, subKey)
+    return syntax ?: owner.defaultSyntax(subKey)
+}
 
 fun AnyGameEntity.executeBlockingCommand(command: Command<out EntityType, GameContext>): Response {
     return runBlocking { executeCommand(command) }
