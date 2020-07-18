@@ -1,4 +1,4 @@
-package views.fragments
+package fragments
 
 import entity.Item
 import entity.iconTile
@@ -6,10 +6,17 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Fragment
 import org.hexworks.zircon.api.graphics.Symbols
+import org.hexworks.zircon.api.uievent.ComponentEvent
 
 class InventoryRowFragment(width: Int, item: Item) : Fragment {
 
-    val dropButton = Components.button()
+    var onDrop: (ComponentEvent) -> Unit = {}
+        set(value) {
+            dropButton.onActivated(value)
+            field = value
+        }
+
+    private val dropButton = Components.button()
             .withText("${Symbols.ARROW_DOWN}")
             .build()
 
@@ -24,5 +31,4 @@ class InventoryRowFragment(width: Int, item: Item) : Fragment {
                         .withText(item.name))
                 addComponent(dropButton)
             }
-
 }

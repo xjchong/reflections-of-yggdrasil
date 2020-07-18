@@ -1,4 +1,4 @@
-package views.fragments
+package fragments
 
 import attributes.Inventory
 import entity.Item
@@ -32,7 +32,7 @@ class InventoryFragment(
                     val inventoryRow = InventoryRowFragment(width, item)
                     val attachedInventoryRow = addFragment(inventoryRow)
 
-                    inventoryRow.dropButton.onActivated {
+                    inventoryRow.onDrop = {
                         attachedInventoryRow.detach()
                         onDrop(item)
                         Processed
