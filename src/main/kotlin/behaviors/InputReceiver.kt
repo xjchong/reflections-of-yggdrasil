@@ -4,7 +4,10 @@ import commands.Drop
 import commands.InspectInventory
 import commands.Move
 import commands.Take
-import entity.*
+import entity.InventoryOwner
+import entity.InventoryOwnerType
+import entity.ifType
+import entity.position
 import events.DropInputEvent
 import events.InventoryInputEvent
 import events.MoveInputEvent
@@ -47,16 +50,12 @@ object InputReceiver : BaseBehavior<GameContext>() {
         return true
     }
 
-    private suspend fun AnyGameEntity.executeMove(nextPosition: Position3D, context: GameContext) {
-        executeCommand(Move(context, this, nextPosition))
-    }
-
     private suspend fun InventoryOwner.tryTakeAt(position: Position3D, context: GameContext) {
         val world = context.world
         val block = world.fetchBlockAt(position).optional ?: return
 
         for (item in block.items) {
-            if (executeBlockingCommand(Take(context, this, item)) is Consumed) {
+            if (executeCommand(Take(context, this, item)) is Consumed) {
                 break
             }
         }
