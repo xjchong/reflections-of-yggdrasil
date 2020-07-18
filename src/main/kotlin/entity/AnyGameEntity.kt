@@ -59,13 +59,10 @@ fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Res
         val actions = it.createActionsFor(context, this, target)
 
         for (action in actions) {
-            runBlocking {
-                if (target.executeCommand(action) is Consumed) {
-                    result = Consumed
-                }
+            if (target.executeBlockingCommand(action) is Consumed) {
+                result = Consumed
+                break
             }
-
-            if (result == Consumed) break
         }
     }
 

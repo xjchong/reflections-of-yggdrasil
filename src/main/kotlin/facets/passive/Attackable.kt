@@ -3,11 +3,11 @@ package facets.passive
 import commands.Attack
 import commands.Destroy
 import entity.combatStats
+import entity.executeBlockingCommand
 import entity.isPlayer
 import entity.whenDead
 import event.logGameEvent
 import game.GameContext
-import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
@@ -21,17 +21,15 @@ object Attackable : BaseFacet<GameContext>() {
         return command.responseWhenCommandIs(Attack::class) { (context, attacker, target) ->
             if (!attacker.isPlayer && !target.isPlayer) return@responseWhenCommandIs Pass
 
-            val damage = Math.max(0, attacker.combatStats.attackRating - target.combatStats.defenseRating)
+            val damage = (attacker.combatStats.attackRating - target.combatStats.defenseRating)
+                    .coerceAtLeast(0)
 
             target.combatStats.health -= damage
 
             logGameEvent("The $attacker hits the $target for $damage!")
 
             target.whenDead {
-                runBlocking {
-                    target.executeCommand(Destroy(
-                        context, attacker, target, cause = "a mortal wound."))
-                }
+                target.executeBlockingCommand(Destroy(context, attacker, target, cause = "a mortal wound"))
             }
 
             Consumed
