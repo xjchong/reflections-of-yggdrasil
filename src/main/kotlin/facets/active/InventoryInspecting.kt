@@ -1,4 +1,4 @@
-package facets
+package facets.active
 
 import commands.Drop
 import commands.InspectInventory

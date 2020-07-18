@@ -1,4 +1,4 @@
-package facets
+package facets.passive
 
 import commands.Take
 import entity.addToInventory

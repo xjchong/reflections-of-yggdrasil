@@ -7,7 +7,7 @@ import attributes.EntityTile
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import extensions.optional
-import facets.Takeable
+import facets.passive.Takeable
 import game.GameContext
 import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.*

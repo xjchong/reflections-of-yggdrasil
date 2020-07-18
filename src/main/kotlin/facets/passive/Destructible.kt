@@ -1,7 +1,7 @@
-package facets
+package facets.passive
 
-import commands.Drop
-import entity.execute
+import commands.Destroy
+import event.logGameEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -9,12 +9,11 @@ import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
-
-object ItemDropping : BaseFacet<GameContext>() {
-
+object Destructible : BaseFacet<GameContext>() {
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Drop::class) { (context, inventoryOwner, item, position) ->
-            item.execute(Drop(context, inventoryOwner, item, position))
+        return command.responseWhenCommandIs(Destroy::class) { (context, attacker, target, cause) ->
+            context.world.removeEntity(target)
+            logGameEvent("$target is destroyed by $cause")
 
             Consumed
         }

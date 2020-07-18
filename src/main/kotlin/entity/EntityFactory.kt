@@ -9,7 +9,9 @@ import commands.Attack
 import commands.Dig
 import commands.Open
 import constants.GameTileRepository
-import facets.*
+import facets.active.InventoryInspecting
+import facets.active.ItemDropping
+import facets.passive.*
 import game.Game
 import game.GameContext
 import org.hexworks.amethyst.api.builder.EntityBuilder

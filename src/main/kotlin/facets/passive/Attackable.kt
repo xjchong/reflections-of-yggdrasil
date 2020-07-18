@@ -1,11 +1,12 @@
-package facets
+package facets.passive
 
 import commands.Attack
 import commands.Destroy
 import entity.combatStats
+import entity.isPlayer
 import entity.whenDead
 import event.logGameEvent
-import entity.isPlayer
+import game.GameContext
 import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -13,7 +14,6 @@ import org.hexworks.amethyst.api.Pass
 import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
-import game.GameContext
 
 object Attackable : BaseFacet<GameContext>() {
 

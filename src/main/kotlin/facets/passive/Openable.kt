@@ -1,17 +1,17 @@
-package facets
+package facets.passive
 
 import attributes.EntityTile
 import attributes.OpenAppearance
 import attributes.flag.Opened
 import commands.Open
 import entity.getAttribute
+import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
 import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
-import game.GameContext
 
 object Openable : BaseFacet<GameContext>() {
 
