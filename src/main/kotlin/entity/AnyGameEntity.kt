@@ -75,3 +75,9 @@ fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Res
 inline fun <reified T : EntityType> Iterable<AnyGameEntity>.filterType() : List<Entity<T, GameContext>> {
     return filter { T::class.isSuperclassOf(it.type::class) }.toList() as List<Entity<T, GameContext>>
 }
+
+inline fun <reified T : EntityType> AnyGameEntity.ifType(fn: GameEntity<T>.() -> Unit) {
+    if (T::class.isSuperclassOf(this.type::class)) {
+        (this as GameEntity<T>).run(fn)
+    }
+}

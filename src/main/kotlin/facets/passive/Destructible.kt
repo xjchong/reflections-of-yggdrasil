@@ -2,7 +2,8 @@ package facets.passive
 
 import attributes.EntitySyntax
 import commands.Destroy
-import entity.syntaxFor
+import commands.Drop
+import entity.*
 import event.logGameEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -20,8 +21,15 @@ object Destructible : BaseFacet<GameContext>(), AdaptableSyntax {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(Destroy::class) { (context, attacker, target, cause) ->
-            context.world.removeEntity(target)
             logGameEvent("The $target is ${target.syntaxFor(Destructible)} by $cause.")
+
+            target.ifType<InventoryOwnerType> {
+                inventory.items.forEach { item ->
+                    item.executeBlockingCommand(Drop(context, this, item, position))
+                }
+            }
+
+            context.world.removeEntity(target)
 
             Consumed
         }

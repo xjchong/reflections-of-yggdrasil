@@ -32,6 +32,9 @@ object EntityFactory {
                 EntityActions(Attack::class),
                 EntityPosition(),
                 EntityTile(GameTileRepository.BAT),
+                Inventory(1).apply {
+                    add(newEn())
+                },
                 Obstacle,
                 Vision(3),
 

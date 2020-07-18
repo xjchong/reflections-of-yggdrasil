@@ -5,7 +5,7 @@ import org.hexworks.amethyst.api.base.BaseEntityType
 
 object Bat : BaseEntityType(
         name = "bat"
-), Combatant
+), Combatant, InventoryOwnerType
 
 object Door : BaseEntityType(
         name = "door"
