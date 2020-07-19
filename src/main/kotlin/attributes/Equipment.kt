@@ -9,7 +9,7 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.builder.component.TextBoxBuilder
 import org.hexworks.zircon.api.component.Component
 
-class Equipment(initialWeapon: Weapon?, initialArmor: Armor?): DisplayableAttribute {
+class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): DisplayableAttribute {
 
     private val weaponProperty: Property<Maybe<Weapon>> = createPropertyFrom(Maybe.ofNullable(initialWeapon))
     private val weapon: Maybe<Weapon> by weaponProperty.asDelegate()

@@ -67,9 +67,7 @@ object EntityFactory {
                 EntityPosition(),
                 EntityTile(GameTileRepository.PLAYER),
                 EntityActions(Open::class, Dig::class, Attack::class),
-                Equipment(
-                        initialWeapon = newClub(),
-                        initialArmor = newJacket()),
+                Equipment(initialArmor = newJacket()),
                 Inventory(10),
                 Obstacle,
                 Vision(5),
