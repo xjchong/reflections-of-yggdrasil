@@ -7,6 +7,7 @@ import events.GameLogEvent
 import events.InventoryInputEvent
 import events.MoveInputEvent
 import events.TakeInputEvent
+import fragments.PlayerInfoFragment
 import game.Game
 import org.hexworks.cobalt.events.api.KeepSubscription
 import org.hexworks.zircon.api.ComponentDecorations.box
@@ -45,8 +46,12 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
     private fun setupSideBar() {
         val sidebar = Components.panel()
                 .withSize(Size.create(GameConfig.SIDEBAR_WIDTH, GameConfig.WINDOW_HEIGHT))
-                .withDecorations(box(boxType = BoxType.SINGLE, title = "Sidebar"))
+                .withDecorations(box(boxType = BoxType.SINGLE))
                 .build()
+
+        sidebar.addFragment(PlayerInfoFragment(
+                width = sidebar.contentSize.width,
+                player = game.player))
 
         screen.addComponent(sidebar)
     }
