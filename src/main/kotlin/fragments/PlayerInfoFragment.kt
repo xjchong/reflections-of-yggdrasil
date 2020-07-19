@@ -2,6 +2,7 @@ package fragments
 
 import attributes.CombatStats
 import attributes.EnergyLevel
+import attributes.Equipment
 import entity.GameEntity
 import entity.Player
 import org.hexworks.zircon.api.Components
@@ -21,6 +22,9 @@ class PlayerInfoFragment(
                     addComponent(it.toComponent(width))
                 }
                 player.findAttribute(EnergyLevel::class).ifPresent {
+                    addComponent(it.toComponent(width))
+                }
+                player.findAttribute(Equipment::class).ifPresent {
                     addComponent(it.toComponent(width))
                 }
             }

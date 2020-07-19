@@ -26,7 +26,7 @@ object Fungus : BaseEntityType(
 
 object Player : BaseEntityType(
         name = "player"
-), Combatant, EnergyUserType, InventoryOwnerType
+), Combatant, EnergyUserType, InventoryOwnerType, EquipmentWearerType
 
 object Wall : BaseEntityType(
         name = "wall"
@@ -72,7 +72,7 @@ object Club : BaseEntityType(
 ), WeaponType
 
 object Jacket : BaseEntityType(
-        name = "Leather jacket",
+        name = "Jacket",
         description = "Dirty and rugged jacket made of leather."
 ), ArmorType
 

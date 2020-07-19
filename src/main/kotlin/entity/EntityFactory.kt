@@ -67,6 +67,9 @@ object EntityFactory {
                 EntityPosition(),
                 EntityTile(GameTileRepository.PLAYER),
                 EntityActions(Open::class, Dig::class, Attack::class),
+                Equipment(
+                        initialWeapon = newClub(),
+                        initialArmor = newJacket()),
                 Inventory(10),
                 Obstacle,
                 Vision(5),
@@ -138,4 +141,101 @@ object EntityFactory {
     }
 
     fun newFogOfWar(game: Game) = FogOfWar(game, needsUpdate = true)
+
+    /**
+     * EQUIPMENT
+     */
+
+    fun newDagger() = newGameEntityOfType(Dagger) {
+        attributes(ItemIcon(Tile.newBuilder()
+                .withName("Dagger")
+                .withTileset(GraphicalTilesetResources.nethack16x16())
+                .buildGraphicalTile()),
+                EntityPosition(),
+                ItemCombatStats(
+                        attackRating = 4,
+                        combatType = "Weapon"),
+                EntityTile(GameTileRepository.DAGGER))
+    }
+
+    fun newSword() = newGameEntityOfType(Sword) {
+        attributes(ItemIcon(Tile.newBuilder()
+                .withName("Short sword")
+                .withTileset(GraphicalTilesetResources.nethack16x16())
+                .buildGraphicalTile()),
+                EntityPosition(),
+                ItemCombatStats(
+                        attackRating = 6,
+                        combatType = "Weapon"),
+                EntityTile(GameTileRepository.SWORD))
+    }
+
+    fun newStaff() = newGameEntityOfType(Staff) {
+        attributes(ItemIcon(Tile.newBuilder()
+                .withName("staff")
+                .withTileset(GraphicalTilesetResources.nethack16x16())
+                .buildGraphicalTile()),
+                EntityPosition(),
+                ItemCombatStats(
+                        attackRating = 4,
+                        defenseRating = 2,
+                        combatType = "Weapon"),
+                EntityTile(GameTileRepository.STAFF))
+    }
+
+    fun newLightArmor() = newGameEntityOfType(LightArmor) {
+        attributes(ItemIcon(Tile.newBuilder()
+                .withName("Leather armor")
+                .withTileset(GraphicalTilesetResources.nethack16x16())
+                .buildGraphicalTile()),
+                EntityPosition(),
+                ItemCombatStats(
+                        defenseRating = 2,
+                        combatType = "Armor"),
+                EntityTile(GameTileRepository.LIGHT_ARMOR))
+    }
+
+    fun newMediumArmor() = newGameEntityOfType(MediumArmor) {
+        attributes(ItemIcon(Tile.newBuilder()
+                .withName("Chain mail")
+                .withTileset(GraphicalTilesetResources.nethack16x16())
+                .buildGraphicalTile()),
+                EntityPosition(),
+                ItemCombatStats(
+                        defenseRating = 3,
+                        combatType = "Armor"),
+                EntityTile(GameTileRepository.MEDIUM_ARMOR))
+    }
+
+    fun newHeavyArmor() = newGameEntityOfType(HeavyArmor) {
+        attributes(ItemIcon(Tile.newBuilder()
+                .withName("Plate mail")
+                .withTileset(GraphicalTilesetResources.nethack16x16())
+                .buildGraphicalTile()),
+                EntityPosition(),
+                ItemCombatStats(
+                        defenseRating = 4,
+                        combatType = "Armor"),
+                EntityTile(GameTileRepository.HEAVY_ARMOR))
+    }
+
+    fun newClub() = newGameEntityOfType(Club) {
+        attributes(ItemCombatStats(combatType = "Weapon"),
+                EntityTile(GameTileRepository.CLUB),
+                EntityPosition(),
+                ItemIcon(Tile.newBuilder()
+                        .withName("Club")
+                        .withTileset(GraphicalTilesetResources.nethack16x16())
+                        .buildGraphicalTile()))
+    }
+
+    fun newJacket() = newGameEntityOfType(Jacket) {
+        attributes(ItemCombatStats(combatType = "Armor"),
+                EntityTile(GameTileRepository.JACKET),
+                EntityPosition(),
+                ItemIcon(Tile.newBuilder()
+                        .withName("Leather jacket")
+                        .withTileset(GraphicalTilesetResources.nethack16x16())
+                        .buildGraphicalTile()))
+    }
 }

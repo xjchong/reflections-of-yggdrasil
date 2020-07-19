@@ -87,6 +87,8 @@ class Equipment(initialWeapon: Weapon?, initialArmor: Armor?): DisplayableAttrib
                 .addInlineComponent(weaponNameLabel)
                 .commitInlineElements()
                 .addInlineComponent(weaponStatsLabel)
+                .commitInlineElements()
+                .addNewLine()
     }
 
 }
