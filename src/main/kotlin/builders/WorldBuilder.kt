@@ -36,19 +36,12 @@ class WorldBuilder(private val worldSize: Size3D) {
         repeat(depth) { level ->
             placeBorder(level)
             placeRooms(level, 200, 6, 5, 2.0)
-            placeCorridors(level)
-            placeDoors(level, 5, 15)
+            placeCorridors(level, 0.05)
+            placeDoors(level, 0.05, 12)
             removeDeadEnds(level)
         }
 
         return this
-    }
-
-    fun fill(regionId: Int, fn: () -> GameBlock) {
-        forAllPositions { pos ->
-            blocks[pos] = fn()
-            regionIds[pos] = regionId
-        }
     }
 
     fun build(visibleSize: Size3D): World =
@@ -64,6 +57,13 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     private fun nextGaussian(mu: Int, standardDeviation: Double): Double {
         return (Random.asJavaRandom().nextGaussian() * standardDeviation) + mu
+    }
+
+    private fun fill(regionId: Int, fn: () -> GameBlock) {
+        forAllPositions { pos ->
+            blocks[pos] = fn()
+            regionIds[pos] = regionId
+        }
     }
 
     private fun placeBorder(level: Int) {
@@ -106,20 +106,20 @@ class WorldBuilder(private val worldSize: Size3D) {
         return true
     }
 
-    private fun placeCorridors(level: Int) {
+    private fun placeCorridors(level: Int, cyclePercent: Double) {
         for (x in (1 until width) step 2) {
             for (y in (1 until height) step 2) {
                 val pos = Position3D.create(x, y, level)
 
                 if (blocks[pos]?.isWall == true) {
-                    placeCorridorFrom(pos)
+                    placeCorridorFrom(pos, cyclePercent)
                     nextRegionId++
                 }
             }
         }
     }
 
-    private fun placeCorridorFrom(startPos: Position3D) {
+    private fun placeCorridorFrom(startPos: Position3D, cyclePercent: Double) {
         val directions = mutableListOf<Char>('e', 's', 'w', 'n').shuffled()
         blocks[startPos] = GameBlockFactory.floor()
         regionIds[startPos] = nextRegionId
@@ -132,18 +132,20 @@ class WorldBuilder(private val worldSize: Size3D) {
                 else -> startPos.withRelativeY(-2)
             }
 
-            if (blocks[endPos]?.isWall == true) {
+            val couldCreateCycle = regionIds[endPos] == nextRegionId && Math.random() < cyclePercent
+
+            if (blocks[endPos]?.isWall == true || couldCreateCycle) {
                 forSlice(startPos, endPos) { pos ->
                     blocks[pos] = GameBlockFactory.floor()
                     regionIds[pos] = nextRegionId
                 }
 
-                placeCorridorFrom(endPos)
+                placeCorridorFrom(endPos, cyclePercent)
             }
         }
     }
 
-    private fun placeDoors(level: Int, extraDoorPercent: Int, maxExtraDoors: Int) {
+    private fun placeDoors(level: Int, extraDoorPercent: Double, maxExtraDoors: Int) {
         val positions = worldSize.fetchPositionsForSlice( // Get all the blocks on this level.
                 Position3D.create(1, 1, level), width - 2, height - 2, 1)
                 .toMutableList()
@@ -165,8 +167,7 @@ class WorldBuilder(private val worldSize: Size3D) {
 
             var needsMerge = true
             var isDisjoint = true
-            val canCreateExtra = extraDoorsCount < maxExtraDoors
-                    && (Math.random() * 100).roundToInt() < extraDoorPercent
+            val canCreateExtra = extraDoorsCount < maxExtraDoors && Math.random() < extraDoorPercent
 
             for (mergedSet in mergedRegionIds) {
                 val intersectionSize = mergedSet.intersect(adjacentRegions).size
