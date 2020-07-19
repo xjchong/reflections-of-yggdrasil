@@ -3,10 +3,7 @@ package views
 import block.GameBlock
 import builders.GameBuilder
 import constants.GameConfig
-import events.GameLogEvent
-import events.InventoryInputEvent
-import events.MoveInputEvent
-import events.TakeInputEvent
+import events.*
 import fragments.PlayerInfoFragment
 import game.Game
 import org.hexworks.cobalt.events.api.KeepSubscription
@@ -101,7 +98,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                 KeyCode.DOWN -> MoveInputEvent(relativePosition = Position3D.create(0, 1, 0))
                 KeyCode.LEFT -> MoveInputEvent(relativePosition = Position3D.create(-1, 0, 0))
                 KeyCode.UP -> MoveInputEvent(relativePosition = Position3D.create(0, -1, 0))
-                KeyCode.PERIOD -> MoveInputEvent(relativePosition = Position3D.create(0, 0, 0))
+                KeyCode.COMMA -> WaitInputEvent()
                 KeyCode.KEY_G -> TakeInputEvent()
                 KeyCode.KEY_I  -> InventoryInputEvent()
                 else -> null

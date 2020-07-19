@@ -22,6 +22,8 @@ class MoveInputEvent(override val type: GameUpdateMode = Foreground,
 
 class TakeInputEvent(override val type: GameUpdateMode = Foreground) : GameInputEvent()
 
+class WaitInputEvent(override val type: GameUpdateMode = Foreground) : GameInputEvent()
+
 
 
 
