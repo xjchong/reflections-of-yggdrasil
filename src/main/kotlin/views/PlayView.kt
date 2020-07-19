@@ -94,11 +94,24 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
             }
 
             val inputEvent = when (keyEvent.code) {
-                KeyCode.RIGHT -> MoveInputEvent(relativePosition = Position3D.create(1, 0, 0))
-                KeyCode.DOWN -> MoveInputEvent(relativePosition = Position3D.create(0, 1, 0))
-                KeyCode.LEFT -> MoveInputEvent(relativePosition = Position3D.create(-1, 0, 0))
-                KeyCode.UP -> MoveInputEvent(relativePosition = Position3D.create(0, -1, 0))
-                KeyCode.COMMA -> WaitInputEvent()
+                KeyCode.RIGHT, KeyCode.DIGIT_6, KeyCode.NUMPAD_6 ->
+                    MoveInputEvent(relativePosition = Position3D.create(1, 0, 0))
+                KeyCode.DOWN, KeyCode.DIGIT_2, KeyCode.NUMPAD_2 ->
+                    MoveInputEvent(relativePosition = Position3D.create(0, 1, 0))
+                KeyCode.LEFT, KeyCode.DIGIT_4, KeyCode.NUMPAD_4 ->
+                    MoveInputEvent(relativePosition = Position3D.create(-1, 0, 0))
+                KeyCode.UP, KeyCode.DIGIT_8, KeyCode.NUMPAD_8 ->
+                    MoveInputEvent(relativePosition = Position3D.create(0, -1, 0))
+                KeyCode.DIGIT_1 ->
+                    MoveInputEvent(relativePosition = Position3D.create(-1, 1, 0))
+                KeyCode.DIGIT_3 ->
+                    MoveInputEvent(relativePosition = Position3D.create(1, 1, 0))
+                KeyCode.DIGIT_7 ->
+                    MoveInputEvent(relativePosition = Position3D.create(-1, -1, 0))
+                KeyCode.DIGIT_9 ->
+                    MoveInputEvent(relativePosition = Position3D.create(1, -1, 0))
+                KeyCode.COMMA, KeyCode.DIGIT_5, KeyCode.NUMPAD_5 -> WaitInputEvent()
+
                 KeyCode.KEY_G -> TakeInputEvent()
                 KeyCode.KEY_I  -> InventoryInputEvent()
                 else -> null
