@@ -13,6 +13,8 @@ import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.component.modal.Modal
 import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.screen.Screen
+import org.hexworks.zircon.api.uievent.KeyCode
+import org.hexworks.zircon.api.uievent.KeyboardEventType
 import org.hexworks.zircon.api.uievent.Processed
 import org.hexworks.zircon.internal.component.modal.EmptyModalResult
 
@@ -59,6 +61,14 @@ class InventoryModalBuilder(private val screen: Screen, private val inventory: I
 
         panel.addFragment(inventoryFragment)
         panel.addComponent(closeButton)
+
+        modal.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, phase ->
+            when (event.code) {
+                KeyCode.KEY_I, KeyCode.ESCAPE -> modal.close(EmptyModalResult)
+            }
+
+            Processed
+        }
 
         return modal
     }
