@@ -1,6 +1,7 @@
 package fragments
 
-import attributes.DisplayableAttribute
+import attributes.CombatStats
+import attributes.EnergyLevel
 import entity.GameEntity
 import entity.Player
 import org.hexworks.zircon.api.Components
@@ -16,7 +17,11 @@ class PlayerInfoFragment(
             .withSpacing(1)
             .build().apply {
                 addComponent(Components.header().withText("Player"))
-                player.attributes.toList().filterIsInstance<DisplayableAttribute>()
-                        .forEach { addComponent(it.toComponent(width))}
+                player.findAttribute(CombatStats::class).ifPresent {
+                    addComponent(it.toComponent(width))
+                }
+                player.findAttribute(EnergyLevel::class).ifPresent {
+                    addComponent(it.toComponent(width))
+                }
             }
 }
