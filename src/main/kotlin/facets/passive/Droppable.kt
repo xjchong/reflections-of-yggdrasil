@@ -18,7 +18,6 @@ object Droppable : BaseFacet<GameContext>() {
                     addEntity(item, position)
                     observeSceneBy(inventoryOwner, "The $inventoryOwner drops the $item")
                 }
-                context.world.addEntity(item, position)
             }
 
             Consumed
