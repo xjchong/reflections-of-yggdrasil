@@ -30,6 +30,8 @@ object EnergyExpender : BaseActor<GameContext>(EnergyLevel::class) {
     }
 
     override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
+        if (context.inBackground) return true
+
         entity.whenTypeIs<EnergyUserType> {
             executeCommand(ExpendEnergy(context, this, energy = 2))
         }
