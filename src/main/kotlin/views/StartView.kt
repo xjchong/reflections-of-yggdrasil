@@ -5,6 +5,7 @@ import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.ComponentDecorations.shadow
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
+import org.hexworks.zircon.api.component.renderer.ComponentDecorationRenderer
 import org.hexworks.zircon.api.grid.TileGrid
 import org.hexworks.zircon.api.uievent.MouseEventType
 import org.hexworks.zircon.api.uievent.UIEventResponse
@@ -25,7 +26,9 @@ class StartView(private val tileGrid: TileGrid) : BaseView(tileGrid) {
         val startButton = Components.button()
                 .withAlignmentAround(header, ComponentAlignment.BOTTOM_CENTER)
                 .withText("Start!")
-                .withDecorations(box(), shadow())
+                .withDecorations(
+                        box(renderingMode = ComponentDecorationRenderer.RenderingMode.INTERACTIVE),
+                        shadow())
                 .build()
 
         startButton.handleMouseEvents(MouseEventType.MOUSE_RELEASED) { _, _ ->

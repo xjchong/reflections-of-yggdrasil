@@ -10,7 +10,7 @@ object GameConfig {
     val TILESET = CP437TilesetResources.tyr16x16()
     val THEME = ColorThemeBuilder.newBuilder()
             .withAccentColor(GameColor.ACCENT)
-            .withPrimaryForegroundColor(GameColor.FOREGROUND)
+            .withPrimaryForegroundColor(GameColor.WHITE)
             .withSecondaryForegroundColor(GameColor.SECONDARY_FOREGROUND)
             .withPrimaryBackgroundColor(GameColor.BACKGROUND)
             .withSecondaryBackgroundColor(GameColor.SECONDARY_BACKGROUND)

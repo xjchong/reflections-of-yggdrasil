@@ -7,7 +7,6 @@ import entity.whenTypeIs
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Fragment
-import org.hexworks.zircon.api.graphics.Symbols
 import org.hexworks.zircon.api.uievent.ComponentEvent
 
 class InventoryRowFragment(width: Int, item: Item) : Fragment {
@@ -25,7 +24,7 @@ class InventoryRowFragment(width: Int, item: Item) : Fragment {
         }
 
     private val dropButton = Components.button()
-            .withText("${Symbols.ARROW_DOWN}")
+            .withText("Drop")
             .build()
 
     private val eatButton = Components.button()
