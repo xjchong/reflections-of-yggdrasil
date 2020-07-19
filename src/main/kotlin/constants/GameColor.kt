@@ -6,12 +6,12 @@ object GameColor {
      * PALETTE
      */
 
-    val WHITE       = hexColor("e1ddcf")
-    val BLACK       = hexColor("202020")
+    val WHITE           = hexColor("e1ddcf")
+    val BLACK           = hexColor("202020")
 
-    val GREY        = hexColor("afab9e")
-    val LIGHT_GREY  = GREY.light
-    val DARK_GREY   = GREY.dark
+    val GREY            = hexColor("afab9e")
+    val LIGHT_GREY      = GREY.light
+    val DARK_GREY       = GREY.dark
 
     val BROWN       	= hexColor("402c14")
     val LIGHT_BROWN     = BROWN.light
@@ -25,7 +25,7 @@ object GameColor {
     val LIGHT_RED       = RED.light
     val DARK_RED        = RED.dark
 
-    val ORANGE      	= hexColor("cb4b16")
+    val ORANGE      	= hexColor("d77504")
     val LIGHT_ORANGE    = ORANGE.light
     val DARK_ORANGE     = ORANGE.dark
 
@@ -51,16 +51,25 @@ object GameColor {
 
 
     /**
+     * APPLICATION
+     */
+
+    val ACCENT                  = YELLOW
+    val FOREGROUND              = WHITE
+    val SECONDARY_FOREGROUND    = GREY
+    val BACKGROUND              = BLACK
+    val SECONDARY_BACKGROUND    = BLACK.light
+
+
+    /**
      * ENVIRONMENT
      */
 
-    val FOREGROUND  = GREY
-    val BACKGROUND = BLACK
-    val FOG_OF_WAR = BACKGROUND.darkenByPercent(0.8)
+    val FOG_OF_WAR      = BACKGROUND
 
-    val WALL = FOREGROUND
-    val FLOOR = FOREGROUND
-    val DOOR = FOREGROUND
+    val WALL            = SECONDARY_FOREGROUND
+    val FLOOR           = SECONDARY_FOREGROUND
+    val DOOR            = SECONDARY_FOREGROUND
     val DOOR_BACKGROUND = BROWN
 
 
@@ -68,17 +77,17 @@ object GameColor {
      * ACTORS
      */
 
-    val BAT = DARK_BLUE
-    val FUNGUS = GREEN
-    val PLAYER = YELLOW
+    val BAT     = DARK_BLUE
+    val FUNGUS  = GREEN
+    val PLAYER  = YELLOW
 
 
     /**
      * ITEMS
      */
 
-    val BAT_MEAT = PINK
-    val EN = LIGHT_CYAN
+    val BAT_MEAT    = DARK_PINK
+    val EN          = LIGHT_CYAN
 
 
     private fun hexColor(hexString: String): TileColor {

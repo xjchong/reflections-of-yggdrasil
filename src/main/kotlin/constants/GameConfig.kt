@@ -1,13 +1,21 @@
 package constants
+import GameColor
 import org.hexworks.zircon.api.CP437TilesetResources
-import org.hexworks.zircon.api.ColorThemes
 import org.hexworks.zircon.api.application.AppConfig
+import org.hexworks.zircon.api.builder.component.ColorThemeBuilder
 import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.data.Size3D
 
 object GameConfig {
     val TILESET = CP437TilesetResources.tyr16x16()
-    val THEME = ColorThemes.zenburnVanilla()
+    val THEME = ColorThemeBuilder.newBuilder()
+            .withAccentColor(GameColor.ACCENT)
+            .withPrimaryForegroundColor(GameColor.FOREGROUND)
+            .withSecondaryForegroundColor(GameColor.SECONDARY_FOREGROUND)
+            .withPrimaryBackgroundColor(GameColor.BACKGROUND)
+            .withSecondaryBackgroundColor(GameColor.SECONDARY_BACKGROUND)
+            .build()
+
     val TITLE = "Reflections of Yggdrasil"
 
     const val DUNGEON_LEVEL_COUNT = 2
