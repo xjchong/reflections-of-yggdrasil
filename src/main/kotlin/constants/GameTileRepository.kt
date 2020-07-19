@@ -1,6 +1,7 @@
 package constants
 
 import GameColor
+import org.hexworks.zircon.api.builder.data.TileBuilder
 import org.hexworks.zircon.api.color.ANSITileColor
 import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Tile
@@ -8,6 +9,11 @@ import org.hexworks.zircon.api.graphics.Symbols
 
 
 object GameTileRepository {
+    
+    private fun newBuilder(): TileBuilder {
+        return Tile.newBuilder()
+                .withBackgroundColor(GameColor.BACKGROUND)
+    }
 
     val EMPTY: CharacterTile = Tile.empty()
 
@@ -15,25 +21,25 @@ object GameTileRepository {
      * ENVIRONMENT TILES
      */
 
-    val FLOOR: CharacterTile = Tile.newBuilder()
+    val FLOOR = newBuilder()
             .withCharacter(Symbols.INTERPUNCT)
-            .withForegroundColor(GameColor.FLOOR_FOREGROUND)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withForegroundColor(GameColor.FLOOR)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val WALL: CharacterTile = Tile.newBuilder()
+    val WALL = newBuilder()
             .withCharacter('#')
-            .withForegroundColor(GameColor.WALL_FOREGROUND)
-            .withBackgroundColor(GameColor.WALL_BACKGROUND)
+            .withForegroundColor(GameColor.WALL)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val DOOR: CharacterTile = Tile.newBuilder()
+    val DOOR = newBuilder()
             .withCharacter('+')
-            .withForegroundColor(GameColor.DOOR_FOREGROUND)
+            .withForegroundColor(GameColor.DOOR)
             .withBackgroundColor(GameColor.DOOR_BACKGROUND)
             .buildCharacterTile()
 
-    val UNREVEALED = Tile.newBuilder()
+    val UNREVEALED = newBuilder()
             .withCharacter(' ')
             .withForegroundColor(GameColor.FOG_OF_WAR)
             .withBackgroundColor(GameColor.FOG_OF_WAR)
@@ -44,22 +50,22 @@ object GameTileRepository {
      * ACTOR TILES
      */
 
-    val BAT = Tile.newBuilder()
+    val BAT = newBuilder()
             .withCharacter('b')
             .withForegroundColor(GameColor.BAT)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val PLAYER = Tile.newBuilder()
+    val PLAYER = newBuilder()
             .withCharacter('@')
             .withForegroundColor(GameColor.PLAYER)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val FUNGUS = Tile.newBuilder()
+    val FUNGUS = newBuilder()
             .withCharacter(',')
             .withForegroundColor(GameColor.FUNGUS)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
 
@@ -67,63 +73,63 @@ object GameTileRepository {
      * ITEM TILES
      */
 
-    val BAT_MEAT = Tile.newBuilder()
+    val BAT_MEAT = newBuilder()
             .withCharacter('%')
             .withForegroundColor(GameColor.BAT_MEAT)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val CLUB = Tile.newBuilder()
+    val CLUB = newBuilder()
             .withCharacter('\\')
-            .withForegroundColor(ANSITileColor.GRAY)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withForegroundColor(GameColor.BROWN)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val DAGGER = Tile.newBuilder()
+    val DAGGER = newBuilder()
             .withCharacter('|')
-            .withForegroundColor(ANSITileColor.WHITE)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withForegroundColor(GameColor.WHITE)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val EN = Tile.newBuilder()
+    val EN = newBuilder()
             .withCharacter('$')
             .withForegroundColor(GameColor.EN)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val JACKET = Tile.newBuilder()
+    val JACKET = newBuilder()
             .withCharacter('(')
-            .withForegroundColor(ANSITileColor.GRAY)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withForegroundColor(GameColor.GREY)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val LIGHT_ARMOR = Tile.newBuilder()
+    val LIGHT_ARMOR = newBuilder()
             .withCharacter('(')
-            .withForegroundColor(ANSITileColor.GREEN)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withForegroundColor(GameColor.GREEN)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val MEDIUM_ARMOR = Tile.newBuilder()
+    val MEDIUM_ARMOR = newBuilder()
             .withCharacter('[')
-            .withForegroundColor(ANSITileColor.WHITE)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withForegroundColor(GameColor.GREY)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val HEAVY_ARMOR = Tile.newBuilder()
+    val HEAVY_ARMOR = newBuilder()
             .withCharacter('[')
-            .withForegroundColor(ANSITileColor.BRIGHT_WHITE)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withForegroundColor(GameColor.WHITE)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val STAFF = Tile.newBuilder()
+    val STAFF = newBuilder()
             .withCharacter('/')
             .withForegroundColor(ANSITileColor.YELLOW)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
-    val SWORD = Tile.newBuilder()
+    val SWORD = newBuilder()
             .withCharacter('|')
             .withForegroundColor(ANSITileColor.BRIGHT_WHITE)
-            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 }
