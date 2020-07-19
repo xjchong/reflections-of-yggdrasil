@@ -17,7 +17,7 @@ object Takeable : BaseFacet<GameContext>() {
             with (context.world) {
                 if (inventoryOwner.addToInventory(item)) {
                     removeEntity(item)
-                    observeSceneBy(inventoryOwner, "The $inventoryOwner picks up the $item")
+                    observeSceneBy(inventoryOwner, "The $inventoryOwner picks up the $item.")
                 }
             }
 

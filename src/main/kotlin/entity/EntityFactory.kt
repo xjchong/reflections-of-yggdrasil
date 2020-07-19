@@ -22,6 +22,7 @@ import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.amethyst.api.newEntityOfType
 import org.hexworks.zircon.api.GraphicalTilesetResources
 import org.hexworks.zircon.api.data.Tile
+import kotlin.random.Random
 
 
 fun <T : EntityType> newGameEntityOfType(type: T, init: EntityBuilder<T, GameContext>.() -> Unit) =
@@ -164,6 +165,22 @@ object EntityFactory {
      * EQUIPMENT
      */
 
+    fun newRandomWeapon(): Weapon {
+        return when (Random.nextInt(3)) {
+            0 -> newDagger()
+            1 -> newStaff()
+            else -> newSword()
+        }
+    }
+
+    fun newRandomArmor(): Armor {
+        return when (Random.nextInt(3)) {
+            0 -> newLightArmor()
+            1 -> newMediumArmor()
+            else -> newHeavyArmor()
+        }
+    }
+
     fun newDagger() = newGameEntityOfType(Dagger) {
         attributes(ItemIcon(Tile.newBuilder()
                 .withName("Dagger")
@@ -174,6 +191,7 @@ object EntityFactory {
                         attackRating = 4,
                         combatType = "Weapon"),
                 EntityTile(GameTileRepository.DAGGER))
+        facets(Droppable, Takeable)
     }
 
     fun newSword() = newGameEntityOfType(Sword) {
@@ -186,6 +204,7 @@ object EntityFactory {
                         attackRating = 6,
                         combatType = "Weapon"),
                 EntityTile(GameTileRepository.SWORD))
+        facets(Droppable, Takeable)
     }
 
     fun newStaff() = newGameEntityOfType(Staff) {
@@ -199,6 +218,7 @@ object EntityFactory {
                         defenseRating = 2,
                         combatType = "Weapon"),
                 EntityTile(GameTileRepository.STAFF))
+        facets(Droppable, Takeable)
     }
 
     fun newLightArmor() = newGameEntityOfType(LightArmor) {
@@ -211,6 +231,7 @@ object EntityFactory {
                         defenseRating = 2,
                         combatType = "Armor"),
                 EntityTile(GameTileRepository.LIGHT_ARMOR))
+        facets(Droppable, Takeable)
     }
 
     fun newMediumArmor() = newGameEntityOfType(MediumArmor) {
@@ -223,6 +244,7 @@ object EntityFactory {
                         defenseRating = 3,
                         combatType = "Armor"),
                 EntityTile(GameTileRepository.MEDIUM_ARMOR))
+        facets(Droppable, Takeable)
     }
 
     fun newHeavyArmor() = newGameEntityOfType(HeavyArmor) {
@@ -235,6 +257,7 @@ object EntityFactory {
                         defenseRating = 4,
                         combatType = "Armor"),
                 EntityTile(GameTileRepository.HEAVY_ARMOR))
+        facets(Droppable, Takeable)
     }
 
     fun newClub() = newGameEntityOfType(Club) {
@@ -245,6 +268,7 @@ object EntityFactory {
                         .withName("Club")
                         .withTileset(GraphicalTilesetResources.nethack16x16())
                         .buildGraphicalTile()))
+        facets(Droppable, Takeable)
     }
 
     fun newJacket() = newGameEntityOfType(Jacket) {
@@ -255,5 +279,6 @@ object EntityFactory {
                         .withName("Leather jacket")
                         .withTileset(GraphicalTilesetResources.nethack16x16())
                         .buildGraphicalTile()))
+        facets(Droppable, Takeable)
     }
 }

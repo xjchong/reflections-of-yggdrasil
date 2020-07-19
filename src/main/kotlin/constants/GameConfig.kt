@@ -27,6 +27,8 @@ object GameConfig {
     const val BATS_PER_LEVEL = 6
     const val EN_PER_LEVEL = 20
     const val FUNGI_PER_LEVEL = 10
+    const val WEAPONS_PER_LEVEL = 2
+    const val ARMOR_PER_LEVEL = 2
 
     val WORLD_SIZE = Size3D.create(
             WINDOW_WIDTH - SIDEBAR_WIDTH,

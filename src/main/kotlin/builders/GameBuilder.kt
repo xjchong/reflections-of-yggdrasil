@@ -1,6 +1,7 @@
 package builders
 
 import constants.GameConfig
+import entity.AnyGameEntity
 import entity.EntityFactory
 import entity.GameEntity
 import entity.Player
@@ -23,9 +24,12 @@ class GameBuilder(val worldSize: Size3D) {
 
     fun buildGame(): Game {
         prepareWorld()
-        addBats()
-        addEn()
-        addFungi()
+
+        addEntities(GameConfig.BATS_PER_LEVEL) { EntityFactory.newBat() }
+        addEntities(GameConfig.EN_PER_LEVEL) { EntityFactory.newEn() }
+        addEntities(GameConfig.FUNGI_PER_LEVEL) { EntityFactory.newFungus() }
+        addEntities(GameConfig.WEAPONS_PER_LEVEL) { EntityFactory.newRandomWeapon() }
+        addEntities(GameConfig.ARMOR_PER_LEVEL) { EntityFactory.newRandomArmor() }
 
         val game = Game.create(
             player = addPlayer(),
@@ -48,26 +52,10 @@ class GameBuilder(val worldSize: Size3D) {
         )
     }
 
-    private fun addBats() = also {
+    private fun addEntities(countPerLevel: Int, buildEntity: () -> AnyGameEntity) {
         repeat(world.actualSize.zLength) { level ->
-            repeat(GameConfig.BATS_PER_LEVEL) {
-                EntityFactory.newBat().addToWorld(level)
-            }
-        }
-    }
-
-    private fun addEn() = also {
-        repeat(world.actualSize.zLength) { level ->
-            repeat(GameConfig.EN_PER_LEVEL) {
-                EntityFactory.newEn().addToWorld(level)
-            }
-        }
-    }
-
-    private fun addFungi() = also {
-        repeat(world.actualSize.zLength) { level ->
-            repeat(GameConfig.FUNGI_PER_LEVEL) {
-                EntityFactory.newFungus().addToWorld(level)
+            repeat(countPerLevel) {
+                buildEntity().addToWorld(level)
             }
         }
     }
