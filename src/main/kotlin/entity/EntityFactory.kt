@@ -84,7 +84,7 @@ object EntityFactory {
         facets(Attackable, Destructible, EnergyExpender, FoodEating, InventoryInspecting, ItemDropping, ItemTaking, Movable)
     }
 
-    fun newFungus(fungusSpread: FungusSpread = FungusSpread()) = newGameEntityOfType(Fungus) {
+    fun newFungus(fungusSpread: Proliferation = Proliferation(0.02, 1.7)) = newGameEntityOfType(Fungus) {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.FUNGUS),
@@ -96,7 +96,7 @@ object EntityFactory {
                         attackRating = 0,
                         defenseRating = 0
                 ))
-        behaviors(FungusGrowth)
+        behaviors(Proliferator)
         facets(Attackable, Destructible)
     }
 
