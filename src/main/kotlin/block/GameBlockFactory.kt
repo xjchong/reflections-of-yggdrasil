@@ -6,7 +6,7 @@ object GameBlockFactory {
 
     fun floor() = GameBlock()
 
-    fun wall() = GameBlock.createWith(EntityFactory.newWall())
+    fun wall(isDiggable: Boolean = true) = GameBlock.createWith(EntityFactory.newWall(isDiggable))
 
     fun door() = GameBlock.createWith(EntityFactory.newDoor())
 }

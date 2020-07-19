@@ -1,13 +1,13 @@
 package builders
 
 import block.GameBlock
+import block.GameBlockFactory
 import extensions.adjacentNeighbors
 import extensions.fetchPositionsForSlice
 import extensions.neighbors
-import block.GameBlockFactory
+import game.World
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
-import game.World
 import kotlin.math.roundToInt
 import kotlin.random.Random
 import kotlin.random.asJavaRandom
@@ -34,6 +34,7 @@ class WorldBuilder(private val worldSize: Size3D) {
         fill(WALL_REGION_ID) { GameBlockFactory.wall() }
 
         repeat(depth) { level ->
+            placeBorder(level)
             placeRooms(level, 200, 6, 5, 2.0)
             placeCorridors(level)
             placeDoors(level, 5, 15)
@@ -63,6 +64,17 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     private fun nextGaussian(mu: Int, standardDeviation: Double): Double {
         return (Random.asJavaRandom().nextGaussian() * standardDeviation) + mu
+    }
+
+    private fun placeBorder(level: Int) {
+        repeat(width) { col ->
+            blocks[Position3D.create(col, 0, level)] = GameBlockFactory.wall(isDiggable = false) }
+        repeat(width) { col ->
+            blocks[Position3D.create(col, height - 1, level)] = GameBlockFactory.wall(isDiggable = false) }
+        repeat(height) { row ->
+            blocks[Position3D.create(0, row, level)] = GameBlockFactory.wall(isDiggable = false) }
+        repeat(height) { row ->
+            blocks[Position3D.create(width - 1, row, level)] = GameBlockFactory.wall(isDiggable = false) }
     }
 
     private fun placeRooms(level: Int, attempts: Int, meanWidth: Int, meanHeight: Int, standardDeviation: Double) {

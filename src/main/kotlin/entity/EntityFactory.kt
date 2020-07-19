@@ -111,13 +111,13 @@ object EntityFactory {
         facets(Takeable, Droppable)
     }
 
-    fun newWall() = newGameEntityOfType(Wall) {
+    fun newWall(isDiggable: Boolean = true) = newGameEntityOfType(Wall) {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.WALL),
                 Obstacle,
                 Opaque)
-        facets(Diggable)
+        if (isDiggable) facets(Diggable)
     }
 
     fun newDoor(isOpened: Boolean = false) = newGameEntityOfType(Door) {
