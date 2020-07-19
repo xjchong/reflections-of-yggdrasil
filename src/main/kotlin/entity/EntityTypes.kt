@@ -21,7 +21,7 @@ object Fungus : BaseEntityType(
 
 object Player : BaseEntityType(
         name = "player"
-), Combatant, InventoryOwnerType
+), Combatant, EnergyUserType, InventoryOwnerType
 
 object Wall : BaseEntityType(
         name = "wall"

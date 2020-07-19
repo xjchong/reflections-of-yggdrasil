@@ -6,7 +6,7 @@ import commands.Move
 import commands.Take
 import entity.InventoryOwner
 import entity.InventoryOwnerType
-import entity.ifType
+import entity.whenTypeIs
 import entity.position
 import events.DropInputEvent
 import events.InventoryInputEvent
@@ -28,12 +28,12 @@ object InputReceiver : BaseBehavior<GameContext>() {
 
         when (event) {
             is DropInputEvent -> {
-                entity.ifType<InventoryOwnerType> {
+                entity.whenTypeIs<InventoryOwnerType> {
                     executeCommand(Drop(context, this, event.item, position))
                 }
             }
             is InventoryInputEvent -> {
-                entity.ifType<InventoryOwnerType> {
+                entity.whenTypeIs<InventoryOwnerType> {
                     executeCommand(InspectInventory(context, this, position))
                 }
             }
@@ -41,7 +41,7 @@ object InputReceiver : BaseBehavior<GameContext>() {
                 entity.executeCommand(Move(context, entity, position.withRelative(event.relativePosition)))
             }
             is TakeInputEvent -> {
-                entity.ifType<InventoryOwnerType> {
+                entity.whenTypeIs<InventoryOwnerType> {
                     tryTakeAt(position, context)
                 }
             }

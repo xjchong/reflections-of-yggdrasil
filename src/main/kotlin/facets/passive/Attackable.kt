@@ -24,12 +24,14 @@ object Attackable : BaseFacet<GameContext>() {
             val damage = (attacker.combatStats.attackRating - target.combatStats.defenseRating)
                     .coerceAtLeast(0)
 
-            target.combatStats.health -= damage
+            with (target) {
+                combatStats.health -= damage
 
-            logGameEvent("The $attacker hits the $target for $damage!")
+                logGameEvent("The $attacker hits the $this for $damage!")
 
-            target.whenDead {
-                target.executeBlockingCommand(Destroy(context, attacker, target, cause = "the $attacker"))
+                whenDead {
+                    executeBlockingCommand(Destroy(context, this, cause = "the $attacker"))
+                }
             }
 
             Consumed

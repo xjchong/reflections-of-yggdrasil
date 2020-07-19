@@ -20,16 +20,16 @@ interface AdaptableSyntax {
 object Destructible : BaseFacet<GameContext>(), AdaptableSyntax {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Destroy::class) { (context, attacker, target, cause) ->
-            logGameEvent("The $target is ${target.syntaxFor(Destructible)} by $cause.")
+        return command.responseWhenCommandIs(Destroy::class) { (context, entity, cause) ->
+            logGameEvent("The $entity is ${entity.syntaxFor(Destructible)} by $cause.")
 
-            target.ifType<InventoryOwnerType> {
+            entity.whenTypeIs<InventoryOwnerType> {
                 inventory.items.forEach { item ->
                     item.executeBlockingCommand(Drop(context, this, item, position))
                 }
             }
 
-            context.world.removeEntity(target)
+            context.world.removeEntity(entity)
 
             Consumed
         }
