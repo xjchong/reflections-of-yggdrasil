@@ -38,6 +38,7 @@ class WorldBuilder(private val worldSize: Size3D) {
             placeRooms(level, 200, 6, 5, 2.0)
             placeCorridors(level, 0.05)
             placeDoors(level, 0.05, 12)
+            removePillars(level, 0.5)
             removeDeadEnds(level)
         }
 
@@ -146,12 +147,7 @@ class WorldBuilder(private val worldSize: Size3D) {
     }
 
     private fun placeDoors(level: Int, extraDoorPercent: Double, maxExtraDoors: Int) {
-        val positions = worldSize.fetchPositionsForSlice( // Get all the blocks on this level.
-                Position3D.create(1, 1, level), width - 2, height - 2, 1)
-                .toMutableList()
-                .filter{ pos -> blocks[pos]?.isWall == true } // Get only the walls (only walls connect regions).
-                .shuffled() // We want to choose the location of doors randomly.
-
+        val positions = getAllWallPositions(level) // Only walls can be connectors, so iterate through them randomly.
         var extraDoorsCount = 0
 
         for (pos in positions) {
@@ -212,6 +208,28 @@ class WorldBuilder(private val worldSize: Size3D) {
         return position.adjacentNeighbors(shouldShuffle = false)
                 .filter { neighborPos -> blocks[neighborPos]?.isWall == true }
                 .size > 2
+    }
+
+    private fun removePillars(level: Int, removalPercent: Double) {
+        for (wallPos in getAllWallPositions(level)) {
+            if (Math.random() >= removalPercent) continue
+            if (wallPos.adjacentNeighbors(false).all { neighborPos ->
+                        blocks[neighborPos]?.isWall == false }) {
+                blocks[wallPos] = GameBlockFactory.floor()
+            }
+        }
+    }
+
+    /**
+     * Get all the wall positions on the given level, excluding the outermost border of walls.
+     */
+    private fun getAllWallPositions(level: Int, shouldShuffle: Boolean = true): List<Position3D> {
+        val positions = worldSize.fetchPositionsForSlice(
+                Position3D.create(1, 1, level), width - 2, height - 2, 1)
+                .toMutableList()
+                .filter{ pos -> blocks[pos]?.isWall == true }
+
+        return if (shouldShuffle) positions.shuffled() else positions
     }
 
 
