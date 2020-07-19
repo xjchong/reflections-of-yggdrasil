@@ -47,26 +47,18 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
         return infoTextBox.build()
     }
 
-    fun equip(inventory: Inventory, combatItem: CombatItem): CombatItem? {
+    fun equip(combatItem: CombatItem): CombatItem? {
         combatItem.whenTypeIs<WeaponType> {
-            val oldWeapon = weapon.optional?.let { oldWeapon ->
-                inventory.add(oldWeapon)
-                oldWeapon
-            }
+            val oldWeapon = weapon.optional
 
-            inventory.remove(this)
             weaponProperty.value = Maybe.of(this)
 
             return oldWeapon
         }
 
         combatItem.whenTypeIs<ArmorType> {
-            val oldArmor = armor.optional?.let { oldArmor ->
-                inventory.add(oldArmor)
-                oldArmor
-            }
+            val oldArmor = armor.optional
 
-            inventory.remove(this)
             armorProperty.value = Maybe.of(this)
 
             return oldArmor
