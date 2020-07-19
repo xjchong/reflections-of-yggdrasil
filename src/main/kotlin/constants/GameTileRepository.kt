@@ -68,6 +68,12 @@ object GameTileRepository {
             .withBackgroundColor(GameColor.BACKGROUND)
             .buildCharacterTile()
 
+    val ZOMBIE = newBuilder()
+            .withCharacter('z')
+            .withForegroundColor(GameColor.DARK_CYAN)
+            .withBackgroundColor(GameColor.BACKGROUND)
+            .buildCharacterTile()
+
 
     /**
      * ITEM TILES

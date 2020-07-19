@@ -138,6 +138,26 @@ object EntityFactory {
         facets(Openable)
     }
 
+    fun newZombie() = newGameEntityOfType(Zombie) {
+        attributes(
+                EntityActions(Attack::class),
+                EntityPosition(),
+                EntityTile(GameTileRepository.BAT),
+                Inventory(5).apply {
+                    // TODO: Add some equipment here.
+                },
+                Obstacle,
+                Vision(5),
+
+                CombatStats.create(
+                        maxHealth = 30,
+                        attackRating = 10,
+                        defenseRating = 5
+                ))
+        behaviors(Wanderer)
+        facets(Attackable, Destructible, Movable)
+    }
+
     fun newFogOfWar(game: Game) = FogOfWar(game, needsUpdate = true)
 
     /**

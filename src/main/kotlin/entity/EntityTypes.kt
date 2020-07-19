@@ -32,6 +32,10 @@ object Wall : BaseEntityType(
         name = "wall"
 )
 
+object Zombie : BaseEntityType(
+        name = "zombie"
+), Combatant, EquipmentWearerType, InventoryOwnerType
+
 /**
  * EQUIPMENT
  */
