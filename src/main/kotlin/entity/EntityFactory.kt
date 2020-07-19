@@ -80,7 +80,7 @@ object EntityFactory {
                         defenseRating = 5
                 ))
         behaviors(InputReceiver, EnergyExpender, VisualRememberer)
-        facets(Attackable, EnergyExpender, FoodEating, InventoryInspecting, ItemDropping, ItemTaking, Movable)
+        facets(Attackable, Destructible, EnergyExpender, FoodEating, InventoryInspecting, ItemDropping, ItemTaking, Movable)
     }
 
     fun newFungus(fungusSpread: FungusSpread = FungusSpread()) = newGameEntityOfType(Fungus) {
