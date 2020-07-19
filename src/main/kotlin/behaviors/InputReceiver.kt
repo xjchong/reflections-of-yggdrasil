@@ -1,17 +1,8 @@
 package behaviors
 
-import commands.Drop
-import commands.InspectInventory
-import commands.Move
-import commands.Take
-import entity.InventoryOwner
-import entity.InventoryOwnerType
-import entity.whenTypeIs
-import entity.position
-import events.DropInputEvent
-import events.InventoryInputEvent
-import events.MoveInputEvent
-import events.TakeInputEvent
+import commands.*
+import entity.*
+import events.*
 import extensions.optional
 import game.GameContext
 import org.hexworks.amethyst.api.Consumed
@@ -30,6 +21,11 @@ object InputReceiver : BaseBehavior<GameContext>() {
             is DropInputEvent -> {
                 entity.whenTypeIs<InventoryOwnerType> {
                     executeCommand(Drop(context, this, event.item, position))
+                }
+            }
+            is EatInputEvent -> {
+                entity.whenTypeIs<EnergyUserType> {
+                    executeCommand(Eat(context, this, event.food))
                 }
             }
             is InventoryInputEvent -> {

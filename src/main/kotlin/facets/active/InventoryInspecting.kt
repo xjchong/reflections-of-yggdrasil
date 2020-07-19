@@ -4,6 +4,7 @@ import builders.InventoryModalBuilder
 import commands.InspectInventory
 import entity.inventory
 import events.DropInputEvent
+import events.EatInputEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -20,9 +21,14 @@ object InventoryInspecting : BaseFacet<GameContext>() {
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(InspectInventory::class) { (context, inventoryOwner, position) ->
             val (world, screen) = context
-            val inventoryModal = InventoryModalBuilder.build(screen, inventoryOwner.inventory) { item ->
-                world.update(screen, DropInputEvent(item = item))
-            }
+            val inventoryModal = InventoryModalBuilder.build(screen, inventoryOwner.inventory,
+                    onDrop = { item ->
+                        world.update(screen, DropInputEvent(item))
+                    },
+                    onEat = { food ->
+                        world.update(screen, EatInputEvent(food))
+                        inventoryOwner.inventory.remove(food)
+                    })
 
             screen.openModal(inventoryModal)
 

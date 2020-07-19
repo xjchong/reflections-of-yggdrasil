@@ -1,5 +1,6 @@
 package events
 
+import entity.Food
 import entity.Item
 import org.hexworks.zircon.api.data.Position3D
 
@@ -10,7 +11,9 @@ sealed class GameInputEvent {
 }
 
 
-class DropInputEvent(override val type: GameUpdateMode = Foreground, val item: Item) : GameInputEvent()
+class DropInputEvent(val item: Item, override val type: GameUpdateMode = Foreground) : GameInputEvent()
+
+class EatInputEvent(val food: Food, override val type: GameUpdateMode = Foreground) : GameInputEvent()
 
 class InventoryInputEvent(override val type: GameUpdateMode = Background) : GameInputEvent()
 

@@ -1,7 +1,10 @@
 package fragments
 
 import attributes.Inventory
+import entity.Food
+import entity.FoodType
 import entity.Item
+import entity.whenTypeIs
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Fragment
 import org.hexworks.zircon.api.uievent.Processed
@@ -9,7 +12,8 @@ import org.hexworks.zircon.api.uievent.Processed
 class InventoryFragment(
         inventory: Inventory,
         width: Int,
-        onDrop: (Item) -> Unit) : Fragment {
+        onDrop: (Item) -> Unit,
+        onEat: (Food) -> Unit) : Fragment {
 
     companion object {
         const val NAME_COLUMN_WIDTH = 15
@@ -36,6 +40,14 @@ class InventoryFragment(
                         attachedInventoryRow.detach()
                         onDrop(item)
                         Processed
+                    }
+
+                    inventoryRow.onEat = {
+                        item.whenTypeIs<FoodType> {
+                            attachedInventoryRow.detach()
+                            onEat(this)
+                            Processed
+                        }
                     }
                 }
             }

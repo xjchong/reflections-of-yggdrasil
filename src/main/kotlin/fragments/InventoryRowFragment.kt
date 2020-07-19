@@ -1,7 +1,9 @@
 package fragments
 
+import entity.FoodType
 import entity.Item
 import entity.iconTile
+import entity.whenTypeIs
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Fragment
@@ -16,8 +18,18 @@ class InventoryRowFragment(width: Int, item: Item) : Fragment {
             field = value
         }
 
+    var onEat: (ComponentEvent) -> Unit = {}
+        set(value) {
+            eatButton.onActivated(value)
+            field = value
+        }
+
     private val dropButton = Components.button()
             .withText("${Symbols.ARROW_DOWN}")
+            .build()
+
+    private val eatButton = Components.button()
+            .withText("Eat")
             .build()
 
     override val root: Component = Components.hbox()
@@ -30,5 +42,6 @@ class InventoryRowFragment(width: Int, item: Item) : Fragment {
                         .withSize(InventoryFragment.NAME_COLUMN_WIDTH, 1)
                         .withText(item.name))
                 addComponent(dropButton)
+                item.whenTypeIs<FoodType> { addComponent(eatButton) }
             }
 }
