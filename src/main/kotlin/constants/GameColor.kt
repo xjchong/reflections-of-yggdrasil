@@ -26,5 +26,6 @@ object GameColor {
      * ITEMS
      */
 
+    val BAT_MEAT = TileColor.fromString("#EA4861")
     val EN = TileColor.fromString("#a2b8a2")
 }

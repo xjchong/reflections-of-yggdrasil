@@ -7,6 +7,11 @@ object Bat : BaseEntityType(
         name = "bat"
 ), Combatant, InventoryOwnerType
 
+object BatMeat : BaseEntityType(
+        name = "bat meat",
+        description = "Stringy bat meat. It is an acquired taste."
+), FoodType
+
 object Door : BaseEntityType(
         name = "door"
 )

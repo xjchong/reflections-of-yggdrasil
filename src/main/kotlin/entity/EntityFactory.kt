@@ -24,7 +24,7 @@ import org.hexworks.zircon.api.data.Tile
 
 
 fun <T : EntityType> newGameEntityOfType(type: T, init: EntityBuilder<T, GameContext>.() -> Unit) =
-    newEntityOfType<T, GameContext>(type, init)
+        newEntityOfType<T, GameContext>(type, init)
 
 object EntityFactory {
 
@@ -34,7 +34,7 @@ object EntityFactory {
                 EntityPosition(),
                 EntityTile(GameTileRepository.BAT),
                 Inventory(1).apply {
-                    add(newEn())
+                    add(newBatMeat())
                 },
                 Obstacle,
                 Vision(3),
@@ -46,6 +46,18 @@ object EntityFactory {
                 ))
         behaviors(Wanderer)
         facets(Attackable, Destructible, Movable)
+    }
+
+    fun newBatMeat() = newGameEntityOfType(BatMeat) {
+        attributes(
+                EntityPosition(),
+                EntityTile(GameTileRepository.BAT_MEAT),
+                ItemIcon(Tile.newBuilder()
+                        .withName("Meatball")
+                        .withTileset(GraphicalTilesetResources.nethack16x16())
+                        .buildGraphicalTile()),
+                NutritionalValue(300))
+        facets(Droppable, Takeable)
     }
 
     fun newPlayer() = newGameEntityOfType(Player) {

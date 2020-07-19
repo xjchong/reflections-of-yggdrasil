@@ -66,6 +66,12 @@ object GameTileRepository {
      * ITEM TILES
      */
 
+    val BAT_MEAT = Tile.newBuilder()
+            .withCharacter('%')
+            .withForegroundColor(GameColor.BAT_MEAT)
+            .withBackgroundColor(GameColor.FLOOR_BACKGROUND)
+            .buildCharacterTile()
+
     val EN = Tile.newBuilder()
             .withCharacter('$')
             .withForegroundColor(GameColor.EN)
