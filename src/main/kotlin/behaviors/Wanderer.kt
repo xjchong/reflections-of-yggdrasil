@@ -3,6 +3,7 @@ package behaviors
 import commands.Move
 import entity.position
 import extensions.neighbors
+import extensions.optional
 import game.GameContext
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity
@@ -17,9 +18,15 @@ object Wanderer : BaseBehavior<GameContext>() {
         val position = entity.position
 
         if (!position.isUnknown) {
-            entity.executeCommand(Move(context, entity, position.neighbors().first()))
+            val nextPosition = position.neighbors().firstOrNull { potentialPos ->
+                val block = context.world.fetchBlockAt(potentialPos).optional
+                block != null && !block.isWall
+            }
 
-            return true
+            nextPosition?.let {
+                entity.executeCommand(Move(context, entity, it))
+                return true
+            }
         }
 
         return false
