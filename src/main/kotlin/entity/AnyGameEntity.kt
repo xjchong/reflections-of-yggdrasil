@@ -44,6 +44,22 @@ val AnyGameEntity.isOpaque: Boolean
 val AnyGameEntity.snapshot: EntitySnapshot
     get() = EntitySnapshot(type, getAttribute(EntityTile::class)?.tile)
 
+val AnyGameEntity.attackRating: Int
+    get() {
+        val combatantRating = getAttribute(CombatStats::class)?.attackRating ?: 0
+        val equipmentRating = getAttribute(Equipment::class)?.attackRating ?: 0
+        val itemRating = getAttribute(ItemCombatStats::class)?.attackRating ?: 0
+        return combatantRating + equipmentRating + itemRating
+    }
+
+val AnyGameEntity.defenseRating: Int
+    get() {
+        val combatantRating = getAttribute(CombatStats::class)?.defenseRating ?: 0
+        val equipmentRating = getAttribute(Equipment::class)?.defenseRating ?: 0
+        val itemRating = getAttribute(ItemCombatStats::class)?.defenseRating ?: 0
+        return combatantRating + equipmentRating + itemRating
+    }
+
 fun <T : Attribute> AnyGameEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
 
 fun AnyGameEntity.syntaxFor(owner: AdaptableSyntax, subKey: String? = null): String {

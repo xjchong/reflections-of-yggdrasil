@@ -2,10 +2,7 @@ package facets.passive
 
 import commands.Attack
 import commands.Destroy
-import entity.combatStats
-import entity.executeBlockingCommand
-import entity.isPlayer
-import entity.whenDead
+import entity.*
 import events.logGameEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -21,7 +18,7 @@ object Attackable : BaseFacet<GameContext>() {
         return command.responseWhenCommandIs(Attack::class) { (context, attacker, target) ->
             if (!attacker.isPlayer && !target.isPlayer) return@responseWhenCommandIs Pass
 
-            val damage = (attacker.combatStats.attackRating - target.combatStats.defenseRating)
+            val damage = (attacker.attackRating - target.defenseRating)
                     .coerceAtLeast(0)
 
             with (target) {
