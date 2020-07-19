@@ -39,7 +39,7 @@ class InventoryRowFragment(width: Int, item: Item) : Fragment {
                         .withIcon(item.iconTile))
                 addComponent(Components.label()
                         .withSize(InventoryFragment.NAME_COLUMN_WIDTH, 1)
-                        .withText(item.name))
+                        .withText(item.name.capitalize()))
                 addComponent(dropButton)
                 item.whenTypeIs<FoodType> { addComponent(eatButton) }
             }
