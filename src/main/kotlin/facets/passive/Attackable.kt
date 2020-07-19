@@ -3,7 +3,6 @@ package facets.passive
 import commands.Attack
 import commands.Destroy
 import entity.*
-import events.logGameEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -24,7 +23,7 @@ object Attackable : BaseFacet<GameContext>() {
             with (target) {
                 combatStats.health -= damage
 
-                logGameEvent("The $attacker hits the $this for $damage!")
+                context.world.observeSceneBy(attacker, "The $attacker hits the $this for $damage!")
 
                 whenDead {
                     executeBlockingCommand(Destroy(context, this, cause = "the $attacker"))

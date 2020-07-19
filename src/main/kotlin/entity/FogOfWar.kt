@@ -1,9 +1,10 @@
 package entity
 
-import org.hexworks.amethyst.api.base.BaseEntity
-import org.hexworks.amethyst.api.base.BaseEntityType
+import events.Foreground
 import game.Game
 import game.GameContext
+import org.hexworks.amethyst.api.base.BaseEntity
+import org.hexworks.amethyst.api.base.BaseEntityType
 
 object FogOfWarType : BaseEntityType()
 
@@ -19,7 +20,7 @@ class FogOfWar(game: Game, override val needsUpdate: Boolean) : BaseEntity<FogOf
     }
 
     override suspend fun update(context: GameContext): Boolean {
-        updateFow()
+        if (context.event.type == Foreground) updateFow()
 
         return true
     }

@@ -4,7 +4,6 @@ import attributes.EntitySyntax
 import commands.Destroy
 import commands.Drop
 import entity.*
-import events.logGameEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -21,7 +20,7 @@ object Destructible : BaseFacet<GameContext>(), AdaptableSyntax {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(Destroy::class) { (context, entity, cause) ->
-            logGameEvent("The $entity is ${entity.syntaxFor(Destructible)} by $cause.")
+            context.world.observeSceneBy(entity, "The $entity is ${entity.syntaxFor(Destructible)} by $cause.")
 
             entity.whenTypeIs<InventoryOwnerType> {
                 inventory.items.forEach { item ->

@@ -84,12 +84,11 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
     }
 
     fun rememberAs(tile: Tile?) {
-        if (tile != null) {
-            memory = tile
-                .withForegroundColor(tile.foregroundColor.darkenByPercent(0.5))
-                .withBackgroundColor(tile.backgroundColor.darkenByPercent(0.5))
+        memory = if (tile != null) {
+            tile.withForegroundColor(tile.foregroundColor.darkenByPercent(0.5))
+                    .withBackgroundColor(tile.backgroundColor.darkenByPercent(0.5))
         } else {
-            memory = GameTileRepository.UNREVEALED
+            GameTileRepository.UNREVEALED
         }
     }
 }

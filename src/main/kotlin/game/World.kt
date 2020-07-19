@@ -5,6 +5,7 @@ import block.GameBlock
 import constants.GameTileRepository
 import entity.*
 import events.GameInputEvent
+import events.logGameEvent
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.Position3D
@@ -21,6 +22,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 ) {
 
     private val engine: GameEngine<GameContext> = GameEngine()
+    private val sceneObservers: MutableSet<AnyGameEntity> = mutableSetOf()
     private var lastVisiblePositions: MutableSet<Position3D> = mutableSetOf()
 
     init {
@@ -37,6 +39,24 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         val context = GameContext(this, screen, event)
 
         engine.update(context)
+    }
+
+    fun addSceneObserver(entity: AnyGameEntity) {
+        sceneObservers.add(entity)
+    }
+
+    fun removeSceneObserver(entity: AnyGameEntity) {
+        sceneObservers.remove(entity)
+    }
+
+    fun observeSceneBy(entity: AnyGameEntity, message: String) {
+        sceneObservers.forEach { observer ->
+            val visiblePositions = findVisiblePositionsFor(observer)
+
+            if (visiblePositions.contains(entity.position)) {
+                logGameEvent(message)
+            }
+        }
     }
 
     /**

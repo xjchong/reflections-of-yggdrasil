@@ -33,6 +33,7 @@ class GameBuilder(val worldSize: Size3D) {
         )
 
         world.addWorldEntity(EntityFactory.newFogOfWar(game))
+        world.addSceneObserver(game.player)
 
         return game
     }

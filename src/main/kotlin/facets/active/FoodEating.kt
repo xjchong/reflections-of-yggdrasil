@@ -4,7 +4,6 @@ import attributes.EnergyLevel
 import commands.Eat
 import entity.energy
 import entity.energyLevel
-import events.logGameEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -18,7 +17,7 @@ object FoodEating : BaseFacet<GameContext>(EnergyLevel::class) {
         return command.responseWhenCommandIs(Eat::class) { (context, entity, food) ->
             entity.energyLevel.currentEnergy += food.energy
 
-            logGameEvent("The $entity eats the $food.")
+            context.world.observeSceneBy(entity, "The $entity eats the $food")
             Consumed
         }
     }
