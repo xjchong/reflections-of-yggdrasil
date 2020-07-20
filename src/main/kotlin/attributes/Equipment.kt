@@ -4,14 +4,13 @@ import GameColor
 import entity.*
 import extensions.create
 import extensions.optional
-import extensions.withStyle
-import extensions.withTextFrom
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.ComponentStyleSet
+import org.hexworks.zircon.api.component.Label
 
 class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): DisplayableAttribute {
 
@@ -38,54 +37,22 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
         }()
 
     override fun toComponent(width: Int): Component {
-        val weaponCharLabel = Components.label()
-                .withStyle(
-                        weapon.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
-                        backgroundColor = GameColor.SECONDARY_BACKGROUND)
-                .withTextFrom(weapon.optional?.tile)
-                .withSize(1, 1)
-                .build()
-        val weaponNameLabel = Components.label()
-                .withText(weapon.optional?.name?.capitalize() ?: "None")
-                .withSize(width - 2, 1)
-                .build()
-        val weaponStatsLabel = Components.label()
-                .withText(weapon.optional?.statsString ?: "")
-                .withSize(width - 1, 1)
-                .build()
+        val weaponCharLabel = Components.label().withSize(1, 1).build()
+        val weaponNameLabel = Components.label().withSize(width - 2, 1).build()
+        val weaponStatsLabel = Components.label().withSize(width - 1, 1).build()
 
-        val armorCharLabel = Components.label()
-                .withStyle(
-                        armor.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
-                        backgroundColor = GameColor.SECONDARY_BACKGROUND)
-                .withTextFrom(armor.optional?.tile)
-                .withSize(1, 1)
-                .build()
-        val armorNameLabel = Components.label()
-                .withText(armor.optional?.name?.capitalize() ?: "None")
-                .withSize(width - 2, 1)
-                .build()
-        val armorStatsLabel = Components.label()
-                .withText(armor.optional?.statsString ?: "")
-                .withSize(width - 1, 1)
-                .build()
+        val armorCharLabel = Components.label().withSize(1, 1).build()
+        val armorNameLabel = Components.label().withSize(width - 2, 1).build()
+        val armorStatsLabel = Components.label().withSize(width - 1, 1).build()
 
+        updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, weapon as Maybe<CombatItem>)
         weaponProperty.onChange {
-            weaponCharLabel.componentStyleSet = ComponentStyleSet.create(
-                    weapon.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
-                    backgroundColor = GameColor.SECONDARY_BACKGROUND)
-            weaponCharLabel.textProperty.value = weapon.optional?.tile?.character.toString() ?: ""
-            weaponNameLabel.textProperty.value = weapon.optional?.name?.capitalize() ?: "None"
-            weaponStatsLabel.textProperty.value = weapon.optional?.statsString ?: ""
+            updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, weapon as Maybe<CombatItem>)
         }
 
+        updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, armor as Maybe<CombatItem>)
         armorProperty.onChange {
-            armorCharLabel.componentStyleSet = ComponentStyleSet.create(
-                    armor.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
-                    backgroundColor = GameColor.SECONDARY_BACKGROUND)
-            armorCharLabel.textProperty.value = armor.optional?.tile?.character.toString() ?: ""
-            armorNameLabel.textProperty.value = armor.optional?.name?.capitalize() ?: "None"
-            armorStatsLabel.textProperty.value = armor.optional?.statsString ?: ""
+            updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, armor as Maybe<CombatItem>)
         }
 
         return Components.textBox(width)
@@ -124,6 +91,16 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
 
         throw IllegalStateException("Equipment does not accept combat item of type ${combatItem.type::class}.")
     }
+
+    private fun updateInfo(charLabel: Label, nameLabel: Label, statsLabel: Label, combatItem: Maybe<CombatItem>) {
+        charLabel.componentStyleSet = ComponentStyleSet.create(
+                combatItem.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
+                backgroundColor = GameColor.SECONDARY_BACKGROUND)
+        charLabel.textProperty.value = combatItem.optional?.tile?.character.toString() ?: ""
+        nameLabel.textProperty.value = combatItem.optional?.name?.capitalize() ?: "None"
+        statsLabel.textProperty.value = combatItem.optional?.statsString ?: ""
+    }
+
 
     private val CombatItem.statsString: String
         get() = "A: ${this.attackRating} D: ${this.defenseRating}"
