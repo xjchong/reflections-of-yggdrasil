@@ -63,10 +63,7 @@ object EntityFactory {
                 Inventory(10),
                 Obstacle,
                 Vision(5),
-                VisualMemory(
-                        strength = 150,
-                        excludedFacets = mutableSetOf(Movable)
-                ),
+                VisualMemory(excludedFacets = mutableSetOf(Movable)),
 
                 CombatStats.create(
                         maxHealth = 100,
@@ -74,7 +71,7 @@ object EntityFactory {
                         defenseRating = 5
                 ))
         behaviors(InputReceiver, EnergyExpender, VisualRememberer)
-        facets(Attackable, Destructible, EnergyExpender, EquipmentWearing, FoodEating, InventoryInspecting, ItemDropping, ItemTaking, Movable)
+        facets(Attackable, EnergyExpender, EquipmentWearing, FoodEating, InventoryInspecting, ItemDropping, ItemTaking, Movable)
     }
 
     fun newFungus(fungusSpread: Proliferation = Proliferation(0.02, 1.7)) = newGameEntityOfType(Fungus) {

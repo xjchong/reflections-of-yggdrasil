@@ -13,10 +13,11 @@ import kotlin.reflect.KClass
 
 data class EntitySnapshot(val type: EntityType, val tile: CharacterTile)
 
-data class Memory(val turn: Int, val strength: Int, val snapshots: List<EntitySnapshot>)
+data class Memory(val turn: Long, val strength: Double, val snapshots: List<EntitySnapshot>)
 
 class VisualMemory(
-        val strength: Int,
+        private val strength: Double = 100.0, // The base number of turns before the memory fades.
+        private val memorizationRate: Double = 0.04, // The rate at which memories gain strength when reinforced.
         private val memories: HashMap<Position3D, Memory> = hashMapOf(),
         private val timestamps: HashMap<Position3D, Int> = hashMapOf(),
         private val requiredAttributes: Set<Attribute> = mutableSetOf(),
@@ -28,8 +29,19 @@ class VisualMemory(
         private val requiredEntityTypes: Set<KClass<EntityType>> = mutableSetOf(),
         private val excludedEntityTypes: Set<KClass<EntityType>> = mutableSetOf()) : Attribute {
 
-    fun remember(position: Position3D, turn: Int, entities: List<AnyGameEntity>) {
+    companion object {
+        /**
+         * As the locations are revisited, the memory of them can grow stronger.
+         * The [MAX_STRENGTH_FACTOR] indicates the maximum possible strength for
+         * any memory, with the max being [strength] * [MAX_STRENGTH_FACTOR].
+         */
+        const val MAX_STRENGTH_FACTOR: Double = 20.0
+    }
+
+    fun remember(position: Position3D, turn: Long, entities: List<AnyGameEntity>) {
         val snapshots: MutableList<EntitySnapshot> = mutableListOf()
+        val previousStrength = memories[position]?.strength ?: strength
+        val nextStrength = ((1.0 - memorizationRate) * previousStrength) + (memorizationRate * strength * MAX_STRENGTH_FACTOR)
 
         entities.forEach {
             if (canAccept(it)) {
@@ -37,7 +49,7 @@ class VisualMemory(
             }
         }
 
-        memories[position] = Memory(turn, strength, snapshots)
+        memories[position] = Memory(turn, nextStrength, snapshots)
     }
 
     fun getMemoryAt(position: Position3D): Memory? {

@@ -25,7 +25,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     private val sceneObservers: MutableSet<AnyGameEntity> = mutableSetOf()
     private var lastVisiblePositions: MutableSet<Position3D> = mutableSetOf()
 
-    var turn: Int = 0 // Represents how much game time has passed.
+    var turn: Long = 0 // Represents how much game time has passed.
         private set
 
     init {

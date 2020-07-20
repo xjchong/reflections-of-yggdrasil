@@ -18,7 +18,8 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
 
     companion object {
-        val MIN_MEMORY_FOGGINESS = 0.5
+        const val MIN_MEMORY_FOGGINESS = 0.6
+        const val MAX_MEMORY_FOGGINESS = 0.92
 
         fun createWith(entity: AnyGameEntity) = GameBlock(
             currentEntities = mutableListOf(entity)
@@ -26,7 +27,7 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
     }
 
     private var memory: Memory? = null
-    private var turn: Int = 0
+    private var turn: Long = 0
 
     override var tiles: PersistentMap<BlockTileType, Tile> = persistentMapOf()
         get() {
@@ -92,7 +93,7 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
         this.memory = memory
     }
 
-    fun setTurn(turn: Int) {
+    fun setTurn(turn: Long) {
         this.turn = turn
     }
 
@@ -105,7 +106,7 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
 
             val fogginess = (MIN_MEMORY_FOGGINESS
                     + ((turn - it.turn) * MIN_MEMORY_FOGGINESS / it.strength))
-                    .coerceAtMost(1.0)
+                    .coerceAtMost(MAX_MEMORY_FOGGINESS)
             val foregroundInterpolator = tile.foregroundColor.interpolateTo(GameColor.BACKGROUND)
             val backgroundInterpolator = tile.backgroundColor.interpolateTo(GameColor.BACKGROUND)
 
