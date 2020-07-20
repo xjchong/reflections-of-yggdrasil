@@ -2,9 +2,10 @@ package facets.active
 
 import builders.InventoryModalBuilder
 import commands.InspectInventory
-import entity.inventory
+import entity.*
 import events.DropInputEvent
 import events.EatInputEvent
+import events.WaitInputEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -21,13 +22,26 @@ object InventoryInspecting : BaseFacet<GameContext>() {
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(InspectInventory::class) { (context, inventoryOwner, position) ->
             val (world, screen) = context
-            val inventoryModal = InventoryModalBuilder.build(screen, inventoryOwner.inventory,
+            val inventoryModal = InventoryModalBuilder(screen).build(inventoryOwner.inventory,
                     onDrop = { item ->
                         world.update(screen, DropInputEvent(item))
                     },
                     onEat = { food ->
                         world.update(screen, EatInputEvent(food))
                         inventoryOwner.inventory.remove(food)
+                    },
+                    onEquip = { combatItem ->
+                        var oldCombatItem: CombatItem? = null
+
+                        inventoryOwner.whenTypeIs<EquipmentWearerType> {
+                            inventoryOwner.inventory.remove(combatItem)
+                            oldCombatItem = equipment.equip(combatItem)
+                            world.observeSceneBy(this, "The $this equips the $combatItem.")
+                            // Force the world to update, since equipping was done for 'free'.
+                            world.update(screen, WaitInputEvent())
+                        }
+
+                        oldCombatItem
                     })
 
             screen.openModal(inventoryModal)

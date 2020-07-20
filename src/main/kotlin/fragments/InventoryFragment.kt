@@ -1,19 +1,17 @@
 package fragments
 
 import attributes.Inventory
-import entity.Food
-import entity.FoodType
-import entity.Item
-import entity.whenTypeIs
+import entity.*
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Fragment
-import org.hexworks.zircon.api.uievent.Processed
+import org.hexworks.zircon.api.component.VBox
 
 class InventoryFragment(
         inventory: Inventory,
-        width: Int,
-        onDrop: (Item) -> Unit,
-        onEat: (Food) -> Unit) : Fragment {
+        private val width: Int,
+        private val onDrop: (Item) -> Unit,
+        private val onEat: (Food) -> Unit,
+        private val onEquip: (CombatItem) -> CombatItem?) : Fragment {
 
     companion object {
         const val NAME_COLUMN_WIDTH = 15
@@ -32,23 +30,36 @@ class InventoryFragment(
                             addComponent(Components.header().withText("Actions").withSize(ACTIONS_COLUMN_WIDTH, 1))
                         })
 
+
+
                 inventory.items.forEach { item ->
-                    val inventoryRow = InventoryRowFragment(width, item)
-                    val attachedInventoryRow = addFragment(inventoryRow)
-
-                    inventoryRow.onDrop = {
-                        attachedInventoryRow.detach()
-                        onDrop(item)
-                        Processed
-                    }
-
-                    inventoryRow.onEat = {
-                        item.whenTypeIs<FoodType> {
-                            attachedInventoryRow.detach()
-                            onEat(this)
-                            Processed
-                        }
-                    }
+                    addInventoryRow(this, item)
                 }
             }
+
+    private fun addInventoryRow(vBox: VBox, item: Item) {
+        val inventoryRow = InventoryRowFragment(width, item)
+        val attachedInventoryRow = vBox.addFragment(inventoryRow)
+
+        inventoryRow.onDrop = {
+            attachedInventoryRow.detach()
+            onDrop(item)
+        }
+
+        inventoryRow.onEat = {
+            item.whenTypeIs<FoodType> {
+                attachedInventoryRow.detach()
+                onEat(this)
+            }
+        }
+
+        inventoryRow.onEquip = {
+            item.whenTypeIs<CombatItemType> {
+                attachedInventoryRow.detach()
+                val oldCombatItem = onEquip(this)
+
+                oldCombatItem?.let { addInventoryRow(vBox, it) }
+            }
+        }
+    }
 }
