@@ -93,10 +93,12 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
     }
 
     private fun updateInfo(charLabel: Label, nameLabel: Label, statsLabel: Label, combatItem: Maybe<CombatItem>) {
+        val itemChar = combatItem.optional?.tile?.character
+
         charLabel.componentStyleSet = ComponentStyleSet.create(
                 combatItem.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
                 backgroundColor = GameColor.SECONDARY_BACKGROUND)
-        charLabel.textProperty.value = combatItem.optional?.tile?.character.toString() ?: ""
+        charLabel.textProperty.value = if (itemChar != null) itemChar.toString() else "" // Don't fold this expression, as nullChar.toString == "n"
         nameLabel.textProperty.value = combatItem.optional?.name?.capitalize() ?: "None"
         statsLabel.textProperty.value = combatItem.optional?.statsString ?: ""
     }
