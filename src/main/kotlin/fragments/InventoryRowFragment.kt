@@ -1,6 +1,7 @@
 package fragments
 
 import entity.*
+import extensions.withStyle
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Fragment
@@ -42,8 +43,10 @@ class InventoryRowFragment(width: Int, item: Item) : Fragment {
             .withSpacing(1)
             .withSize(width, 1)
             .build().apply {
-                addComponent(Components.icon()
-                        .withIcon(item.iconTile))
+                addComponent(Components.label()
+                        .withSize(1, 1)
+                        .withStyle(item.tile.foregroundColor)
+                        .withText(item.tile.character.toString()))
                 addComponent(Components.label()
                         .withSize(InventoryFragment.NAME_COLUMN_WIDTH, 1)
                         .withText(item.name.capitalize()))

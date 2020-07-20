@@ -11,7 +11,7 @@ import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.*
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
-import org.hexworks.zircon.api.data.Tile
+import org.hexworks.zircon.api.data.CharacterTile
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
@@ -26,7 +26,7 @@ var AnyGameEntity.position
         }
     }
 
-val AnyGameEntity.tile: Tile
+val AnyGameEntity.tile: CharacterTile
     get() = this.findAttribute(EntityTile::class).get().tile
 
 val AnyGameEntity.isObstacle: Boolean
