@@ -17,9 +17,11 @@ object Movable : BaseFacet<GameContext>() {
             val world = context.world
 
             world.fetchBlockAt(position).map { block ->
-                if (block.isObstructed) {
-                    result = source.tryActionsOn(context, block.obstacle.get())
-                } else if (world.moveEntity(source, position)) {
+                block.obstacle.ifPresent {
+                    result = source.tryActionsOn(context, it)
+                }
+
+                if (result == Pass && world.moveEntity(source, position)) {
                     result = Consumed
                 }
             }
