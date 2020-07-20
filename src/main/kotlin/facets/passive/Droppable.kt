@@ -16,7 +16,7 @@ object Droppable : BaseFacet<GameContext>() {
             if (inventoryOwner.removeFromInventory(item)) {
                 with (context.world) {
                     addEntity(item, position)
-                    observeSceneBy(inventoryOwner, "The $inventoryOwner drops the $item")
+                    observeSceneBy(inventoryOwner, "The $inventoryOwner drops the $item.")
                 }
             }
 

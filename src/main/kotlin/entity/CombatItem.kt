@@ -15,6 +15,7 @@ val CombatItem.defenseRating: Int
 val CombatItem.combatType: String
     get() = findAttribute(ItemCombatStats::class).get().combatType
 
+
 interface ArmorType : CombatItemType
 typealias Armor = GameEntity<ArmorType>
 

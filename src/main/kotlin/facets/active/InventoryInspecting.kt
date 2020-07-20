@@ -36,6 +36,10 @@ object InventoryInspecting : BaseFacet<GameContext>() {
                         inventoryOwner.whenTypeIs<EquipmentWearerType> {
                             inventoryOwner.inventory.remove(combatItem)
                             oldCombatItem = equipment.equip(combatItem)
+                            oldCombatItem?.let {
+                                inventoryOwner.inventory.add(it)
+                            }
+
                             world.observeSceneBy(this, "The $this equips the $combatItem.")
                             // Force the world to update, since equipping was done for 'free'.
                             world.update(screen, WaitInputEvent())

@@ -37,11 +37,11 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
         val infoTextBox = Components.textBox(width)
 
         weapon.ifPresent { weapon ->
-            addCombatItemInfo(weapon, infoTextBox, width)
+            addCombatItemInfo(weapon, weaponProperty as Property<Maybe<CombatItem>>, infoTextBox, width)
         }
 
         armor.ifPresent { armor ->
-            addCombatItemInfo(armor, infoTextBox, width)
+            addCombatItemInfo(armor, armorProperty as Property<Maybe<CombatItem>>, infoTextBox, width)
         }
 
         return infoTextBox.build()
@@ -67,20 +67,29 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
         throw IllegalStateException("Equipment does not accept combat item of type ${combatItem.type::class}.")
     }
 
-    private fun addCombatItemInfo(item: CombatItem, infoTextBox: TextBoxBuilder, width: Int) {
-        val weaponIcon = Components.icon().withIcon(item.iconTile).build()
-        val weaponNameLabel = Components.label().withText(item.name).build()
-        val weaponStatsLabel = Components.label().withText(
-                "A : ${item.attackRating} D: ${item.defenseRating}"
-        ).withSize(width - 1, 1).build()
+    private fun addCombatItemInfo(item: CombatItem, itemProperty: Property<Maybe<CombatItem>>, infoTextBox: TextBoxBuilder, width: Int) {
+        val itemIcon = Components.icon().withIcon(item.iconTile).build()
+        val itemNameLabel = Components.label().withText(item.name).build()
+        val itemStatsLabel = Components.label()
+                .withText(item.statsString)
+                .withSize(width - 1, 1)
+                .build()
+
+        itemProperty.onChange {
+            itemIcon.iconProperty.value = item.iconTile
+            itemNameLabel.textProperty.value = item.name
+            itemStatsLabel.textProperty.value = item.statsString
+        }
 
         infoTextBox.addHeader(item.combatType, withNewLine = false)
-                .addInlineComponent(weaponIcon)
-                .addInlineComponent(weaponNameLabel)
+                .addInlineComponent(itemIcon)
+                .addInlineComponent(itemNameLabel)
                 .commitInlineElements()
-                .addInlineComponent(weaponStatsLabel)
+                .addInlineComponent(itemStatsLabel)
                 .commitInlineElements()
                 .addNewLine()
     }
 
+    private val CombatItem.statsString: String
+        get() = "A : ${this.attackRating} D: ${this.defenseRating}"
 }
