@@ -17,7 +17,7 @@ object FoodEating : BaseFacet<GameContext>(EnergyLevel::class) {
         return command.responseWhenCommandIs(Eat::class) { (context, entity, food) ->
             entity.energyLevel.currentEnergy += food.energy
 
-            context.world.observeSceneBy(entity, "The $entity eats the $food")
+            context.world.observeSceneBy(entity, "The $entity eats the $food.")
             Consumed
         }
     }
