@@ -3,10 +3,12 @@ package attributes
 import entity.Item
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.cobalt.core.api.UUID
+import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 
 class Inventory(val size: Int) : Attribute {
 
     private val currentItems = mutableListOf<Item>()
+    val currentHash = createPropertyFrom(currentItems.hashCode())
 
     val items: List<Item>
         get() = currentItems.toList()
@@ -22,12 +24,20 @@ class Inventory(val size: Int) : Attribute {
     }
 
     fun add(item: Item): Boolean {
-        return if (isFull.not()) {
-            currentItems.add(item)
-        } else false
+        if (isFull.not() && currentItems.add(item)) {
+            currentHash.updateValue(currentItems.hashCode())
+            return true
+        }
+
+        return false
     }
 
     fun remove(item: Item): Boolean {
-        return currentItems.remove(item)
+        if (currentItems.remove(item)) {
+            currentHash.updateValue(currentItems.hashCode())
+            return true
+        }
+
+        return false
     }
 }

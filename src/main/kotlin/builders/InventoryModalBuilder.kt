@@ -29,7 +29,7 @@ class InventoryModalBuilder(private val screen: Screen) {
     fun build(inventory: Inventory,
               onDrop: (Item) -> Unit,
               onEat: (Food) -> Unit,
-              onEquip: (CombatItem) -> CombatItem?): Modal<EmptyModalResult> {
+              onEquip: (CombatItem) -> Unit): Modal<EmptyModalResult> {
         val panel = Components.panel()
                 .withSize(DIALOG_SIZE)
                 .withDecorations(box(title = "Inventory"), shadow())
@@ -59,7 +59,7 @@ class InventoryModalBuilder(private val screen: Screen) {
         panel.addFragment(inventoryFragment)
         panel.addComponent(closeButton)
 
-        modal.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, phase ->
+        modal.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, _ ->
             when (event.code) {
                 KeyCode.KEY_I, KeyCode.ESCAPE -> modal.close(EmptyModalResult)
             }

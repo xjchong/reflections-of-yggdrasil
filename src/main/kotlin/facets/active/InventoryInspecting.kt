@@ -1,6 +1,7 @@
 package facets.active
 
 import builders.InventoryModalBuilder
+import commands.Drop
 import commands.InspectInventory
 import entity.*
 import events.DropInputEvent
@@ -31,21 +32,22 @@ object InventoryInspecting : BaseFacet<GameContext>() {
                         inventoryOwner.inventory.remove(food)
                     },
                     onEquip = { combatItem ->
-                        var oldCombatItem: CombatItem? = null
-
                         inventoryOwner.whenTypeIs<EquipmentWearerType> {
-                            inventoryOwner.inventory.remove(combatItem)
-                            oldCombatItem = equipment.equip(combatItem)
-                            oldCombatItem?.let {
-                                inventoryOwner.inventory.add(it)
+                            if (!inventoryOwner.inventory.remove(combatItem)) return@whenTypeIs
+
+                            equipment.equip(combatItem)?.let {oldCombatItem ->
+                                // If owner couldn't place the old item in inventory, try to drop it instead.
+                                if (!inventoryOwner.inventory.add(oldCombatItem)) {
+                                    executeBlockingCommand(
+                                            Drop(context, inventoryOwner, oldCombatItem, inventoryOwner.position))
+                                }
                             }
 
                             world.observeSceneBy(this, "The $this equips the $combatItem.")
+
                             // Force the world to update, since equipping was done for 'free'.
                             world.update(screen, WaitInputEvent())
                         }
-
-                        oldCombatItem
                     })
 
             screen.openModal(inventoryModal)
