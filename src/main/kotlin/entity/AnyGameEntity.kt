@@ -41,9 +41,6 @@ val AnyGameEntity.isPlayer: Boolean
 val AnyGameEntity.isOpaque: Boolean
     get() = this.findAttribute(Opaque::class).isPresent
 
-val AnyGameEntity.snapshot: EntitySnapshot
-    get() = EntitySnapshot(type, getAttribute(EntityTile::class)?.tile)
-
 val AnyGameEntity.attackRating: Int
     get() {
         val combatantRating = getAttribute(CombatStats::class)?.attackRating ?: 0

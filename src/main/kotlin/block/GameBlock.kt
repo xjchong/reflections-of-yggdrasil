@@ -1,10 +1,13 @@
 package block
+import GameColor
+import attributes.Memory
 import constants.GameTileRepository
 import entity.*
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.BlockTileType
+import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
 import utilities.DebugConfig
@@ -15,13 +18,15 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
 
     companion object {
+        val MIN_MEMORY_FOGGINESS = 0.5
 
         fun createWith(entity: AnyGameEntity) = GameBlock(
             currentEntities = mutableListOf(entity)
         )
     }
 
-    private var memory: Tile = GameTileRepository.UNREVEALED
+    private var memory: Memory? = null
+    private var turn: Int = 0
 
     override var tiles: PersistentMap<BlockTileType, Tile> = persistentMapOf()
         get() {
@@ -35,7 +40,7 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
             val topTile = when {
                 DebugConfig.shouldRevealWorld -> GameTileRepository.EMPTY
                 isRevealed -> GameTileRepository.EMPTY
-                else -> memory
+                else -> getMemoryTile()
             }
 
             return persistentMapOf(
@@ -83,12 +88,32 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
         isRevealed = false
     }
 
-    fun rememberAs(tile: Tile?) {
-        memory = if (tile != null) {
-            tile.withForegroundColor(tile.foregroundColor.darkenByPercent(0.5))
-                    .withBackgroundColor(tile.backgroundColor.darkenByPercent(0.5))
-        } else {
-            GameTileRepository.UNREVEALED
+    fun rememberAs(memory: Memory?) {
+        this.memory = memory
+    }
+
+    fun setTurn(turn: Int) {
+        this.turn = turn
+    }
+
+    private fun getMemoryTile(): CharacterTile {
+        var memoryTile: CharacterTile = GameTileRepository.UNREVEALED
+
+        memory?.let {
+            val snapshot = it.snapshots.firstOrNull()
+            val tile = snapshot?.tile ?: GameTileRepository.FLOOR
+
+            val fogginess = (MIN_MEMORY_FOGGINESS
+                    + ((turn - it.turn) * MIN_MEMORY_FOGGINESS / it.strength))
+                    .coerceAtMost(1.0)
+            val foregroundInterpolator = tile.foregroundColor.interpolateTo(GameColor.BACKGROUND)
+            val backgroundInterpolator = tile.backgroundColor.interpolateTo(GameColor.BACKGROUND)
+
+            memoryTile = tile
+                    .withForegroundColor(foregroundInterpolator.getColorAtRatio(fogginess))
+                    .withBackgroundColor(backgroundInterpolator.getColorAtRatio(fogginess))
         }
+
+        return memoryTile
     }
 }

@@ -2,8 +2,8 @@ package game
 import attributes.Vision
 import attributes.VisualMemory
 import block.GameBlock
-import constants.GameTileRepository
 import entity.*
+import events.Foreground
 import events.GameInputEvent
 import events.logGameEvent
 import org.hexworks.amethyst.api.entity.Entity
@@ -25,6 +25,9 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     private val sceneObservers: MutableSet<AnyGameEntity> = mutableSetOf()
     private var lastVisiblePositions: MutableSet<Position3D> = mutableSetOf()
 
+    var turn: Int = 0 // Represents how much game time has passed.
+        private set
+
     init {
         startingBlocks.forEach { (pos, block) ->
             setBlockAt(pos, block)
@@ -37,6 +40,10 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
     fun update(screen: Screen, event: GameInputEvent) {
         val context = GameContext(this, screen, event)
+
+        if (event.type == Foreground) {
+            updateTurn()
+        }
 
         engine.update(context)
     }
@@ -179,10 +186,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
                 block.reveal()
 
                 entity.findAttribute(VisualMemory::class).ifPresent {
-                    val snapshots = it.memories.get(visiblePos)
-                    val tile = snapshots?.firstOrNull()?.tile ?: GameTileRepository.FLOOR
-
-                    block.rememberAs(tile)
+                    block.rememberAs(it.getMemoryAt(visiblePos))
                 }
             }
         }
@@ -195,5 +199,14 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
         lastVisiblePositions.clear()
         lastVisiblePositions.addAll(nextVisiblePositions)
+    }
+
+    private fun updateTurn() {
+        turn++
+        actualSize.fetchPositions().forEach { pos ->
+            fetchBlockAt(pos).ifPresent { block ->
+                block.setTurn(turn)
+            }
+        }
     }
 }

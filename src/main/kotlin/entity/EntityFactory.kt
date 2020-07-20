@@ -17,8 +17,6 @@ import game.GameContext
 import org.hexworks.amethyst.api.builder.EntityBuilder
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.amethyst.api.newEntityOfType
-import org.hexworks.zircon.api.GraphicalTilesetResources
-import org.hexworks.zircon.api.data.Tile
 import kotlin.random.Random
 
 
@@ -66,6 +64,7 @@ object EntityFactory {
                 Obstacle,
                 Vision(5),
                 VisualMemory(
+                        strength = 150,
                         excludedFacets = mutableSetOf(Movable)
                 ),
 
