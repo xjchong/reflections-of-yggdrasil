@@ -1,12 +1,17 @@
 package attributes
 
+import GameColor
 import entity.*
+import extensions.create
 import extensions.optional
+import extensions.withStyle
+import extensions.withTextFrom
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
+import org.hexworks.zircon.api.component.ComponentStyleSet
 
 class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): DisplayableAttribute {
 
@@ -33,6 +38,13 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
         }()
 
     override fun toComponent(width: Int): Component {
+        val weaponCharLabel = Components.label()
+                .withStyle(
+                        weapon.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
+                        backgroundColor = GameColor.SECONDARY_BACKGROUND)
+                .withTextFrom(weapon.optional?.tile)
+                .withSize(1, 1)
+                .build()
         val weaponNameLabel = Components.label()
                 .withText(weapon.optional?.name?.capitalize() ?: "None")
                 .withSize(width - 2, 1)
@@ -42,6 +54,13 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
                 .withSize(width - 1, 1)
                 .build()
 
+        val armorCharLabel = Components.label()
+                .withStyle(
+                        armor.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
+                        backgroundColor = GameColor.SECONDARY_BACKGROUND)
+                .withTextFrom(armor.optional?.tile)
+                .withSize(1, 1)
+                .build()
         val armorNameLabel = Components.label()
                 .withText(armor.optional?.name?.capitalize() ?: "None")
                 .withSize(width - 2, 1)
@@ -52,23 +71,33 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
                 .build()
 
         weaponProperty.onChange {
+            weaponCharLabel.componentStyleSet = ComponentStyleSet.create(
+                    weapon.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
+                    backgroundColor = GameColor.SECONDARY_BACKGROUND)
+            weaponCharLabel.textProperty.value = weapon.optional?.tile?.character.toString() ?: ""
             weaponNameLabel.textProperty.value = weapon.optional?.name?.capitalize() ?: "None"
             weaponStatsLabel.textProperty.value = weapon.optional?.statsString ?: ""
         }
 
         armorProperty.onChange {
+            armorCharLabel.componentStyleSet = ComponentStyleSet.create(
+                    armor.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
+                    backgroundColor = GameColor.SECONDARY_BACKGROUND)
+            armorCharLabel.textProperty.value = armor.optional?.tile?.character.toString() ?: ""
             armorNameLabel.textProperty.value = armor.optional?.name?.capitalize() ?: "None"
             armorStatsLabel.textProperty.value = armor.optional?.statsString ?: ""
         }
 
         return Components.textBox(width)
                 .addHeader("Weapon", withNewLine = false)
+                .addInlineComponent(weaponCharLabel)
                 .addInlineComponent(weaponNameLabel)
                 .commitInlineElements()
                 .addInlineComponent(weaponStatsLabel)
                 .commitInlineElements()
                 .addNewLine()
                 .addHeader("Armour", withNewLine = false)
+                .addInlineComponent(armorCharLabel)
                 .addInlineComponent(armorNameLabel)
                 .commitInlineElements()
                 .addInlineComponent(armorStatsLabel)
