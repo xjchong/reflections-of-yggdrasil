@@ -2,6 +2,7 @@ package facets.passive
 
 import commands.Move
 import entity.tryActionsOn
+import extensions.optional
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -16,12 +17,12 @@ object Movable : BaseFacet<GameContext>() {
             var result: Response = Pass
             val world = context.world
 
-            world.fetchBlockAt(position).map { block ->
-                block.obstacle.ifPresent {
-                    result = source.tryActionsOn(context, it)
-                }
+            world.fetchBlockAt(position).ifPresent { block ->
+                val obstacle = block.obstacle.optional
 
-                if (result == Pass && world.moveEntity(source, position)) {
+                if (obstacle != null) {
+                    result = source.tryActionsOn(context, obstacle)
+                } else if (world.moveEntity(source, position)) {
                     result = Consumed
                 }
             }
