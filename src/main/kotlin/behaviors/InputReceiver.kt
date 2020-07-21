@@ -50,7 +50,11 @@ object InputReceiver : BaseBehavior<GameContext>() {
         val world = context.world
         val block = world.fetchBlockAt(position).optional ?: return
 
-        for (item in block.items) {
+        for (item in block.items.reversed()) {
+            if (inventory.isFull) {
+                logGameEvent("The $this has no room to take the $item.")
+                break
+            }
             if (executeCommand(Take(context, this, item)) is Consumed) {
                 break
             }
