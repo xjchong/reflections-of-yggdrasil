@@ -112,7 +112,7 @@ class GameBlock(private val position: Position3D,
         var memoryTile: CharacterTile = GameTileRepository.UNREVEALED
 
         memory?.let {
-            val snapshot = it.snapshots.firstOrNull()
+            val snapshot = it.snapshots.lastOrNull()
             val tile = snapshot?.tile ?: GameTileRepository.FLOOR
 
             val fogginess = (MIN_MEMORY_FOGGINESS
