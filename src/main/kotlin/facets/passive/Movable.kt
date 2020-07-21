@@ -1,6 +1,8 @@
 package facets.passive
 
 import commands.Move
+import entity.position
+import extensions.optional
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -14,9 +16,10 @@ object Movable : BaseFacet<GameContext>() {
         return command.responseWhenCommandIs(Move::class) { (context, source, position) ->
             var result: Response = Pass
             val world = context.world
+            val currentBlock = world.fetchBlockAt(source.position).optional ?: return@responseWhenCommandIs Pass
 
             world.fetchBlockAt(position).ifPresent { block ->
-                if (block.isObstructed.not() && world.moveEntity(source, position)) {
+                if (block.transfer(source, currentBlock)) {
                     result = Consumed
                 }
             }

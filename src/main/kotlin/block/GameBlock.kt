@@ -8,11 +8,13 @@ import kotlinx.collections.immutable.persistentMapOf
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.BlockTileType
 import org.hexworks.zircon.api.data.CharacterTile
+import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
 import utilities.DebugConfig
 
-class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
+class GameBlock(private val position: Position3D,
+                private var defaultTile: Tile = GameTileRepository.FLOOR,
                 private val currentEntities: MutableList<AnyGameEntity> = mutableListOf(),
                 private var isRevealed: Boolean = false)
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
@@ -21,8 +23,9 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
         const val MIN_MEMORY_FOGGINESS = 0.6
         const val MAX_MEMORY_FOGGINESS = 0.92
 
-        fun createWith(entity: AnyGameEntity) = GameBlock(
-            currentEntities = mutableListOf(entity)
+        fun createWith(position: Position3D, entity: AnyGameEntity) = GameBlock(
+                position = position,
+                currentEntities = mutableListOf(entity)
         )
     }
 
@@ -69,16 +72,24 @@ class GameBlock(private var defaultTile: Tile = GameTileRepository.FLOOR,
     val entities: Iterable<AnyGameEntity>
         get() = currentEntities.toList()
 
-    fun createWith(entity: AnyGameEntity) = GameBlock(
-        currentEntities = mutableListOf(entity)
-    )
-
     fun addEntity(entity: AnyGameEntity) {
         currentEntities.add(entity)
     }
 
-    fun removeEntity(entity: AnyGameEntity) {
-        currentEntities.remove(entity)
+    fun removeEntity(entity: AnyGameEntity): Boolean {
+        return currentEntities.remove(entity)
+    }
+
+    @Synchronized fun transfer(entity: AnyGameEntity, currentBlock: GameBlock): Boolean {
+        if (isObstructed) {
+            return false
+        }
+
+        if (!currentBlock.removeEntity(entity)) return false
+        currentEntities.add(entity)
+        entity.position = position
+
+        return true
     }
 
     fun reveal() {

@@ -31,7 +31,7 @@ class WorldBuilder(private val worldSize: Size3D) {
     }
 
     fun makeDungeon(): WorldBuilder {
-        fill(WALL_REGION_ID) { GameBlockFactory.wall() }
+        fill(WALL_REGION_ID) { pos -> GameBlockFactory.wall(pos) }
 
         repeat(depth) { level ->
             placeBorder(level)
@@ -60,22 +60,27 @@ class WorldBuilder(private val worldSize: Size3D) {
         return (Random.asJavaRandom().nextGaussian() * standardDeviation) + mu
     }
 
-    private fun fill(regionId: Int, fn: () -> GameBlock) {
+    private fun fill(regionId: Int, fn: (Position3D) -> GameBlock) {
         forAllPositions { pos ->
-            blocks[pos] = fn()
+            blocks[pos] = fn(pos)
             regionIds[pos] = regionId
         }
     }
 
     private fun placeBorder(level: Int) {
+        var position: Position3D = Position3D.defaultPosition()
         repeat(width) { col ->
-            blocks[Position3D.create(col, 0, level)] = GameBlockFactory.wall(isDiggable = false) }
+            position = Position3D.create(col, 0, level)
+            blocks[position] = GameBlockFactory.wall(position, isDiggable = false) }
         repeat(width) { col ->
-            blocks[Position3D.create(col, height - 1, level)] = GameBlockFactory.wall(isDiggable = false) }
+            position = Position3D.create(col, height - 1, level)
+            blocks[position] = GameBlockFactory.wall(position, isDiggable = false) }
         repeat(height) { row ->
-            blocks[Position3D.create(0, row, level)] = GameBlockFactory.wall(isDiggable = false) }
+            position = Position3D.create(0, row, level)
+            blocks[position] = GameBlockFactory.wall(position, isDiggable = false) }
         repeat(height) { row ->
-            blocks[Position3D.create(width - 1, row, level)] = GameBlockFactory.wall(isDiggable = false) }
+            position = Position3D.create(width - 1, row, level)
+            blocks[position] = GameBlockFactory.wall(position, isDiggable = false) }
     }
 
     private fun placeRooms(level: Int, attempts: Int, meanWidth: Int, meanHeight: Int, standardDeviation: Double) {
@@ -87,7 +92,7 @@ class WorldBuilder(private val worldSize: Size3D) {
 
             if (isRoomSafe(x, y, level, roomWidth, roomHeight)) {
                 forSlice(Position3D.create(x, y, level), roomWidth, roomHeight) { pos ->
-                    blocks[pos] = GameBlockFactory.floor()
+                    blocks[pos] = GameBlockFactory.floor(pos)
                     regionIds[pos] = nextRegionId
                 }
                 nextRegionId++
@@ -122,7 +127,7 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     private fun placeCorridorFrom(startPos: Position3D, cyclePercent: Double) {
         val directions = mutableListOf<Char>('e', 's', 'w', 'n').shuffled()
-        blocks[startPos] = GameBlockFactory.floor()
+        blocks[startPos] = GameBlockFactory.floor(startPos)
         regionIds[startPos] = nextRegionId
 
         for (direction in directions) {
@@ -137,7 +142,7 @@ class WorldBuilder(private val worldSize: Size3D) {
 
             if (blocks[endPos]?.isWall == true || couldCreateCycle) {
                 forSlice(startPos, endPos) { pos ->
-                    blocks[pos] = GameBlockFactory.floor()
+                    blocks[pos] = GameBlockFactory.floor(pos)
                     regionIds[pos] = nextRegionId
                 }
 
@@ -176,10 +181,10 @@ class WorldBuilder(private val worldSize: Size3D) {
             }
 
             if (needsMerge) {
-                blocks[pos] = GameBlockFactory.door()
+                blocks[pos] = GameBlockFactory.door(pos)
                 if (isDisjoint) mergedRegionIds.add(adjacentRegions)
             } else if (canCreateExtra) {
-                blocks[pos] = GameBlockFactory.door()
+                blocks[pos] = GameBlockFactory.door(pos)
                 extraDoorsCount++
             }
         }
@@ -194,7 +199,7 @@ class WorldBuilder(private val worldSize: Size3D) {
     private fun removeDeadEnd(position: Position3D) {
         if (!isDeadEnd(position)) return
 
-        blocks[position] = GameBlockFactory.wall()
+        blocks[position] = GameBlockFactory.wall(position)
         regionIds[position] = WALL_REGION_ID
 
         for (neighborPos in position.adjacentNeighbors(shouldShuffle = false)) {
@@ -215,7 +220,7 @@ class WorldBuilder(private val worldSize: Size3D) {
             if (Math.random() >= removalPercent) continue
             if (wallPos.adjacentNeighbors(false).all { neighborPos ->
                         blocks[neighborPos]?.isUnoccupied == true }) {
-                blocks[wallPos] = GameBlockFactory.floor()
+                blocks[wallPos] = GameBlockFactory.floor(wallPos)
             }
         }
     }
@@ -240,8 +245,8 @@ class WorldBuilder(private val worldSize: Size3D) {
     private fun randomizeTiles(): WorldBuilder {
         forAllPositions { pos ->
             blocks[pos] = if (Math.random() < 0.5) {
-                GameBlockFactory.floor()
-            } else GameBlockFactory.wall()
+                GameBlockFactory.floor(pos)
+            } else GameBlockFactory.wall(pos)
         }
         return this
     }
@@ -260,7 +265,7 @@ class WorldBuilder(private val worldSize: Size3D) {
                         } else rocks++
                     }
                 }
-                newBlocks[Position3D.create(x, y, z)] = if (floors >= rocks) GameBlockFactory.floor() else GameBlockFactory.wall()
+                newBlocks[Position3D.create(x, y, z)] = if (floors >= rocks) GameBlockFactory.floor(pos) else GameBlockFactory.wall(pos)
             }
             blocks = newBlocks
         }

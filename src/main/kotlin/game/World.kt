@@ -95,22 +95,6 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         entity.position = Position3D.unknown()
     }
 
-    fun moveEntity(entity: AnyGameEntity, endPosition: Position3D): Boolean {
-        val startBlock = fetchBlockAt(entity.position)
-        val endBlock = fetchBlockAt(endPosition)
-        var isSuccess = false
-
-        if (startBlock.isPresent && endBlock.isPresent) {
-            startBlock.get().removeEntity(entity)
-            entity.position = endPosition
-            endBlock.get().addEntity(entity)
-
-            isSuccess = true
-        }
-
-        return isSuccess
-    }
-
     fun fetchEntitiesAt(position: Position3D): List<AnyGameEntity> {
         val entities = mutableListOf<AnyGameEntity>()
 

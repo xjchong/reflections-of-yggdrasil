@@ -1,12 +1,13 @@
 package block
 
 import entity.EntityFactory
+import org.hexworks.zircon.api.data.Position3D
 
 object GameBlockFactory {
 
-    fun floor() = GameBlock()
+    fun floor(position: Position3D) = GameBlock(position)
 
-    fun wall(isDiggable: Boolean = true) = GameBlock.createWith(EntityFactory.newWall(isDiggable))
+    fun wall(position: Position3D, isDiggable: Boolean = true) = GameBlock.createWith(position, EntityFactory.newWall(isDiggable))
 
-    fun door() = GameBlock.createWith(EntityFactory.newDoor())
+    fun door(position: Position3D) = GameBlock.createWith(position, EntityFactory.newDoor())
 }
