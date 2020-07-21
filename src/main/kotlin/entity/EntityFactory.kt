@@ -42,7 +42,7 @@ object EntityFactory {
                         defenseRating = 1
                 ))
         behaviors(Wanderer)
-        facets(Attackable, Destructible, Movable)
+        facets(ActionAttempting, Attackable, Destructible, Movable)
     }
 
     fun newBatMeat() = newGameEntityOfType(BatMeat) {
@@ -71,7 +71,7 @@ object EntityFactory {
                         defenseRating = 5
                 ))
         behaviors(InputReceiver, EnergyExpender, VisualRememberer)
-        facets(Attackable, EnergyExpender, EquipmentWearing, FoodEating, InventoryInspecting, ItemDropping, ItemTaking, Movable)
+        facets(ActionAttempting, Attackable, EnergyExpender, EquipmentWearing, FoodEating, InventoryInspecting, ItemDropping, ItemTaking, Movable)
     }
 
     fun newFungus(fungusSpread: Proliferation = Proliferation(0.02, 1.7)) = newGameEntityOfType(Fungus) {
@@ -142,7 +142,7 @@ object EntityFactory {
                         defenseRating = 5
                 ))
         behaviors(DumbChaser or Wanderer)
-        facets(Attackable, Destructible, Movable)
+        facets(ActionAttempting, Attackable, Destructible, Movable)
     }
 
     fun newFogOfWar(game: Game) = FogOfWar(game, needsUpdate = true)

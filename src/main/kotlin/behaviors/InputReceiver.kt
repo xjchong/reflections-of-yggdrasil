@@ -6,6 +6,7 @@ import events.*
 import extensions.optional
 import game.GameContext
 import org.hexworks.amethyst.api.Consumed
+import org.hexworks.amethyst.api.Pass
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
@@ -34,7 +35,11 @@ object InputReceiver : BaseBehavior<GameContext>() {
                 }
             }
             is MoveInputEvent -> {
-                entity.executeCommand(Move(context, entity, position.withRelative(event.relativePosition)))
+                val nextPosition = position.withRelative(event.relativePosition)
+
+                if (entity.executeCommand(AttemptAnyAction(context, entity, nextPosition)) == Pass) {
+                    entity.executeCommand(Move(context, entity, nextPosition))
+                }
             }
             is TakeInputEvent -> {
                 entity.whenTypeIs<InventoryOwnerType> {

@@ -1,11 +1,13 @@
 package behaviors
 
+import commands.AttemptAnyAction
 import commands.Move
 import entity.AnyGameEntity
 import entity.position
 import extensions.neighbors
 import extensions.optional
 import game.GameContext
+import org.hexworks.amethyst.api.Pass
 
 
 object Wanderer : ForegroundBehavior() {
@@ -20,7 +22,10 @@ object Wanderer : ForegroundBehavior() {
             }
 
             nextPosition?.let {
-                entity.executeCommand(Move(context, entity, it))
+                if (entity.executeCommand(AttemptAnyAction(context, entity, it)) == Pass) {
+                    entity.executeCommand(Move(context, entity, it))
+                }
+
                 return true
             }
         }

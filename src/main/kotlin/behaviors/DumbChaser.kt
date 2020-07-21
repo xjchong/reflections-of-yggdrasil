@@ -1,5 +1,6 @@
 package behaviors
 
+import commands.AttemptAnyAction
 import commands.Move
 import entity.AnyGameEntity
 import entity.Player
@@ -8,6 +9,7 @@ import entity.position
 import extensions.neighbors
 import extensions.optional
 import game.GameContext
+import org.hexworks.amethyst.api.Pass
 
 object DumbChaser : ForegroundBehavior() {
 
@@ -53,7 +55,10 @@ object DumbChaser : ForegroundBehavior() {
                         potentialMoves.firstOrNull()?.let { nextPosition = it }
                     }
 
-                    entity.executeBlockingCommand(Move(context, entity, nextPosition))
+                    if (entity.executeBlockingCommand(AttemptAnyAction(context, entity, nextPosition)) == Pass) {
+                        entity.executeBlockingCommand(Move(context, entity, nextPosition))
+                    }
+
                     isChasing = true
                 }
             }

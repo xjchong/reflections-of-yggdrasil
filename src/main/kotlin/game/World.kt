@@ -111,6 +111,16 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         return isSuccess
     }
 
+    fun fetchEntitiesAt(position: Position3D): List<AnyGameEntity> {
+        val entities = mutableListOf<AnyGameEntity>()
+
+        fetchBlockAt(position).ifPresent { block ->
+            entities.addAll(block.entities)
+        }
+
+        return entities
+    }
+
     fun addAtEmptyPosition(
             entity: AnyGameEntity,
             offset: Position3D = Position3D.defaultPosition(),

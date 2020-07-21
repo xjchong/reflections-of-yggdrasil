@@ -8,7 +8,9 @@ import facets.passive.AdaptableSyntax
 import facets.passive.Takeable
 import game.GameContext
 import kotlinx.coroutines.runBlocking
-import org.hexworks.amethyst.api.*
+import org.hexworks.amethyst.api.Attribute
+import org.hexworks.amethyst.api.Command
+import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.CharacterTile
@@ -66,23 +68,6 @@ fun AnyGameEntity.syntaxFor(owner: AdaptableSyntax, subKey: String? = null): Str
 
 fun AnyGameEntity.executeBlockingCommand(command: Command<out EntityType, GameContext>): Response {
     return runBlocking { executeCommand(command) }
-}
-
-fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Response {
-    var result: Response = Pass
-
-    findAttribute(EntityActions::class).map {
-        val actions = it.createActionsFor(context, this, target)
-
-        for (action in actions) {
-            if (target.executeBlockingCommand(action) is Consumed) {
-                result = Consumed
-                break
-            }
-        }
-    }
-
-    return result
 }
 
 inline fun <reified T : EntityType> Iterable<AnyGameEntity>.filterType() : List<Entity<T, GameContext>> {
