@@ -27,6 +27,7 @@ object GameConfig {
     const val BATS_PER_LEVEL = 6
     const val EN_PER_LEVEL = 20
     const val FUNGI_PER_LEVEL = 10
+    const val ZOMBIES_PER_LEVEL = 3
     const val WEAPONS_PER_LEVEL = 2
     const val ARMOR_PER_LEVEL = 2
 

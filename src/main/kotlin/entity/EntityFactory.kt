@@ -128,9 +128,10 @@ object EntityFactory {
         attributes(
                 EntityActions(Attack::class),
                 EntityPosition(),
-                EntityTile(GameTileRepository.BAT),
+                EntityTile(GameTileRepository.ZOMBIE),
                 Inventory(5).apply {
-                    // TODO: Add some equipment here.
+                    add(newRandomArmor())
+                    add(newRandomWeapon())
                 },
                 Obstacle,
                 Vision(5),
@@ -140,7 +141,7 @@ object EntityFactory {
                         attackRating = 10,
                         defenseRating = 5
                 ))
-        behaviors(Wanderer)
+        behaviors(DumbChaser or Wanderer)
         facets(Attackable, Destructible, Movable)
     }
 

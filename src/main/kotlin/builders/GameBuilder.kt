@@ -28,6 +28,7 @@ class GameBuilder(val worldSize: Size3D) {
         addEntities(GameConfig.BATS_PER_LEVEL) { EntityFactory.newBat() }
         addEntities(GameConfig.EN_PER_LEVEL) { EntityFactory.newEn() }
         addEntities(GameConfig.FUNGI_PER_LEVEL) { EntityFactory.newFungus() }
+        addEntities(GameConfig.ZOMBIES_PER_LEVEL) { EntityFactory.newZombie() }
         addEntities(GameConfig.WEAPONS_PER_LEVEL) { EntityFactory.newRandomWeapon() }
         addEntities(GameConfig.ARMOR_PER_LEVEL) { EntityFactory.newRandomArmor() }
 
