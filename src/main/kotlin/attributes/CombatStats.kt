@@ -16,7 +16,7 @@ class CombatStats(
     val maxHealth: Int by maxHealthProperty.asDelegate()
     var health: Int by healthProperty.asDelegate()
     val attackRating: Int by attackRatingProperty.asDelegate()
-    val defenseRating: Int by attackRatingProperty.asDelegate()
+    val defenseRating: Int by defenseRatingProperty.asDelegate()
 
     companion object {
 
