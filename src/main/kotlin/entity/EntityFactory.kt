@@ -38,7 +38,7 @@ object EntityFactory {
 
                 CombatStats.create(
                         maxHealth = 20,
-                        attackRating = 5,
+                        attackRating = 7,
                         defenseRating = 1
                 ))
         behaviors(Wanderer)

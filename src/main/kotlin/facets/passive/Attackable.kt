@@ -17,7 +17,7 @@ object Attackable : BaseFacet<GameContext>() {
         return command.responseWhenCommandIs(Attack::class) { (context, attacker, target) ->
             if (!attacker.isPlayer && !target.isPlayer) return@responseWhenCommandIs Pass
 
-            val damage = (attacker.attackRating - target.defenseRating).coerceAtLeast(0)
+            val damage = (attacker.attackRating - target.defenseRating).coerceAtLeast(1)
 
             with (target) {
                 combatStats.health -= damage
