@@ -1,19 +1,17 @@
 package behaviors
 
 import commands.Move
+import entity.AnyGameEntity
 import entity.Player
 import entity.executeBlockingCommand
 import entity.position
 import extensions.neighbors
 import extensions.optional
 import game.GameContext
-import org.hexworks.amethyst.api.base.BaseBehavior
-import org.hexworks.amethyst.api.entity.Entity
-import org.hexworks.amethyst.api.entity.EntityType
 
-object DumbChaser : BaseBehavior<GameContext>() {
+object DumbChaser : ForegroundBehavior() {
 
-    override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
+    override suspend fun foregroundUpdate(entity: AnyGameEntity, context: GameContext): Boolean {
         val world = context.world
         var isChasing = false
 

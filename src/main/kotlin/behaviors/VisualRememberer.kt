@@ -1,18 +1,14 @@
 package behaviors
 
 import attributes.VisualMemory
+import entity.AnyGameEntity
 import entity.getAttribute
 import entity.position
 import game.GameContext
-import org.hexworks.amethyst.api.base.BaseBehavior
-import org.hexworks.amethyst.api.entity.Entity
-import org.hexworks.amethyst.api.entity.EntityType
 
-object VisualRememberer : BaseBehavior<GameContext>() {
+object VisualRememberer : ForegroundBehavior() {
 
-    override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
-        if (context.inBackground) return true
-
+    override suspend fun foregroundUpdate(entity: AnyGameEntity, context: GameContext): Boolean {
         val world = context.world
         val position = entity.position
         val visualMemory = entity.getAttribute(VisualMemory::class) ?: return false

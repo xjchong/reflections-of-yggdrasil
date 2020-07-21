@@ -41,6 +41,7 @@ object InputReceiver : BaseBehavior<GameContext>() {
                     tryTakeAt(position, context)
                 }
             }
+            is WaitInputEvent -> return true
         }
 
         return true

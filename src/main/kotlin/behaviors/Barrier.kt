@@ -3,16 +3,12 @@ package behaviors
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import attributes.flag.Opened
+import entity.AnyGameEntity
 import game.GameContext
-import org.hexworks.amethyst.api.base.BaseBehavior
-import org.hexworks.amethyst.api.entity.Entity
-import org.hexworks.amethyst.api.entity.EntityType
 
-object Barrier : BaseBehavior<GameContext>() {
+object Barrier : ForegroundBehavior() {
 
-    override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
-        if (context.inBackground) return true
-
+    override suspend fun foregroundUpdate(entity: AnyGameEntity, context: GameContext): Boolean {
         with(entity.asMutableEntity()) {
             findAttribute(Opened::class).ifPresent {
                 removeAttribute(Obstacle)
