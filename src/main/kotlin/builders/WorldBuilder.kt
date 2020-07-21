@@ -214,7 +214,7 @@ class WorldBuilder(private val worldSize: Size3D) {
         for (wallPos in getAllWallPositions(level)) {
             if (Math.random() >= removalPercent) continue
             if (wallPos.adjacentNeighbors(false).all { neighborPos ->
-                        blocks[neighborPos]?.isWall == false }) {
+                        blocks[neighborPos]?.isUnoccupied == true }) {
                 blocks[wallPos] = GameBlockFactory.floor()
             }
         }
@@ -266,6 +266,11 @@ class WorldBuilder(private val worldSize: Size3D) {
         }
         return this
     }
+
+
+    /**
+     * POSITION HELPERS
+     */
 
     private fun forAllPositions(fn: (Position3D) -> Unit) {
         worldSize.fetchPositions().forEach(fn)
