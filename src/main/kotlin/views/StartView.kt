@@ -7,8 +7,6 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.component.renderer.ComponentDecorationRenderer
 import org.hexworks.zircon.api.grid.TileGrid
-import org.hexworks.zircon.api.uievent.MouseEventType
-import org.hexworks.zircon.api.uievent.UIEventResponse
 import org.hexworks.zircon.api.view.base.BaseView
 
 class StartView(private val tileGrid: TileGrid) : BaseView(tileGrid) {
@@ -31,9 +29,8 @@ class StartView(private val tileGrid: TileGrid) : BaseView(tileGrid) {
                         shadow())
                 .build()
 
-        startButton.handleMouseEvents(MouseEventType.MOUSE_RELEASED) { _, _ ->
+        startButton.onActivated {
             PlayView(tileGrid).dock()
-            UIEventResponse.processed()
         }
 
         screen.theme = GameConfig.THEME
