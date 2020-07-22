@@ -1,12 +1,12 @@
 package behaviors
 
+import attributes.Inventory
 import commands.*
 import entity.*
 import events.*
 import extensions.optional
 import facets.passive.Takeable
 import game.GameContext
-import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity
@@ -43,9 +43,7 @@ object InputReceiver : BaseBehavior<GameContext>() {
                 }
             }
             is TakeInputEvent -> {
-                entity.whenTypeIs<InventoryOwnerType> {
-                    tryTakeAt(position, context)
-                }
+                entity.tryTakeAt(position, context)
             }
             is WaitInputEvent -> return true
         }
@@ -53,19 +51,14 @@ object InputReceiver : BaseBehavior<GameContext>() {
         return true
     }
 
-    private suspend fun InventoryOwner.tryTakeAt(position: Position3D, context: GameContext) {
+    private suspend fun AnyGameEntity.tryTakeAt(position: Position3D, context: GameContext) {
         val world = context.world
         val block = world.fetchBlockAt(position).optional ?: return
+        val inventory = getAttribute(Inventory::class)
 
         for (entity in block.entities.reversed()) {
-            if (entity.findFacet(Takeable::class).isPresent.not()) continue
-
-            if (inventory.isFull) {
-                logGameEvent("The $this has no room to take the $entity.")
-                break
-            }
-
-            if (executeCommand(Take(context, this, entity)) is Consumed) {
+            if (entity.findFacet(Takeable::class).isPresent) {
+                entity.executeCommand(Take(context, entity, this))
                 break
             }
         }

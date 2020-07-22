@@ -10,7 +10,10 @@ import commands.Attack
 import commands.Dig
 import commands.Open
 import constants.GameTileRepository
-import facets.active.*
+import facets.active.ActionAttempting
+import facets.active.FoodEating
+import facets.active.InventoryInspecting
+import facets.active.ItemDropping
 import facets.passive.*
 import game.Game
 import game.GameContext
@@ -71,7 +74,7 @@ object EntityFactory {
                         defenseRating = 5
                 ))
         behaviors(InputReceiver, EnergyExpender, VisualRememberer)
-        facets(ActionAttempting, Attackable, EnergyExpender, FoodEating, InventoryInspecting, ItemDropping, ItemTaking, Movable)
+        facets(ActionAttempting, Attackable, EnergyExpender, FoodEating, InventoryInspecting, ItemDropping, Movable)
     }
 
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 1.7)) = newGameEntityOfType(Fungus) {
