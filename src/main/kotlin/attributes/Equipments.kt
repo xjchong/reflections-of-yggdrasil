@@ -4,6 +4,8 @@ import GameColor
 import entity.*
 import extensions.create
 import extensions.optional
+import facets.passive.Wearable
+import facets.passive.Wieldable
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
@@ -12,21 +14,28 @@ import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.ComponentStyleSet
 import org.hexworks.zircon.api.component.Label
 
-class Equipments(initialWeapon: Weapon? = null, initialArmor: Armor? = null): DisplayableAttribute {
+class Equipments(initialWeapon: AnyGameEntity? = null, initialArmor: AnyGameEntity? = null) : DisplayableAttribute {
 
-    private val weaponProperty: Property<Maybe<Weapon>> = createPropertyFrom(Maybe.ofNullable(initialWeapon))
-    private val weapon: Maybe<Weapon> by weaponProperty.asDelegate()
+    private val weaponProperty: Property<Maybe<AnyGameEntity>> =
+            createPropertyFrom(Maybe.ofNullable(initialWeapon)) {
+                it.optional?.findFacet(Wieldable::class)?.isPresent == true
+            }
+    private val weapon: Maybe<AnyGameEntity> by weaponProperty.asDelegate()
 
-    private val armorProperty: Property<Maybe<Armor>> = createPropertyFrom(Maybe.ofNullable(initialArmor))
-    private val armor: Maybe<Armor> by armorProperty.asDelegate()
+
+    private val armorProperty: Property<Maybe<AnyGameEntity>> =
+            createPropertyFrom(Maybe.ofNullable(initialArmor)) {
+                it.optional?.findFacet(Wearable::class)?.isPresent == true
+            }
+    private val armor: Maybe<AnyGameEntity> by armorProperty.asDelegate()
 
     val attackRating: Int
-     get() = {
-         val weaponAttackRating = weaponProperty.value.optional?.attackRating ?: 0
-         val armorAttackRating = armorProperty.value.optional?.attackRating ?: 0
+        get() = {
+            val weaponAttackRating = weaponProperty.value.optional?.attackRating ?: 0
+            val armorAttackRating = armorProperty.value.optional?.attackRating ?: 0
 
-         weaponAttackRating + armorAttackRating
-     }()
+            weaponAttackRating + armorAttackRating
+        }()
 
     val defenseRating: Int
         get() = {
@@ -45,14 +54,14 @@ class Equipments(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Di
         val armorNameLabel = Components.label().withSize(width - 2, 1).build()
         val armorStatsLabel = Components.label().withSize(width - 1, 1).build()
 
-        updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, weapon as Maybe<Equipment>)
+        updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, weapon)
         weaponProperty.onChange {
-            updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, weapon as Maybe<Equipment>)
+            updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, weapon)
         }
 
-        updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, armor as Maybe<Equipment>)
+        updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, armor)
         armorProperty.onChange {
-            updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, armor as Maybe<Equipment>)
+            updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, armor)
         }
 
         return Components.textBox(width)
@@ -72,38 +81,39 @@ class Equipments(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Di
                 .build()
     }
 
-    fun equip(equippable: GameEntity<EquipmentType>): GameEntity<EquipmentType>? {
-        equippable.whenTypeIs<WeaponType> {
-            val oldWeapon = weapon.optional
+    fun wield(equipment: AnyGameEntity): AnyGameEntity? {
+        var unequipped: AnyGameEntity? = equipment
 
-            weaponProperty.value = Maybe.of(this)
-
-            return oldWeapon
+        equipment.whenFacetIs<Wieldable> {
+            unequipped = weapon.optional
+            weaponProperty.value = Maybe.of(equipment)
         }
 
-        equippable.whenTypeIs<ArmorType> {
-            val oldArmor = armor.optional
-
-            armorProperty.value = Maybe.of(this)
-
-            return oldArmor
-        }
-
-        throw IllegalStateException("Equipment does not accept combat item of type ${equippable.type::class}.")
+        return unequipped
     }
 
-    private fun updateInfo(charLabel: Label, nameLabel: Label, statsLabel: Label, combatItem: Maybe<Equipment>) {
-        val itemChar = combatItem.optional?.tile?.character
+    fun wear(equipment: AnyGameEntity): AnyGameEntity? {
+        var unequipped: AnyGameEntity? = equipment
+
+        equipment.whenFacetIs<Wearable> {
+            unequipped = armor.optional
+            armorProperty.value = Maybe.of(equipment)
+        }
+
+        return unequipped
+    }
+
+    private fun updateInfo(charLabel: Label, nameLabel: Label, statsLabel: Label, equipment: Maybe<AnyGameEntity>) {
+        val itemChar = equipment.optional?.tile?.character
 
         charLabel.componentStyleSet = ComponentStyleSet.create(
-                combatItem.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
+                equipment.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
                 backgroundColor = GameColor.SECONDARY_BACKGROUND)
         charLabel.textProperty.value = if (itemChar != null) itemChar.toString() else "" // Don't fold this expression, as nullChar.toString == "n"
-        nameLabel.textProperty.value = combatItem.optional?.name?.capitalize() ?: "None"
-        statsLabel.textProperty.value = combatItem.optional?.statsString ?: ""
+        nameLabel.textProperty.value = equipment.optional?.name?.capitalize() ?: "None"
+        statsLabel.textProperty.value = equipment.optional?.statsString ?: ""
     }
 
-
-    private val Equipment.statsString: String
+    private val AnyGameEntity.statsString: String
         get() = "A: ${this.attackRating} D: ${this.defenseRating}"
 }

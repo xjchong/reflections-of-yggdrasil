@@ -32,7 +32,7 @@ object InputReceiver : BaseBehavior<GameContext>() {
             }
             is InventoryInputEvent -> {
                 entity.whenTypeIs<InventoryOwnerType> {
-                    executeCommand(InspectInventory(context, this, position))
+                    executeCommand(InspectInventory(context, this))
                 }
             }
             is MoveInputEvent -> {

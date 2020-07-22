@@ -1,7 +1,8 @@
 package facets.passive
 
+import attributes.Inventory
 import commands.Drop
-import entity.removeFromInventory
+import entity.getAttribute
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -12,12 +13,12 @@ import org.hexworks.amethyst.api.entity.EntityType
 object Droppable : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Drop::class) { (context, inventoryOwner, item, position) ->
-            if (inventoryOwner.removeFromInventory(item)) {
-                with (context.world) {
-                    addEntity(item, position)
-                    observeSceneBy(inventoryOwner, "The $inventoryOwner drops the $item.")
-                }
+        return command.responseWhenCommandIs(Drop::class) { (context, owner, droppable, position) ->
+            owner.getAttribute(Inventory::class)?.let { inventory -> inventory.remove(droppable) }
+
+            with (context.world) {
+                addEntity(droppable, position)
+                observeSceneBy(owner, "The $owner drops the $droppable.")
             }
 
             Consumed

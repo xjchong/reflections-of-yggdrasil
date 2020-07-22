@@ -1,7 +1,10 @@
 package fragments
 
 import attributes.Inventory
-import entity.*
+import entity.AnyGameEntity
+import entity.ConsumableType
+import entity.GameEntity
+import entity.whenTypeIs
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.AttachedComponent
 import org.hexworks.zircon.api.component.Fragment
@@ -12,7 +15,8 @@ class InventoryFragment(
         private val width: Int,
         private val onDrop: (AnyGameEntity) -> Unit,
         private val onEat: (GameEntity<ConsumableType>) -> Unit,
-        private val onEquip: (Equipment) -> Unit
+        private val onWield: (AnyGameEntity) -> Unit,
+        private val onWear: (AnyGameEntity) -> Unit
 ) : Fragment {
 
     private val attachedRows: MutableList<AttachedComponent> = mutableListOf()
@@ -61,7 +65,8 @@ class InventoryFragment(
         with (inventoryRow) {
             dropButton.onActivated { onDrop(entity) }
             eatButton.onActivated { entity.whenTypeIs<ConsumableType> { onEat(this) } }
-            equipButton?.onActivated { entity.whenTypeIs<EquipmentType> { onEquip(this) } }
+            wieldButton.onActivated { onWield(entity) }
+            wearButton.onActivated { onWear(entity) }
         }
     }
 }

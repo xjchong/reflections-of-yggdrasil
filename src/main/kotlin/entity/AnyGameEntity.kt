@@ -11,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Response
+import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.CharacterTile
@@ -48,18 +49,16 @@ val AnyGameEntity.isOpaque: Boolean
 
 val AnyGameEntity.attackRating: Int
     get() {
-        val combatantRating = getAttribute(CombatStats::class)?.attackRating ?: 0
+        val entityRating = getAttribute(CombatStats::class)?.attackRating ?: 0
         val equipmentRating = getAttribute(Equipments::class)?.attackRating ?: 0
-        val itemRating = getAttribute(CombatStats::class)?.attackRating ?: 0
-        return combatantRating + equipmentRating + itemRating
+        return entityRating + equipmentRating
     }
 
 val AnyGameEntity.defenseRating: Int
     get() {
-        val combatantRating = getAttribute(CombatStats::class)?.defenseRating ?: 0
+        val entityRating = getAttribute(CombatStats::class)?.defenseRating ?: 0
         val equipmentRating = getAttribute(Equipments::class)?.defenseRating ?: 0
-        val itemRating = getAttribute(CombatStats::class)?.defenseRating ?: 0
-        return combatantRating + equipmentRating + itemRating
+        return entityRating + equipmentRating
     }
 
 fun <T : Attribute> AnyGameEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
@@ -85,4 +84,14 @@ inline fun <reified T : EntityType> AnyGameEntity.whenTypeIs(fn: GameEntity<T>.(
 
 inline fun <reified T : EntityType> AnyGameEntity.isType(): Boolean {
     return T::class.isSuperclassOf(this.type::class)
+}
+
+inline fun <reified T : BaseFacet<GameContext>> AnyGameEntity.hasFacet(): Boolean {
+    return this.findFacet(T::class).isPresent
+}
+
+inline fun <reified T : BaseFacet<GameContext>> AnyGameEntity.whenFacetIs(fn: (AnyGameEntity) -> Unit) {
+    if (this.findFacet(T::class).isPresent) {
+        fn(this)
+    }
 }

@@ -71,7 +71,7 @@ object EntityFactory {
                         defenseRating = 5
                 ))
         behaviors(InputReceiver, EnergyExpender, VisualRememberer)
-        facets(ActionAttempting, Attackable, EnergyExpender, EquipmentWearing, FoodEating, InventoryInspecting, ItemDropping, ItemTaking, Movable)
+        facets(ActionAttempting, Attackable, EnergyExpender, FoodEating, InventoryInspecting, ItemDropping, ItemTaking, Movable)
     }
 
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 1.7)) = newGameEntityOfType(Fungus) {
@@ -153,7 +153,7 @@ object EntityFactory {
      * EQUIPMENT
      */
 
-    fun newRandomWeapon(): GameEntity<WeaponType> {
+    fun newRandomWeapon(): AnyGameEntity {
         return when (Random.nextInt(3)) {
             0 -> newDagger()
             1 -> newStaff()
@@ -161,7 +161,7 @@ object EntityFactory {
         }
     }
 
-    fun newRandomArmor(): GameEntity<ArmorType> {
+    fun newRandomArmor(): AnyGameEntity {
         return when (Random.nextInt(3)) {
             0 -> newLightArmor()
             1 -> newMediumArmor()
@@ -173,55 +173,55 @@ object EntityFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.DAGGER))
-        facets(Droppable, Takeable)
+        facets(Droppable, Takeable, Wieldable)
     }
 
     fun newSword() = newGameEntityOfType(Sword) {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.SWORD))
-        facets(Droppable, Takeable)
+        facets(Droppable, Takeable, Wieldable)
     }
 
     fun newStaff() = newGameEntityOfType(Staff) {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.STAFF))
-        facets(Droppable, Takeable)
+        facets(Droppable, Takeable, Wieldable)
     }
 
     fun newLightArmor() = newGameEntityOfType(LightArmor) {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.LIGHT_ARMOR))
-        facets(Droppable, Takeable)
+        facets(Droppable, Takeable, Wearable)
     }
 
     fun newMediumArmor() = newGameEntityOfType(MediumArmor) {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.MEDIUM_ARMOR))
-        facets(Droppable, Takeable)
+        facets(Droppable, Takeable, Wearable)
     }
 
     fun newHeavyArmor() = newGameEntityOfType(HeavyArmor) {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.HEAVY_ARMOR))
-        facets(Droppable, Takeable)
+        facets(Droppable, Takeable, Wearable)
     }
 
     fun newClub() = newGameEntityOfType(Club) {
         attributes(
                 EntityTile(GameTileRepository.CLUB),
                 EntityPosition())
-        facets(Droppable, Takeable)
+        facets(Droppable, Takeable, Wieldable)
     }
 
     fun newJacket() = newGameEntityOfType(Jacket) {
         attributes(
                 EntityTile(GameTileRepository.JACKET),
                 EntityPosition())
-        facets(Droppable, Takeable)
+        facets(Droppable, Takeable, Wearable)
     }
 }

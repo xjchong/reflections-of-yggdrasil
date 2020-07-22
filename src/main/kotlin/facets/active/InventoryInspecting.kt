@@ -1,12 +1,14 @@
 package facets.active
 
 import builders.InventoryModalBuilder
-import commands.Drop
 import commands.InspectInventory
-import entity.*
+import commands.Wear
+import commands.Wield
+import entity.executeBlockingCommand
+import entity.inventory
+import entity.position
 import events.DropInputEvent
 import events.EatInputEvent
-import events.WaitInputEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -21,8 +23,9 @@ object InventoryInspecting : BaseFacet<GameContext>() {
     private val DIALOG_SIZE = Size.create(34, 15)
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(InspectInventory::class) { (context, inventoryOwner, position) ->
+        return command.responseWhenCommandIs(InspectInventory::class) { (context, inventoryOwner) ->
             val (world, screen) = context
+            val position = inventoryOwner.position
 
             val inventoryModal = InventoryModalBuilder(screen).build(inventoryOwner.inventory,
                     onDrop = { content ->
@@ -32,22 +35,14 @@ object InventoryInspecting : BaseFacet<GameContext>() {
                         world.update(screen, EatInputEvent(consumable))
                         inventoryOwner.inventory.remove(consumable)
                     },
-                    onEquip = { equipment ->
-                        inventoryOwner.whenTypeIs<EquipmentUserType> {
-                            if (!inventoryOwner.inventory.remove(equipment)) return@whenTypeIs
-
-                            equipments.equip(equipment)?.let { oldEquipment ->
-                                // If owner couldn't place the old item in inventory, try to drop it instead.
-                                if (!inventoryOwner.inventory.add(oldEquipment)) {
-                                    executeBlockingCommand(
-                                            Drop(context, inventoryOwner, oldEquipment, inventoryOwner.position))
-                                }
-                            }
-
-                            world.observeSceneBy(this, "The $this equips the $equipment.")
-
-                            // Force the world to update, since equipping was done for 'free'.
-                            world.update(screen, WaitInputEvent())
+                    onWield = { equipment ->
+                        if (inventoryOwner.inventory.remove(equipment)) {
+                            equipment.executeBlockingCommand(Wield(context, equipment, inventoryOwner))
+                        }
+                    },
+                    onWear = { equipment ->
+                        if (inventoryOwner.inventory.remove(equipment)) {
+                            equipment.executeBlockingCommand(Wear(context, equipment, inventoryOwner))
                         }
                     })
 
