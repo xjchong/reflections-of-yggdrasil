@@ -82,3 +82,7 @@ inline fun <reified T : EntityType> AnyGameEntity.whenTypeIs(fn: GameEntity<T>.(
         (this as GameEntity<T>).run(fn)
     }
 }
+
+inline fun <reified T : EntityType> AnyGameEntity.isType(): Boolean {
+    return T::class.isSuperclassOf(this.type::class)
+}

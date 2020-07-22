@@ -12,8 +12,8 @@ class InventoryFragment(
         private val width: Int,
         private val onDrop: (AnyGameEntity) -> Unit,
         private val onEat: (GameEntity<ConsumableType>) -> Unit,
-        private val onWield: (GameEntity<WeaponType>) -> Unit,
-        private val onWear: (GameEntity<ArmorType>) -> Unit) : Fragment {
+        private val onEquip: (Equipment) -> Unit
+) : Fragment {
 
     private val attachedRows: MutableList<AttachedComponent> = mutableListOf()
 
@@ -61,8 +61,7 @@ class InventoryFragment(
         with (inventoryRow) {
             dropButton.onActivated { onDrop(entity) }
             eatButton.onActivated { entity.whenTypeIs<ConsumableType> { onEat(this) } }
-            wieldButton.onActivated { entity.whenTypeIs<WeaponType> { onWield(this) } }
-            wearButton.onActivated { entity.whenTypeIs<ArmorType> { onWear(this) } }
+            equipButton?.onActivated { entity.whenTypeIs<EquipmentType> { onEquip(this) } }
         }
     }
 }

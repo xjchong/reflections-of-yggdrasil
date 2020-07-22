@@ -3,6 +3,7 @@ package fragments
 import entity.*
 import extensions.withStyle
 import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.component.Button
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Fragment
 
@@ -16,13 +17,7 @@ class InventoryRowFragment(width: Int, entity: AnyGameEntity) : Fragment {
             .withText("Eat")
             .build()
 
-    val wieldButton = Components.button()
-            .withText("Wield")
-            .build()
-
-    val wearButton = Components.button()
-            .withText("Wear")
-            .build()
+    val equipButton: Button? = null
 
     override val root: Component = Components.hbox()
             .withSpacing(1)
@@ -37,7 +32,13 @@ class InventoryRowFragment(width: Int, entity: AnyGameEntity) : Fragment {
                         .withText(entity.name.capitalize()))
                 addComponent(dropButton)
                 entity.whenTypeIs<ConsumableType> { addComponent(eatButton) }
-                entity.whenTypeIs<WeaponType> { addComponent(wieldButton) }
-                entity.whenTypeIs<ArmorType> { addComponent(wearButton) }
+                entity.whenTypeIs<EquipmentType> {
+                    val equipText = when {
+                        this.isType<WeaponType>() -> "Wield"
+                        this.isType<ArmorType>() -> "Wear"
+                        else -> "Equip"
+                    }
+                    addComponent(Components.button().withText(equipText).build())
+                }
             }
 }
