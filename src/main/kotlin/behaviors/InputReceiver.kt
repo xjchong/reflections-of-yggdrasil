@@ -4,6 +4,7 @@ import commands.*
 import entity.*
 import events.*
 import extensions.optional
+import facets.passive.Takeable
 import game.GameContext
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
@@ -21,12 +22,12 @@ object InputReceiver : BaseBehavior<GameContext>() {
         when (event) {
             is DropInputEvent -> {
                 entity.whenTypeIs<InventoryOwnerType> {
-                    executeCommand(Drop(context, this, event.item, position))
+                    executeCommand(Drop(context, this, event.droppable, position))
                 }
             }
             is EatInputEvent -> {
                 entity.whenTypeIs<EnergyUserType> {
-                    executeCommand(Eat(context, this, event.food))
+                    executeCommand(Eat(context, this, event.consumable))
                 }
             }
             is InventoryInputEvent -> {
@@ -56,12 +57,15 @@ object InputReceiver : BaseBehavior<GameContext>() {
         val world = context.world
         val block = world.fetchBlockAt(position).optional ?: return
 
-        for (item in block.items.reversed()) {
+        for (entity in block.entities.reversed()) {
+            if (entity.findFacet(Takeable::class).isPresent.not()) continue
+
             if (inventory.isFull) {
-                logGameEvent("The $this has no room to take the $item.")
+                logGameEvent("The $this has no room to take the $entity.")
                 break
             }
-            if (executeCommand(Take(context, this, item)) is Consumed) {
+
+            if (executeCommand(Take(context, this, entity)) is Consumed) {
                 break
             }
         }

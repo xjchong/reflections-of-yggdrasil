@@ -11,7 +11,7 @@ typealias InventoryOwner = GameEntity<InventoryOwnerType>
 val InventoryOwner.inventory: Inventory
     get() = findAttribute(Inventory::class).get()
 
-fun InventoryOwner.addToInventory(item: Item) = inventory.add(item)
+fun InventoryOwner.addToInventory(content: AnyGameEntity) = inventory.add(content)
 
-fun InventoryOwner.removeFromInventory(item: Item) = inventory.remove(item)
+fun InventoryOwner.removeFromInventory(content: AnyGameEntity) = inventory.remove(content)
 

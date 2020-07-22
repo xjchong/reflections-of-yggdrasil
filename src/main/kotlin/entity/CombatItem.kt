@@ -1,25 +1,12 @@
 package entity
 
-import attributes.ItemCombatStats
+import org.hexworks.amethyst.api.entity.EntityType
 
 
-interface CombatItemType : ItemType
-typealias CombatItem = GameEntity<CombatItemType>
+interface EquipmentType : EntityType
+interface WeaponType : EquipmentType
+interface ArmorType : EquipmentType
 
-val CombatItem.attackRating: Int
-    get() = findAttribute(ItemCombatStats::class).get().attackRating
-
-val CombatItem.defenseRating: Int
-    get() = findAttribute(ItemCombatStats::class).get().defenseRating
-
-val CombatItem.combatType: String
-    get() = findAttribute(ItemCombatStats::class).get().combatType
-
-
-interface ArmorType : CombatItemType
-typealias Armor = GameEntity<ArmorType>
-
-interface WeaponType : CombatItemType
+typealias Equipment = GameEntity<EquipmentType>
 typealias Weapon = GameEntity<WeaponType>
-
-
+typealias Armor = GameEntity<ArmorType>

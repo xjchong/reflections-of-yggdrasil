@@ -59,7 +59,7 @@ object EntityFactory {
                 EntityPosition(),
                 EntityTile(GameTileRepository.PLAYER),
                 EntityActions(Open::class, Dig::class, Attack::class),
-                Equipment(initialArmor = newJacket()),
+                Equipments(initialArmor = newJacket()),
                 Inventory(10),
                 Obstacle,
                 Vision(5),
@@ -153,7 +153,7 @@ object EntityFactory {
      * EQUIPMENT
      */
 
-    fun newRandomWeapon(): Weapon {
+    fun newRandomWeapon(): GameEntity<WeaponType> {
         return when (Random.nextInt(3)) {
             0 -> newDagger()
             1 -> newStaff()
@@ -161,7 +161,7 @@ object EntityFactory {
         }
     }
 
-    fun newRandomArmor(): Armor {
+    fun newRandomArmor(): GameEntity<ArmorType> {
         return when (Random.nextInt(3)) {
             0 -> newLightArmor()
             1 -> newMediumArmor()
@@ -172,9 +172,6 @@ object EntityFactory {
     fun newDagger() = newGameEntityOfType(Dagger) {
         attributes(
                 EntityPosition(),
-                ItemCombatStats(
-                        attackRating = 4,
-                        combatType = "Weapon"),
                 EntityTile(GameTileRepository.DAGGER))
         facets(Droppable, Takeable)
     }
@@ -182,9 +179,6 @@ object EntityFactory {
     fun newSword() = newGameEntityOfType(Sword) {
         attributes(
                 EntityPosition(),
-                ItemCombatStats(
-                        attackRating = 6,
-                        combatType = "Weapon"),
                 EntityTile(GameTileRepository.SWORD))
         facets(Droppable, Takeable)
     }
@@ -192,10 +186,6 @@ object EntityFactory {
     fun newStaff() = newGameEntityOfType(Staff) {
         attributes(
                 EntityPosition(),
-                ItemCombatStats(
-                        attackRating = 4,
-                        defenseRating = 2,
-                        combatType = "Weapon"),
                 EntityTile(GameTileRepository.STAFF))
         facets(Droppable, Takeable)
     }
@@ -203,9 +193,6 @@ object EntityFactory {
     fun newLightArmor() = newGameEntityOfType(LightArmor) {
         attributes(
                 EntityPosition(),
-                ItemCombatStats(
-                        defenseRating = 2,
-                        combatType = "Armor"),
                 EntityTile(GameTileRepository.LIGHT_ARMOR))
         facets(Droppable, Takeable)
     }
@@ -213,9 +200,6 @@ object EntityFactory {
     fun newMediumArmor() = newGameEntityOfType(MediumArmor) {
         attributes(
                 EntityPosition(),
-                ItemCombatStats(
-                        defenseRating = 3,
-                        combatType = "Armor"),
                 EntityTile(GameTileRepository.MEDIUM_ARMOR))
         facets(Droppable, Takeable)
     }
@@ -223,22 +207,19 @@ object EntityFactory {
     fun newHeavyArmor() = newGameEntityOfType(HeavyArmor) {
         attributes(
                 EntityPosition(),
-                ItemCombatStats(
-                        defenseRating = 4,
-                        combatType = "Armor"),
                 EntityTile(GameTileRepository.HEAVY_ARMOR))
         facets(Droppable, Takeable)
     }
 
     fun newClub() = newGameEntityOfType(Club) {
-        attributes(ItemCombatStats(combatType = "Weapon"),
+        attributes(
                 EntityTile(GameTileRepository.CLUB),
                 EntityPosition())
         facets(Droppable, Takeable)
     }
 
     fun newJacket() = newGameEntityOfType(Jacket) {
-        attributes(ItemCombatStats(combatType = "Armor"),
+        attributes(
                 EntityTile(GameTileRepository.JACKET),
                 EntityPosition())
         facets(Droppable, Takeable)

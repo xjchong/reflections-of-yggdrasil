@@ -1,40 +1,40 @@
 package attributes
 
-import entity.Item
+import entity.AnyGameEntity
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.cobalt.core.api.UUID
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 
 class Inventory(val size: Int) : Attribute {
 
-    private val currentItems = mutableListOf<Item>()
-    val currentHash = createPropertyFrom(currentItems.hashCode())
+    private val currentContents = mutableListOf<AnyGameEntity>()
+    val currentHash = createPropertyFrom(currentContents.hashCode())
 
-    val items: List<Item>
-        get() = currentItems.toList()
+    val contents: List<AnyGameEntity>
+        get() = currentContents.toList()
 
     val isEmpty: Boolean
-        get() = currentItems.isEmpty()
+        get() = currentContents.isEmpty()
 
     val isFull: Boolean
-        get() = currentItems.size >= size
+        get() = currentContents.size >= size
 
-    fun findEntityBy(id: UUID): Item? {
-        return currentItems.firstOrNull { it.id == id }
+    fun findEntityBy(id: UUID): AnyGameEntity? {
+        return currentContents.firstOrNull { it.id == id }
     }
 
-    fun add(item: Item): Boolean {
-        if (isFull.not() && currentItems.add(item)) {
-            currentHash.updateValue(currentItems.hashCode())
+    fun add(content: AnyGameEntity): Boolean {
+        if (isFull.not() && currentContents.add(content)) {
+            currentHash.updateValue(currentContents.hashCode())
             return true
         }
 
         return false
     }
 
-    fun remove(item: Item): Boolean {
-        if (currentItems.remove(item)) {
-            currentHash.updateValue(currentItems.hashCode())
+    fun remove(content: AnyGameEntity): Boolean {
+        if (currentContents.remove(content)) {
+            currentHash.updateValue(currentContents.hashCode())
             return true
         }
 

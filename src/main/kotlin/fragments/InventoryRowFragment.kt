@@ -5,37 +5,22 @@ import extensions.withStyle
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Fragment
-import org.hexworks.zircon.api.uievent.ComponentEvent
 
-class InventoryRowFragment(width: Int, item: Item) : Fragment {
+class InventoryRowFragment(width: Int, entity: AnyGameEntity) : Fragment {
 
-    var onDrop: (ComponentEvent) -> Unit = {}
-        set(value) {
-            dropButton.onActivated(value)
-            field = value
-        }
-
-    var onEat: (ComponentEvent) -> Unit = {}
-        set(value) {
-            eatButton.onActivated(value)
-            field = value
-        }
-
-    var onEquip: (ComponentEvent) -> Unit = {}
-        set(value) {
-            equipButton.onActivated(value)
-            field = value
-        }
-
-    private val dropButton = Components.button()
+    val dropButton = Components.button()
             .withText("Drop")
             .build()
 
-    private val eatButton = Components.button()
+    val eatButton = Components.button()
             .withText("Eat")
             .build()
 
-    private val equipButton = Components.button()
+    val wieldButton = Components.button()
+            .withText("Wield")
+            .build()
+
+    val wearButton = Components.button()
             .withText("Wear")
             .build()
 
@@ -45,13 +30,14 @@ class InventoryRowFragment(width: Int, item: Item) : Fragment {
             .build().apply {
                 addComponent(Components.label()
                         .withSize(1, 1)
-                        .withStyle(item.tile.foregroundColor)
-                        .withText(item.tile.character.toString()))
+                        .withStyle(entity.tile.foregroundColor)
+                        .withText(entity.tile.character.toString()))
                 addComponent(Components.label()
                         .withSize(InventoryFragment.NAME_COLUMN_WIDTH, 1)
-                        .withText(item.name.capitalize()))
+                        .withText(entity.name.capitalize()))
                 addComponent(dropButton)
-                item.whenTypeIs<FoodType> { addComponent(eatButton) }
-                item.whenTypeIs<CombatItemType> { addComponent(equipButton) }
+                entity.whenTypeIs<ConsumableType> { addComponent(eatButton) }
+                entity.whenTypeIs<WeaponType> { addComponent(wieldButton) }
+                entity.whenTypeIs<ArmorType> { addComponent(wearButton) }
             }
 }

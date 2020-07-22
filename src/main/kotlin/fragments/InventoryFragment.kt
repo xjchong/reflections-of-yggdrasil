@@ -10,15 +10,16 @@ import org.hexworks.zircon.api.component.VBox
 class InventoryFragment(
         private val inventory: Inventory,
         private val width: Int,
-        private val onDrop: (Item) -> Unit,
-        private val onEat: (Food) -> Unit,
-        private val onEquip: (CombatItem) -> Unit) : Fragment {
+        private val onDrop: (AnyGameEntity) -> Unit,
+        private val onEat: (GameEntity<ConsumableType>) -> Unit,
+        private val onWield: (GameEntity<WeaponType>) -> Unit,
+        private val onWear: (GameEntity<ArmorType>) -> Unit) : Fragment {
 
     private val attachedRows: MutableList<AttachedComponent> = mutableListOf()
 
     companion object {
         const val NAME_COLUMN_WIDTH = 15
-        const val ACTIONS_COLUMN_WIDTH = 10
+        const val ACTIONS_COLUMN_WIDTH = 20
     }
 
     override val root = Components.vbox()
@@ -33,7 +34,7 @@ class InventoryFragment(
                             addComponent(Components.header().withText("Actions").withSize(ACTIONS_COLUMN_WIDTH, 1))
                         })
 
-                    inventory.items.forEach { item ->
+                    inventory.contents.forEach { item ->
                         addInventoryRow(this, item)
                     }
 
@@ -47,30 +48,21 @@ class InventoryFragment(
             attachedRows.removeAt(0).detach()
         }
 
-        inventory.items.forEach { item ->
+        inventory.contents.forEach { item ->
             addInventoryRow(vBox, item)
         }
     }
 
-    private fun addInventoryRow(vBox: VBox, item: Item) {
-        val inventoryRow = InventoryRowFragment(width, item)
+    private fun addInventoryRow(vBox: VBox, entity: AnyGameEntity) {
+        val inventoryRow = InventoryRowFragment(width, entity)
         val attachedInventoryRow = vBox.addFragment(inventoryRow)
         attachedRows.add(attachedInventoryRow)
 
-        inventoryRow.onDrop = {
-            onDrop(item)
-        }
-
-        inventoryRow.onEat = {
-            item.whenTypeIs<FoodType> {
-                onEat(this)
-            }
-        }
-
-        inventoryRow.onEquip = {
-            item.whenTypeIs<CombatItemType> {
-                onEquip(this)
-            }
+        with (inventoryRow) {
+            dropButton.onActivated { onDrop(entity) }
+            eatButton.onActivated { entity.whenTypeIs<ConsumableType> { onEat(this) } }
+            wieldButton.onActivated { entity.whenTypeIs<WeaponType> { onWield(this) } }
+            wearButton.onActivated { entity.whenTypeIs<ArmorType> { onWear(this) } }
         }
     }
 }

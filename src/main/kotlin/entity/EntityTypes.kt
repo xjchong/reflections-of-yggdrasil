@@ -10,7 +10,7 @@ object Bat : BaseEntityType(
 object BatMeat : BaseEntityType(
         name = "bat meat",
         description = "Stringy bat meat. It is an acquired taste."
-), FoodType
+), ConsumableType
 
 object Door : BaseEntityType(
         name = "door"
@@ -18,7 +18,7 @@ object Door : BaseEntityType(
 
 object En : BaseEntityType(
         name = "en"
-), ItemType
+)
 
 object Fungus : BaseEntityType(
         name = "fungus"
@@ -26,7 +26,7 @@ object Fungus : BaseEntityType(
 
 object Player : BaseEntityType(
         name = "player"
-), Combatant, EnergyUserType, InventoryOwnerType, EquipmentWearerType
+), Combatant, EnergyUserType, InventoryOwnerType, EquipmentUserType
 
 object Wall : BaseEntityType(
         name = "wall"
@@ -34,7 +34,7 @@ object Wall : BaseEntityType(
 
 object Zombie : BaseEntityType(
         name = "zombie"
-), Combatant, EquipmentWearerType, InventoryOwnerType
+), Combatant, EquipmentUserType, InventoryOwnerType
 
 /**
  * EQUIPMENT

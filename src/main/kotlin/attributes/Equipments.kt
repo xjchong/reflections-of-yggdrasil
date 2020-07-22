@@ -12,7 +12,7 @@ import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.ComponentStyleSet
 import org.hexworks.zircon.api.component.Label
 
-class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): DisplayableAttribute {
+class Equipments(initialWeapon: Weapon? = null, initialArmor: Armor? = null): DisplayableAttribute {
 
     private val weaponProperty: Property<Maybe<Weapon>> = createPropertyFrom(Maybe.ofNullable(initialWeapon))
     private val weapon: Maybe<Weapon> by weaponProperty.asDelegate()
@@ -45,14 +45,14 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
         val armorNameLabel = Components.label().withSize(width - 2, 1).build()
         val armorStatsLabel = Components.label().withSize(width - 1, 1).build()
 
-        updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, weapon as Maybe<CombatItem>)
+        updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, weapon as Maybe<Equipment>)
         weaponProperty.onChange {
-            updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, weapon as Maybe<CombatItem>)
+            updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, weapon as Maybe<Equipment>)
         }
 
-        updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, armor as Maybe<CombatItem>)
+        updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, armor as Maybe<Equipment>)
         armorProperty.onChange {
-            updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, armor as Maybe<CombatItem>)
+            updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, armor as Maybe<Equipment>)
         }
 
         return Components.textBox(width)
@@ -72,8 +72,8 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
                 .build()
     }
 
-    fun equip(combatItem: CombatItem): CombatItem? {
-        combatItem.whenTypeIs<WeaponType> {
+    fun equip(equippable: GameEntity<EquipmentType>): GameEntity<EquipmentType>? {
+        equippable.whenTypeIs<WeaponType> {
             val oldWeapon = weapon.optional
 
             weaponProperty.value = Maybe.of(this)
@@ -81,7 +81,7 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
             return oldWeapon
         }
 
-        combatItem.whenTypeIs<ArmorType> {
+        equippable.whenTypeIs<ArmorType> {
             val oldArmor = armor.optional
 
             armorProperty.value = Maybe.of(this)
@@ -89,10 +89,10 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
             return oldArmor
         }
 
-        throw IllegalStateException("Equipment does not accept combat item of type ${combatItem.type::class}.")
+        throw IllegalStateException("Equipment does not accept combat item of type ${equippable.type::class}.")
     }
 
-    private fun updateInfo(charLabel: Label, nameLabel: Label, statsLabel: Label, combatItem: Maybe<CombatItem>) {
+    private fun updateInfo(charLabel: Label, nameLabel: Label, statsLabel: Label, combatItem: Maybe<Equipment>) {
         val itemChar = combatItem.optional?.tile?.character
 
         charLabel.componentStyleSet = ComponentStyleSet.create(
@@ -104,6 +104,6 @@ class Equipment(initialWeapon: Weapon? = null, initialArmor: Armor? = null): Dis
     }
 
 
-    private val CombatItem.statsString: String
+    private val Equipment.statsString: String
         get() = "A: ${this.attackRating} D: ${this.defenseRating}"
 }

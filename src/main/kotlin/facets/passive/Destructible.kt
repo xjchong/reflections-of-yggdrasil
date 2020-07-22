@@ -23,7 +23,7 @@ object Destructible : BaseFacet<GameContext>(), AdaptableSyntax {
             context.world.observeSceneBy(entity, "The $entity is ${entity.syntaxFor(Destructible)} by $cause.")
 
             entity.whenTypeIs<InventoryOwnerType> {
-                inventory.items.forEach { item ->
+                inventory.contents.forEach { item ->
                     item.executeBlockingCommand(Drop(context, this, item, position))
                 }
             }

@@ -14,10 +14,10 @@ import org.hexworks.amethyst.api.entity.EntityType
 object FoodEating : BaseFacet<GameContext>(EnergyLevel::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Eat::class) { (context, entity, food) ->
-            entity.energyLevel.currentEnergy += food.energy
+        return command.responseWhenCommandIs(Eat::class) { (context, entity, consumable) ->
+            entity.energyLevel.currentEnergy += consumable.energy
 
-            context.world.observeSceneBy(entity, "The $entity eats the $food.")
+            context.world.observeSceneBy(entity, "The $entity eats the $consumable.")
             Consumed
         }
     }

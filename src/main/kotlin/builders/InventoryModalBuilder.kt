@@ -2,9 +2,7 @@ package builders
 
 import attributes.Inventory
 import constants.GameConfig
-import entity.CombatItem
-import entity.Food
-import entity.Item
+import entity.*
 import fragments.InventoryFragment
 import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.ComponentDecorations.shadow
@@ -23,13 +21,14 @@ import org.hexworks.zircon.internal.component.modal.EmptyModalResult
 class InventoryModalBuilder(private val screen: Screen) {
 
     companion object {
-        val DIALOG_SIZE = Size.create(34, 15)
+        val DIALOG_SIZE = Size.create(44, 15)
     }
 
     fun build(inventory: Inventory,
-              onDrop: (Item) -> Unit,
-              onEat: (Food) -> Unit,
-              onEquip: (CombatItem) -> Unit): Modal<EmptyModalResult> {
+              onDrop: (AnyGameEntity) -> Unit,
+              onEat: (GameEntity<ConsumableType>) -> Unit,
+              onWield: (GameEntity<WeaponType>) -> Unit,
+              onWear: (GameEntity<ArmorType>) -> Unit): Modal<EmptyModalResult> {
         val panel = Components.panel()
                 .withSize(DIALOG_SIZE)
                 .withDecorations(box(title = "Inventory"), shadow())
@@ -38,7 +37,7 @@ class InventoryModalBuilder(private val screen: Screen) {
         val inventoryFragment = InventoryFragment(
                 inventory,
                 DIALOG_SIZE.width - 3,
-                onDrop, onEat, onEquip)
+                onDrop, onEat, onWield, onWear)
 
         val closeButton = Components.button()
                 .withText("Close")

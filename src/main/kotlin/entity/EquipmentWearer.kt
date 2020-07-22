@@ -1,11 +1,11 @@
 package entity
 
-import attributes.Equipment
+import attributes.Equipments
 import org.hexworks.amethyst.api.entity.EntityType
 
 
-interface EquipmentWearerType: EntityType
-typealias EquipmentWearer = GameEntity<EquipmentWearerType>
+interface EquipmentUserType: EntityType
+typealias EquipmentUser = GameEntity<EquipmentUserType>
 
-val EquipmentWearer.equipment: Equipment
-        get() = findAttribute(Equipment::class).get()
+val EquipmentUser.equipments: Equipments
+        get() = findAttribute(Equipments::class).get()

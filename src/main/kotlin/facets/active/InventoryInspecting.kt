@@ -23,31 +23,39 @@ object InventoryInspecting : BaseFacet<GameContext>() {
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(InspectInventory::class) { (context, inventoryOwner, position) ->
             val (world, screen) = context
-            val inventoryModal = InventoryModalBuilder(screen).build(inventoryOwner.inventory,
-                    onDrop = { item ->
-                        world.update(screen, DropInputEvent(item))
-                    },
-                    onEat = { food ->
-                        world.update(screen, EatInputEvent(food))
-                        inventoryOwner.inventory.remove(food)
-                    },
-                    onEquip = { combatItem ->
-                        inventoryOwner.whenTypeIs<EquipmentWearerType> {
-                            if (!inventoryOwner.inventory.remove(combatItem)) return@whenTypeIs
 
-                            equipment.equip(combatItem)?.let {oldCombatItem ->
-                                // If owner couldn't place the old item in inventory, try to drop it instead.
-                                if (!inventoryOwner.inventory.add(oldCombatItem)) {
-                                    executeBlockingCommand(
-                                            Drop(context, inventoryOwner, oldCombatItem, inventoryOwner.position))
-                                }
-                            }
+            fun onEquip(equipment: Equipment) {
+                inventoryOwner.whenTypeIs<EquipmentUserType> {
+                    if (!inventoryOwner.inventory.remove(equipment)) return@whenTypeIs
 
-                            world.observeSceneBy(this, "The $this equips the $combatItem.")
-
-                            // Force the world to update, since equipping was done for 'free'.
-                            world.update(screen, WaitInputEvent())
+                    equipments.equip(equipment)?.let { oldEquipment ->
+                        // If owner couldn't place the old item in inventory, try to drop it instead.
+                        if (!inventoryOwner.inventory.add(oldEquipment)) {
+                            executeBlockingCommand(
+                                    Drop(context, inventoryOwner, oldEquipment, inventoryOwner.position))
                         }
+                    }
+
+                    world.observeSceneBy(this, "The $this equips the $equipment.")
+
+                    // Force the world to update, since equipping was done for 'free'.
+                    world.update(screen, WaitInputEvent())
+                }
+            }
+
+            val inventoryModal = InventoryModalBuilder(screen).build(inventoryOwner.inventory,
+                    onDrop = { content ->
+                        world.update(screen, DropInputEvent(content))
+                    },
+                    onEat = { consumable ->
+                        world.update(screen, EatInputEvent(consumable))
+                        inventoryOwner.inventory.remove(consumable)
+                    },
+                    onWield = { wieldable ->
+                        onEquip(wieldable)
+                    },
+                    onWear = { wearable ->
+                        onEquip(wearable)
                     })
 
             screen.openModal(inventoryModal)

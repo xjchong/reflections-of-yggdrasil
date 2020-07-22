@@ -49,16 +49,16 @@ val AnyGameEntity.isOpaque: Boolean
 val AnyGameEntity.attackRating: Int
     get() {
         val combatantRating = getAttribute(CombatStats::class)?.attackRating ?: 0
-        val equipmentRating = getAttribute(Equipment::class)?.attackRating ?: 0
-        val itemRating = getAttribute(ItemCombatStats::class)?.attackRating ?: 0
+        val equipmentRating = getAttribute(Equipments::class)?.attackRating ?: 0
+        val itemRating = getAttribute(CombatStats::class)?.attackRating ?: 0
         return combatantRating + equipmentRating + itemRating
     }
 
 val AnyGameEntity.defenseRating: Int
     get() {
         val combatantRating = getAttribute(CombatStats::class)?.defenseRating ?: 0
-        val equipmentRating = getAttribute(Equipment::class)?.defenseRating ?: 0
-        val itemRating = getAttribute(ItemCombatStats::class)?.defenseRating ?: 0
+        val equipmentRating = getAttribute(Equipments::class)?.defenseRating ?: 0
+        val itemRating = getAttribute(CombatStats::class)?.defenseRating ?: 0
         return combatantRating + equipmentRating + itemRating
     }
 

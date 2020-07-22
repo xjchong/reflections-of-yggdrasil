@@ -1,6 +1,6 @@
 package facets.active
 
-import attributes.Equipment
+import attributes.Equipments
 import attributes.Inventory
 import commands.Drop
 import commands.Equip
@@ -12,11 +12,11 @@ import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
-object EquipmentWearing : BaseFacet<GameContext>(Equipment::class, Inventory::class) {
+object EquipmentWearing : BaseFacet<GameContext>(Equipments::class, Inventory::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(Equip::class) { (context, entity, item) ->
-            val oldEquipment = entity.equipment.equip(item)
+            val oldEquipment = entity.equipments.equip(item)
 
             oldEquipment?.let {
                 entity.whenTypeIs<InventoryOwnerType> {

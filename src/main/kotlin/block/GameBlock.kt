@@ -2,7 +2,10 @@ package block
 import GameColor
 import attributes.Memory
 import constants.GameTileRepository
-import entity.*
+import entity.AnyGameEntity
+import entity.isObstacle
+import entity.position
+import entity.tile
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
 import org.hexworks.cobalt.datatypes.Maybe
@@ -65,9 +68,6 @@ class GameBlock(private val position: Position3D,
 
     val isObstructed: Boolean
         get() = obstacle.isPresent
-
-    val items: List<Item>
-        get() = currentEntities.filterType<ItemType>()
 
     val entities: Iterable<AnyGameEntity>
         get() = currentEntities.toList()
