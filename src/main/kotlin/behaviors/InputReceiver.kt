@@ -46,6 +46,8 @@ object InputReceiver : BaseBehavior<GameContext>() {
                 entity.tryTakeAt(position, context)
             }
             is WaitInputEvent -> return true
+            is WearInputEvent -> event.equipment.run { executeCommand(Wear(context, this, entity)) }
+            is WieldInputEvent -> event.equipment.run { executeCommand(Wield(context, this, entity)) }
         }
 
         return true

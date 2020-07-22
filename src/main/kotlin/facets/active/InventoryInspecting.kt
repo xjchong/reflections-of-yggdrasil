@@ -2,13 +2,12 @@ package facets.active
 
 import builders.InventoryModalBuilder
 import commands.InspectInventory
-import commands.Wear
-import commands.Wield
-import entity.executeBlockingCommand
 import entity.inventory
 import entity.position
 import events.DropInputEvent
 import events.EatInputEvent
+import events.WearInputEvent
+import events.WieldInputEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -37,12 +36,12 @@ object InventoryInspecting : BaseFacet<GameContext>() {
                     },
                     onWield = { equipment ->
                         if (inventoryOwner.inventory.remove(equipment)) {
-                            equipment.executeBlockingCommand(Wield(context, equipment, inventoryOwner))
+                            world.update(screen, WieldInputEvent(equipment))
                         }
                     },
                     onWear = { equipment ->
                         if (inventoryOwner.inventory.remove(equipment)) {
-                            equipment.executeBlockingCommand(Wear(context, equipment, inventoryOwner))
+                            world.update(screen, WearInputEvent(equipment))
                         }
                     })
 

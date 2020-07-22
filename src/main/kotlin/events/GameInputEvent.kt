@@ -8,22 +8,25 @@ import org.hexworks.zircon.api.data.Position3D
 
 sealed class GameInputEvent {
 
-    abstract val type: GameUpdateMode
+    open val type: GameUpdateMode = Foreground
 }
 
 
-class DropInputEvent(val droppable: AnyGameEntity, override val type: GameUpdateMode = Foreground) : GameInputEvent()
+class DropInputEvent(val droppable: AnyGameEntity) : GameInputEvent()
 
-class EatInputEvent(val consumable: GameEntity<ConsumableType>, override val type: GameUpdateMode = Foreground) : GameInputEvent()
+class EatInputEvent(val consumable: GameEntity<ConsumableType>) : GameInputEvent()
 
 class InventoryInputEvent(override val type: GameUpdateMode = Background) : GameInputEvent()
 
-class MoveInputEvent(override val type: GameUpdateMode = Foreground,
-                     val relativePosition: Position3D) : GameInputEvent()
+class MoveInputEvent(val relativePosition: Position3D) : GameInputEvent()
 
-class TakeInputEvent(override val type: GameUpdateMode = Foreground) : GameInputEvent()
+class TakeInputEvent() : GameInputEvent()
 
-class WaitInputEvent(override val type: GameUpdateMode = Foreground) : GameInputEvent()
+class WaitInputEvent() : GameInputEvent()
+
+class WearInputEvent(val equipment: AnyGameEntity) : GameInputEvent()
+
+class WieldInputEvent(val equipment: AnyGameEntity) : GameInputEvent()
 
 
 
