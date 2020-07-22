@@ -1,13 +1,13 @@
 package commands
 
-import entity.AnyGameEntity
+import entity.AnyEntity
 import game.GameContext
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Position3D
 
 data class Drop(
         override val context: GameContext,
-        override val source: AnyGameEntity,
-        override val target: AnyGameEntity,
+        override val source: AnyEntity,
+        override val target: AnyEntity,
         val position: Position3D
 ) : EntityAction<EntityType, EntityType>

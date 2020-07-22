@@ -2,13 +2,12 @@ package fragments
 
 import entity.*
 import extensions.withStyle
-import facets.passive.Wearable
-import facets.passive.Wieldable
+import facets.passive.Equippable
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Fragment
 
-class InventoryRowFragment(width: Int, entity: AnyGameEntity) : Fragment {
+class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
 
     val dropButton = Components.button()
             .withText("Drop")
@@ -18,12 +17,8 @@ class InventoryRowFragment(width: Int, entity: AnyGameEntity) : Fragment {
             .withText("Eat")
             .build()
 
-    val wieldButton = Components.button()
-            .withText("Wield")
-            .build()
-
-    val wearButton = Components.button()
-            .withText("Wear")
+    val equipButton = Components.button()
+            .withText("Equip")
             .build()
 
     override val root: Component = Components.hbox()
@@ -39,7 +34,6 @@ class InventoryRowFragment(width: Int, entity: AnyGameEntity) : Fragment {
                         .withText(entity.name.capitalize()))
                 addComponent(dropButton)
                 entity.whenTypeIs<ConsumableType> { addComponent(eatButton) }
-                entity.whenFacetIs<Wieldable> { addComponent(wieldButton) }
-                entity.whenFacetIs<Wearable> { addComponent(wearButton) }
+                entity.whenFacetIs<Equippable> { addComponent(equipButton) }
             }
 }

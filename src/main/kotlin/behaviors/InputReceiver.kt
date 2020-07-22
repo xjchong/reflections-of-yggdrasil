@@ -30,6 +30,7 @@ object InputReceiver : BaseBehavior<GameContext>() {
                     executeCommand(Eat(context, this, event.consumable))
                 }
             }
+            is EquipInputEvent -> event.equipment.run { executeCommand(Equip(context, this, entity)) }
             is InventoryInputEvent -> {
                 entity.whenTypeIs<InventoryOwnerType> {
                     executeCommand(InspectInventory(context, this))
@@ -46,14 +47,12 @@ object InputReceiver : BaseBehavior<GameContext>() {
                 entity.tryTakeAt(position, context)
             }
             is WaitInputEvent -> return true
-            is WearInputEvent -> event.equipment.run { executeCommand(Wear(context, this, entity)) }
-            is WieldInputEvent -> event.equipment.run { executeCommand(Wield(context, this, entity)) }
         }
 
         return true
     }
 
-    private suspend fun AnyGameEntity.tryTakeAt(position: Position3D, context: GameContext) {
+    private suspend fun AnyEntity.tryTakeAt(position: Position3D, context: GameContext) {
         val world = context.world
         val block = world.fetchBlockAt(position).optional ?: return
         val inventory = getAttribute(Inventory::class)

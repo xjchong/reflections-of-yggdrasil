@@ -22,7 +22,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 ) {
 
     private val engine: GameEngine<GameContext> = GameEngine()
-    private val sceneObservers: MutableSet<AnyGameEntity> = mutableSetOf()
+    private val sceneObservers: MutableSet<AnyEntity> = mutableSetOf()
     private var lastVisiblePositions: MutableSet<Position3D> = mutableSetOf()
 
     var turn: Long = 0 // Represents how much game time has passed.
@@ -48,15 +48,15 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         engine.update(context)
     }
 
-    fun addSceneObserver(entity: AnyGameEntity) {
+    fun addSceneObserver(entity: AnyEntity) {
         sceneObservers.add(entity)
     }
 
-    fun removeSceneObserver(entity: AnyGameEntity) {
+    fun removeSceneObserver(entity: AnyEntity) {
         sceneObservers.remove(entity)
     }
 
-    fun observeSceneBy(entity: AnyGameEntity, message: String) {
+    fun observeSceneBy(entity: AnyEntity, message: String) {
         sceneObservers.forEach { observer ->
             val visiblePositions = findVisiblePositionsFor(observer)
 
@@ -71,7 +71,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
      * Has no effect if this world already contains the
      * given [Entity].
      */
-    fun addEntity(entity: AnyGameEntity, position: Position3D) {
+    fun addEntity(entity: AnyEntity, position: Position3D) {
         val priority = if (entity.isPlayer) GameEngine.PRIORITY_HIGH else GameEngine.PRIORITY_DEFAULT
 
         entity.position = position
@@ -82,11 +82,11 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
     }
 
-    fun addWorldEntity(entity: AnyGameEntity) {
+    fun addWorldEntity(entity: AnyEntity) {
         engine.addEntityWithPriority(entity, GameEngine.PRIORITY_LOW)
     }
 
-    fun removeEntity(entity: AnyGameEntity) {
+    fun removeEntity(entity: AnyEntity) {
         fetchBlockAt(entity.position).map {
             it.removeEntity(entity)
         }
@@ -95,8 +95,8 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         entity.position = Position3D.unknown()
     }
 
-    fun fetchEntitiesAt(position: Position3D): List<AnyGameEntity> {
-        val entities = mutableListOf<AnyGameEntity>()
+    fun fetchEntitiesAt(position: Position3D): List<AnyEntity> {
+        val entities = mutableListOf<AnyEntity>()
 
         fetchBlockAt(position).ifPresent { block ->
             entities.addAll(block.entities)
@@ -106,7 +106,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     fun addAtEmptyPosition(
-            entity: AnyGameEntity,
+            entity: AnyEntity,
             offset: Position3D = Position3D.defaultPosition(),
             size: Size3D = actualSize): Boolean {
 
@@ -146,11 +146,11 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
     private fun isVisionBlockedAt(position: Position3D): Boolean {
         return fetchBlockAt(position).fold(whenEmpty = { false }, whenPresent = {
-            it.entities.any(AnyGameEntity::isOpaque)
+            it.entities.any(AnyEntity::isOpaque)
         })
     }
 
-    fun findVisiblePositionsFor(entity: AnyGameEntity): Iterable<Position3D> {
+    fun findVisiblePositionsFor(entity: AnyEntity): Iterable<Position3D> {
         val radius = entity.getAttribute(Vision::class)?.radius ?: return listOf()
         val origin = entity.position
         val visiblePositions = mutableListOf<Position3D>()
@@ -168,7 +168,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         return visiblePositions
     }
 
-    fun updateFowAt(entity: AnyGameEntity) {
+    fun updateFowAt(entity: AnyEntity) {
         val nextVisiblePositions: MutableSet<Position3D> = mutableSetOf()
         val nextHiddenPositions: MutableSet<Position3D> = mutableSetOf()
         nextHiddenPositions.addAll(lastVisiblePositions)

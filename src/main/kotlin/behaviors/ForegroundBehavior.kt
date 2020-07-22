@@ -1,6 +1,6 @@
 package behaviors
 
-import entity.AnyGameEntity
+import entity.AnyEntity
 import game.GameContext
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.base.BaseBehavior
@@ -9,7 +9,7 @@ import org.hexworks.amethyst.api.entity.EntityType
 import kotlin.reflect.KClass
 
 /**
- * Only updates the [AnyGameEntity] when the [GameContext.event] type is in the foreground.
+ * Only updates the [AnyEntity] when the [GameContext.event] type is in the foreground.
  */
 abstract class ForegroundBehavior(
         vararg mandatoryAttribute: KClass<out Attribute>) : BaseBehavior<GameContext>(*mandatoryAttribute) {
@@ -19,5 +19,5 @@ abstract class ForegroundBehavior(
         else foregroundUpdate(entity, context)
     }
 
-    abstract suspend fun foregroundUpdate(entity: AnyGameEntity, context: GameContext): Boolean
+    abstract suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean
 }

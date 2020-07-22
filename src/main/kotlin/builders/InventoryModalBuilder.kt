@@ -2,7 +2,7 @@ package builders
 
 import attributes.Inventory
 import constants.GameConfig
-import entity.AnyGameEntity
+import entity.AnyEntity
 import entity.ConsumableType
 import entity.GameEntity
 import fragments.InventoryFragment
@@ -27,10 +27,9 @@ class InventoryModalBuilder(private val screen: Screen) {
     }
 
     fun build(inventory: Inventory,
-              onDrop: (AnyGameEntity) -> Unit,
+              onDrop: (AnyEntity) -> Unit,
               onEat: (GameEntity<ConsumableType>) -> Unit,
-              onWield: (AnyGameEntity) -> Unit,
-              onWear: (AnyGameEntity) -> Unit
+              onEquip: (AnyEntity) -> Unit
     ): Modal<EmptyModalResult> {
         val panel = Components.panel()
                 .withSize(DIALOG_SIZE)
@@ -40,7 +39,7 @@ class InventoryModalBuilder(private val screen: Screen) {
         val inventoryFragment = InventoryFragment(
                 inventory,
                 DIALOG_SIZE.width - 3,
-                onDrop, onEat, onWield, onWear)
+                onDrop, onEat, onEquip)
 
         val closeButton = Components.button()
                 .withText("Close")

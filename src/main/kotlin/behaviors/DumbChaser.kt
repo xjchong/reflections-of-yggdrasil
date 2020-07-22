@@ -2,7 +2,7 @@ package behaviors
 
 import commands.AttemptAnyAction
 import commands.Move
-import entity.AnyGameEntity
+import entity.AnyEntity
 import entity.Player
 import entity.executeBlockingCommand
 import entity.position
@@ -13,7 +13,7 @@ import org.hexworks.amethyst.api.Pass
 
 object DumbChaser : ForegroundBehavior() {
 
-    override suspend fun foregroundUpdate(entity: AnyGameEntity, context: GameContext): Boolean {
+    override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val world = context.world
         var isChasing = false
 

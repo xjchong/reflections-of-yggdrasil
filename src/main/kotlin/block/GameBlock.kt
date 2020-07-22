@@ -2,7 +2,7 @@ package block
 import GameColor
 import attributes.Memory
 import constants.GameTileRepository
-import entity.AnyGameEntity
+import entity.AnyEntity
 import entity.isObstacle
 import entity.position
 import entity.tile
@@ -18,7 +18,7 @@ import utilities.DebugConfig
 
 class GameBlock(private val position: Position3D,
                 private var defaultTile: Tile = GameTileRepository.FLOOR,
-                private val currentEntities: MutableList<AnyGameEntity> = mutableListOf(),
+                private val currentEntities: MutableList<AnyEntity> = mutableListOf(),
                 private var isRevealed: Boolean = false)
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
 
@@ -26,7 +26,7 @@ class GameBlock(private val position: Position3D,
         const val MIN_MEMORY_FOGGINESS = 0.6
         const val MAX_MEMORY_FOGGINESS = 0.92
 
-        fun createWith(position: Position3D, entity: AnyGameEntity) = GameBlock(
+        fun createWith(position: Position3D, entity: AnyEntity) = GameBlock(
                 position = position,
                 currentEntities = mutableListOf(entity)
         )
@@ -63,24 +63,24 @@ class GameBlock(private val position: Position3D,
     val isUnoccupied: Boolean
         get() = currentEntities.isEmpty()
 
-    val obstacle: Maybe<AnyGameEntity>
+    val obstacle: Maybe<AnyEntity>
         get() = Maybe.ofNullable(currentEntities.firstOrNull { it.isObstacle })
 
     val isObstructed: Boolean
         get() = obstacle.isPresent
 
-    val entities: Iterable<AnyGameEntity>
+    val entities: Iterable<AnyEntity>
         get() = currentEntities.toList()
 
-    fun addEntity(entity: AnyGameEntity) {
+    fun addEntity(entity: AnyEntity) {
         currentEntities.add(entity)
     }
 
-    fun removeEntity(entity: AnyGameEntity): Boolean {
+    fun removeEntity(entity: AnyEntity): Boolean {
         return currentEntities.remove(entity)
     }
 
-    @Synchronized fun transfer(entity: AnyGameEntity, currentBlock: GameBlock): Boolean {
+    @Synchronized fun transfer(entity: AnyEntity, currentBlock: GameBlock): Boolean {
         if (isObstructed) {
             return false
         }

@@ -3,12 +3,12 @@ package behaviors
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import attributes.flag.Opened
-import entity.AnyGameEntity
+import entity.AnyEntity
 import game.GameContext
 
 object Barrier : ForegroundBehavior() {
 
-    override suspend fun foregroundUpdate(entity: AnyGameEntity, context: GameContext): Boolean {
+    override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         with(entity.asMutableEntity()) {
             findAttribute(Opened::class).ifPresent {
                 removeAttribute(Obstacle)

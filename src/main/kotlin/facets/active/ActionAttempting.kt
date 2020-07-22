@@ -2,7 +2,7 @@ package facets.active
 
 import attributes.EntityActions
 import commands.AttemptAnyAction
-import entity.AnyGameEntity
+import entity.AnyEntity
 import entity.executeBlockingCommand
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -28,7 +28,7 @@ object ActionAttempting : BaseFacet<GameContext>(EntityActions::class) {
         }
     }
 
-    private fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Response {
+    private fun AnyEntity.tryActionsOn(context: GameContext, target: AnyEntity): Response {
         var result: Response = org.hexworks.amethyst.api.Pass
 
         findAttribute(attributes.EntityActions::class).map {

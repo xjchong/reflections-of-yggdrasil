@@ -1,11 +1,11 @@
 package commands
 
-import entity.AnyGameEntity
+import entity.AnyEntity
 import game.GameContext
 import org.hexworks.amethyst.api.entity.EntityType
 
-data class Wield(
+data class Equip(
         override val context: GameContext,
-        override val source: AnyGameEntity, // Equipment.
-        override val target: AnyGameEntity // Equipment user.
+        override val source: AnyEntity,
+        override val target: AnyEntity
 ) : EntityAction<EntityType, EntityType>

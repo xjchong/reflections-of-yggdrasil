@@ -3,7 +3,7 @@ package facets.passive
 import attributes.Equipments
 import attributes.Inventory
 import commands.Drop
-import commands.Wield
+import commands.Equip
 import entity.executeBlockingCommand
 import entity.getAttribute
 import entity.position
@@ -14,17 +14,17 @@ import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
-object Wieldable : BaseFacet<GameContext>() {
+object Equippable : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Wield::class) { (context, equipment, equipper) ->
+        return command.responseWhenCommandIs(Equip::class) { (context, equipment, equipper) ->
             equipper.findAttribute(Equipments::class).ifPresent { equipments ->
-                context.world.observeSceneBy(equipper, "The $equipper wields the $equipment.")
-                equipments.wield(equipment)?.let { oldEquipment ->
+                context.world.observeSceneBy(equipper, "The $equipper wears the $equipment.")
+                equipments.equip(equipment)?.let { unequipped ->
                     val inventory = equipper.getAttribute(Inventory::class)
 
-                    if (inventory == null || !inventory.add(oldEquipment)) {
-                        equipper.executeBlockingCommand(Drop(context, equipper, oldEquipment, equipper.position))
+                    if (inventory == null || !inventory.add(unequipped)) {
+                        equipper.executeBlockingCommand(Drop(context, equipper, unequipped, equipper.position))
                     }
                 }
             }

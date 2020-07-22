@@ -2,7 +2,7 @@ package behaviors
 
 import commands.AttemptAnyAction
 import commands.Move
-import entity.AnyGameEntity
+import entity.AnyEntity
 import entity.position
 import extensions.neighbors
 import extensions.optional
@@ -12,7 +12,7 @@ import org.hexworks.amethyst.api.Pass
 
 object Wanderer : ForegroundBehavior() {
 
-    override suspend fun foregroundUpdate(entity: AnyGameEntity, context: GameContext): Boolean {
+    override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val position = entity.position
 
         if (!position.isUnknown) {

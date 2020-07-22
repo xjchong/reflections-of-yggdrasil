@@ -6,8 +6,7 @@ import entity.inventory
 import entity.position
 import events.DropInputEvent
 import events.EatInputEvent
-import events.WearInputEvent
-import events.WieldInputEvent
+import events.EquipInputEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -34,14 +33,9 @@ object InventoryInspecting : BaseFacet<GameContext>() {
                         world.update(screen, EatInputEvent(consumable))
                         inventoryOwner.inventory.remove(consumable)
                     },
-                    onWield = { equipment ->
+                    onEquip = { equipment ->
                         if (inventoryOwner.inventory.remove(equipment)) {
-                            world.update(screen, WieldInputEvent(equipment))
-                        }
-                    },
-                    onWear = { equipment ->
-                        if (inventoryOwner.inventory.remove(equipment)) {
-                            world.update(screen, WearInputEvent(equipment))
+                            world.update(screen, EquipInputEvent(equipment))
                         }
                     })
 

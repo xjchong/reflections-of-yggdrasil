@@ -1,11 +1,11 @@
 package commands
 
-import entity.AnyGameEntity
+import entity.AnyEntity
 import org.hexworks.amethyst.api.entity.EntityType
 import game.GameContext
 
 data class Dig(
         override val context: GameContext,
-        override val source: AnyGameEntity,
-        override val target: AnyGameEntity
+        override val source: AnyEntity,
+        override val target: AnyEntity
 ) : EntityAction<EntityType, EntityType>

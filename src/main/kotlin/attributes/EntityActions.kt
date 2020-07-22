@@ -1,7 +1,7 @@
 package attributes
 
 import commands.EntityAction
-import entity.AnyGameEntity
+import entity.AnyEntity
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.entity.EntityType
 import game.GameContext
@@ -11,7 +11,7 @@ class EntityActions(
     private vararg val actions: KClass<out EntityAction<out EntityType, out EntityType>>
 ) : Attribute {
 
-    fun createActionsFor(context: GameContext, source: AnyGameEntity, target: AnyGameEntity):
+    fun createActionsFor(context: GameContext, source: AnyEntity, target: AnyEntity):
             Iterable<EntityAction<out EntityType, out EntityType>> {
         return actions.map {
             try {

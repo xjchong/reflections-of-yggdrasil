@@ -19,9 +19,9 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
 
-typealias AnyGameEntity = Entity<EntityType, GameContext>
+typealias AnyEntity = Entity<EntityType, GameContext>
 
-var AnyGameEntity.position
+var AnyEntity.position
     get() = findAttribute(EntityPosition::class).get().position
     set(value) {
         findAttribute(EntityPosition::class).map {
@@ -29,68 +29,68 @@ var AnyGameEntity.position
         }
     }
 
-val AnyGameEntity.tile: CharacterTile
+val AnyEntity.tile: CharacterTile
     get() = this.findAttribute(EntityTile::class).get().tile
 
-val AnyGameEntity.symbol: String
+val AnyEntity.symbol: String
     get() = this.findAttribute(EntityTile::class).get().tile.character.toString()
 
-val AnyGameEntity.isObstacle: Boolean
+val AnyEntity.isObstacle: Boolean
     get() = findAttribute(Obstacle::class).isPresent
 
-val AnyGameEntity.isTakeable: Boolean
+val AnyEntity.isTakeable: Boolean
     get() = findFacet(Takeable::class).isPresent
 
-val AnyGameEntity.isPlayer: Boolean
+val AnyEntity.isPlayer: Boolean
     get() = this.type == Player
 
-val AnyGameEntity.isOpaque: Boolean
+val AnyEntity.isOpaque: Boolean
     get() = this.findAttribute(Opaque::class).isPresent
 
-val AnyGameEntity.attackRating: Int
+val AnyEntity.attackRating: Int
     get() {
         val entityRating = getAttribute(CombatStats::class)?.attackRating ?: 0
         val equipmentRating = getAttribute(Equipments::class)?.attackRating ?: 0
         return entityRating + equipmentRating
     }
 
-val AnyGameEntity.defenseRating: Int
+val AnyEntity.defenseRating: Int
     get() {
         val entityRating = getAttribute(CombatStats::class)?.defenseRating ?: 0
         val equipmentRating = getAttribute(Equipments::class)?.defenseRating ?: 0
         return entityRating + equipmentRating
     }
 
-fun <T : Attribute> AnyGameEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
+fun <T : Attribute> AnyEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
 
-fun AnyGameEntity.syntaxFor(owner: AdaptableSyntax, subKey: String? = null): String {
+fun AnyEntity.syntaxFor(owner: AdaptableSyntax, subKey: String? = null): String {
     val syntax = getAttribute(EntitySyntax::class)?.getFor(owner, subKey)
     return syntax ?: owner.defaultSyntax(subKey)
 }
 
-fun AnyGameEntity.executeBlockingCommand(command: Command<out EntityType, GameContext>): Response {
+fun AnyEntity.executeBlockingCommand(command: Command<out EntityType, GameContext>): Response {
     return runBlocking { executeCommand(command) }
 }
 
-inline fun <reified T : EntityType> Iterable<AnyGameEntity>.filterType() : List<Entity<T, GameContext>> {
+inline fun <reified T : EntityType> Iterable<AnyEntity>.filterType() : List<Entity<T, GameContext>> {
     return filter { T::class.isSuperclassOf(it.type::class) }.toList() as List<Entity<T, GameContext>>
 }
 
-inline fun <reified T : EntityType> AnyGameEntity.whenTypeIs(fn: GameEntity<T>.() -> Unit) {
+inline fun <reified T : EntityType> AnyEntity.whenTypeIs(fn: GameEntity<T>.() -> Unit) {
     if (T::class.isSuperclassOf(this.type::class)) {
         (this as GameEntity<T>).run(fn)
     }
 }
 
-inline fun <reified T : EntityType> AnyGameEntity.isType(): Boolean {
+inline fun <reified T : EntityType> AnyEntity.isType(): Boolean {
     return T::class.isSuperclassOf(this.type::class)
 }
 
-inline fun <reified T : BaseFacet<GameContext>> AnyGameEntity.hasFacet(): Boolean {
+inline fun <reified T : BaseFacet<GameContext>> AnyEntity.hasFacet(): Boolean {
     return this.findFacet(T::class).isPresent
 }
 
-inline fun <reified T : BaseFacet<GameContext>> AnyGameEntity.whenFacetIs(fn: (AnyGameEntity) -> Unit) {
+inline fun <reified T : BaseFacet<GameContext>> AnyEntity.whenFacetIs(fn: (AnyEntity) -> Unit) {
     if (this.findFacet(T::class).isPresent) {
         fn(this)
     }

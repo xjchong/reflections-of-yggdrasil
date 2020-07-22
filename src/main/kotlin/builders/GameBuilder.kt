@@ -1,7 +1,7 @@
 package builders
 
 import constants.GameConfig
-import entity.AnyGameEntity
+import entity.AnyEntity
 import entity.EntityFactory
 import entity.GameEntity
 import entity.Player
@@ -53,7 +53,7 @@ class GameBuilder(val worldSize: Size3D) {
         )
     }
 
-    private fun addEntities(countPerLevel: Int, buildEntity: () -> AnyGameEntity) {
+    private fun addEntities(countPerLevel: Int, buildEntity: () -> AnyEntity) {
         repeat(world.actualSize.zLength) { level ->
             repeat(countPerLevel) {
                 buildEntity().addToWorld(level)

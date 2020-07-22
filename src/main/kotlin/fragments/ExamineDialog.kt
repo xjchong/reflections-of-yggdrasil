@@ -1,6 +1,6 @@
 package fragments
 
-import entity.AnyGameEntity
+import entity.AnyEntity
 import entity.symbol
 import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.Components
@@ -9,7 +9,7 @@ import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.screen.Screen
 
-class ExamineDialog(screen: Screen, entity: AnyGameEntity) : Dialog(screen) {
+class ExamineDialog(screen: Screen, entity: AnyEntity) : Dialog(screen) {
 
     companion object {
         val DIALOG_SIZE = Size.create(25, 15)

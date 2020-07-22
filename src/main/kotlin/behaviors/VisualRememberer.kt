@@ -1,14 +1,14 @@
 package behaviors
 
 import attributes.VisualMemory
-import entity.AnyGameEntity
+import entity.AnyEntity
 import entity.getAttribute
 import entity.position
 import game.GameContext
 
 object VisualRememberer : ForegroundBehavior() {
 
-    override suspend fun foregroundUpdate(entity: AnyGameEntity, context: GameContext): Boolean {
+    override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val world = context.world
         val position = entity.position
         val visualMemory = entity.getAttribute(VisualMemory::class) ?: return false

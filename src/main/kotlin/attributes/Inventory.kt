@@ -1,16 +1,16 @@
 package attributes
 
-import entity.AnyGameEntity
+import entity.AnyEntity
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.cobalt.core.api.UUID
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 
 class Inventory(val size: Int) : Attribute {
 
-    private val currentContents = mutableListOf<AnyGameEntity>()
+    private val currentContents = mutableListOf<AnyEntity>()
     val currentHash = createPropertyFrom(currentContents.hashCode())
 
-    val contents: List<AnyGameEntity>
+    val contents: List<AnyEntity>
         get() = currentContents.toList()
 
     val isEmpty: Boolean
@@ -19,11 +19,11 @@ class Inventory(val size: Int) : Attribute {
     val isFull: Boolean
         get() = currentContents.size >= size
 
-    fun findEntityBy(id: UUID): AnyGameEntity? {
+    fun findEntityBy(id: UUID): AnyEntity? {
         return currentContents.firstOrNull { it.id == id }
     }
 
-    fun add(content: AnyGameEntity): Boolean {
+    fun add(content: AnyEntity): Boolean {
         if (isFull.not() && currentContents.add(content)) {
             currentHash.updateValue(currentContents.hashCode())
             return true
@@ -32,7 +32,7 @@ class Inventory(val size: Int) : Attribute {
         return false
     }
 
-    fun remove(content: AnyGameEntity): Boolean {
+    fun remove(content: AnyEntity): Boolean {
         if (currentContents.remove(content)) {
             currentHash.updateValue(currentContents.hashCode())
             return true

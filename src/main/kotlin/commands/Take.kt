@@ -1,11 +1,11 @@
 package commands
 
-import entity.AnyGameEntity
+import entity.AnyEntity
 import game.GameContext
 import org.hexworks.amethyst.api.entity.EntityType
 
 data class Take(
         override val context: GameContext,
-        override val source: AnyGameEntity, // Entity being taken.
-        override val target: AnyGameEntity
+        override val source: AnyEntity, // Entity being taken.
+        override val target: AnyEntity
 ) : EntityAction<EntityType, EntityType>
