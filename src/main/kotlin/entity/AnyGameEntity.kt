@@ -31,6 +31,9 @@ var AnyGameEntity.position
 val AnyGameEntity.tile: CharacterTile
     get() = this.findAttribute(EntityTile::class).get().tile
 
+val AnyGameEntity.symbol: String
+    get() = this.findAttribute(EntityTile::class).get().tile.character.toString()
+
 val AnyGameEntity.isObstacle: Boolean
     get() = findAttribute(Obstacle::class).isPresent
 
