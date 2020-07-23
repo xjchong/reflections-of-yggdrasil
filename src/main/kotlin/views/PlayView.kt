@@ -1,14 +1,17 @@
 package views
 
+import GameColor
 import block.GameBlock
 import builders.GameBuilder
 import constants.GameConfig
 import events.*
+import extensions.withStyle
 import fragments.PlayerInfoFragment
 import game.Game
 import org.hexworks.cobalt.events.api.KeepSubscription
 import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.builder.component.ParagraphBuilder
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.data.*
 import org.hexworks.zircon.api.game.base.BaseGameArea
@@ -63,13 +66,22 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                 .build()
 
         screen.addComponent(logArea)
+        logArea.size
 
         Zircon.eventBus.subscribeTo<GameLogEvent>(key = "GameLogEvent") { event ->
-            logArea.addParagraph(
-                paragraph = event.message,
-                withNewLine = false,
-                withTypingEffectSpeedInMs = 5
-            )
+            val logColor = when (event.type) {
+                Info -> GameColor.GREY
+                Notice -> GameColor.LIGHT_YELLOW
+                Critical -> GameColor.ORANGE
+                Error -> GameColor.RED
+                Flavor -> GameColor.DARK_BLUE
+                Special -> GameColor.GREEN
+            }
+
+            logArea.addParagraph(ParagraphBuilder.newBuilder()
+                    .withStyle(logColor)
+                    .withText(event.message),
+                    withNewLine = false)
 
             KeepSubscription
         }

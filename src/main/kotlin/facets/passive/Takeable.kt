@@ -3,6 +3,8 @@ package facets.passive
 import attributes.Inventory
 import commands.Take
 import entity.getAttribute
+import events.Critical
+import events.Error
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -19,12 +21,12 @@ object Takeable : BaseFacet<GameContext>() {
             val inventory = taker.getAttribute(Inventory::class)
 
             if (inventory == null || inventory.isFull) {
-                world.observeSceneBy(taker, "The $taker has no room for the $takeable.")
+                world.observeSceneBy(taker, "The $taker has no room for the $takeable.", Critical)
             } else if (inventory.add(takeable)) {
                 world.removeEntity(takeable)
                 world.observeSceneBy(taker, "The $taker picks up the $takeable.")
             } else {
-                world.observeSceneBy(taker, "The $taker's inventory can't hold the $takeable for some reason.")
+                world.observeSceneBy(taker, "The $taker's inventory can't hold the $takeable for some reason.", Error)
             }
 
             Consumed

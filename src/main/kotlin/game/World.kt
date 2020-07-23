@@ -3,9 +3,7 @@ import attributes.Vision
 import attributes.VisualMemory
 import block.GameBlock
 import entity.*
-import events.Foreground
-import events.GameInputEvent
-import events.logGameEvent
+import events.*
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.Position3D
@@ -56,12 +54,12 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         sceneObservers.remove(entity)
     }
 
-    fun observeSceneBy(entity: AnyEntity, message: String) {
+    fun observeSceneBy(entity: AnyEntity, message: String, eventType: GameLogEventType = Info) {
         sceneObservers.forEach { observer ->
             val visiblePositions = findVisiblePositionsFor(observer)
 
             if (visiblePositions.contains(entity.position)) {
-                logGameEvent(message)
+                GameLogEvent.log(message, eventType)
             }
         }
     }

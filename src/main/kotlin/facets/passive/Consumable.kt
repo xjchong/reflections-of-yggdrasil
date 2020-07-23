@@ -1,9 +1,10 @@
 package facets.passive
 
-import attributes.EnergyLevel
 import attributes.ConsumableDetails
+import attributes.EnergyLevel
 import commands.Consume
 import entity.getAttribute
+import events.Error
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -18,12 +19,12 @@ object Consumable : BaseFacet<GameContext>() {
             val world = context.world
 
             val energyLevel = consumer.getAttribute(EnergyLevel::class) ?: run {
-                world.observeSceneBy(consumer, "The $consumer doesn't seem interested in the $consumable...")
+                world.observeSceneBy(consumer, "The $consumer doesn't seem interested in the $consumable...", Error)
                 return@responseWhenCommandIs Consumed
             }
 
             val energyValue = consumable.getAttribute(ConsumableDetails::class) ?: run {
-                world.observeSceneBy(consumer, "The $consumable doesn't seem to do much for the $consumer...")
+                world.observeSceneBy(consumer, "The $consumable doesn't seem to do much for the $consumer...", Error)
                 return@responseWhenCommandIs Consumed
             }
 
