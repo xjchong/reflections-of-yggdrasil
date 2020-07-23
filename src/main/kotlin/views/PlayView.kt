@@ -33,6 +33,9 @@ class CustomGameArea(
 )
 
 class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuilder.defaultGame()) : BaseView(tileGrid) {
+
+    private val pressedKeys: MutableSet<KeyCode> = mutableSetOf()
+
     override fun onDock() {
         super.onDock()
 
@@ -100,6 +103,25 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
     private fun setupInputHandlers() {
         screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { keyEvent, _ ->
+            pressedKeys.add(keyEvent.code)
+
+            if (pressedKeys.contains(KeyCode.SHIFT)) {
+                val comboInputEvent = when {
+                    pressedKeys.equals(setOf(KeyCode.SHIFT, KeyCode.UP, KeyCode.LEFT)) ->
+                        MoveInputEvent(relativePosition = Position3D.create(-1, -1, 0))
+                    pressedKeys.equals(setOf(KeyCode.SHIFT, KeyCode.UP, KeyCode.RIGHT)) ->
+                        MoveInputEvent(relativePosition = Position3D.create(1, -1, 0))
+                    pressedKeys.equals(setOf(KeyCode.SHIFT, KeyCode.DOWN, KeyCode.LEFT)) ->
+                        MoveInputEvent(relativePosition = Position3D.create(-1, 1, 0))
+                    pressedKeys.equals(setOf(KeyCode.SHIFT, KeyCode.DOWN, KeyCode.RIGHT)) ->
+                        MoveInputEvent(relativePosition = Position3D.create(1, 1, 0))
+                    else -> null
+                } ?: return@handleKeyboardEvents Pass
+
+                game.world.update(screen, comboInputEvent)
+                return@handleKeyboardEvents Processed
+            }
+
             // Debug command for revealing all tiles.
             if (keyEvent.code == KeyCode.BACKSLASH) {
                 DebugConfig.apply { shouldRevealWorld = !shouldRevealWorld }
@@ -137,6 +159,11 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
             } ?: return@handleKeyboardEvents Pass
 
             game.world.update(screen, inputEvent)
+            Processed
+        }
+
+        screen.handleKeyboardEvents(KeyboardEventType.KEY_RELEASED) { keyEvent, _ ->
+            pressedKeys.remove(keyEvent.code)
             Processed
         }
     }
