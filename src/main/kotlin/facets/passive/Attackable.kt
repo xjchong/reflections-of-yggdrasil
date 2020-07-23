@@ -1,5 +1,6 @@
 package facets.passive
 
+import attributes.CombatStats
 import commands.Attack
 import commands.Destroy
 import entity.*
@@ -17,15 +18,15 @@ object Attackable : BaseFacet<GameContext>() {
         return command.responseWhenCommandIs(Attack::class) { (context, attacker, target) ->
             if (!attacker.isPlayer && !target.isPlayer) return@responseWhenCommandIs Pass
 
-            val damage = (attacker.attackRating - target.defenseRating).coerceAtLeast(1)
+            target.getAttribute(CombatStats::class)?.let { combatStats ->
+                val damage = (attacker.attackRating - target.defenseRating).coerceAtLeast(1)
 
-            with (target) {
                 combatStats.health -= damage
 
-                context.world.observeSceneBy(attacker, "The $attacker hits the $this for $damage!")
+                context.world.observeSceneBy(attacker, "The $attacker hits the $target for $damage!")
 
-                whenDead {
-                    executeBlockingCommand(Destroy(context, this, cause = "the $attacker"))
+                if (combatStats.health <= 0) {
+                    target.executeBlockingCommand(Destroy(context, target, cause = "the $attacker"))
                 }
             }
 
