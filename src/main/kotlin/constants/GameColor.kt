@@ -95,7 +95,7 @@ object GameColor {
     }
 
     private val TileColor.light: TileColor
-        get() = this.lightenByPercent(0.5).desaturate(0.7)
+        get() = this.lightenByPercent(0.3).desaturate(0.3)
 
     private val TileColor.dark: TileColor
         get() = this.darkenByPercent(0.2).shade(0.2)
