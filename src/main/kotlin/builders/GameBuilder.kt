@@ -49,7 +49,7 @@ class GameBuilder(val worldSize: Size3D) {
 
     private fun addPlayer(): GameEntity<Player> {
         return EntityFactory.newPlayer().addToWorld(
-            atLevel = GameConfig.DUNGEON_LEVEL_COUNT - 1
+            atLevel = 0
         )
     }
 

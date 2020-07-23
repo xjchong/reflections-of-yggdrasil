@@ -2,23 +2,15 @@ package constants
 import GameColor
 import org.hexworks.zircon.api.CP437TilesetResources
 import org.hexworks.zircon.api.application.AppConfig
-import org.hexworks.zircon.api.builder.component.ColorThemeBuilder
 import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.data.Size3D
 
 object GameConfig {
     val TILESET = CP437TilesetResources.tyr16x16()
-    val THEME = ColorThemeBuilder.newBuilder()
-            .withAccentColor(GameColor.ACCENT)
-            .withPrimaryForegroundColor(GameColor.WHITE)
-            .withSecondaryForegroundColor(GameColor.SECONDARY_FOREGROUND)
-            .withPrimaryBackgroundColor(GameColor.BACKGROUND)
-            .withSecondaryBackgroundColor(GameColor.SECONDARY_BACKGROUND)
-            .build()
+    val THEME = GameColor.THEME
 
     val TITLE = "Reflections of Yggdrasil"
 
-    const val DUNGEON_LEVEL_COUNT = 2
     const val SIDEBAR_WIDTH = 29
     const val LOG_HEIGHT = 11
     const val WINDOW_WIDTH = 88
@@ -34,7 +26,7 @@ object GameConfig {
     val WORLD_SIZE = Size3D.create(
             WINDOW_WIDTH - SIDEBAR_WIDTH,
             WINDOW_HEIGHT - LOG_HEIGHT,
-            DUNGEON_LEVEL_COUNT)
+            1)
 
     fun buildAppConfig() = AppConfig.newBuilder()
         .withSize(Size.create(WINDOW_WIDTH, WINDOW_HEIGHT))

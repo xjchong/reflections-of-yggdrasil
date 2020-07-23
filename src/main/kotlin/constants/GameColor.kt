@@ -1,3 +1,4 @@
+import org.hexworks.zircon.api.builder.component.ColorThemeBuilder
 import org.hexworks.zircon.api.color.TileColor
 
 object GameColor {
@@ -51,25 +52,14 @@ object GameColor {
 
 
     /**
-     * APPLICATION
-     */
-
-    val ACCENT                  = YELLOW
-    val FOREGROUND              = WHITE
-    val SECONDARY_FOREGROUND    = GREY
-    val BACKGROUND              = BLACK
-    val SECONDARY_BACKGROUND    = BLACK.light
-
-
-    /**
      * ENVIRONMENT
      */
 
-    val FOG_OF_WAR      = BACKGROUND
+    val FOG_OF_WAR      = BLACK
 
-    val WALL            = SECONDARY_FOREGROUND
-    val FLOOR           = SECONDARY_FOREGROUND
-    val DOOR            = SECONDARY_FOREGROUND
+    val WALL            = GREY
+    val FLOOR           = GREY
+    val DOOR            = GREY
     val DOOR_BACKGROUND = BROWN
 
 
@@ -89,6 +79,29 @@ object GameColor {
     val BAT_MEAT    = DARK_PINK
     val EN          = LIGHT_CYAN
 
+
+    /**
+     * APPLICATION
+     */
+
+    val ACCENT = GameColor.YELLOW
+    val FOREGROUND = GameColor.WHITE
+    val SECONDARY_FOREGROUND = GameColor.GREY
+    val BACKGROUND = GameColor.BLACK
+    val SECONDARY_BACKGROUND = BLACK.light
+
+    val THEME = ColorThemeBuilder.newBuilder()
+            .withAccentColor(ACCENT)
+            .withPrimaryForegroundColor(FOREGROUND)
+            .withSecondaryForegroundColor(SECONDARY_FOREGROUND)
+            .withPrimaryBackgroundColor(BACKGROUND)
+            .withSecondaryBackgroundColor(SECONDARY_BACKGROUND)
+            .build()
+
+
+    /**
+     * HELPERS
+     */
 
     private fun hexColor(hexString: String): TileColor {
         return TileColor.fromString("#$hexString)")
