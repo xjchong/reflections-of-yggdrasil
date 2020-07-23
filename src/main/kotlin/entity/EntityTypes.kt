@@ -10,7 +10,7 @@ object Bat : BaseEntityType(
 object BatMeat : BaseEntityType(
         name = "bat meat",
         description = "Stringy bat meat. It is an acquired taste."
-), ConsumableType
+)
 
 object Door : BaseEntityType(
         name = "door"

@@ -1,7 +1,10 @@
 package fragments
 
-import entity.*
+import entity.AnyEntity
+import entity.tile
+import entity.whenFacetIs
 import extensions.withStyle
+import facets.passive.Consumable
 import facets.passive.Equippable
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
@@ -13,8 +16,8 @@ class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
             .withText("Drop")
             .build()
 
-    val eatButton = Components.button()
-            .withText("Eat")
+    val consumeButton = Components.button()
+            .withText("Consume")
             .build()
 
     val equipButton = Components.button()
@@ -33,7 +36,7 @@ class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
                         .withSize(InventoryFragment.NAME_COLUMN_WIDTH, 1)
                         .withText(entity.name.capitalize()))
                 addComponent(dropButton)
-                entity.whenTypeIs<ConsumableType> { addComponent(eatButton) }
+                entity.whenFacetIs<Consumable> { addComponent(consumeButton) }
                 entity.whenFacetIs<Equippable> { addComponent(equipButton) }
             }
 }

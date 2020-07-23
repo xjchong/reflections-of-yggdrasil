@@ -11,7 +11,6 @@ import commands.Dig
 import commands.Open
 import constants.GameTileRepository
 import facets.active.ActionAttempting
-import facets.active.FoodEating
 import facets.active.InventoryInspecting
 import facets.passive.*
 import game.Game
@@ -51,8 +50,8 @@ object EntityFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.BAT_MEAT),
-                NutritionalValue(300))
-        facets(Droppable, Takeable)
+                ConsumableDetails(300))
+        facets(Consumable, Droppable, Takeable)
     }
 
     fun newPlayer() = newGameEntityOfType(Player) {
@@ -73,7 +72,7 @@ object EntityFactory {
                         defenseRating = 5
                 ))
         behaviors(InputReceiver, EnergyExpender, VisualRememberer)
-        facets(ActionAttempting, Attackable, EnergyExpender, FoodEating, InventoryInspecting, Movable)
+        facets(ActionAttempting, Attackable, EnergyExpender, InventoryInspecting, Movable)
     }
 
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 1.7)) = newGameEntityOfType(Fungus) {

@@ -2,7 +2,9 @@ package behaviors
 
 import attributes.Inventory
 import commands.*
-import entity.*
+import entity.AnyEntity
+import entity.getAttribute
+import entity.position
 import events.*
 import extensions.optional
 import facets.passive.Takeable
@@ -20,13 +22,8 @@ object InputReceiver : BaseBehavior<GameContext>() {
         val position = entity.position
 
         when (event) {
-            is DropInputEvent -> event.droppable.run { executeCommand(Drop(context, this, entity, position))
-            }
-            is EatInputEvent -> {
-                entity.whenTypeIs<EnergyUserType> {
-                    executeCommand(Eat(context, this, event.consumable))
-                }
-            }
+            is ConsumeInputEvent -> event.consumable.run { executeCommand(Consume(context, this, entity)) }
+            is DropInputEvent -> event.droppable.run { executeCommand(Drop(context, this, entity, position)) }
             is EquipInputEvent -> event.equipment.run { executeCommand(Equip(context, this, entity)) }
             is InventoryInputEvent -> entity.executeCommand(InspectInventory(context, entity))
             is MoveInputEvent -> {

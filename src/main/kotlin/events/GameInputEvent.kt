@@ -1,8 +1,6 @@
 package events
 
 import entity.AnyEntity
-import entity.ConsumableType
-import entity.GameEntity
 import org.hexworks.zircon.api.data.Position3D
 
 
@@ -11,10 +9,9 @@ sealed class GameInputEvent {
     open val type: GameUpdateMode = Foreground
 }
 
+class ConsumeInputEvent(val consumable: AnyEntity) : GameInputEvent()
 
 class DropInputEvent(val droppable: AnyEntity) : GameInputEvent()
-
-class EatInputEvent(val consumable: GameEntity<ConsumableType>) : GameInputEvent()
 
 class EquipInputEvent(val equipment: AnyEntity) : GameInputEvent()
 

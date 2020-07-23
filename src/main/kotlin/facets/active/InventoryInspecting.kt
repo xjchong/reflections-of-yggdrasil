@@ -5,8 +5,8 @@ import builders.InventoryModalBuilder
 import commands.InspectInventory
 import entity.getAttribute
 import entity.position
+import events.ConsumeInputEvent
 import events.DropInputEvent
-import events.EatInputEvent
 import events.EquipInputEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -31,8 +31,8 @@ object InventoryInspecting : BaseFacet<GameContext>() {
                         onDrop = { content ->
                             world.update(screen, DropInputEvent(content))
                         },
-                        onEat = { consumable ->
-                            world.update(screen, EatInputEvent(consumable))
+                        onConsume = { consumable ->
+                            world.update(screen, ConsumeInputEvent(consumable))
                             inventory.remove(consumable)
                         },
                         onEquip = { equipment ->
