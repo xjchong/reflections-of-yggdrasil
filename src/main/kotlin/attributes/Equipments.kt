@@ -8,6 +8,7 @@ import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.builder.component.TextBoxBuilder
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.ComponentStyleSet
 import org.hexworks.zircon.api.component.Label
@@ -90,8 +91,8 @@ class Equipments(initialMainHand: AnyEntity? = null,
     private val mainHand: Maybe<AnyEntity> by mainHandProp.asDelegate()
     private val offHand: Maybe<AnyEntity> by offHandProp.asDelegate()
     private val neck: Maybe<AnyEntity> by neckProp.asDelegate()
-    private val mainFinger: Maybe<AnyEntity> by mainFingerProp.asDelegate()
-    private val offFinger: Maybe<AnyEntity> by offFingerProp.asDelegate()
+    private val leftFinger: Maybe<AnyEntity> by mainFingerProp.asDelegate()
+    private val rightFinger: Maybe<AnyEntity> by offFingerProp.asDelegate()
     private val wrists: Maybe<AnyEntity> by wristsProp.asDelegate()
     private val head: Maybe<AnyEntity> by headProp.asDelegate()
     private val hands: Maybe<AnyEntity> by handsProp.asDelegate()
@@ -120,40 +121,47 @@ class Equipments(initialMainHand: AnyEntity? = null,
             })
         }()
 
+
     override fun toComponent(width: Int): Component {
-        val weaponCharLabel = Components.label().withSize(1, 1).build()
-        val weaponNameLabel = Components.label().withSize(width - 2, 1).build()
-        val weaponStatsLabel = Components.label().withSize(width - 1, 1).build()
+        val textBoxBuilder = Components.textBox(width)
 
-        updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, mainHand)
-        mainHandProp.onChange {
-            updateInfo(weaponCharLabel, weaponNameLabel, weaponStatsLabel, mainHand)
-        }
+        val mainHandInfo = setupInfo(width, textBoxBuilder, "M.Hand:", mainHand, mainHandProp)
+        mainHandProp.onChange { updateInfo(mainHandInfo, mainHand) }
 
-        val armorCharLabel = Components.label().withSize(1, 1).build()
-        val armorNameLabel = Components.label().withSize(width - 2, 1).build()
-        val armorStatsLabel = Components.label().withSize(width - 1, 1).build()
+        val offHandInfo = setupInfo(width, textBoxBuilder, "O.Hand:", offHand, offHandProp)
+        offHandProp.onChange { updateInfo(offHandInfo, offHand) }
 
-        updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, chest)
-        chestProp.onChange {
-            updateInfo(armorCharLabel, armorNameLabel, armorStatsLabel, chest)
-        }
+        val headInfo = setupInfo(width, textBoxBuilder, "Head  :", head, headProp)
+        headProp.onChange { updateInfo(headInfo, head) }
 
-        return Components.textBox(width)
-                .addHeader("Weapon", withNewLine = false)
-                .addInlineComponent(weaponCharLabel)
-                .addInlineComponent(weaponNameLabel)
-                .commitInlineElements()
-                .addInlineComponent(weaponStatsLabel)
-                .commitInlineElements()
-                .addNewLine()
-                .addHeader("Armour", withNewLine = false)
-                .addInlineComponent(armorCharLabel)
-                .addInlineComponent(armorNameLabel)
-                .commitInlineElements()
-                .addInlineComponent(armorStatsLabel)
-                .commitInlineElements()
-                .build()
+        val chestInfo = setupInfo(width, textBoxBuilder, "Chest :", chest, chestProp)
+        chestProp.onChange { updateInfo(chestInfo, chest) }
+
+        val handsInfo = setupInfo(width, textBoxBuilder, "Hands :", hands, handsProp)
+        handsProp.onChange { updateInfo(handsInfo, hands) }
+
+        val waistInfo = setupInfo(width, textBoxBuilder, "Waist :", waist, waistProp)
+        waistProp.onChange { updateInfo(waistInfo, waist) }
+
+        val legsInfo = setupInfo(width, textBoxBuilder, "Legs  :", legs, legsProp)
+        legsProp.onChange { updateInfo(legsInfo, legs) }
+
+        val feetInfo = setupInfo(width, textBoxBuilder, "Feet  :", feet, feetProp)
+        feetProp.onChange { updateInfo(feetInfo, feet) }
+
+        val neckInfo = setupInfo(width, textBoxBuilder, "Neck  :", neck, neckProp)
+        neckProp.onChange { updateInfo(neckInfo, neck) }
+
+        val wristsInfo = setupInfo(width, textBoxBuilder, "Wrists:", wrists, wristsProp)
+        wristsProp.onChange { updateInfo(wristsInfo, wrists) }
+
+        val mainFingerInfo = setupInfo(width, textBoxBuilder, "L.Ring:", leftFinger, mainFingerProp)
+        mainFingerProp.onChange { updateInfo(mainFingerInfo, leftFinger) }
+
+        val offFingerInfo = setupInfo(width, textBoxBuilder, "R.Ring:", rightFinger, offFingerProp)
+        offFingerProp.onChange { updateInfo(offFingerInfo, rightFinger) }
+
+        return textBoxBuilder.build()
     }
 
     fun equip(equipment: AnyEntity): AnyEntity? {
@@ -176,19 +184,36 @@ class Equipments(initialMainHand: AnyEntity? = null,
         return unequipped
     }
 
-    private fun updateInfo(charLabel: Label, nameLabel: Label, statsLabel: Label, equipment: Maybe<AnyEntity>) {
+    private fun setupInfo(width: Int,
+                          textBoxBuilder: TextBoxBuilder,
+                          title: String,
+                          equipment: Maybe<AnyEntity>,
+                          equipmentProp: Property<Maybe<AnyEntity>>): List<Label> {
+        val charLabel = Components.label().withSize(2, 1).build()
+        val nameLabel = Components.label().withSize(width - 11, 1).build()
+        val infoLabels = listOf(charLabel, nameLabel)
+
+        updateInfo(infoLabels, equipment)
+
+        textBoxBuilder
+                .addInlineComponent(charLabel)
+                .addInlineComponent(Components.header().withSize(8, 1).withText(title).build())
+                .addInlineComponent(nameLabel)
+                .commitInlineElements()
+
+        return infoLabels
+    }
+
+    private fun updateInfo(infoLabels: List<Label>, equipment: Maybe<AnyEntity>) {
+        val (charLabel, nameLabel) = infoLabels
         val itemChar = equipment.optional?.tile?.character
 
         charLabel.componentStyleSet = ComponentStyleSet.create(
                 equipment.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
                 backgroundColor = GameColor.SECONDARY_BACKGROUND)
         charLabel.textProperty.value = if (itemChar != null) itemChar.toString() else "" // Don't fold this expression, as nullChar.toString == "n"
-        nameLabel.textProperty.value = equipment.optional?.name?.capitalize() ?: "None"
-        statsLabel.textProperty.value = equipment.optional?.statsString ?: ""
+        nameLabel.textProperty.value = equipment.optional?.name?.capitalize() ?: "-"
     }
-
-    private val AnyEntity.statsString: String
-        get() = "A: ${this.attackRating} D: ${this.defenseRating}"
 
     private val AnyEntity.details: EquippableDetails?
         get() = getAttribute(EquippableDetails::class)

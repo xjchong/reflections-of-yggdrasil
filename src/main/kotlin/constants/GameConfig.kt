@@ -19,10 +19,10 @@ object GameConfig {
     val TITLE = "Reflections of Yggdrasil"
 
     const val DUNGEON_LEVEL_COUNT = 2
-    const val SIDEBAR_WIDTH = 21
-    const val LOG_HEIGHT = 9
-    const val WINDOW_WIDTH = 80
-    const val WINDOW_HEIGHT = 50
+    const val SIDEBAR_WIDTH = 29
+    const val LOG_HEIGHT = 11
+    const val WINDOW_WIDTH = 88
+    const val WINDOW_HEIGHT = 52
 
     const val BATS_PER_LEVEL = 6
     const val EN_PER_LEVEL = 20

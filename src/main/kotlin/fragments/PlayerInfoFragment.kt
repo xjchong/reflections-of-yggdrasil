@@ -17,7 +17,6 @@ class PlayerInfoFragment(
             .withSize(width, 30)
             .withSpacing(1)
             .build().apply {
-                addComponent(Components.header().withText("Player"))
                 player.findAttribute(CombatStats::class).ifPresent {
                     addComponent(it.toComponent(width))
                 }
