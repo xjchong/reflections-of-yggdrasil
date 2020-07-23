@@ -1,8 +1,9 @@
 package facets.active
 
+import attributes.Inventory
 import builders.InventoryModalBuilder
 import commands.InspectInventory
-import entity.inventory
+import entity.getAttribute
 import entity.position
 import events.DropInputEvent
 import events.EatInputEvent
@@ -21,25 +22,27 @@ object InventoryInspecting : BaseFacet<GameContext>() {
     private val DIALOG_SIZE = Size.create(34, 15)
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(InspectInventory::class) { (context, inventoryOwner) ->
+        return command.responseWhenCommandIs(InspectInventory::class) { (context, entity) ->
             val (world, screen) = context
-            val position = inventoryOwner.position
+            val position = entity.position
 
-            val inventoryModal = InventoryModalBuilder(screen).build(inventoryOwner.inventory,
-                    onDrop = { content ->
-                        world.update(screen, DropInputEvent(content))
-                    },
-                    onEat = { consumable ->
-                        world.update(screen, EatInputEvent(consumable))
-                        inventoryOwner.inventory.remove(consumable)
-                    },
-                    onEquip = { equipment ->
-                        if (inventoryOwner.inventory.remove(equipment)) {
-                            world.update(screen, EquipInputEvent(equipment))
-                        }
-                    })
+            entity.getAttribute(Inventory::class)?.let { inventory ->
+                val inventoryModal = InventoryModalBuilder(screen).build(inventory,
+                        onDrop = { content ->
+                            world.update(screen, DropInputEvent(content))
+                        },
+                        onEat = { consumable ->
+                            world.update(screen, EatInputEvent(consumable))
+                            inventory.remove(consumable)
+                        },
+                        onEquip = { equipment ->
+                            if (inventory.remove(equipment)) {
+                                world.update(screen, EquipInputEvent(equipment))
+                            }
+                        })
 
-            screen.openModal(inventoryModal)
+                screen.openModal(inventoryModal)
+            }
 
             Consumed
         }

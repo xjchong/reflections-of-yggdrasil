@@ -5,7 +5,7 @@ import org.hexworks.amethyst.api.base.BaseEntityType
 
 object Bat : BaseEntityType(
         name = "bat"
-), Combatant, InventoryOwnerType
+), Combatant
 
 object BatMeat : BaseEntityType(
         name = "bat meat",
@@ -26,7 +26,7 @@ object Fungus : BaseEntityType(
 
 object Player : BaseEntityType(
         name = "player"
-), Combatant, EnergyUserType, InventoryOwnerType
+), Combatant, EnergyUserType
 
 object Wall : BaseEntityType(
         name = "wall"
@@ -34,7 +34,7 @@ object Wall : BaseEntityType(
 
 object Zombie : BaseEntityType(
         name = "zombie"
-), Combatant, InventoryOwnerType
+), Combatant
 
 /**
  * EQUIPMENT

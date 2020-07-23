@@ -20,10 +20,7 @@ object InputReceiver : BaseBehavior<GameContext>() {
         val position = entity.position
 
         when (event) {
-            is DropInputEvent -> {
-                entity.whenTypeIs<InventoryOwnerType> {
-                    executeCommand(Drop(context, this, event.droppable, position))
-                }
+            is DropInputEvent -> event.droppable.run { executeCommand(Drop(context, this, entity, position))
             }
             is EatInputEvent -> {
                 entity.whenTypeIs<EnergyUserType> {
@@ -31,11 +28,7 @@ object InputReceiver : BaseBehavior<GameContext>() {
                 }
             }
             is EquipInputEvent -> event.equipment.run { executeCommand(Equip(context, this, entity)) }
-            is InventoryInputEvent -> {
-                entity.whenTypeIs<InventoryOwnerType> {
-                    executeCommand(InspectInventory(context, this))
-                }
-            }
+            is InventoryInputEvent -> entity.executeCommand(InspectInventory(context, entity))
             is MoveInputEvent -> {
                 val nextPosition = position.withRelative(event.relativePosition)
 

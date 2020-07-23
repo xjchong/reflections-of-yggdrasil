@@ -13,7 +13,7 @@ import org.hexworks.amethyst.api.entity.EntityType
 object Droppable : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Drop::class) { (context, owner, droppable, position) ->
+        return command.responseWhenCommandIs(Drop::class) { (context, droppable, owner, position) ->
             owner.getAttribute(Inventory::class)?.let { inventory -> inventory.remove(droppable) }
 
             with (context.world) {

@@ -1,10 +1,10 @@
 package commands
 
-import entity.InventoryOwner
-import entity.InventoryOwnerType
+import entity.AnyEntity
 import game.GameContext
+import org.hexworks.amethyst.api.entity.EntityType
 
 data class InspectInventory(
         override val context: GameContext,
-        override val source: InventoryOwner
-) : GameCommand<InventoryOwnerType>
+        override val source: AnyEntity
+) : GameCommand<EntityType>
