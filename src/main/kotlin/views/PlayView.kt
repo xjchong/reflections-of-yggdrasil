@@ -6,6 +6,7 @@ import builders.GameBuilder
 import constants.GameConfig
 import events.*
 import extensions.withStyle
+import fragments.DebugColorDialog
 import fragments.PlayerInfoFragment
 import game.Game
 import org.hexworks.cobalt.events.api.KeepSubscription
@@ -102,6 +103,12 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
             // Debug command for revealing all tiles.
             if (keyEvent.code == KeyCode.BACKSLASH) {
                 DebugConfig.apply { shouldRevealWorld = !shouldRevealWorld }
+                return@handleKeyboardEvents Processed
+            }
+
+            // Debug command for showing the colors used in game.
+            if (keyEvent.code == KeyCode.BACK_QUOTE) {
+                screen.openModal(DebugColorDialog(screen))
                 return@handleKeyboardEvents Processed
             }
 
