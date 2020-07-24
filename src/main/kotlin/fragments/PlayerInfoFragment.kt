@@ -1,7 +1,6 @@
 package fragments
 
 import attributes.CombatStats
-import attributes.EnergyLevel
 import attributes.Equipments
 import entity.GameEntity
 import entity.Player
@@ -20,9 +19,6 @@ class PlayerInfoFragment(
                 addComponent(Components.header()
                         .withText("Player"))
                 player.findAttribute(CombatStats::class).ifPresent {
-                    addComponent(it.toComponent(width))
-                }
-                player.findAttribute(EnergyLevel::class).ifPresent {
                     addComponent(it.toComponent(width))
                 }
                 player.findAttribute(Equipments::class).ifPresent {

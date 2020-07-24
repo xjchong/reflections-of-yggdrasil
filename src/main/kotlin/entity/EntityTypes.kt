@@ -26,7 +26,7 @@ object Fungus : BaseEntityType(
 
 object Player : BaseEntityType(
         name = "player"
-), EnergyUserType
+)
 
 object Wall : BaseEntityType(
         name = "wall"

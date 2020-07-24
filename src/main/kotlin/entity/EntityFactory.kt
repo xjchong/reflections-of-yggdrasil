@@ -1,6 +1,5 @@
 package entity
 
-import actors.EnergyExpender
 import attributes.*
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
@@ -56,7 +55,6 @@ object EntityFactory {
 
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(
-                EnergyLevel(500, 1000),
                 EntityPosition(),
                 EntityTile(GameTileRepository.PLAYER),
                 EntityActions(Open::class, Dig::class, Attack::class),
@@ -71,8 +69,8 @@ object EntityFactory {
                         attackRating = 10,
                         defenseRating = 5
                 ))
-        behaviors(InputReceiver, EnergyExpender, VisualRememberer)
-        facets(ActionAttempting, Attackable, EnergyExpender, InventoryInspecting, Movable)
+        behaviors(InputReceiver, VisualRememberer)
+        facets(ActionAttempting, Attackable, InventoryInspecting, Movable)
     }
 
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 1.7)) = newGameEntityOfType(Fungus) {
