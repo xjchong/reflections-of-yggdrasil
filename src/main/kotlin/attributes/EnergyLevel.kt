@@ -18,7 +18,7 @@ class EnergyLevel(initialEnergy: Int, val maxEnergy: Int) : DisplayableAttribute
     private val currentValueProperty = createPropertyFrom(initialEnergy)
 
     override fun toComponent(width: Int): Component = Components.vbox()
-            .withSize(width, 5)
+            .withSize(width, 3)
             .build().apply {
                 val hungerLabel = Components.label()
                         .withSize(width, 1)

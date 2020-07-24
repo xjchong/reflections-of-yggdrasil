@@ -10,6 +10,8 @@ import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.graphics.Symbols
+import org.hexworks.zircon.api.uievent.MouseEventType
+import org.hexworks.zircon.api.uievent.Processed
 
 
 class CombatStats(
@@ -37,21 +39,22 @@ class CombatStats(
     }
 
     override fun toComponent(width: Int): Component = Components.vbox()
-            .withSize(width, 6)
+            .withSize(width, 1)
             .build().apply {
                 val textBoxBuilder = Components.textBox(width)
 
-                val healthBarLabel = setupBar(textBoxBuilder, health, maxHealth, GameColor.GREEN)
+                val healthBarLabel = setupBar(textBoxBuilder, healthProperty, maxHealthProperty, GameColor.GREEN)
                 healthProperty.onChange { updateBar(healthBarLabel, health, maxHealth) }
 
-                val hpLabel = Components.label().withSize(width, 1)
-                        .build()
 
                 addComponent(textBoxBuilder.build())
-                addComponent(hpLabel)
+
             }
 
-    private fun setupBar(textBoxBuilder: TextBoxBuilder, value: Int, maxValue: Int, color: TileColor): Label {
+    private fun setupBar(textBoxBuilder: TextBoxBuilder,
+                         valueProp: Property<Int>,
+                         maxValueProp: Property<Int>,
+                         color: TileColor): Label {
         val leftCapLabel = Components.label()
                 .withSize(1, 1)
                 .withText("${Symbols.SINGLE_LINE_T_DOUBLE_RIGHT}")
@@ -64,16 +67,25 @@ class CombatStats(
 
         val barLabel = Components.label()
                 .withSize(BAR_WIDTH, 1)
-                .withText(getBarString(value, maxValue))
+                .withText(getBarString(valueProp.value, maxValueProp.value))
                 .withStyle(color)
                 .build()
+
+        barLabel.handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
+            barLabel.textProperty.value = " ${valueProp.value}/${maxValueProp.value}"
+            Processed
+        }
+
+        barLabel.handleMouseEvents(MouseEventType.MOUSE_EXITED) { _, _ ->
+            updateBar(barLabel, valueProp.value, maxValueProp.value)
+            Processed
+        }
 
         textBoxBuilder
                 .addInlineComponent(leftCapLabel)
                 .addInlineComponent(barLabel)
                 .addInlineComponent(rightCapLabel)
                 .commitInlineElements()
-                .addNewLine()
 
         return barLabel
     }
