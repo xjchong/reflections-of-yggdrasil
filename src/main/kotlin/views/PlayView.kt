@@ -71,7 +71,6 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                 .build()
 
         screen.addComponent(logArea)
-        logArea.size
 
         Zircon.eventBus.subscribeTo<GameLogEvent>(key = "GameLogEvent") { event ->
             val logColor = when (event.type) {
@@ -107,14 +106,15 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
             pressedKeys.add(keyEvent.code)
 
             if (pressedKeys.contains(KeyCode.SHIFT)) {
+                println(pressedKeys)
                 val comboInputEvent = when {
-                    pressedKeys.equals(setOf(KeyCode.SHIFT, KeyCode.UP, KeyCode.LEFT)) ->
+                    pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.UP, KeyCode.LEFT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(-1, -1, 0))
-                    pressedKeys.equals(setOf(KeyCode.SHIFT, KeyCode.UP, KeyCode.RIGHT)) ->
+                    pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.UP, KeyCode.RIGHT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(1, -1, 0))
-                    pressedKeys.equals(setOf(KeyCode.SHIFT, KeyCode.DOWN, KeyCode.LEFT)) ->
+                    pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.DOWN, KeyCode.LEFT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(-1, 1, 0))
-                    pressedKeys.equals(setOf(KeyCode.SHIFT, KeyCode.DOWN, KeyCode.RIGHT)) ->
+                    pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.DOWN, KeyCode.RIGHT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(1, 1, 0))
                     else -> null
                 } ?: return@handleKeyboardEvents Pass
