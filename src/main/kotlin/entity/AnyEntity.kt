@@ -1,6 +1,9 @@
 package entity
 
-import attributes.*
+import attributes.EntityPosition
+import attributes.EntitySyntax
+import attributes.EntityTile
+import attributes.Equipments
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import extensions.optional
@@ -49,16 +52,14 @@ val AnyEntity.isOpaque: Boolean
 
 val AnyEntity.attackRating: Int
     get() {
-        val entityRating = getAttribute(CombatStats::class)?.attackRating ?: 0
         val equipmentRating = getAttribute(Equipments::class)?.attackRating ?: 0
-        return entityRating + equipmentRating
+        return equipmentRating
     }
 
 val AnyEntity.defenseRating: Int
     get() {
-        val entityRating = getAttribute(CombatStats::class)?.defenseRating ?: 0
         val equipmentRating = getAttribute(Equipments::class)?.defenseRating ?: 0
-        return entityRating + equipmentRating
+        return equipmentRating
     }
 
 fun <T : Attribute> AnyEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional

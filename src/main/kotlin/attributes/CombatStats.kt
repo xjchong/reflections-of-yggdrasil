@@ -17,35 +17,37 @@ import org.hexworks.zircon.api.uievent.Processed
 class CombatStats(
         val maxHealthProperty: Property<Int>,
         val healthProperty: Property<Int> = createPropertyFrom(maxHealthProperty.value),
-        val attackRatingProperty: Property<Int>,
-        val defenseRatingProperty: Property<Int>
+        val maxStaminaProperty: Property<Int>,
+        val staminaProperty: Property<Int> = createPropertyFrom(maxStaminaProperty.value)
 ) : DisplayableAttribute {
     val maxHealth: Int by maxHealthProperty.asDelegate()
     var health: Int by healthProperty.asDelegate()
-    val attackRating: Int by attackRatingProperty.asDelegate()
-    val defenseRating: Int by defenseRatingProperty.asDelegate()
+    val maxStamina: Int by maxStaminaProperty.asDelegate()
+    val stamina: Int by staminaProperty.asDelegate()
 
     companion object {
 
         const val BAR_WIDTH = 24
 
-        fun create(maxHealth: Int, health: Int = maxHealth, attackRating: Int, defenseRating: Int) =
+        fun create(maxHealth: Int, health: Int = maxHealth, maxStamina: Int, stamina: Int = maxStamina) =
                 CombatStats(
                         maxHealthProperty = createPropertyFrom(maxHealth),
                         healthProperty = createPropertyFrom(health),
-                        attackRatingProperty = createPropertyFrom(attackRating),
-                        defenseRatingProperty = createPropertyFrom(defenseRating)
+                        maxStaminaProperty = createPropertyFrom(maxStamina),
+                        staminaProperty = createPropertyFrom(stamina)
                 )
     }
 
     override fun toComponent(width: Int): Component = Components.vbox()
-            .withSize(width, 1)
+            .withSize(width, 3)
             .build().apply {
                 val textBoxBuilder = Components.textBox(width)
 
-                val healthBarLabel = setupBar(textBoxBuilder, healthProperty, maxHealthProperty, GameColor.GREEN)
+                val healthBarLabel = setupBar(textBoxBuilder, healthProperty, maxHealthProperty, GameColor.DARK_GREEN)
                 healthProperty.onChange { updateBar(healthBarLabel, health, maxHealth) }
 
+                val staminaBarLabel = setupBar(textBoxBuilder, staminaProperty, maxStaminaProperty, GameColor.LIGHT_YELLOW)
+                staminaProperty.onChange { updateBar(staminaBarLabel, stamina, maxStamina) }
 
                 addComponent(textBoxBuilder.build())
 
