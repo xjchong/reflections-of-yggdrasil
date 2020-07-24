@@ -10,10 +10,11 @@ import org.hexworks.zircon.api.component.Fragment
 
 class PlayerInfoFragment(
         width: Int,
+        height: Int,
         player: GameEntity<Player>) : Fragment {
 
     override val root: Component = Components.vbox()
-            .withSize(width, 30)
+            .withSize(width, height)
             .withSpacing(1)
             .build().apply {
                 addComponent(Components.header()

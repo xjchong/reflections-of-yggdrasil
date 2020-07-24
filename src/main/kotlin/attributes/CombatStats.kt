@@ -9,6 +9,7 @@ import org.hexworks.zircon.api.builder.component.TextBoxBuilder
 import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Label
+import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.graphics.Symbols
 import org.hexworks.zircon.api.uievent.MouseEventType
 import org.hexworks.zircon.api.uievent.Processed
@@ -26,8 +27,6 @@ class CombatStats(
     val stamina: Int by staminaProperty.asDelegate()
 
     companion object {
-
-        const val BAR_WIDTH = 24
 
         fun create(maxHealth: Int, health: Int = maxHealth, maxStamina: Int, stamina: Int = maxStamina) =
                 CombatStats(
@@ -67,9 +66,11 @@ class CombatStats(
                 .withText("${Symbols.SINGLE_LINE_T_DOUBLE_LEFT}")
                 .build()
 
+
+        val barLabelSize = Size.create(textBoxBuilder.size.width - 3, 1)
         val barLabel = Components.label()
-                .withSize(BAR_WIDTH, 1)
-                .withText(getBarString(valueProp.value, maxValueProp.value))
+                .withSize(barLabelSize)
+                .withText(getBarString(barLabelSize.width, valueProp.value, maxValueProp.value))
                 .withStyle(color)
                 .build()
 
@@ -93,11 +94,11 @@ class CombatStats(
     }
 
     private fun updateBar(barLabel: Label, value: Int, maxValue: Int) {
-        barLabel.textProperty.value = getBarString(value, maxValue)
+        barLabel.textProperty.value = getBarString(barLabel.size.width, value, maxValue)
     }
 
-    private fun getBarString(value: Int, maxValue: Int): String {
-        val increment = (maxValue.toDouble() / BAR_WIDTH.toDouble()) / 4.0
+    private fun getBarString(width: Int, value: Int, maxValue: Int): String {
+        val increment = (maxValue.toDouble() / width.toDouble()) / 4.0
         var currentValue = value.toDouble()
         var barString = ""
 

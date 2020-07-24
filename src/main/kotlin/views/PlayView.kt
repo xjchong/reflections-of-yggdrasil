@@ -55,6 +55,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
         sidebar.addFragment(PlayerInfoFragment(
                 width = sidebar.contentSize.width,
+                height = sidebar.contentSize.height,
                 player = game.player))
 
         screen.addComponent(sidebar)
