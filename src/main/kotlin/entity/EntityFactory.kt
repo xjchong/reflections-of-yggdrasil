@@ -1,5 +1,6 @@
 package entity
 
+import actors.StaminaUser
 import attributes.*
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
@@ -71,7 +72,7 @@ object EntityFactory {
                         skill = .33,
                         luck = .34
                 ))
-        behaviors(InputReceiver, VisualRememberer)
+        behaviors(InputReceiver, StaminaUser, VisualRememberer)
         facets(ActionAttempting, Attackable, InventoryInspecting, Movable)
     }
 
@@ -144,7 +145,7 @@ object EntityFactory {
                         maxStamina = 50,
                         power = 0.3
                 ))
-        behaviors(DumbChaser or Wanderer)
+        behaviors(DumbChaser or Wanderer, StaminaUser)
         facets(ActionAttempting, Attackable, Destructible, Movable)
     }
 

@@ -19,7 +19,7 @@ object Attackable : BaseFacet<GameContext>() {
         return command.responseWhenCommandIs(Attack::class) { (context, attacker, target) ->
             if (!attacker.isPlayer && !target.isPlayer) return@responseWhenCommandIs Pass
 
-            target.getAttribute(CombatStats::class)?.let { combatStats ->
+            target.getAttribute(CombatStats::class)?.run {
                 // Get incoming damage.
                 var incomingDamage = attacker.attackRating
 
@@ -33,12 +33,12 @@ object Attackable : BaseFacet<GameContext>() {
                 target.getAttribute(CombatStats::class)?.dockStamina(10)
 
                 // Deal the damage, log the event.
-                combatStats.dockHealth(incomingDamage.toInt())
+                dockHealth(incomingDamage.toInt())
 
                 context.world.observeSceneBy(attacker, "The $attacker hits the $target for ${incomingDamage.toInt()}!")
                 context.world.flash(attacker, GameColor.ATTACK_FLASH)
 
-                if (combatStats.health <= 0) {
+                if (health <= 0) {
                     context.world.flash(target, GameColor.DESTROY_FLASH)
                     target.executeBlockingCommand(Destroy(context, target, cause = "the $attacker"))
                 } else {
