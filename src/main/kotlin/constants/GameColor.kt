@@ -89,8 +89,8 @@ object GameColor {
      */
 
     val ACCENT = GameColor.YELLOW
-    val FOREGROUND = GameColor.WHITE
-    val SECONDARY_FOREGROUND = GameColor.GREY
+    val FOREGROUND = GameColor.GREY
+    val SECONDARY_FOREGROUND = GameColor.DARK_GREY
     val BACKGROUND = GameColor.BLACK
     val SECONDARY_BACKGROUND = BLACK.light
 

@@ -19,9 +19,9 @@ import org.hexworks.zircon.api.uievent.Processed
 
 
 class CombatStats(
-        private val maxHealthProperty: Property<Int>,
+        val maxHealthProperty: Property<Int>,
         val healthProperty: Property<Int> = createPropertyFrom(maxHealthProperty.value),
-        private val maxStaminaProperty: Property<Int>,
+        val maxStaminaProperty: Property<Int>,
         val staminaProperty: Property<Int> = createPropertyFrom(maxStaminaProperty.value),
         private val powerProperty: Property<Double>,
         private val skillProperty: Property<Double>,

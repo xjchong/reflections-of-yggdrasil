@@ -13,33 +13,45 @@ import org.hexworks.zircon.api.component.Component
 class FocusTarget : DisplayableAttribute {
 
     var targetProperty: Property<Maybe<AnyEntity>> = createPropertyFrom(Maybe.empty())
+
     private val healthProperty: Property<Int> = createPropertyFrom(0)
     private val maxHealthProperty: Property<Int> = createPropertyFrom(1)
+    private val staminaProperty: Property<Int> = createPropertyFrom(0)
+    private val maxStaminaProperty: Property<Int> = createPropertyFrom(1)
 
     override fun toComponent(width: Int): Component {
         val textBoxBuilder = Components.textBox(width - 2)
-        val nameLabel = Components.label()
+        val nameLabel = Components.header()
                 .withText("")
                 .withSize(16, 1)
                 .build()
 
         textBoxBuilder.addInlineComponent(nameLabel)
 
-        val healthBarLabel = CombatStats.getBarComponent(textBoxBuilder, 20,
+        val healthBarLabel = CombatStats.getBarComponent(textBoxBuilder, 21,
                 healthProperty, maxHealthProperty, GameColor.DARK_GREEN)
 
+        val staminaBarLabel = CombatStats.getBarComponent(textBoxBuilder, 21,
+                staminaProperty, maxStaminaProperty, GameColor.LIGHT_YELLOW)
+
         targetProperty.onChange {
-            val combatStatsCopy = it.newValue?.optional?.getAttribute(CombatStats::class)
+            it.newValue.optional?.getAttribute(CombatStats::class)?.let {combatStats ->
+                healthProperty.updateFrom(combatStats.healthProperty)
+                maxHealthProperty.updateFrom(combatStats.maxHealthProperty)
+                staminaProperty.updateFrom(combatStats.staminaProperty)
+                maxStaminaProperty.updateFrom(combatStats.maxStaminaProperty)
+            }
 
             nameLabel.textProperty.value = it.newValue.optional?.name?.capitalize() ?: ""
-            healthProperty.updateValue(combatStatsCopy?.health ?: 0)
-            maxHealthProperty.updateValue(combatStatsCopy?.maxHealth ?: 1)
 
             it.newValue.ifPresent { target ->
                 target.getAttribute(CombatStats::class)?.healthProperty?.onChange {
-                    healthProperty.updateValue(it.newValue)
                     if (it.newValue <= 0) {
                         targetProperty.updateValue(Maybe.empty())
+                        healthProperty.updateValue(0)
+                        maxHealthProperty.updateValue(1)
+                        staminaProperty.updateValue(0)
+                        maxStaminaProperty.updateValue(1)
                     }
                 }
             }
