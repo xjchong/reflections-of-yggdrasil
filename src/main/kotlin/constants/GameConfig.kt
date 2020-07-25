@@ -12,7 +12,8 @@ object GameConfig {
     val TITLE = "Reflections of Yggdrasil"
 
     const val SIDEBAR_WIDTH = 29
-    const val LOG_HEIGHT = 11
+    const val LOG_HEIGHT = 8
+    const val TARGET_BAR_HEIGHT = 3
     const val WINDOW_WIDTH = 88
     const val WINDOW_HEIGHT = 52
 
@@ -25,7 +26,7 @@ object GameConfig {
 
     val WORLD_SIZE = Size3D.create(
             WINDOW_WIDTH - SIDEBAR_WIDTH,
-            WINDOW_HEIGHT - LOG_HEIGHT,
+            WINDOW_HEIGHT - LOG_HEIGHT - TARGET_BAR_HEIGHT,
             1)
 
     fun buildAppConfig() = AppConfig.newBuilder()

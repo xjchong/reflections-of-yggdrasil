@@ -2,6 +2,7 @@ package facets.passive
 
 import GameColor
 import attributes.CombatStats
+import attributes.FocusTarget
 import commands.Attack
 import commands.Destroy
 import entity.*
@@ -12,6 +13,7 @@ import org.hexworks.amethyst.api.Pass
 import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
+import org.hexworks.cobalt.datatypes.Maybe
 
 object Attackable : BaseFacet<GameContext>() {
 
@@ -34,6 +36,16 @@ object Attackable : BaseFacet<GameContext>() {
 
                 // Deal the damage, log the event.
                 dockHealth(incomingDamage.toInt())
+
+                if (health > 0) {
+                    attacker.getAttribute(FocusTarget::class)?.targetProperty?.updateValue(Maybe.of(target))
+                }
+
+                target.getAttribute(FocusTarget::class)?.run {
+                    if (!targetProperty.value.isPresent) {
+                        targetProperty.updateValue(Maybe.of(attacker))
+                    }
+                }
 
                 context.world.observeSceneBy(attacker, "The $attacker hits the $target for ${incomingDamage.toInt()}!")
                 context.world.flash(attacker, GameColor.ATTACK_FLASH)

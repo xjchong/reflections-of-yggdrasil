@@ -20,7 +20,7 @@ import org.hexworks.zircon.api.uievent.Processed
 
 class CombatStats(
         private val maxHealthProperty: Property<Int>,
-        private val healthProperty: Property<Int> = createPropertyFrom(maxHealthProperty.value),
+        val healthProperty: Property<Int> = createPropertyFrom(maxHealthProperty.value),
         private val maxStaminaProperty: Property<Int>,
         private val staminaProperty: Property<Int> = createPropertyFrom(maxStaminaProperty.value),
         private val powerProperty: Property<Double>,
@@ -62,11 +62,8 @@ class CombatStats(
             .build().apply {
                 val textBoxBuilder = Components.textBox(width)
 
-                val healthBarLabel = setupBar(textBoxBuilder, healthProperty, maxHealthProperty, GameColor.DARK_GREEN)
-                healthProperty.onChange { updateBar(healthBarLabel, health, maxHealth) }
-
-                val staminaBarLabel = setupBar(textBoxBuilder, staminaProperty, maxStaminaProperty, GameColor.LIGHT_YELLOW)
-                staminaProperty.onChange { updateBar(staminaBarLabel, stamina, maxStamina) }
+                val healthBarLabel = getHealthBarComponent(textBoxBuilder)
+                val staminaBarLabel = getStaminaBarComponent(textBoxBuilder)
 
                 val statsLabel = Components.label()
                         .withDecorations(box(boxType = BoxType.TOP_BOTTOM_DOUBLE))
@@ -86,6 +83,18 @@ class CombatStats(
                 addComponent(textBoxBuilder.build())
                 addComponent(statsLabel)
             }
+
+    fun getHealthBarComponent(textBoxBuilder: TextBoxBuilder): Component {
+        val healthBarLabel = setupBar(textBoxBuilder, healthProperty, maxHealthProperty, GameColor.DARK_GREEN)
+        healthProperty.onChange { updateBar(healthBarLabel, health, maxHealth) }
+        return healthBarLabel
+    }
+
+    fun getStaminaBarComponent(textBoxBuilder: TextBoxBuilder): Component {
+        val staminaBarLabel = setupBar(textBoxBuilder, staminaProperty, maxStaminaProperty, GameColor.LIGHT_YELLOW)
+        staminaProperty.onChange { updateBar(staminaBarLabel, stamina, maxStamina) }
+        return staminaBarLabel
+    }
 
     private fun setupBar(textBoxBuilder: TextBoxBuilder,
                          valueProp: Property<Int>,

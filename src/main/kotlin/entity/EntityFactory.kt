@@ -59,6 +59,7 @@ object EntityFactory {
                 EntityPosition(),
                 EntityTile(GameTileRepository.PLAYER),
                 EntityActions(Open::class, Dig::class, Attack::class),
+                FocusTarget(),
                 Equipments(initialChest = newJacket()),
                 Inventory(10),
                 Obstacle,

@@ -1,6 +1,7 @@
 package views
 
 import GameColor
+import attributes.FocusTarget
 import block.GameBlock
 import builders.GameBuilder
 import constants.GameConfig
@@ -41,6 +42,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
         setupSideBar()
         setupLogArea()
+        setupTargetBar()
         setupGameComponent()
         setupInputHandlers()
 
@@ -89,6 +91,21 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
             KeepSubscription
         }
+    }
+
+    private fun setupTargetBar() {
+        val targetBarWidth = GameConfig.WINDOW_WIDTH - GameConfig.SIDEBAR_WIDTH
+
+        val targetBar = Components.panel()
+                .withSize(Size.create(targetBarWidth, GameConfig.TARGET_BAR_HEIGHT))
+                .withDecorations(box(title = "Target", boxType = BoxType.SINGLE))
+                .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
+                .build()
+
+        targetBar.moveDownBy(GameConfig.LOG_HEIGHT)
+        targetBar.addComponent(game.player.findAttribute(FocusTarget::class).get().toComponent(targetBarWidth))
+
+        screen.addComponent(targetBar)
     }
 
     private fun setupGameComponent() {
