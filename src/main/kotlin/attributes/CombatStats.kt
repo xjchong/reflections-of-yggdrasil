@@ -23,23 +23,23 @@ class CombatStats(
         val healthProperty: Property<Int> = createPropertyFrom(maxHealthProperty.value),
         val maxStaminaProperty: Property<Int>,
         val staminaProperty: Property<Int> = createPropertyFrom(maxStaminaProperty.value),
-        val powerProperty: Property<Int>,
-        val skillProperty: Property<Int>,
-        val luckProperty: Property<Int>
+        val powerProperty: Property<Double>,
+        val skillProperty: Property<Double>,
+        val luckProperty: Property<Double>
 ) : DisplayableAttribute {
     val maxHealth: Int by maxHealthProperty.asDelegate()
     var health: Int by healthProperty.asDelegate()
     val maxStamina: Int by maxStaminaProperty.asDelegate()
     val stamina: Int by staminaProperty.asDelegate()
-    val power: Int by powerProperty.asDelegate()
-    val skill: Int by skillProperty.asDelegate()
-    val luck: Int by luckProperty.asDelegate()
+    val power: Double by powerProperty.asDelegate()
+    val skill: Double by skillProperty.asDelegate()
+    val luck: Double by luckProperty.asDelegate()
 
     companion object {
 
         fun create(maxHealth: Int, health: Int = maxHealth,
                    maxStamina: Int, stamina: Int = maxStamina,
-                   power: Int = 0, skill: Int = 0, luck: Int = 0) =
+                   power: Double = 0.0, skill: Double = 0.0, luck: Double = 0.0) =
                 CombatStats(
                         maxHealthProperty = createPropertyFrom(maxHealth),
                         healthProperty = createPropertyFrom(health),
@@ -71,11 +71,11 @@ class CombatStats(
                         .build()
 
                 statsLabel.textProperty.updateFrom(createPropertyFrom("POW ")
-                        .bindPlusWith(createPropertyFrom(power.toString().padStart(2)))
+                        .bindPlusWith(createPropertyFrom((power * 100).toInt().toString().padStart(2)))
                         .bindPlusWith(createPropertyFrom(" ${Symbols.SINGLE_LINE_VERTICAL} TEC "))
-                        .bindPlusWith(createPropertyFrom(skill.toString().padStart(2)))
+                        .bindPlusWith(createPropertyFrom((skill * 100).toInt().toString().padStart(2)))
                         .bindPlusWith(createPropertyFrom(" ${Symbols.SINGLE_LINE_VERTICAL} LUC "))
-                        .bindPlusWith(createPropertyFrom(luck.toString().padStart(2))))
+                        .bindPlusWith(createPropertyFrom((luck * 100).toInt().toString().padStart(2))))
 
                 addComponent(textBoxBuilder.build())
                 addComponent(statsLabel)

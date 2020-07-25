@@ -37,8 +37,9 @@ object EntityFactory {
                 Vision(3),
 
                 CombatStats.create(
-                        maxHealth = 20,
-                        maxStamina = 50
+                        maxHealth = 250,
+                        maxStamina = 500,
+                        power = 0.05
                 ))
         behaviors(Wanderer)
         facets(ActionAttempting, Attackable, Destructible, Movable)
@@ -64,8 +65,11 @@ object EntityFactory {
                 VisualMemory(excludedFacets = mutableSetOf(Movable)),
 
                 CombatStats.create(
-                        maxHealth = 100,
-                        maxStamina = 100
+                        maxHealth = 1000,
+                        maxStamina = 1000,
+                        power = .33,
+                        skill = .33,
+                        luck = .34
                 ))
         behaviors(InputReceiver, VisualRememberer)
         facets(ActionAttempting, Attackable, InventoryInspecting, Movable)
@@ -80,7 +84,7 @@ object EntityFactory {
                 proliferation,
 
                 CombatStats.create(
-                        maxHealth = 10,
+                        maxHealth = 100,
                         maxStamina = 0
                 ),
                 Vision(2))
@@ -135,8 +139,9 @@ object EntityFactory {
                 Vision(5),
 
                 CombatStats.create(
-                        maxHealth = 30,
-                        maxStamina = 100
+                        maxHealth = 800,
+                        maxStamina = 500,
+                        power = 0.1
                 ))
         behaviors(DumbChaser or Wanderer)
         facets(ActionAttempting, Attackable, Destructible, Movable)
