@@ -19,16 +19,16 @@ import org.hexworks.zircon.api.uievent.Processed
 
 
 class CombatStats(
-        val maxHealthProperty: Property<Int>,
-        val healthProperty: Property<Int> = createPropertyFrom(maxHealthProperty.value),
-        val maxStaminaProperty: Property<Int>,
-        val staminaProperty: Property<Int> = createPropertyFrom(maxStaminaProperty.value),
-        val powerProperty: Property<Double>,
-        val skillProperty: Property<Double>,
-        val luckProperty: Property<Double>
+        private val maxHealthProperty: Property<Int>,
+        private val healthProperty: Property<Int> = createPropertyFrom(maxHealthProperty.value),
+        private val maxStaminaProperty: Property<Int>,
+        private val staminaProperty: Property<Int> = createPropertyFrom(maxStaminaProperty.value),
+        private val powerProperty: Property<Double>,
+        private val skillProperty: Property<Double>,
+        private val luckProperty: Property<Double>
 ) : DisplayableAttribute {
     val maxHealth: Int by maxHealthProperty.asDelegate()
-    var health: Int by healthProperty.asDelegate()
+    val health: Int by healthProperty.asDelegate()
     val maxStamina: Int by maxStaminaProperty.asDelegate()
     val stamina: Int by staminaProperty.asDelegate()
     val power: Double by powerProperty.asDelegate()
@@ -130,6 +130,14 @@ class CombatStats(
 
     fun regenStamina(amount: Int) {
         staminaProperty.value = (stamina + amount).coerceAtMost(maxStamina)
+    }
+
+    fun dockStamina(amount: Int) {
+        staminaProperty.value = (stamina - amount).coerceAtLeast(0)
+    }
+
+    fun dockHealth(amount: Int) {
+        healthProperty.value = (health - amount).coerceAtLeast(0)
     }
 
     private fun updateBar(barLabel: Label, value: Int, maxValue: Int) {

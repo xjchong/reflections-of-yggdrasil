@@ -20,14 +20,22 @@ object Attackable : BaseFacet<GameContext>() {
             if (!attacker.isPlayer && !target.isPlayer) return@responseWhenCommandIs Pass
 
             target.getAttribute(CombatStats::class)?.let { combatStats ->
-                val attackerRating = attacker.attackRating
-                val targetModifier = target.defenseModifier
-                println("$attacker: $attackerRating, $target: $targetModifier")
-                val damage = (attacker.attackRating * target.defenseModifier).toInt()
+                // Get incoming damage.
+                var incomingDamage = attacker.attackRating
 
-                combatStats.health -= damage
+                // Bill attacker for stamina use.
+                attacker.getAttribute(CombatStats::class)?.dockStamina(20)
 
-                context.world.observeSceneBy(attacker, "The $attacker hits the $target for $damage!")
+                // Modify incoming damage.
+                incomingDamage *= target.defenseModifier
+
+                // Bill defender for stamina use.
+                target.getAttribute(CombatStats::class)?.dockStamina(10)
+
+                // Deal the damage, log the event.
+                combatStats.dockHealth(incomingDamage.toInt())
+
+                context.world.observeSceneBy(attacker, "The $attacker hits the $target for ${incomingDamage.toInt()}!")
                 context.world.flash(attacker, GameColor.ATTACK_FLASH)
 
                 if (combatStats.health <= 0) {
