@@ -6,6 +6,7 @@ import entity.*
 import events.*
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.cobalt.datatypes.Maybe
+import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
 import org.hexworks.zircon.api.data.Tile
@@ -61,6 +62,12 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
             if (visiblePositions.contains(entity.position)) {
                 GameLogEvent.log(message, eventType)
             }
+        }
+    }
+
+    fun flash(entity: AnyEntity, color: TileColor) {
+        fetchBlockAt(entity.position).ifPresent {
+            it.flash(color)
         }
     }
 

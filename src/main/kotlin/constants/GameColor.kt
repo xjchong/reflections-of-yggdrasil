@@ -62,6 +62,9 @@ object GameColor {
     val DOOR            = GREY
     val DOOR_BACKGROUND = BROWN
 
+    val DAMAGE_FLASH    = RED
+    val DESTROY_FLASH   = DARK_VIOLET
+
 
     /**
      * ACTORS

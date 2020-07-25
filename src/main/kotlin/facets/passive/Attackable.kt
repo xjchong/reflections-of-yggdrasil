@@ -1,5 +1,6 @@
 package facets.passive
 
+import GameColor
 import attributes.CombatStats
 import commands.Attack
 import commands.Destroy
@@ -29,7 +30,10 @@ object Attackable : BaseFacet<GameContext>() {
                 context.world.observeSceneBy(attacker, "The $attacker hits the $target for $damage!")
 
                 if (combatStats.health <= 0) {
+                    context.world.flash(target, GameColor.DESTROY_FLASH)
                     target.executeBlockingCommand(Destroy(context, target, cause = "the $attacker"))
+                } else {
+                    context.world.flash(target, GameColor.DAMAGE_FLASH)
                 }
             }
 

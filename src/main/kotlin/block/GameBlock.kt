@@ -8,7 +8,10 @@ import entity.position
 import entity.tile
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.hexworks.cobalt.datatypes.Maybe
+import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.data.BlockTileType
 import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Position3D
@@ -34,6 +37,7 @@ class GameBlock(private val position: Position3D,
 
     private var memory: Memory? = null
     private var turn: Long = 0
+    private var flashColor: TileColor? = null
 
     override var tiles: PersistentMap<BlockTileType, Tile> = persistentMapOf()
         get() {
@@ -42,7 +46,7 @@ class GameBlock(private val position: Position3D,
                 entityTiles.contains(GameTileRepository.PLAYER) -> GameTileRepository.PLAYER
                 entityTiles.isNotEmpty() -> entityTiles.last()
                 else -> defaultTile
-            }
+            }.run { flashColor?.let { withBackgroundColor(it) } ?: run { this } }
 
             val topTile = when {
                 DebugConfig.shouldRevealWorld -> GameTileRepository.EMPTY
@@ -106,6 +110,14 @@ class GameBlock(private val position: Position3D,
 
     fun setTurn(turn: Long) {
         this.turn = turn
+    }
+
+    fun flash(color: TileColor) {
+        flashColor = color
+        runBlocking {
+            delay(100)
+            flashColor = null
+        }
     }
 
     private fun getMemoryTile(): CharacterTile {
