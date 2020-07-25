@@ -102,6 +102,14 @@ object GameColor {
             .withSecondaryBackgroundColor(SECONDARY_BACKGROUND)
             .build()
 
+    val TRANSPARENT_BG = ColorThemeBuilder.newBuilder()
+            .withAccentColor(ACCENT)
+            .withPrimaryForegroundColor(FOREGROUND)
+            .withSecondaryForegroundColor(SECONDARY_FOREGROUND)
+            .withPrimaryBackgroundColor(BACKGROUND.withAlpha(0))
+            .withSecondaryBackgroundColor(SECONDARY_BACKGROUND.withAlpha(0))
+            .build()
+
 
     /**
      * HELPERS

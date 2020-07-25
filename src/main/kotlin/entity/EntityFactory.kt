@@ -86,7 +86,7 @@ object EntityFactory {
                 proliferation,
 
                 CombatStats.create(
-                        maxHealth = 100,
+                        maxHealth = 50,
                         maxStamina = 10,
                         stamina = 0,
                         power = 0.1
