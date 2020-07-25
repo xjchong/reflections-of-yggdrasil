@@ -35,6 +35,12 @@ class CombatStats(
     val skill: Double by skillProperty.asDelegate()
     val luck: Double by luckProperty.asDelegate()
 
+    val attackRating: Double
+        get() {
+            val staminaBonus = if (stamina > 0) 1.0 else 0.5
+            return (power + skill) * 100 * staminaBonus
+        }
+
     companion object {
 
         fun create(maxHealth: Int, health: Int = maxHealth,
@@ -120,6 +126,10 @@ class CombatStats(
                 .commitInlineElements()
 
         return barLabel
+    }
+
+    fun regenStamina(amount: Int) {
+        staminaProperty.value = (stamina + amount).coerceAtMost(maxStamina)
     }
 
     private fun updateBar(barLabel: Label, value: Int, maxValue: Int) {

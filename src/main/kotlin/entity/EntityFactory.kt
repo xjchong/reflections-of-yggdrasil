@@ -37,9 +37,9 @@ object EntityFactory {
                 Vision(3),
 
                 CombatStats.create(
-                        maxHealth = 250,
-                        maxStamina = 500,
-                        power = 0.05
+                        maxHealth = 60,
+                        maxStamina = 50,
+                        power = 0.5
                 ))
         behaviors(Wanderer)
         facets(ActionAttempting, Attackable, Destructible, Movable)
@@ -65,8 +65,8 @@ object EntityFactory {
                 VisualMemory(excludedFacets = mutableSetOf(Movable)),
 
                 CombatStats.create(
-                        maxHealth = 1000,
-                        maxStamina = 1000,
+                        maxHealth = 100,
+                        maxStamina = 100,
                         power = .33,
                         skill = .33,
                         luck = .34
@@ -85,7 +85,8 @@ object EntityFactory {
 
                 CombatStats.create(
                         maxHealth = 100,
-                        maxStamina = 0
+                        maxStamina = 0,
+                        power = 0.1
                 ),
                 Vision(2))
         behaviors(DumbChaser, Proliferator)
@@ -139,9 +140,9 @@ object EntityFactory {
                 Vision(5),
 
                 CombatStats.create(
-                        maxHealth = 800,
-                        maxStamina = 500,
-                        power = 0.1
+                        maxHealth = 80,
+                        maxStamina = 50,
+                        power = 0.3
                 ))
         behaviors(DumbChaser or Wanderer)
         facets(ActionAttempting, Attackable, Destructible, Movable)
@@ -173,7 +174,10 @@ object EntityFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.DAGGER),
-                EquippableDetails(OneHanded))
+                EquippableDetails(OneHanded,
+                        reliability = 0.6,
+                        efficiency = 1.1
+                ))
 
         facets(Droppable, Takeable, Equippable)
     }
@@ -182,7 +186,10 @@ object EntityFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.SWORD),
-                EquippableDetails(OneHanded))
+                EquippableDetails(OneHanded,
+                        reliability = 0.8,
+                        efficiency = 1.2
+                ))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -190,7 +197,10 @@ object EntityFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.STAFF),
-                EquippableDetails(TwoHanded))
+                EquippableDetails(TwoHanded,
+                        reliability = 0.7,
+                        efficiency = 1.1
+                ))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -198,7 +208,10 @@ object EntityFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.LIGHT_ARMOR),
-                EquippableDetails(Chest))
+                EquippableDetails(Chest,
+                        reliability = 0.8,
+                        efficiency = 0.2
+                ))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -206,7 +219,10 @@ object EntityFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.MEDIUM_ARMOR),
-                EquippableDetails(Chest))
+                EquippableDetails(Chest,
+                        reliability = 0.8,
+                        efficiency = 0.3
+                ))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -214,14 +230,21 @@ object EntityFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTileRepository.HEAVY_ARMOR),
-                EquippableDetails(Chest))
+                EquippableDetails(Chest,
+                        reliability = 0.8,
+                        efficiency = 0.35
+                ))
         facets(Droppable, Takeable, Equippable)
     }
 
     fun newJacket() = newGameEntityOfType(Jacket) {
         attributes(
                 EntityTile(GameTileRepository.JACKET),
-                EntityPosition())
+                EntityPosition(),
+                EquippableDetails(Chest,
+                        reliability = 0.6,
+                        efficiency = 0.1
+                ))
         facets(Droppable, Takeable, Equippable)
     }
 }

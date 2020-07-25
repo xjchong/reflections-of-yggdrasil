@@ -4,10 +4,7 @@ import GameColor
 import attributes.CombatStats
 import commands.Attack
 import commands.Destroy
-import entity.attackRating
-import entity.executeBlockingCommand
-import entity.getAttribute
-import entity.isPlayer
+import entity.*
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -23,7 +20,10 @@ object Attackable : BaseFacet<GameContext>() {
             if (!attacker.isPlayer && !target.isPlayer) return@responseWhenCommandIs Pass
 
             target.getAttribute(CombatStats::class)?.let { combatStats ->
-                val damage = attacker.attackRating.coerceAtLeast(10)
+                val attackerRating = attacker.attackRating
+                val targetModifier = target.defenseModifier
+                println("$attacker: $attackerRating, $target: $targetModifier")
+                val damage = (attacker.attackRating * target.defenseModifier).toInt()
 
                 combatStats.health -= damage
 

@@ -1,7 +1,9 @@
 package attributes
 
 import GameColor
-import entity.*
+import entity.AnyEntity
+import entity.getAttribute
+import entity.tile
 import extensions.create
 import extensions.optional
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
@@ -35,7 +37,8 @@ class Equipments(initialMainHand: AnyEntity? = null,
 
     private val offHandProp: Property<Maybe<AnyEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialOffHand)) {
-                it.optional?.details?.type == OneHanded
+                val type = it.optional?.details?.type
+                type == OneHanded || type == Offhand
             }
 
     private val neckProp: Property<Maybe<AnyEntity>> =
@@ -101,26 +104,44 @@ class Equipments(initialMainHand: AnyEntity? = null,
     private val legs: Maybe<AnyEntity> by legsProp.asDelegate()
     private val feet: Maybe<AnyEntity> by feetProp.asDelegate()
 
-    val attackRating: Int
-        get() = {
-            val allProps = listOf(mainHandProp, offHandProp, neckProp, mainFingerProp, offFingerProp,
-                    wristsProp, headProp, handsProp, chestProp, waistProp, legsProp, feetProp)
-
-            allProps.fold(0, { sum, prop ->
-                sum + (prop.value.optional?.attackRating ?: 0)
-            })
-        }()
-
     val defenseRating: Int
         get() = {
             val allProps = listOf(mainHandProp, offHandProp, neckProp, mainFingerProp, offFingerProp,
                     wristsProp, headProp, handsProp, chestProp, waistProp, legsProp, feetProp)
 
-            allProps.fold(0, { sum, prop ->
-                sum + (prop.value.optional?.defenseRating ?: 0)
-            })
+            0
         }()
 
+    val attackModifier: Double
+        get() {
+            var mainHandModifier = 1.0
+            var offHandModifier = 0.0
+
+            mainHand.optional?.details?.run {
+                mainHandModifier = attackModifier
+            }
+
+            offHand.optional?.details?.run {
+                if (type == OneHanded) {
+                    offHandModifier = attackModifier
+                }
+            }
+
+            return mainHandModifier + offHandModifier
+        }
+
+    val defenseModifier: Double
+        get() {
+            var damageModifier = listOf(head, hands, chest, waist, legs, feet).fold(1.0) { modifier, armor ->
+                modifier * (1.0 - (armor.optional?.details?.defenseModifier ?: 0.0))
+            }
+
+            offHand.optional?.details?.run {
+                if (type == OneHanded) damageModifier *= defenseModifier
+            }
+
+            return damageModifier
+        }
 
     override fun toComponent(width: Int): Component {
         val textBoxBuilder = Components.textBox(width)
