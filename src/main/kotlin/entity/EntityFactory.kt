@@ -87,7 +87,8 @@ object EntityFactory {
 
                 CombatStats.create(
                         maxHealth = 100,
-                        maxStamina = 0,
+                        maxStamina = 10,
+                        stamina = 0,
                         power = 0.1
                 ),
                 Vision(2))
