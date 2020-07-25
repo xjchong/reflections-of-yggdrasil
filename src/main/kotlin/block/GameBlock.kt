@@ -113,9 +113,9 @@ class GameBlock(private val position: Position3D,
     }
 
     fun flash(color: TileColor) {
-        flashColor = color
+        flashColor = color.withAlpha(200)
         runBlocking {
-            delay(100)
+            delay(75)
             flashColor = null
         }
     }
