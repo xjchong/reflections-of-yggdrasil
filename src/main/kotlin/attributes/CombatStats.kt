@@ -2,14 +2,17 @@ package attributes
 
 import GameColor
 import extensions.withStyle
+import org.hexworks.cobalt.databinding.api.binding.bindPlusWith
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
+import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.builder.component.TextBoxBuilder
 import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Label
 import org.hexworks.zircon.api.data.Size
+import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.graphics.Symbols
 import org.hexworks.zircon.api.uievent.MouseEventType
 import org.hexworks.zircon.api.uievent.Processed
@@ -19,26 +22,37 @@ class CombatStats(
         val maxHealthProperty: Property<Int>,
         val healthProperty: Property<Int> = createPropertyFrom(maxHealthProperty.value),
         val maxStaminaProperty: Property<Int>,
-        val staminaProperty: Property<Int> = createPropertyFrom(maxStaminaProperty.value)
+        val staminaProperty: Property<Int> = createPropertyFrom(maxStaminaProperty.value),
+        val powerProperty: Property<Int>,
+        val skillProperty: Property<Int>,
+        val luckProperty: Property<Int>
 ) : DisplayableAttribute {
     val maxHealth: Int by maxHealthProperty.asDelegate()
     var health: Int by healthProperty.asDelegate()
     val maxStamina: Int by maxStaminaProperty.asDelegate()
     val stamina: Int by staminaProperty.asDelegate()
+    val power: Int by powerProperty.asDelegate()
+    val skill: Int by skillProperty.asDelegate()
+    val luck: Int by luckProperty.asDelegate()
 
     companion object {
 
-        fun create(maxHealth: Int, health: Int = maxHealth, maxStamina: Int, stamina: Int = maxStamina) =
+        fun create(maxHealth: Int, health: Int = maxHealth,
+                   maxStamina: Int, stamina: Int = maxStamina,
+                   power: Int = 0, skill: Int = 0, luck: Int = 0) =
                 CombatStats(
                         maxHealthProperty = createPropertyFrom(maxHealth),
                         healthProperty = createPropertyFrom(health),
                         maxStaminaProperty = createPropertyFrom(maxStamina),
-                        staminaProperty = createPropertyFrom(stamina)
+                        staminaProperty = createPropertyFrom(stamina),
+                        powerProperty = createPropertyFrom(power),
+                        skillProperty = createPropertyFrom(skill),
+                        luckProperty = createPropertyFrom(luck)
                 )
     }
 
     override fun toComponent(width: Int): Component = Components.vbox()
-            .withSize(width, 3)
+            .withSize(width, 5)
             .build().apply {
                 val textBoxBuilder = Components.textBox(width)
 
@@ -48,8 +62,23 @@ class CombatStats(
                 val staminaBarLabel = setupBar(textBoxBuilder, staminaProperty, maxStaminaProperty, GameColor.LIGHT_YELLOW)
                 staminaProperty.onChange { updateBar(staminaBarLabel, stamina, maxStamina) }
 
-                addComponent(textBoxBuilder.build())
+                val statsLabel = Components.label()
+                        .withDecorations(box(boxType = BoxType.TOP_BOTTOM_DOUBLE))
+                        .withSize(width - 1, 3)
+                        .withText("POW ${power.toString().padStart(2)} ${Symbols.SINGLE_LINE_VERTICAL} " +
+                                "TEC ${skill.toString().padStart(2)} ${Symbols.SINGLE_LINE_VERTICAL} " +
+                                "LUC ${luck.toString().padStart(2)}")
+                        .build()
 
+                statsLabel.textProperty.updateFrom(createPropertyFrom("POW ")
+                        .bindPlusWith(createPropertyFrom(power.toString().padStart(2)))
+                        .bindPlusWith(createPropertyFrom(" ${Symbols.SINGLE_LINE_VERTICAL} TEC "))
+                        .bindPlusWith(createPropertyFrom(skill.toString().padStart(2)))
+                        .bindPlusWith(createPropertyFrom(" ${Symbols.SINGLE_LINE_VERTICAL} LUC "))
+                        .bindPlusWith(createPropertyFrom(luck.toString().padStart(2))))
+
+                addComponent(textBoxBuilder.build())
+                addComponent(statsLabel)
             }
 
     private fun setupBar(textBoxBuilder: TextBoxBuilder,
