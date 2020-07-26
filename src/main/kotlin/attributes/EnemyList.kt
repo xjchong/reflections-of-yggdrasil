@@ -4,53 +4,54 @@ import GameColor
 import entity.AnyEntity
 import entity.tile
 import extensions.withStyle
-import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.zircon.api.Components
-import org.hexworks.zircon.api.component.*
+import org.hexworks.zircon.api.component.AttachedComponent
+import org.hexworks.zircon.api.component.Component
+import org.hexworks.zircon.api.component.Fragment
+import org.hexworks.zircon.api.component.VBox
 import org.hexworks.zircon.api.graphics.Symbols
 
 
 class EnemyList : DisplayableAttribute {
 
-    private val enemies: MutableList<AnyEntity> = mutableListOf()
-    private val currentHash = createPropertyFrom(enemies.hashCode())
-    private val attachedEnemyRows: MutableList<AttachedComponent> = mutableListOf()
+    private val enemyEntries: MutableList<EnemyListEntry> = mutableListOf()
+    private var vBox: VBox? = null
 
     override fun toComponent(width: Int) = Components.vbox()
             .withSpacing(1)
             .withSize(width - 3, height = 19)
             .build().apply {
 
-                updateComponent(this)
-                currentHash.onChange {
-                    updateComponent(this)
-                }
-
+                vBox = this
             }
 
     fun updateEnemies(newEnemies: List<AnyEntity>) {
-        enemies.clear()
-        enemies.addAll(newEnemies)
-        currentHash.updateValue(enemies.hashCode())
-    }
+        vBox?.let { vBox ->
+            enemyEntries.filter {
+                !newEnemies.contains(it.entity)
+            }.forEach { oldEnemyEntry ->
+                oldEnemyEntry.attachedRow.detach()
+                enemyEntries.remove(oldEnemyEntry)
+            }
 
-    private fun getEnemyListRow(enemy: AnyEntity): Label {
-        return Components.label().withText(enemy.name.capitalize()).build()
-    }
+            val currentEnemies = enemyEntries.map { it.entity }
 
-    private fun updateComponent(vBox: VBox) {
-        while (attachedEnemyRows.isNotEmpty()) {
-            attachedEnemyRows.removeAt(0).detach()
-        }
+            newEnemies.forEach {
+                if (!currentEnemies.contains(it)) {
+                    val newEnemyRow = EnemyListRow(vBox.width, it)
+                    val newAttachedEnemyRow = vBox.addFragment(newEnemyRow)
 
-        enemies.forEach { enemy ->
-            val enemyRow = EnemyListRow(vBox.width, enemy)
-            val attachedEnemyRow = vBox.addFragment(enemyRow)
-
-            attachedEnemyRows.add(attachedEnemyRow)
+                    enemyEntries.add(EnemyListEntry(
+                            it, newAttachedEnemyRow
+                    ))
+                }
+            }
         }
     }
 }
+
+
+data class EnemyListEntry(var entity: AnyEntity, var attachedRow: AttachedComponent)
 
 
 class EnemyListRow(width: Int, entity: AnyEntity) : Fragment {
