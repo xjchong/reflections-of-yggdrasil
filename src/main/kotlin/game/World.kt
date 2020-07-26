@@ -170,11 +170,12 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
     fun updateFowAt(entity: AnyEntity) {
         val vision = entity.getAttribute(Vision::class) ?: return
-        val nextVisiblePositions: MutableSet<Position3D> = vision.visiblePositions
+        val nextVisiblePositions: MutableSet<Position3D> = mutableSetOf()
         val nextHiddenPositions: MutableSet<Position3D> = mutableSetOf()
         nextHiddenPositions.addAll(lastVisiblePositions)
 
-        nextVisiblePositions.forEach { visiblePos ->
+        findVisiblePositionsFor(entity.position, vision.radius).forEach { visiblePos ->
+            nextVisiblePositions.add(visiblePos)
             nextHiddenPositions.remove(visiblePos)
             fetchBlockAt(visiblePos).ifPresent { block ->
                 block.reveal()
