@@ -5,6 +5,7 @@ import entity.AnyEntity
 import entity.EntityFactory
 import entity.GameEntity
 import entity.Player
+import events.WaitInputEvent
 import game.Game
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Position3D
@@ -39,6 +40,7 @@ class GameBuilder(val worldSize: Size3D) {
 
         world.addWorldEntity(EntityFactory.newFogOfWar(game))
         world.addSceneObserver(game.player)
+        world.update(WaitInputEvent()) // Update all entities to setup vision, etc. How could this be refactored?
 
         return game
     }

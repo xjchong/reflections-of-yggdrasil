@@ -20,22 +20,22 @@ object InventoryInspecting : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(InspectInventory::class) { (context, entity) ->
-            val (world, screen) = context
+            val world = context.world
             val position = entity.position
 
             entity.getAttribute(Inventory::class)?.let { inventory ->
                 InventoryMenuEvent.publish(
                         inventory,
                         onDrop = { content ->
-                            world.update(screen, DropInputEvent(content))
+                            world.update(DropInputEvent(content))
                         },
                         onConsume = { consumable ->
-                            world.update(screen, ConsumeInputEvent(consumable))
+                            world.update(ConsumeInputEvent(consumable))
                             inventory.remove(consumable)
                         },
                         onEquip = { equipment ->
                             if (inventory.remove(equipment)) {
-                                world.update(screen, EquipInputEvent(equipment))
+                                world.update(EquipInputEvent(equipment))
                             }
                         })
             }
