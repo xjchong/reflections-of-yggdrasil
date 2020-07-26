@@ -56,10 +56,8 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     fun observeSceneBy(entity: AnyEntity, message: String, eventType: GameLogEventType = Info) {
-        sceneObservers.forEach { observer ->
-            val visiblePositions = findVisiblePositionsFor(observer)
-
-            if (visiblePositions.contains(entity.position)) {
+        for (observer in sceneObservers) {
+            if (observer.sensedPositions.contains(entity.position)) {
                 GameLogEvent.log(message, eventType)
             }
         }
@@ -155,9 +153,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         })
     }
 
-    fun findVisiblePositionsFor(entity: AnyEntity): Iterable<Position3D> {
-        val radius = entity.getAttribute(Vision::class)?.radius ?: return listOf()
-        val origin = entity.position
+    fun findVisiblePositionsFor(origin: Position3D, radius: Int): Iterable<Position3D> {
         val visiblePositions = mutableListOf<Position3D>()
 
         ShadowCasting.computeFOV(origin.to2DPosition(), radius,
@@ -174,12 +170,12 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     fun updateFowAt(entity: AnyEntity) {
-        val nextVisiblePositions: MutableSet<Position3D> = mutableSetOf()
+        val vision = entity.getAttribute(Vision::class) ?: return
+        val nextVisiblePositions: MutableSet<Position3D> = vision.visiblePositions
         val nextHiddenPositions: MutableSet<Position3D> = mutableSetOf()
         nextHiddenPositions.addAll(lastVisiblePositions)
 
-        findVisiblePositionsFor(entity).forEach { visiblePos ->
-            nextVisiblePositions.add(visiblePos)
+        nextVisiblePositions.forEach { visiblePos ->
             nextHiddenPositions.remove(visiblePos)
             fetchBlockAt(visiblePos).ifPresent { block ->
                 block.reveal()

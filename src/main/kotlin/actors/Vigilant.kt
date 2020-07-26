@@ -3,6 +3,7 @@ package actors
 import attributes.KillTarget
 import attributes.Vigilance
 import entity.getAttribute
+import entity.sensedPositions
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Pass
@@ -21,8 +22,8 @@ object Vigilant : BaseActor<GameContext>(Vigilance::class) {
         val world = context.world
         val vigilance = entity.getAttribute(Vigilance::class) ?: return true
 
-        for (visiblePos in world.findVisiblePositionsFor(entity)) {
-            for (potentialKiller in world.fetchEntitiesAt(visiblePos)) {
+        for (sensedPos in entity.sensedPositions) {
+            for (potentialKiller in world.fetchEntitiesAt(sensedPos)) {
                 if (potentialKiller.getAttribute(KillTarget::class)?.target == entity) {
                     vigilance.alert()
                     return true

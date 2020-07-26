@@ -131,6 +131,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                 .build()
 
         screen.addComponent(gameComponent)
+        game.world.update(screen, WaitInputEvent()) // TODO: Take screen out of world, use event for inventory screen.
     }
 
     private fun setupInputHandlers() {

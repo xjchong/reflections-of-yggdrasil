@@ -45,7 +45,7 @@ object EntityFactory {
                         maxStamina = 50,
                         power = 0.3
                 ))
-        behaviors(Wanderer)
+        behaviors(VisionUser, Wanderer)
         facets(ActionAttempting, Attackable, Destructible, Movable)
     }
 
@@ -78,7 +78,7 @@ object EntityFactory {
                         skill = .33,
                         luck = .34
                 ))
-        behaviors(InputReceiver, StaminaUser, VisualRememberer, Vigilant)
+        behaviors(InputReceiver, StaminaUser, VisionUser, VisualRememberer, Vigilant)
         facets(ActionAttempting, Attackable, InventoryInspecting, Movable)
     }
 
@@ -98,7 +98,7 @@ object EntityFactory {
                         power = 0.1
                 ),
                 Vision(2))
-        behaviors(DumbChaser, Proliferator)
+        behaviors(DumbChaser, Proliferator, VisionUser)
         facets(ActionAttempting, Attackable, Destructible)
     }
 
@@ -154,7 +154,7 @@ object EntityFactory {
                         maxStamina = 50,
                         power = 0.5
                 ))
-        behaviors(DumbChaser or Wanderer, StaminaUser)
+        behaviors(DumbChaser or Wanderer, StaminaUser, VisionUser)
         facets(ActionAttempting, Attackable, Destructible, Movable)
     }
 

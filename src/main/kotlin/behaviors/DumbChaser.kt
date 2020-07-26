@@ -17,8 +17,8 @@ object DumbChaser : ForegroundBehavior() {
         val world = context.world
         var isChasing = false
 
-        for (visiblePos in world.findVisiblePositionsFor(entity).minus(entity.position)) {
-            world.fetchBlockAt(visiblePos).ifPresent { block ->
+        for (sensedPos in entity.sensedPositions.minus(entity.position)) {
+            world.fetchBlockAt(sensedPos).ifPresent { block ->
                 block.entities.firstOrNull {
                             it.findAttribute(CombatStats::class).isPresent
                                     && !entity.isAlliedWith(it) }?.let { target ->

@@ -15,6 +15,7 @@ import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.CharacterTile
+import org.hexworks.zircon.api.data.Position3D
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
@@ -60,6 +61,14 @@ val AnyEntity.defenseModifier: Double
         val staminaModifier = if (stamina > 0) 0.5 else 1.0
         val equipmentsModifier = getAttribute(Equipments::class)?.defenseModifier ?: 1.0
         return staminaModifier * equipmentsModifier
+    }
+
+// This can be updated to support other types of 'vision'.
+val AnyEntity.sensedPositions: List<Position3D>
+    get() {
+        val vision = getAttribute(Vision::class) ?: return listOf()
+
+        return vision.visiblePositions.toList()
     }
 
 fun AnyEntity.isAlliedWith(entity: AnyEntity): Boolean {
