@@ -14,6 +14,7 @@ object GameConfig {
     const val SIDEBAR_WIDTH = 29
     const val LOG_HEIGHT = 8
     const val TARGET_BAR_HEIGHT = 3
+    const val ENMITY_LIST_HEIGHT = 21
     const val WINDOW_WIDTH = 88
     const val WINDOW_HEIGHT = 52
 

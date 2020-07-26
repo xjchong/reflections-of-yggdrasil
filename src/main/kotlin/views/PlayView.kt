@@ -15,7 +15,10 @@ import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.builder.component.ParagraphBuilder
 import org.hexworks.zircon.api.component.ComponentAlignment
-import org.hexworks.zircon.api.data.*
+import org.hexworks.zircon.api.data.Block
+import org.hexworks.zircon.api.data.Position3D
+import org.hexworks.zircon.api.data.Size3D
+import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.game.base.BaseGameArea
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.grid.TileGrid
@@ -41,6 +44,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         super.onDock()
 
         setupSideBar()
+        setupEnmityList()
         setupLogArea()
         setupTargetBar()
         setupGameComponent()
@@ -51,8 +55,9 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
     private fun setupSideBar() {
         val sidebar = Components.panel()
-                .withSize(Size.create(GameConfig.SIDEBAR_WIDTH, GameConfig.WINDOW_HEIGHT))
+                .withSize(GameConfig.SIDEBAR_WIDTH,GameConfig.WINDOW_HEIGHT - GameConfig.ENMITY_LIST_HEIGHT)
                 .withDecorations(box(boxType = BoxType.SINGLE))
+                .withAlignmentWithin(screen, ComponentAlignment.TOP_LEFT)
                 .build()
 
         sidebar.addFragment(PlayerInfoFragment(
@@ -67,7 +72,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         val logWidth = GameConfig.WINDOW_WIDTH - GameConfig.SIDEBAR_WIDTH
 
         val logArea = Components.logArea()
-                .withSize(Size.create(logWidth, GameConfig.LOG_HEIGHT))
+                .withSize(logWidth, GameConfig.LOG_HEIGHT)
                 .withDecorations(box(boxType = BoxType.SINGLE, title = "Log"))
                 .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
                 .build()
@@ -97,7 +102,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         val targetBarWidth = GameConfig.WINDOW_WIDTH - GameConfig.SIDEBAR_WIDTH
 
         val targetBar = Components.panel()
-                .withSize(Size.create(targetBarWidth, GameConfig.TARGET_BAR_HEIGHT))
+                .withSize(targetBarWidth, GameConfig.TARGET_BAR_HEIGHT)
                 .withDecorations(box(title = "Target", boxType = BoxType.SINGLE))
                 .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
                 .build()
@@ -106,6 +111,16 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         targetBar.addComponent(game.player.findAttribute(FocusTarget::class).get().toComponent(targetBarWidth))
 
         screen.addComponent(targetBar)
+    }
+
+    private fun setupEnmityList() {
+        val enmityList = Components.panel()
+                .withSize(GameConfig.SIDEBAR_WIDTH, GameConfig.ENMITY_LIST_HEIGHT)
+                .withDecorations(box(title = "Enemies", boxType = BoxType.SINGLE))
+                .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_LEFT)
+                .build()
+
+        screen.addComponent(enmityList)
     }
 
     private fun setupGameComponent() {
