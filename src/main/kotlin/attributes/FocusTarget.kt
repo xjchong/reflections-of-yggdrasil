@@ -40,13 +40,14 @@ class FocusTarget : DisplayableAttribute {
                 maxHealthProperty.updateFrom(combatStats.maxHealthProperty)
                 staminaProperty.updateFrom(combatStats.staminaProperty)
                 maxStaminaProperty.updateFrom(combatStats.maxStaminaProperty)
+                refreshBars()
             }
 
             nameLabel.textProperty.value = it.newValue.optional?.name?.capitalize() ?: ""
 
             it.newValue.ifPresent { target ->
-                target.getAttribute(CombatStats::class)?.healthProperty?.onChange {
-                    if (it.newValue <= 0) {
+                target.getAttribute(CombatStats::class)?.healthProperty?.onChange { health ->
+                    if (health.newValue <= 0) {
                         targetProperty.updateValue(Maybe.empty())
                         healthProperty.updateValue(0)
                         maxHealthProperty.updateValue(1)
@@ -58,5 +59,19 @@ class FocusTarget : DisplayableAttribute {
         }
 
         return textBoxBuilder.commitInlineElements().build()
+    }
+
+    /**
+     * Trigger a visual update of the bars. Not sure why this is necessary, but sadly it works.
+     */
+    private fun refreshBars() {
+        val health = healthProperty.value
+        val stamina = staminaProperty.value
+
+        healthProperty.updateValue(health + 1)
+        healthProperty.updateValue(health)
+
+        staminaProperty.updateValue(stamina + 1)
+        staminaProperty.updateValue(stamina)
     }
 }
