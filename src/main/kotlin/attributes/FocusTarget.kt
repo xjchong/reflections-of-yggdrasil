@@ -29,7 +29,7 @@ class FocusTarget : DisplayableAttribute {
         textBoxBuilder.addInlineComponent(nameLabel)
 
         val healthBarLabel = CombatStats.getBarComponent(textBoxBuilder, 21,
-                healthProperty, maxHealthProperty, GameColor.DARK_GREEN)
+                healthProperty, maxHealthProperty, GameColor.DARK_RED)
 
         val staminaBarLabel = CombatStats.getBarComponent(textBoxBuilder, 21,
                 staminaProperty, maxStaminaProperty, GameColor.LIGHT_YELLOW)

@@ -31,7 +31,7 @@ object GameColor {
     val DARK_ORANGE     = ORANGE.dark
 
     val YELLOW      	= hexColor("b58900")
-    val LIGHT_YELLOW    = YELLOW.light
+    val LIGHT_YELLOW    = hexColor("ad8d2a")
     val DARK_YELLOW     = YELLOW.dark
 
     val GREEN       	= hexColor("859900")
