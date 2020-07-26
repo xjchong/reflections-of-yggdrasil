@@ -73,6 +73,7 @@ val AnyEntity.sensedPositions: List<Position3D>
 
 fun AnyEntity.isAlliedWith(entity: AnyEntity): Boolean {
     if (this.id == entity.id) return true
+    if (entity.getAttribute(CombatStats::class) == null) return true
 
     val thisFaction = getAttribute(Alliance::class)?.faction
     val otherFaction = entity.getAttribute(Alliance::class)?.faction

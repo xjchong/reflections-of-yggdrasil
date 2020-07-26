@@ -1,6 +1,7 @@
 package views
 
 import GameColor
+import attributes.EnemyList
 import attributes.FocusTarget
 import block.GameBlock
 import builders.GameBuilder
@@ -45,7 +46,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         super.onDock()
 
         setupSideBar()
-        setupEnmityList()
+        setupEnemyList()
         setupLogArea()
         setupTargetBar()
         setupGameComponent()
@@ -116,14 +117,16 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         screen.addComponent(targetBar)
     }
 
-    private fun setupEnmityList() {
-        val enmityList = Components.panel()
+    private fun setupEnemyList() {
+        val enemyList = Components.panel()
                 .withSize(GameConfig.SIDEBAR_WIDTH, GameConfig.ENMITY_LIST_HEIGHT)
                 .withDecorations(box(title = "Enemies", boxType = BoxType.SINGLE))
                 .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_LEFT)
                 .build()
 
-        screen.addComponent(enmityList)
+        enemyList.addComponent(game.player.findAttribute(EnemyList::class).get().toComponent(GameConfig.SIDEBAR_WIDTH))
+
+        screen.addComponent(enemyList)
     }
 
     private fun setupGameComponent() {

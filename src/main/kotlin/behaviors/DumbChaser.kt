@@ -1,6 +1,5 @@
 package behaviors
 
-import attributes.CombatStats
 import attributes.KillTarget
 import commands.AttemptAnyAction
 import commands.Move
@@ -19,9 +18,7 @@ object DumbChaser : ForegroundBehavior() {
 
         for (sensedPos in entity.sensedPositions.minus(entity.position)) {
             world.fetchBlockAt(sensedPos).ifPresent { block ->
-                block.entities.firstOrNull {
-                            it.findAttribute(CombatStats::class).isPresent
-                                    && !entity.isAlliedWith(it) }?.let { target ->
+                block.entities.firstOrNull { !entity.isAlliedWith(it) }?.let { target ->
                     val targetPos = target.position
                     val entityPos = entity.position
                     val greedyPos = getGreedyPosition(entityPos, targetPos)

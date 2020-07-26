@@ -175,6 +175,14 @@ class CombatStats(
                 addComponent(statsPanel)
             }
 
+    fun getHealthBarLabel(width: Int, color: TileColor): Label {
+        return getBarLabel(width, healthProperty, maxHealthProperty, color)
+    }
+
+    fun getStaminaBarLabel(width: Int, color: TileColor): Label {
+        return getBarLabel(width, staminaProperty, maxStaminaProperty, color)
+    }
+
     fun regenStamina(amount: Int) {
         staminaProperty.value = (stamina + amount).coerceAtMost(maxStamina)
     }
