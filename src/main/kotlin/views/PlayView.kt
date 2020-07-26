@@ -4,6 +4,7 @@ import GameColor
 import attributes.FocusTarget
 import block.GameBlock
 import builders.GameBuilder
+import builders.InventoryModalBuilder
 import constants.GameConfig
 import events.*
 import extensions.withStyle
@@ -50,6 +51,8 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         setupGameComponent()
         setupInputHandlers()
 
+        subscribeToInventoryMenuEvent()
+
         screen.theme = GameConfig.THEME
     }
 
@@ -79,7 +82,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
         screen.addComponent(logArea)
 
-        Zircon.eventBus.subscribeTo<GameLogEvent>(key = "GameLogEvent") { event ->
+        Zircon.eventBus.subscribeTo<GameLogEvent>(key = GameLogEvent.KEY) { event ->
             val logColor = when (event.type) {
                 Info -> GameColor.GREY
                 Notice -> GameColor.LIGHT_YELLOW
@@ -199,6 +202,19 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         screen.handleKeyboardEvents(KeyboardEventType.KEY_RELEASED) { keyEvent, _ ->
             pressedKeys.remove(keyEvent.code)
             Processed
+        }
+    }
+
+    private fun subscribeToInventoryMenuEvent() {
+        Zircon.eventBus.subscribeTo<InventoryMenuEvent>(key = InventoryMenuEvent.KEY) { event ->
+            val (inventory, onDrop, onConsume, onEquip) = event
+            val inventoryModal = InventoryModalBuilder(screen).build(
+                   inventory, onDrop, onConsume, onEquip
+            )
+
+            screen.openModal(inventoryModal)
+
+            KeepSubscription
         }
     }
 }

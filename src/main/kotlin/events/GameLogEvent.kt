@@ -5,15 +5,17 @@ import org.hexworks.zircon.internal.Zircon
 
 
 data class GameLogEvent(
-        override val emitter: Any,
         val message: String,
         val type: GameLogEventType = Info) : Event {
 
     companion object {
-        val KEY = GameLogEvent::class.simpleName
+        val KEY = "GameLogEvent"
 
         fun log(message: String, type: GameLogEventType) {
-            Zircon.eventBus.publish(GameLogEvent(Unit, message, type))
+            Zircon.eventBus.publish(GameLogEvent(message, type))
         }
     }
+
+    override val emitter: Any
+        get() = this
 }
