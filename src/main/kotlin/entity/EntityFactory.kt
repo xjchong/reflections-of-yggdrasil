@@ -1,6 +1,7 @@
 package entity
 
 import actors.StaminaUser
+import actors.Vigilant
 import attributes.*
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
@@ -35,6 +36,7 @@ object EntityFactory {
                 Inventory(1).apply {
                     add(newBatMeat())
                 },
+                KillTarget(),
                 Obstacle,
                 Vision(3),
 
@@ -65,6 +67,7 @@ object EntityFactory {
                 Equipments(initialChest = newJacket()),
                 Inventory(10),
                 Obstacle,
+                Vigilance.create(10),
                 Vision(5),
                 VisualMemory(excludedFacets = mutableSetOf(Movable)),
 
@@ -75,7 +78,7 @@ object EntityFactory {
                         skill = .33,
                         luck = .34
                 ))
-        behaviors(InputReceiver, StaminaUser, VisualRememberer)
+        behaviors(InputReceiver, StaminaUser, VisualRememberer, Vigilant)
         facets(ActionAttempting, Attackable, InventoryInspecting, Movable)
     }
 
@@ -142,6 +145,7 @@ object EntityFactory {
                     add(newRandomArmor())
                     add(newRandomWeapon())
                 },
+                KillTarget(),
                 Obstacle,
                 Vision(5),
 

@@ -1,6 +1,8 @@
 package actors
 
 import attributes.CombatStats
+import attributes.KillTarget
+import attributes.Vigilance
 import entity.getAttribute
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -14,9 +16,13 @@ import org.hexworks.amethyst.api.entity.EntityType
 object StaminaUser : BaseActor<GameContext>(CombatStats::class) {
 
     override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
-        // TODO: If there are no enemies in sight, then regen stamina fully/very quickly.
+        // Entities with a target they are actively trying to kill don't regen stamina.
+        if (entity.getAttribute(KillTarget::class)?.target != null) return true
 
-        // If there are still enemies, then regen slowly. TODO: Add varying amounts of stamina regen.
+        // Entities that are not fully relaxed don't regen stamina.
+        val alertLevel = entity.getAttribute(Vigilance::class)?.alertLevel
+        if (alertLevel != null && alertLevel > 0) return true
+
         entity.getAttribute(CombatStats::class)?.regenStamina(5)
         return true
     }

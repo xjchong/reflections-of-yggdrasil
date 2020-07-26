@@ -4,7 +4,7 @@ import entity.AnyEntity
 import org.hexworks.zircon.api.component.Component
 
 
-class EnmityList : DisplayableAttribute {
+class EnemyList : DisplayableAttribute {
 
     val entities: MutableList<AnyEntity> = mutableListOf()
 

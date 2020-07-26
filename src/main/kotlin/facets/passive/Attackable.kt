@@ -3,6 +3,7 @@ package facets.passive
 import GameColor
 import attributes.CombatStats
 import attributes.FocusTarget
+import attributes.KillTarget
 import commands.Attack
 import commands.Destroy
 import entity.*
@@ -24,17 +25,21 @@ object Attackable : BaseFacet<GameContext>() {
             }
 
             target.getAttribute(CombatStats::class)?.run {
+                // Attacker phase
                 var incomingDamage = attacker.attackRating
-
                 attacker.getAttribute(CombatStats::class)?.dockStamina(20)
+
+                // Target phase
                 incomingDamage *= target.defenseModifier
                 dockHealth(incomingDamage.toInt())
 
                 // Update focus targets of the combatants.
                 if (health > 0) {
                     attacker.getAttribute(FocusTarget::class)?.targetProperty?.updateValue(Maybe.of(target))
+                    attacker.getAttribute(KillTarget::class)?.target = target
                 }
 
+                target.getAttribute(KillTarget::class)?.target = attacker
                 target.getAttribute(FocusTarget::class)?.run {
                     if (!targetProperty.value.isPresent) {
                         targetProperty.updateValue(Maybe.of(attacker))
