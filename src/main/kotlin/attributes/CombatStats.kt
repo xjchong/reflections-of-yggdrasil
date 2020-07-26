@@ -153,23 +153,30 @@ class CombatStats(
                         staminaProperty, maxStaminaProperty, GameColor.LIGHT_YELLOW)
                 textBoxBuilder.commitInlineElements()
 
-                val statsLabel = Components.label()
-                        .withDecorations(box(boxType = BoxType.TOP_BOTTOM_DOUBLE))
+                val statsPanel = Components.panel()
                         .withSize(width - 1, 3)
-                        .withText("POW ${power.toString().padStart(2)} ${Symbols.SINGLE_LINE_VERTICAL} " +
-                                "TEC ${skill.toString().padStart(2)} ${Symbols.SINGLE_LINE_VERTICAL} " +
-                                "LUC ${luck.toString().padStart(2)}")
-                        .build()
+                        .withDecorations(box(boxType = BoxType.TOP_BOTTOM_DOUBLE))
+                        .build().apply {
+                            val statsLabel = Components.label()
+                                    .withStyle(GameColor.GREY)
+                                    .withSize(width - 3, 1)
+                                    .withText("POW ${power.toString().padStart(2)} ${Symbols.SINGLE_LINE_VERTICAL} " +
+                                            "TEC ${skill.toString().padStart(2)} ${Symbols.SINGLE_LINE_VERTICAL} " +
+                                            "LUC ${luck.toString().padStart(2)}")
+                                    .build()
 
-                statsLabel.textProperty.updateFrom(createPropertyFrom("POW ")
-                        .bindPlusWith(createPropertyFrom((power * 100).toInt().toString().padStart(2)))
-                        .bindPlusWith(createPropertyFrom(" ${Symbols.SINGLE_LINE_VERTICAL} TEC "))
-                        .bindPlusWith(createPropertyFrom((skill * 100).toInt().toString().padStart(2)))
-                        .bindPlusWith(createPropertyFrom(" ${Symbols.SINGLE_LINE_VERTICAL} LUC "))
-                        .bindPlusWith(createPropertyFrom((luck * 100).toInt().toString().padStart(2))))
+                            statsLabel.textProperty.updateFrom(createPropertyFrom("POW ")
+                                    .bindPlusWith(createPropertyFrom((power * 100).toInt().toString().padStart(2)))
+                                    .bindPlusWith(createPropertyFrom(" ${Symbols.SINGLE_LINE_VERTICAL} TEC "))
+                                    .bindPlusWith(createPropertyFrom((skill * 100).toInt().toString().padStart(2)))
+                                    .bindPlusWith(createPropertyFrom(" ${Symbols.SINGLE_LINE_VERTICAL} LUC "))
+                                    .bindPlusWith(createPropertyFrom((luck * 100).toInt().toString().padStart(2))))
+
+                            addComponent(statsLabel)
+                        }
 
                 addComponent(textBoxBuilder.build())
-                addComponent(statsLabel)
+                addComponent(statsPanel)
             }
 
     fun regenStamina(amount: Int) {

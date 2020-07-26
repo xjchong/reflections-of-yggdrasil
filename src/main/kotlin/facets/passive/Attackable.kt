@@ -22,21 +22,13 @@ object Attackable : BaseFacet<GameContext>() {
             if (!attacker.isPlayer && !target.isPlayer) return@responseWhenCommandIs Pass
 
             target.getAttribute(CombatStats::class)?.run {
-                // Get incoming damage.
                 var incomingDamage = attacker.attackRating
 
-                // Bill attacker for stamina use.
                 attacker.getAttribute(CombatStats::class)?.dockStamina(20)
-
-                // Modify incoming damage.
                 incomingDamage *= target.defenseModifier
-
-                // Bill defender for stamina use.
-                target.getAttribute(CombatStats::class)?.dockStamina(10)
-
-                // Deal the damage, log the event.
                 dockHealth(incomingDamage.toInt())
 
+                // Update focus targets of the combatants.
                 if (health > 0) {
                     attacker.getAttribute(FocusTarget::class)?.targetProperty?.updateValue(Maybe.of(target))
                 }
