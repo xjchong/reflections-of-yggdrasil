@@ -3,12 +3,16 @@ package attributes
 import GameColor
 import entity.AnyEntity
 import entity.getAttribute
-import extensions.optional
+import entity.tile
+import extensions.withStyle
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.component.AttachedComponent
 import org.hexworks.zircon.api.component.Component
+import org.hexworks.zircon.api.component.Fragment
+import org.hexworks.zircon.api.component.HBox
 import org.hexworks.zircon.api.graphics.Symbols
 
 class FocusTarget : DisplayableAttribute {
@@ -17,56 +21,16 @@ class FocusTarget : DisplayableAttribute {
     var target: Maybe<AnyEntity> by targetProperty.asDelegate()
         private set
 
-    private val healthProperty: Property<Int> = createPropertyFrom(0)
-    private val maxHealthProperty: Property<Int> = createPropertyFrom(1)
-    private val staminaProperty: Property<Int> = createPropertyFrom(0)
-    private val maxStaminaProperty: Property<Int> = createPropertyFrom(1)
+    private var attachedTargetRow: AttachedComponent? = null
 
-    override fun toComponent(width: Int): Component {
-        val textBoxBuilder = Components.textBox(width - 2)
-        val nameLabel = Components.header()
-                .withText("")
-                .withSize(16, 1)
-                .build()
-
-        val leftCapLabel = Components.label()
-                .withSize(1, 1)
-                .withText("${Symbols.SINGLE_LINE_T_DOUBLE_RIGHT}")
-
-        val rightCapLabel = Components.label()
-                .withSize(1, 1)
-                .withText("${Symbols.SINGLE_LINE_T_DOUBLE_LEFT}")
-
-        val healthBarLabel = CombatStats.getBarLabel(19,
-                healthProperty, maxHealthProperty, GameColor.DARK_RED)
-
-        val staminaBarLabel = CombatStats.getBarLabel(19,
-                staminaProperty, maxStaminaProperty, GameColor.LIGHT_YELLOW)
-
-        textBoxBuilder
-                .addInlineComponent(nameLabel)
-                .addInlineComponent(leftCapLabel.createCopy().build())
-                .addInlineComponent(healthBarLabel)
-                .addInlineComponent(rightCapLabel.createCopy().build())
-                .addInlineComponent(leftCapLabel.createCopy().build())
-                .addInlineComponent(staminaBarLabel)
-                .addInlineComponent(rightCapLabel.createCopy().build())
-                .commitInlineElements()
-
-        targetProperty.onChange {
-            it.newValue.optional?.getAttribute(CombatStats::class)?.let {combatStats ->
-                healthProperty.updateFrom(combatStats.healthProperty)
-                maxHealthProperty.updateFrom(combatStats.maxHealthProperty)
-                staminaProperty.updateFrom(combatStats.staminaProperty)
-                maxStaminaProperty.updateFrom(combatStats.maxStaminaProperty)
-                refreshBars()
+    override fun toComponent(width: Int): Component = Components.hbox()
+            .withSize(width - 2, 1)
+            .build().apply {
+                updateComponent(this)
+                targetProperty.onChange {
+                    updateComponent(this)
+                }
             }
-
-            nameLabel.textProperty.value = it.newValue.optional?.name?.capitalize() ?: ""
-        }
-
-        return textBoxBuilder.build()
-    }
 
     fun updateTarget(newTarget: AnyEntity) {
         targetProperty.updateValue(Maybe.of(newTarget))
@@ -74,23 +38,55 @@ class FocusTarget : DisplayableAttribute {
 
     fun clearTarget() {
         targetProperty.updateValue(Maybe.empty())
-        healthProperty.updateValue(0)
-        maxHealthProperty.updateValue(1)
-        staminaProperty.updateValue(0)
-        maxStaminaProperty.updateValue(1)
     }
 
-    /**
-     * Trigger a visual update of the bars. Not sure why this is necessary, but sadly it works.
-     */
-    private fun refreshBars() {
-        val health = healthProperty.value
-        val stamina = staminaProperty.value
+    private fun updateComponent(hBox: HBox) {
+        attachedTargetRow?.detach()
 
-        healthProperty.updateValue(health + 1)
-        healthProperty.updateValue(health)
-
-        staminaProperty.updateValue(stamina + 1)
-        staminaProperty.updateValue(stamina)
+        target.ifPresent {
+            val newTargetRow = FocusTargetRow(hBox.width, it)
+            attachedTargetRow = hBox.addFragment(FocusTargetRow(hBox.width, it))
+        }
     }
+}
+
+
+class FocusTargetRow(width: Int, entity: AnyEntity) : Fragment {
+
+    companion object {
+        const val NAME_LENGTH = 10
+    }
+
+    override val root: Component = Components.hbox()
+            .withSize(width, 1)
+            .build().apply {
+                addComponent(Components.label()
+                        .withSize(2, 1)
+                        .withStyle(entity.tile.foregroundColor)
+                        .withText(entity.tile.character.toString()))
+                addComponent(Components.header()
+                        .withSize(NAME_LENGTH, 1)
+                        .withText(entity.name.capitalize()))
+
+                val combatStats = entity.getAttribute(CombatStats::class)
+
+                if (combatStats != null) {
+                    val barLength = ((width - NAME_LENGTH) / 2) - 2
+
+                    val leftCapLabel = Components.label()
+                            .withSize(1, 1)
+                            .withText("${Symbols.SINGLE_LINE_T_DOUBLE_RIGHT}")
+
+                    val rightCapLabel = Components.label()
+                            .withSize(1, 1)
+                            .withText("${Symbols.SINGLE_LINE_T_DOUBLE_LEFT}")
+
+                    addComponent(leftCapLabel.createCopy().build())
+                    addComponent(combatStats.getHealthBarLabel(barLength, GameColor.DARK_RED))
+                    addComponent(rightCapLabel.createCopy().build())
+                    addComponent(leftCapLabel.createCopy().build())
+                    addComponent(combatStats.getStaminaBarLabel(barLength, GameColor.LIGHT_YELLOW))
+                    addComponent(rightCapLabel.createCopy().build())
+                }
+            }
 }
