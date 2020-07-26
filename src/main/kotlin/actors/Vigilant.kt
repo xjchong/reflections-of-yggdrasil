@@ -24,7 +24,6 @@ object Vigilant : BaseActor<GameContext>(Vigilance::class) {
         for (visiblePos in world.findVisiblePositionsFor(entity)) {
             for (potentialKiller in world.fetchEntitiesAt(visiblePos)) {
                 if (potentialKiller.getAttribute(KillTarget::class)?.target == entity) {
-                    println("$potentialKiller wants to kill $entity")
                     vigilance.alert()
                     return true
                 }

@@ -43,7 +43,7 @@ object EntityFactory {
                 CombatStats.create(
                         maxHealth = 60,
                         maxStamina = 50,
-                        power = 0.5
+                        power = 0.3
                 ))
         behaviors(Wanderer)
         facets(ActionAttempting, Attackable, Destructible, Movable)
@@ -152,7 +152,7 @@ object EntityFactory {
                 CombatStats.create(
                         maxHealth = 80,
                         maxStamina = 50,
-                        power = 0.3
+                        power = 0.5
                 ))
         behaviors(DumbChaser or Wanderer, StaminaUser)
         facets(ActionAttempting, Attackable, Destructible, Movable)
