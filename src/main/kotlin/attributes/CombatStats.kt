@@ -26,6 +26,7 @@ class CombatStats(
         private val skillProperty: Property<Double>,
         private val luckProperty: Property<Double>
 ) : DisplayableAttribute {
+
     val maxHealth: Int by maxHealthProperty.asDelegate()
     val health: Int by healthProperty.asDelegate()
     val maxStamina: Int by maxStaminaProperty.asDelegate()
@@ -54,70 +55,6 @@ class CombatStats(
                         skillProperty = createPropertyFrom(skill),
                         luckProperty = createPropertyFrom(luck)
                 )
-
-        fun getBarLabel(width: Int, valueProp: Property<Int>, maxValueProp: Property<Int>, color: TileColor): Label {
-            val barLabel = setupBar(width, valueProp, maxValueProp, color)
-            valueProp.onChange {
-                updateBar(barLabel, valueProp.value, maxValueProp.value)
-            }
-
-            return barLabel
-        }
-
-        private fun setupBar(width: Int, valueProp: Property<Int>, maxValueProp: Property<Int>, color: TileColor): Label {
-            val barLabelSize = Size.create(width - 1, 1)
-            val barLabel = Components.label()
-                    .withSize(barLabelSize)
-                    .withText(getBarString(barLabelSize.width, valueProp.value, maxValueProp.value))
-                    .withStyle(color)
-                    .build()
-
-            barLabel.handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
-                barLabel.textProperty.value = " ${valueProp.value}/${maxValueProp.value}"
-                Processed
-            }
-
-            barLabel.handleMouseEvents(MouseEventType.MOUSE_EXITED) { _, _ ->
-                updateBar(barLabel, valueProp.value, maxValueProp.value)
-                Processed
-            }
-
-            return barLabel
-        }
-
-        private fun updateBar(barLabel: Label, value: Int, maxValue: Int) {
-            barLabel.textProperty.value = getBarString(barLabel.size.width, value, maxValue)
-        }
-
-        private fun getBarString(width: Int, value: Int, maxValue: Int): String {
-            val increment = (maxValue.toDouble() / width.toDouble()) / 4.0
-            var currentValue = value.toDouble()
-            var barString = ""
-
-            if (increment <= 0) {
-                return barString // Just a sanity check that increment != 0, which could loop.
-            }
-
-            while (currentValue > 0) {
-                if (currentValue - (increment * 4) > -increment) {
-                    barString += "${Symbols.BLOCK_SOLID}"
-                    currentValue -= (increment * 4)
-                } else if (currentValue - (increment * 3) > -increment) {
-                    barString += "${Symbols.BLOCK_DENSE}"
-                    currentValue -= (increment * 3)
-                } else if (currentValue - (increment * 2) > -increment) {
-                    barString += "${Symbols.BLOCK_MIDDLE}"
-                    currentValue -= (increment * 2)
-                } else if (currentValue - increment > -increment) {
-                    barString += "${Symbols.BLOCK_SPARSE}"
-                    currentValue -= increment
-                } else {
-                    break
-                }
-            }
-
-            return barString
-        }
     }
 
     override fun toComponent(width: Int): Component = Components.vbox()
@@ -193,5 +130,69 @@ class CombatStats(
 
     fun dockHealth(amount: Int) {
         healthProperty.value = (health - amount).coerceAtLeast(0)
+    }
+
+    private fun getBarLabel(width: Int, valueProp: Property<Int>, maxValueProp: Property<Int>, color: TileColor): Label {
+        val barLabel = setupBar(width, valueProp, maxValueProp, color)
+        valueProp.onChange {
+            updateBar(barLabel, valueProp.value, maxValueProp.value)
+        }
+
+        return barLabel
+    }
+
+    private fun setupBar(width: Int, valueProp: Property<Int>, maxValueProp: Property<Int>, color: TileColor): Label {
+        val barLabelSize = Size.create(width - 1, 1)
+        val barLabel = Components.label()
+                .withSize(barLabelSize)
+                .withText(getBarString(barLabelSize.width, valueProp.value, maxValueProp.value))
+                .withStyle(color)
+                .build()
+
+        barLabel.handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
+            barLabel.textProperty.value = " ${valueProp.value}/${maxValueProp.value}"
+            Processed
+        }
+
+        barLabel.handleMouseEvents(MouseEventType.MOUSE_EXITED) { _, _ ->
+            updateBar(barLabel, valueProp.value, maxValueProp.value)
+            Processed
+        }
+
+        return barLabel
+    }
+
+    private fun updateBar(barLabel: Label, value: Int, maxValue: Int) {
+        barLabel.textProperty.value = getBarString(barLabel.size.width, value, maxValue)
+    }
+
+    private fun getBarString(width: Int, value: Int, maxValue: Int): String {
+        val increment = (maxValue.toDouble() / width.toDouble()) / 4.0
+        var currentValue = value.toDouble()
+        var barString = ""
+
+        if (increment <= 0) {
+            return barString // Just a sanity check that increment != 0, which could loop.
+        }
+
+        while (currentValue > 0) {
+            if (currentValue - (increment * 4) > -increment) {
+                barString += "${Symbols.BLOCK_SOLID}"
+                currentValue -= (increment * 4)
+            } else if (currentValue - (increment * 3) > -increment) {
+                barString += "${Symbols.BLOCK_DENSE}"
+                currentValue -= (increment * 3)
+            } else if (currentValue - (increment * 2) > -increment) {
+                barString += "${Symbols.BLOCK_MIDDLE}"
+                currentValue -= (increment * 2)
+            } else if (currentValue - increment > -increment) {
+                barString += "${Symbols.BLOCK_SPARSE}"
+                currentValue -= increment
+            } else {
+                break
+            }
+        }
+
+        return barString
     }
 }
