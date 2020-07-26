@@ -28,6 +28,7 @@ object EntityFactory {
 
     fun newBat() = newGameEntityOfType(Bat) {
         attributes(
+                Alliance(Monster),
                 EntityActions(Attack::class),
                 EntityPosition(),
                 EntityTile(GameTileRepository.BAT),
@@ -56,6 +57,7 @@ object EntityFactory {
 
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(
+                Alliance(Adventurer),
                 EntityPosition(),
                 EntityTile(GameTileRepository.PLAYER),
                 EntityActions(Open::class, Dig::class, Attack::class),
@@ -79,6 +81,7 @@ object EntityFactory {
 
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 1.7)) = newGameEntityOfType(Fungus) {
         attributes(
+                Alliance(Monster),
                 EntityActions(Attack::class),
                 EntityPosition(),
                 EntityTile(GameTileRepository.FUNGUS),

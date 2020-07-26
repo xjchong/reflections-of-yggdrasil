@@ -1,10 +1,11 @@
 package behaviors
 
+import attributes.CombatStats
 import commands.AttemptAnyAction
 import commands.Move
 import entity.AnyEntity
-import entity.Player
 import entity.executeBlockingCommand
+import entity.isAlliedWith
 import entity.position
 import extensions.neighbors
 import extensions.optional
@@ -17,9 +18,9 @@ object DumbChaser : ForegroundBehavior() {
         val world = context.world
         var isChasing = false
 
-        for (visiblePos in world.findVisiblePositionsFor(entity)) {
+        for (visiblePos in world.findVisiblePositionsFor(entity).minus(entity.position)) {
             world.fetchBlockAt(visiblePos).ifPresent { block ->
-                if (block.entities.any { it.type == Player }) {
+                if (block.entities.any { it.findAttribute(CombatStats::class).isPresent && !entity.isAlliedWith(it) }) {
                     val (visibleX, visibleY) = visiblePos
                     val (entityX, entityY) = entity.position
 

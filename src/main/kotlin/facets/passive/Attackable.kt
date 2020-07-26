@@ -19,7 +19,9 @@ object Attackable : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(Attack::class) { (context, attacker, target) ->
-            if (!attacker.isPlayer && !target.isPlayer) return@responseWhenCommandIs Pass
+            if (attacker.isAlliedWith(target)) {
+                return@responseWhenCommandIs Pass
+            }
 
             target.getAttribute(CombatStats::class)?.run {
                 var incomingDamage = attacker.attackRating

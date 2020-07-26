@@ -62,6 +62,15 @@ val AnyEntity.defenseModifier: Double
         return staminaModifier * equipmentsModifier
     }
 
+fun AnyEntity.isAlliedWith(entity: AnyEntity): Boolean {
+    if (this.id == entity.id) return true
+
+    val thisFaction = getAttribute(Alliance::class)?.faction
+    val otherFaction = entity.getAttribute(Alliance::class)?.faction
+
+    return (thisFaction == otherFaction && thisFaction != null)
+}
+
 fun <T : Attribute> AnyEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
 
 fun AnyEntity.syntaxFor(owner: AdaptableSyntax, subKey: String? = null): String {
