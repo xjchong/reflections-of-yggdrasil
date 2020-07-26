@@ -7,7 +7,6 @@ import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.Components
-import org.hexworks.zircon.api.builder.component.TextBoxBuilder
 import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Label
@@ -56,31 +55,17 @@ class CombatStats(
                         luckProperty = createPropertyFrom(luck)
                 )
 
-        fun getBarComponent(textBoxBuilder: TextBoxBuilder, width: Int,
-                            valueProp: Property<Int>, maxValueProp: Property<Int>,
-                            color: TileColor): Component {
-            val barLabel = setupBar(textBoxBuilder, width, valueProp, maxValueProp, color)
-            valueProp.onChange { updateBar(barLabel, valueProp.value, maxValueProp.value) }
+        fun getBarLabel(width: Int, valueProp: Property<Int>, maxValueProp: Property<Int>, color: TileColor): Label {
+            val barLabel = setupBar(width, valueProp, maxValueProp, color)
+            valueProp.onChange {
+                updateBar(barLabel, valueProp.value, maxValueProp.value)
+            }
 
             return barLabel
         }
 
-        private fun setupBar(textBoxBuilder: TextBoxBuilder,
-                             width: Int,
-                             valueProp: Property<Int>,
-                             maxValueProp: Property<Int>,
-                             color: TileColor): Label {
-            val leftCapLabel = Components.label()
-                    .withSize(1, 1)
-                    .withText("${Symbols.SINGLE_LINE_T_DOUBLE_RIGHT}")
-                    .build()
-
-            val rightCapLabel = Components.label()
-                    .withSize(1, 1)
-                    .withText("${Symbols.SINGLE_LINE_T_DOUBLE_LEFT}")
-                    .build()
-
-            val barLabelSize = Size.create(width - 3, 1)
+        private fun setupBar(width: Int, valueProp: Property<Int>, maxValueProp: Property<Int>, color: TileColor): Label {
+            val barLabelSize = Size.create(width - 1, 1)
             val barLabel = Components.label()
                     .withSize(barLabelSize)
                     .withText(getBarString(barLabelSize.width, valueProp.value, maxValueProp.value))
@@ -96,11 +81,6 @@ class CombatStats(
                 updateBar(barLabel, valueProp.value, maxValueProp.value)
                 Processed
             }
-
-            textBoxBuilder
-                    .addInlineComponent(leftCapLabel)
-                    .addInlineComponent(barLabel)
-                    .addInlineComponent(rightCapLabel)
 
             return barLabel
         }
@@ -145,13 +125,29 @@ class CombatStats(
             .build().apply {
                 val textBoxBuilder = Components.textBox(width)
 
-                val healthBarLabel = getBarComponent(textBoxBuilder, textBoxBuilder.size.width,
-                        healthProperty, maxHealthProperty, GameColor.DARK_GREEN)
-                textBoxBuilder.commitInlineElements()
+                val leftCapLabel = Components.label()
+                        .withSize(1, 1)
+                        .withText("${Symbols.SINGLE_LINE_T_DOUBLE_RIGHT}")
 
-                val staminaBarLabel = getBarComponent(textBoxBuilder, textBoxBuilder.size.width,
+                val rightCapLabel = Components.label()
+                        .withSize(1, 1)
+                        .withText("${Symbols.SINGLE_LINE_T_DOUBLE_LEFT}")
+
+                val healthBarLabel = getBarLabel(width - 2,
+                        healthProperty, maxHealthProperty, GameColor.DARK_GREEN)
+
+                val staminaBarLabel = getBarLabel(width - 2,
                         staminaProperty, maxStaminaProperty, GameColor.LIGHT_YELLOW)
-                textBoxBuilder.commitInlineElements()
+
+                textBoxBuilder
+                        .addInlineComponent(leftCapLabel.createCopy().build())
+                        .addInlineComponent(healthBarLabel)
+                        .addInlineComponent(rightCapLabel.createCopy().build())
+                        .commitInlineElements()
+                        .addInlineComponent(leftCapLabel.createCopy().build())
+                        .addInlineComponent(staminaBarLabel)
+                        .addInlineComponent(rightCapLabel.createCopy().build())
+                        .commitInlineElements()
 
                 val statsPanel = Components.panel()
                         .withSize(width - 1, 3)

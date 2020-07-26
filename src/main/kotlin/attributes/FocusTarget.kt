@@ -9,6 +9,7 @@ import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
+import org.hexworks.zircon.api.graphics.Symbols
 
 class FocusTarget : DisplayableAttribute {
 
@@ -28,13 +29,29 @@ class FocusTarget : DisplayableAttribute {
                 .withSize(16, 1)
                 .build()
 
-        textBoxBuilder.addInlineComponent(nameLabel)
+        val leftCapLabel = Components.label()
+                .withSize(1, 1)
+                .withText("${Symbols.SINGLE_LINE_T_DOUBLE_RIGHT}")
 
-        val healthBarLabel = CombatStats.getBarComponent(textBoxBuilder, 21,
+        val rightCapLabel = Components.label()
+                .withSize(1, 1)
+                .withText("${Symbols.SINGLE_LINE_T_DOUBLE_LEFT}")
+
+        val healthBarLabel = CombatStats.getBarLabel(19,
                 healthProperty, maxHealthProperty, GameColor.DARK_RED)
 
-        val staminaBarLabel = CombatStats.getBarComponent(textBoxBuilder, 21,
+        val staminaBarLabel = CombatStats.getBarLabel(19,
                 staminaProperty, maxStaminaProperty, GameColor.LIGHT_YELLOW)
+
+        textBoxBuilder
+                .addInlineComponent(nameLabel)
+                .addInlineComponent(leftCapLabel.createCopy().build())
+                .addInlineComponent(healthBarLabel)
+                .addInlineComponent(rightCapLabel.createCopy().build())
+                .addInlineComponent(leftCapLabel.createCopy().build())
+                .addInlineComponent(staminaBarLabel)
+                .addInlineComponent(rightCapLabel.createCopy().build())
+                .commitInlineElements()
 
         targetProperty.onChange {
             it.newValue.optional?.getAttribute(CombatStats::class)?.let {combatStats ->
@@ -48,7 +65,7 @@ class FocusTarget : DisplayableAttribute {
             nameLabel.textProperty.value = it.newValue.optional?.name?.capitalize() ?: ""
         }
 
-        return textBoxBuilder.commitInlineElements().build()
+        return textBoxBuilder.build()
     }
 
     fun updateTarget(newTarget: AnyEntity) {
