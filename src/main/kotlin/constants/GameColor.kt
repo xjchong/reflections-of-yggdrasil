@@ -94,6 +94,8 @@ object GameColor {
     val BACKGROUND = GameColor.BLACK
     val SECONDARY_BACKGROUND = BLACK.light
 
+    val FROSTED_BACKGROUND = BACKGROUND.withAlpha(215)
+
     val THEME = ColorThemeBuilder.newBuilder()
             .withAccentColor(ACCENT)
             .withPrimaryForegroundColor(FOREGROUND)

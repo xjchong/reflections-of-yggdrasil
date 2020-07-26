@@ -1,6 +1,6 @@
 package fragments
 
-import constants.GameConfig
+import GameColor
 import org.hexworks.zircon.api.builder.component.ModalBuilder
 import org.hexworks.zircon.api.component.Container
 import org.hexworks.zircon.api.component.modal.Modal
@@ -22,7 +22,7 @@ abstract class Dialog(
         ModalBuilder.newBuilder<EmptyModalResult>()
                 .withComponent(container)
                 .withParentSize(screen.size)
-                .withColorTheme(GameConfig.THEME)
+                .withColorTheme(GameColor.TRANSPARENT_BG)
                 .build().also { modal ->
                     if (withClose) {
                         container.addFragment(CloseButtonFragment(modal, container))

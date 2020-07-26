@@ -10,7 +10,6 @@ import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.component.Container
 import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.screen.Screen
-import org.hexworks.zircon.api.uievent.KeyCode
 
 class DebugColorDialog(screen: Screen) : Dialog(screen) {
 
@@ -20,6 +19,7 @@ class DebugColorDialog(screen: Screen) : Dialog(screen) {
 
     override val container: Container = Components.panel()
             .withSize(DIALOG_SIZE)
+            .withStyle(GameColor.FOREGROUND, GameColor.FROSTED_BACKGROUND)
             .withDecorations(box(title = "Debug Color"))
             .build().apply {
                 val textBoxBuilderLeft = Components.textBox(this.contentSize.width / 2)

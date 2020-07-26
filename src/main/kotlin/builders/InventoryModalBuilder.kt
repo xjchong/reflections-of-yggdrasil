@@ -32,7 +32,7 @@ class InventoryModalBuilder(private val screen: Screen) {
     ): Modal<EmptyModalResult> {
         val panel = Components.panel()
                 .withSize(DIALOG_SIZE)
-                .withStyle(GameColor.FOREGROUND, GameColor.BACKGROUND.withAlpha(200))
+                .withStyle(GameColor.FOREGROUND, GameColor.FROSTED_BACKGROUND)
                 .withDecorations(box(title = "Inventory"), shadow())
                 .build()
 
