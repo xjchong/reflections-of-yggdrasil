@@ -14,7 +14,6 @@ import org.hexworks.amethyst.api.Pass
 import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
-import org.hexworks.cobalt.datatypes.Maybe
 
 object Attackable : BaseFacet<GameContext>() {
 
@@ -35,14 +34,14 @@ object Attackable : BaseFacet<GameContext>() {
 
                 // Update focus targets of the combatants.
                 if (health > 0) {
-                    attacker.getAttribute(FocusTarget::class)?.targetProperty?.updateValue(Maybe.of(target))
+                    attacker.getAttribute(FocusTarget::class)?.updateTarget(target)
                     attacker.getAttribute(KillTarget::class)?.target = target
                 }
 
                 target.getAttribute(KillTarget::class)?.target = attacker
                 target.getAttribute(FocusTarget::class)?.run {
-                    if (!targetProperty.value.isPresent) {
-                        targetProperty.updateValue(Maybe.of(attacker))
+                    if (!this.target.isPresent) {
+                        updateTarget(attacker)
                     }
                 }
 

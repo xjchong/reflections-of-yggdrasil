@@ -12,7 +12,9 @@ import org.hexworks.zircon.api.component.Component
 
 class FocusTarget : DisplayableAttribute {
 
-    var targetProperty: Property<Maybe<AnyEntity>> = createPropertyFrom(Maybe.empty())
+    private val targetProperty: Property<Maybe<AnyEntity>> = createPropertyFrom(Maybe.empty())
+    var target: Maybe<AnyEntity> by targetProperty.asDelegate()
+        private set
 
     private val healthProperty: Property<Int> = createPropertyFrom(0)
     private val maxHealthProperty: Property<Int> = createPropertyFrom(1)
@@ -44,21 +46,21 @@ class FocusTarget : DisplayableAttribute {
             }
 
             nameLabel.textProperty.value = it.newValue.optional?.name?.capitalize() ?: ""
-
-            it.newValue.ifPresent { target ->
-                target.getAttribute(CombatStats::class)?.healthProperty?.onChange { health ->
-                    if (health.newValue <= 0) {
-                        targetProperty.updateValue(Maybe.empty())
-                        healthProperty.updateValue(0)
-                        maxHealthProperty.updateValue(1)
-                        staminaProperty.updateValue(0)
-                        maxStaminaProperty.updateValue(1)
-                    }
-                }
-            }
         }
 
         return textBoxBuilder.commitInlineElements().build()
+    }
+
+    fun updateTarget(newTarget: AnyEntity) {
+        targetProperty.updateValue(Maybe.of(newTarget))
+    }
+
+    fun clearTarget() {
+        targetProperty.updateValue(Maybe.empty())
+        healthProperty.updateValue(0)
+        maxHealthProperty.updateValue(1)
+        staminaProperty.updateValue(0)
+        maxStaminaProperty.updateValue(1)
     }
 
     /**

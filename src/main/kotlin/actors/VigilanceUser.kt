@@ -13,12 +13,13 @@ import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 
 
-object Vigilant : BaseActor<GameContext>(Vigilance::class) {
+object VigilanceUser : BaseActor<GameContext>(Vigilance::class) {
 
     /** If this entity can see another entity, and that other entity is targeting this one, then
      * this entity will become alert. Otherwise, this entity slowly relaxes its alert level.
      */
     override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
+        if (context.inBackground) return true
         val world = context.world
         val vigilance = entity.getAttribute(Vigilance::class) ?: return true
 

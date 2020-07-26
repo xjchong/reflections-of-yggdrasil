@@ -16,6 +16,8 @@ import org.hexworks.amethyst.api.entity.EntityType
 object StaminaUser : BaseActor<GameContext>(CombatStats::class) {
 
     override suspend fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
+        if (context.inBackground) return true
+
         // Entities with a target they are actively trying to kill don't regen stamina.
         if (entity.getAttribute(KillTarget::class)?.target != null) return true
 

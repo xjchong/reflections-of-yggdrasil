@@ -1,7 +1,8 @@
 package entity
 
+import actors.FocusTargetUser
 import actors.StaminaUser
-import actors.Vigilant
+import actors.VigilanceUser
 import attributes.*
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
@@ -78,7 +79,7 @@ object EntityFactory {
                         skill = .33,
                         luck = .34
                 ))
-        behaviors(InputReceiver, StaminaUser, VisionUser, VisualRememberer, Vigilant)
+        behaviors(FocusTargetUser, InputReceiver, StaminaUser, VisionUser, VisualRememberer, VigilanceUser)
         facets(ActionAttempting, Attackable, InventoryInspecting, Movable)
     }
 
