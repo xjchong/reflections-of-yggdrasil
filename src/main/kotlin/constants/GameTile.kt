@@ -21,7 +21,7 @@ object GameTile {
     val EMPTY: CharacterTile = Tile.empty()
 
     /**
-     * ENVIRONMENT
+     * WIDGET
      */
 
     val FLOOR = newCharacterTile(Symbols.INTERPUNCT, GameColor.GREY)
@@ -36,6 +36,7 @@ object GameTile {
     val BAT = newCharacterTile('b', GameColor.DARK_BLUE)
     val FUNGUS = newCharacterTile(',', GameColor.GREEN)
     val PLAYER = newCharacterTile('@', GameColor.YELLOW)
+    val RAT = newCharacterTile('r', GameColor.LIGHT_GREY)
     val ZOMBIE = newCharacterTile('z', GameColor.DARK_CYAN)
 
     /**

@@ -2,22 +2,12 @@ package entity
 
 import org.hexworks.amethyst.api.base.BaseEntityType
 
+/**
+ * CREATURE
+ */
 
 object Bat : BaseEntityType(
         name = "bat"
-)
-
-object BatMeat : BaseEntityType(
-        name = "bat meat",
-        description = "Stringy bat meat. It is an acquired taste."
-)
-
-object Door : BaseEntityType(
-        name = "door"
-)
-
-object En : BaseEntityType(
-        name = "en"
 )
 
 object Fungus : BaseEntityType(
@@ -28,12 +18,41 @@ object Player : BaseEntityType(
         name = "player"
 )
 
-object Wall : BaseEntityType(
-        name = "wall"
+object Rat : BaseEntityType(
+        name = "rat"
 )
 
 object Zombie : BaseEntityType(
         name = "zombie"
+)
+
+/**
+ * CONSUMABLE
+ */
+
+object BatMeat : BaseEntityType(
+        name = "bat meat",
+        description = "Stringy bat meat. It is an acquired taste."
+)
+
+/**
+ * TREASURE
+ */
+
+object En : BaseEntityType(
+        name = "en"
+)
+
+/**
+ * WIDGET
+ */
+
+object Door : BaseEntityType(
+        name = "door"
+)
+
+object Wall : BaseEntityType(
+        name = "wall"
 )
 
 /**

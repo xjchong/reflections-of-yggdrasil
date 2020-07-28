@@ -23,7 +23,8 @@ object CreatureFactory {
 
     fun newRandomCreature(): AnyEntity {
         return when (Random.nextInt(100)) {
-            in 0..29 -> newBat()
+            in 0..19 -> newBat()
+            in 20..29 -> newRat()
             in 30..59 -> newFungus()
             in 60..99 -> newZombie()
             else -> newZombie()
@@ -86,7 +87,7 @@ object CreatureFactory {
         facets(ActionAttempting, Attackable, Destructible, Movable)
     }
 
-    fun newFungus(proliferation: Proliferation = Proliferation(0.02, 1.7) { newFungus(it) }) = newGameEntityOfType(Fungus) {
+    fun newFungus(proliferation: Proliferation = Proliferation(0.02, 0.6) { newFungus(it) }) = newGameEntityOfType(Fungus) {
         attributes(
                 Alliance(Monster),
                 EntityActions(Attack::class),
@@ -105,6 +106,29 @@ object CreatureFactory {
         behaviors(DumbChaser, Proliferator, VisionUser)
         facets(ActionAttempting, Attackable, Destructible)
     }
+
+    fun newRat(profliferation: Proliferation = Proliferation(0.02, 0.9) { newRat(it) }) = newGameEntityOfType(Rat) {
+        attributes(
+                Alliance(Monster),
+                EntityActions(Attack::class),
+                EntityPosition(),
+                EntityTile(GameTile.RAT),
+                KillTarget(),
+                Obstacle,
+                profliferation,
+                Vision(3),
+
+                CombatStats.create(
+                        maxHealth = 60,
+                        maxStamina = 10,
+                        power = 0.2,
+                        skill = 0.2
+                )
+        )
+        behaviors(DumbChaser or Wanderer, Proliferator, VisionUser)
+        facets(ActionAttempting, Attackable, Destructible, Movable)
+    }
+
 
     fun newZombie() = newGameEntityOfType(Zombie) {
         attributes(
@@ -126,6 +150,5 @@ object CreatureFactory {
                 ))
         behaviors(DumbChaser or Wanderer, StaminaUser, VisionUser)
         facets(ActionAttempting, Attackable, Destructible, Movable)
-
     }
 }

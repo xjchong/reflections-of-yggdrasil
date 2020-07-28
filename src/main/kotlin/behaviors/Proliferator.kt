@@ -18,7 +18,7 @@ object Proliferator : ForegroundBehavior(Proliferation::class) {
                         offset = entity.position.withRelativeX(-1).withRelativeY(-1),
                         size = Size3D.create(3, 3, 0)).map { location ->
                     world.addEntity(proliferate(this), location)
-                    factor /= decayRate
+                    factor *= decayRate
                 }
 
                 return true
