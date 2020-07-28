@@ -1,8 +1,8 @@
 package entity
 
-import actors.FocusTargetUser
-import actors.StaminaUser
-import actors.VigilanceUser
+import behaviors.FocusTargetUser
+import behaviors.StaminaUser
+import behaviors.VigilanceUser
 import attributes.*
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
