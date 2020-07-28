@@ -79,7 +79,7 @@ object EntityFactory {
         facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable)
     }
 
-    fun newFungus(proliferation: Proliferation = Proliferation(0.02, 1.7)) = newGameEntityOfType(Fungus) {
+    fun newFungus(proliferation: Proliferation = Proliferation(0.02, 1.7) { newFungus(it) }) = newGameEntityOfType(Fungus) {
         attributes(
                 Alliance(Monster),
                 EntityActions(Attack::class),

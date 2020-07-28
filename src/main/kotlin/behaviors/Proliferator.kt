@@ -2,7 +2,6 @@ package behaviors
 
 import attributes.Proliferation
 import entity.AnyEntity
-import entity.EntityFactory
 import entity.position
 import game.GameContext
 import org.hexworks.zircon.api.data.Size3D
@@ -13,15 +12,17 @@ object Proliferator : ForegroundBehavior(Proliferation::class) {
         val world = context.world
         val proliferation = entity.findAttribute(Proliferation::class).get()
 
-        if (Math.random() < proliferation.factor) {
-            world.findEmptyLocationWithin(
-                    offset = entity.position.withRelativeX(-1).withRelativeY(-1),
-                    size = Size3D.create(3, 3, 0)).map { location ->
-                world.addEntity(EntityFactory.newFungus(proliferation), location)
-                proliferation.factor /= proliferation.decayRate
-            }
+        with (proliferation) {
+            if (Math.random() < factor) {
+                world.findEmptyLocationWithin(
+                        offset = entity.position.withRelativeX(-1).withRelativeY(-1),
+                        size = Size3D.create(3, 3, 0)).map { location ->
+                    world.addEntity(proliferate(this), location)
+                    factor /= decayRate
+                }
 
-            return true
+                return true
+            }
         }
 
         return false
