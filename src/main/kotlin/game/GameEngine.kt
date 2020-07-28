@@ -1,14 +1,15 @@
 package game
 
+import behaviors.InputReceiving
+import commands.Input
+import entity.AnyEntity
 import kotlinx.coroutines.*
 import org.hexworks.amethyst.api.Engine
-import org.hexworks.amethyst.api.entity.Entity
-import org.hexworks.amethyst.api.entity.EntityType
 import kotlin.coroutines.CoroutineContext
 
-class GameEngine<T : GameContext>(
+class GameEngine(
     override val coroutineContext: CoroutineContext = Dispatchers.Default
-) : Engine<T>, CoroutineScope {
+) : Engine<GameContext>, CoroutineScope {
 
     companion object {
         const val PRIORITY_LOW = 0
@@ -16,16 +17,17 @@ class GameEngine<T : GameContext>(
         const val PRIORITY_HIGH = 2
     }
 
-    private val lowPriorityEntities = mutableListOf<Entity<EntityType, T>>()
-    private val defaultPriorityEntities = mutableListOf<Entity<EntityType, T>>()
-    private val highPriorityEntities = mutableListOf<Entity<EntityType, T>>()
+    private val lowPriorityEntities = mutableListOf<AnyEntity>()
+    private val defaultPriorityEntities = mutableListOf<AnyEntity>()
+    private val highPriorityEntities = mutableListOf<AnyEntity>()
+    private var inputReceivingEntity: AnyEntity? = null
 
     @Synchronized
-    override fun addEntity(entity: Entity<EntityType, T>) {
+    override fun addEntity(entity: AnyEntity) {
         addEntityWithPriority(entity)
     }
 
-    @Synchronized fun addEntityWithPriority(entity: Entity<EntityType, T>, priority: Int = PRIORITY_DEFAULT) {
+    @Synchronized fun addEntityWithPriority(entity: AnyEntity, priority: Int = PRIORITY_DEFAULT) {
         when (priority) {
             PRIORITY_LOW -> lowPriorityEntities.add(entity)
             PRIORITY_DEFAULT -> defaultPriorityEntities.add(entity)
@@ -34,15 +36,21 @@ class GameEngine<T : GameContext>(
     }
 
     @Synchronized
-    override fun removeEntity(entity: Entity<EntityType, T>) {
+    override fun removeEntity(entity: AnyEntity) {
         if (defaultPriorityEntities.remove(entity)) return
         if (highPriorityEntities.remove(entity)) return
         if (lowPriorityEntities.remove(entity)) return
+        if (inputReceivingEntity?.id == entity.id) {
+            inputReceivingEntity = null
+        }
     }
 
     @Synchronized
-    override fun update(context: T): Job {
+    override fun update(context: GameContext): Job {
         return launch {
+            inputReceivingEntity?.run {
+                this.executeCommand(Input(context, this, context.event))
+            }
             highPriorityEntities.filter { it.needsUpdate }.map {
                 async { it.update(context) }
             }.awaitAll()
@@ -52,6 +60,18 @@ class GameEngine<T : GameContext>(
             lowPriorityEntities.filter { it.needsUpdate }.map {
                 async { it.update(context) }
             }.awaitAll()
+            async {
+                inputReceivingEntity?.update(context)
+            }.await()
         }
+    }
+
+    fun setInputReceivingEntity(entity: AnyEntity) {
+        if (!entity.facets.contains(InputReceiving)) {
+            throw IllegalArgumentException("Can't set $entity as the input receiving entity for the game engine. " +
+                    "Does it have ${InputReceiving::class.simpleName}?")
+        }
+
+        inputReceivingEntity = entity
     }
 }

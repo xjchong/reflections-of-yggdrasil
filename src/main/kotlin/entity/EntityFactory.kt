@@ -80,8 +80,8 @@ object EntityFactory {
                         skill = .33,
                         luck = .34
                 ))
-        behaviors(FocusTargetUser, InputReceiver, StaminaUser, VisionUser, VisualRememberer, VigilanceUser)
-        facets(ActionAttempting, Attackable, InventoryInspecting, Movable)
+        behaviors(StaminaUser, VisionUser, FocusTargetUser, VisualRememberer, VigilanceUser)
+        facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable)
     }
 
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 1.7)) = newGameEntityOfType(Fungus) {

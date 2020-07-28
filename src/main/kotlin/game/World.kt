@@ -19,7 +19,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         initialVisibleSize = visibleSize, initialActualSize = actualSize
 ) {
 
-    private val engine: GameEngine<GameContext> = GameEngine()
+    private val engine: GameEngine = GameEngine()
     private val sceneObservers: MutableSet<AnyEntity> = mutableSetOf()
     private var lastVisiblePositions: MutableSet<Position3D> = mutableSetOf()
 
@@ -74,11 +74,13 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
      * given [Entity].
      */
     fun addEntity(entity: AnyEntity, position: Position3D) {
-        val priority = if (entity.isPlayer) GameEngine.PRIORITY_HIGH else GameEngine.PRIORITY_DEFAULT
+        if (entity.isPlayer) {
+            engine.setInputReceivingEntity(entity)
+        } else {
+            engine.addEntityWithPriority(entity, GameEngine.PRIORITY_DEFAULT)
+        }
 
         entity.position = position
-        engine.addEntityWithPriority(entity, priority)
-
         fetchBlockAt(position).map { block ->
             block.addEntity(entity)
         }
