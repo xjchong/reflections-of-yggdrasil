@@ -24,31 +24,31 @@ object GameTile {
      * ENVIRONMENT
      */
 
-    val FLOOR = newCharacterTile(Symbols.INTERPUNCT, GameColor.FLOOR)
-    val WALL = newCharacterTile('#', GameColor.WALL)
-    val DOOR = newCharacterTile('+', GameColor.DOOR, GameColor.DOOR_BACKGROUND)
-    val UNREVEALED = newCharacterTile(' ', GameColor.FOG_OF_WAR, GameColor.FOG_OF_WAR)
+    val FLOOR = newCharacterTile(Symbols.INTERPUNCT, GameColor.GREY)
+    val WALL = newCharacterTile('#', GameColor.GREY)
+    val DOOR = newCharacterTile('+', GameColor.GREY, GameColor.BROWN)
+    val UNREVEALED = newCharacterTile(' ', GameColor.BLACK, GameColor.BLACK)
 
     /**
      * CREATURE
      */
 
-    val BAT = newCharacterTile('b', GameColor.BAT)
-    val FUNGUS = newCharacterTile(',', GameColor.FUNGUS)
-    val PLAYER = newCharacterTile('@', GameColor.PLAYER)
+    val BAT = newCharacterTile('b', GameColor.DARK_BLUE)
+    val FUNGUS = newCharacterTile(',', GameColor.GREEN)
+    val PLAYER = newCharacterTile('@', GameColor.YELLOW)
     val ZOMBIE = newCharacterTile('z', GameColor.DARK_CYAN)
 
     /**
      * CONSUMABLE
      */
 
-    val BAT_MEAT = newCharacterTile('%', GameColor.BAT_MEAT)
+    val BAT_MEAT = newCharacterTile('%', GameColor.DARK_PINK)
 
     /**
      * TREASURE
      */
 
-    val EN = newCharacterTile('$', GameColor.EN)
+    val EN = newCharacterTile('$', GameColor.LIGHT_CYAN)
 
     /**
      * EQUIPMENT

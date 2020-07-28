@@ -7,7 +7,7 @@ import org.hexworks.zircon.api.data.Size3D
 
 object GameConfig {
     val TILESET = CP437TilesetResources.tyr16x16()
-    val THEME = GameColor.THEME
+    val THEME = GameColor.MAIN_THEME
 
     val TITLE = "Reflections of Yggdrasil"
 

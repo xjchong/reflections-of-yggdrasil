@@ -49,7 +49,7 @@ class InventoryModalBuilder(private val screen: Screen) {
         val modal = ModalBuilder.newBuilder<EmptyModalResult>()
                 .withParentSize(screen.size)
                 .withComponent(panel)
-                .withColorTheme(GameColor.TRANSPARENT_BG)
+                .withColorTheme(GameColor.TRANSPARENT_THEME)
                 .build()
 
         closeButton.onActivated {

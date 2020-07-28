@@ -52,36 +52,12 @@ object GameColor {
 
 
     /**
-     * ENVIRONMENT
+     * EFFECTS
      */
-
-    val FOG_OF_WAR      = BLACK
-
-    val WALL            = GREY
-    val FLOOR           = GREY
-    val DOOR            = GREY
-    val DOOR_BACKGROUND = BROWN
 
     val ATTACK_FLASH    = LIGHT_YELLOW
     val DAMAGE_FLASH    = RED
     val DESTROY_FLASH   = DARK_VIOLET
-
-
-    /**
-     * ACTORS
-     */
-
-    val BAT     = DARK_BLUE
-    val FUNGUS  = GREEN
-    val PLAYER  = YELLOW
-
-
-    /**
-     * ITEMS
-     */
-
-    val BAT_MEAT    = DARK_PINK
-    val EN          = LIGHT_CYAN
 
 
     /**
@@ -96,7 +72,7 @@ object GameColor {
 
     val FROSTED_BACKGROUND = BACKGROUND.withAlpha(215)
 
-    val THEME = ColorThemeBuilder.newBuilder()
+    val MAIN_THEME = ColorThemeBuilder.newBuilder()
             .withAccentColor(ACCENT)
             .withPrimaryForegroundColor(FOREGROUND)
             .withSecondaryForegroundColor(SECONDARY_FOREGROUND)
@@ -104,7 +80,7 @@ object GameColor {
             .withSecondaryBackgroundColor(SECONDARY_BACKGROUND)
             .build()
 
-    val TRANSPARENT_BG = ColorThemeBuilder.newBuilder()
+    val TRANSPARENT_THEME = ColorThemeBuilder.newBuilder()
             .withAccentColor(ACCENT)
             .withPrimaryForegroundColor(FOREGROUND)
             .withSecondaryForegroundColor(SECONDARY_FOREGROUND)

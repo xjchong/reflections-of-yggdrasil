@@ -22,7 +22,7 @@ abstract class Dialog(
         ModalBuilder.newBuilder<EmptyModalResult>()
                 .withComponent(container)
                 .withParentSize(screen.size)
-                .withColorTheme(GameColor.TRANSPARENT_BG)
+                .withColorTheme(GameColor.TRANSPARENT_THEME)
                 .build().also { modal ->
                     if (withClose) {
                         container.addFragment(CloseButtonFragment(modal, container))
