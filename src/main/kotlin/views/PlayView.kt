@@ -144,7 +144,6 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
             pressedKeys.add(keyEvent.code)
 
             if (pressedKeys.contains(KeyCode.SHIFT)) {
-                println(pressedKeys)
                 val comboInputEvent = when {
                     pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.UP, KeyCode.LEFT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(-1, -1, 0))
