@@ -1,15 +1,11 @@
 package entity
 
-import behaviors.FocusTargetUser
-import behaviors.StaminaUser
-import behaviors.VigilanceUser
 import attributes.*
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import attributes.flag.Opened
 import behaviors.*
 import commands.Attack
-import commands.Dig
 import commands.Open
 import constants.GameTileRepository
 import facets.active.ActionAttempting
@@ -63,7 +59,7 @@ object EntityFactory {
                 EnemyList(),
                 EntityPosition(),
                 EntityTile(GameTileRepository.PLAYER),
-                EntityActions(Open::class, Dig::class, Attack::class),
+                EntityActions(Open::class, Attack::class),
                 FocusTarget(),
                 Equipments(initialChest = newJacket()),
                 Inventory(10),
