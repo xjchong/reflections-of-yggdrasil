@@ -18,12 +18,9 @@ object GameConfig {
     const val WINDOW_WIDTH = 88
     const val WINDOW_HEIGHT = 52
 
-    const val BATS_PER_LEVEL = 6
-    const val EN_PER_LEVEL = 20
-    const val FUNGI_PER_LEVEL = 10
-    const val ZOMBIES_PER_LEVEL = 3
-    const val WEAPONS_PER_LEVEL = 2
-    const val ARMOR_PER_LEVEL = 2
+    const val TREASURE_PER_LEVEL = 10
+    const val CREATURES_PER_LEVEL = 30
+    const val EQUIPMENT_PER_LEVEL = 4
 
     val WORLD_SIZE = Size3D.create(
             WINDOW_WIDTH - SIDEBAR_WIDTH,

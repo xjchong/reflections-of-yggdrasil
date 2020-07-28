@@ -2,9 +2,10 @@ package builders
 
 import constants.GameConfig
 import entity.AnyEntity
-import entity.EntityFactory
 import entity.GameEntity
 import entity.Player
+import entity.factories.CreatureFactory
+import entity.factories.ItemFactory
 import events.WaitInputEvent
 import game.Game
 import org.hexworks.amethyst.api.entity.EntityType
@@ -26,12 +27,9 @@ class GameBuilder(val worldSize: Size3D) {
     fun buildGame(): Game {
         prepareWorld()
 
-        addEntities(GameConfig.BATS_PER_LEVEL) { EntityFactory.newBat() }
-        addEntities(GameConfig.EN_PER_LEVEL) { EntityFactory.newEn() }
-        addEntities(GameConfig.FUNGI_PER_LEVEL) { EntityFactory.newFungus() }
-        addEntities(GameConfig.ZOMBIES_PER_LEVEL) { EntityFactory.newZombie() }
-        addEntities(GameConfig.WEAPONS_PER_LEVEL) { EntityFactory.newRandomWeapon() }
-        addEntities(GameConfig.ARMOR_PER_LEVEL) { EntityFactory.newRandomArmor() }
+        addEntities(GameConfig.CREATURES_PER_LEVEL) { CreatureFactory.newRandomCreature() }
+        addEntities(GameConfig.EQUIPMENT_PER_LEVEL) { ItemFactory.newRandomEquipment() }
+        addEntities(GameConfig.TREASURE_PER_LEVEL) { ItemFactory.newRandomTreasure() }
 
         val game = Game.create(
             player = addPlayer(),
@@ -49,7 +47,7 @@ class GameBuilder(val worldSize: Size3D) {
     }
 
     private fun addPlayer(): GameEntity<Player> {
-        return EntityFactory.newPlayer().addToWorld(
+        return CreatureFactory.newPlayer().addToWorld(
             atLevel = 0
         )
     }
