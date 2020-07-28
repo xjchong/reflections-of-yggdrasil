@@ -18,6 +18,7 @@ object VisualRememberer : ForegroundBehavior(VisualMemory::class) {
         vision.visiblePositions.forEach { visiblePos ->
             world.fetchBlockAt(visiblePos).ifPresent { block ->
                 visualMemory.remember(visiblePos, world.turn, block.entities.toList())
+                block.rememberAs(visualMemory.getMemoryAt(visiblePos))
             }
         }
 

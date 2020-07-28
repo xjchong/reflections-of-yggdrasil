@@ -1,6 +1,5 @@
 package game
 import attributes.Vision
-import attributes.VisualMemory
 import block.GameBlock
 import entity.*
 import events.*
@@ -86,10 +85,6 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
     }
 
-    fun addWorldEntity(entity: AnyEntity) {
-        engine.addEntityWithPriority(entity, GameEngine.PRIORITY_LOW)
-    }
-
     fun removeEntity(entity: AnyEntity) {
         fetchBlockAt(entity.position).map {
             it.removeEntity(entity)
@@ -172,19 +167,13 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
     fun updateFowAt(entity: AnyEntity) {
         val vision = entity.getAttribute(Vision::class) ?: return
-        val nextVisiblePositions: MutableSet<Position3D> = mutableSetOf()
         val nextHiddenPositions: MutableSet<Position3D> = mutableSetOf()
         nextHiddenPositions.addAll(lastVisiblePositions)
 
-        findVisiblePositionsFor(entity.position, vision.radius).forEach { visiblePos ->
-            nextVisiblePositions.add(visiblePos)
+        vision.visiblePositions.forEach { visiblePos ->
             nextHiddenPositions.remove(visiblePos)
             fetchBlockAt(visiblePos).ifPresent { block ->
                 block.reveal()
-
-                entity.findAttribute(VisualMemory::class).ifPresent {
-                    block.rememberAs(it.getMemoryAt(visiblePos))
-                }
             }
         }
 
@@ -195,7 +184,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
 
         lastVisiblePositions.clear()
-        lastVisiblePositions.addAll(nextVisiblePositions)
+        lastVisiblePositions.addAll(vision.visiblePositions)
     }
 
     private fun updateTurn() {

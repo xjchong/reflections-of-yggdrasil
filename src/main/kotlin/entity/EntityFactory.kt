@@ -15,7 +15,6 @@ import constants.GameTileRepository
 import facets.active.ActionAttempting
 import facets.active.InventoryInspecting
 import facets.passive.*
-import game.Game
 import game.GameContext
 import org.hexworks.amethyst.api.builder.EntityBuilder
 import org.hexworks.amethyst.api.entity.EntityType
@@ -80,7 +79,7 @@ object EntityFactory {
                         skill = .33,
                         luck = .34
                 ))
-        behaviors(StaminaUser, VisionUser, FocusTargetUser, VisualRememberer, VigilanceUser)
+        behaviors(StaminaUser, VisionUser, FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
         facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable)
     }
 
@@ -159,8 +158,6 @@ object EntityFactory {
         behaviors(DumbChaser or Wanderer, StaminaUser, VisionUser)
         facets(ActionAttempting, Attackable, Destructible, Movable)
     }
-
-    fun newFogOfWar(game: Game) = FogOfWar(game, needsUpdate = true)
 
     /**
      * EQUIPMENT

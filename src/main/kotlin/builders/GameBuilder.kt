@@ -38,7 +38,6 @@ class GameBuilder(val worldSize: Size3D) {
             world = world
         )
 
-        world.addWorldEntity(EntityFactory.newFogOfWar(game))
         world.addSceneObserver(game.player)
         world.update(WaitInputEvent()) // Update all entities to setup vision, etc. How could this be refactored?
 
