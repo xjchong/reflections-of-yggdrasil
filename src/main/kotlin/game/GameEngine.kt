@@ -5,6 +5,7 @@ import commands.Input
 import entity.AnyEntity
 import kotlinx.coroutines.*
 import org.hexworks.amethyst.api.Engine
+import org.hexworks.amethyst.api.Pass
 import kotlin.coroutines.CoroutineContext
 
 class GameEngine(
@@ -49,7 +50,9 @@ class GameEngine(
     override fun update(context: GameContext): Job {
         return launch {
             inputReceivingEntity?.run {
-                this.executeCommand(Input(context, this, context.event))
+                if (this.executeCommand(Input(context, this, context.event)) == Pass) {
+                    return@launch
+                }
             }
             highPriorityEntities.filter { it.needsUpdate }.map {
                 async { it.update(context) }

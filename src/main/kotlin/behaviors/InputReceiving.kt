@@ -23,9 +23,10 @@ object InputReceiving : BaseFacet<GameContext>() {
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(Input::class) { (context, entity, event) ->
             val position = entity.position
+            var response: Response = Pass
 
             runBlocking {
-                when (event) {
+                response = when (event) {
                     is ConsumeInputEvent -> event.consumable.run { executeCommand(Consume(context, this, entity)) }
                     is DropInputEvent -> event.droppable.run { executeCommand(Drop(context, this, entity, position)) }
                     is EquipInputEvent -> event.equipment.run { executeCommand(Equip(context, this, entity)) }
@@ -35,27 +36,31 @@ object InputReceiving : BaseFacet<GameContext>() {
 
                         if (entity.executeCommand(AttemptAnyAction(context, entity, nextPosition)) == Pass) {
                             entity.executeCommand(Move(context, entity, nextPosition))
+                        } else {
+                            Consumed
                         }
                     }
                     is TakeInputEvent -> entity.tryTakeAt(position, context)
-                    is WaitInputEvent -> return@runBlocking
+                    is WaitInputEvent -> Consumed
                 }
             }
 
-            Consumed
+            response
         }
     }
 
-    private suspend fun AnyEntity.tryTakeAt(position: Position3D, context: GameContext) {
+    private suspend fun AnyEntity.tryTakeAt(position: Position3D, context: GameContext): Response {
         val world = context.world
-        val block = world.fetchBlockAt(position).optional ?: return
+        val block = world.fetchBlockAt(position).optional ?: return Pass
         val inventory = getAttribute(Inventory::class)
 
         for (entity in block.entities.reversed()) {
             if (entity.findFacet(Takeable::class).isPresent) {
-                entity.executeCommand(Take(context, entity, this))
-                break
+                return entity.executeCommand(Take(context, entity, this))
             }
         }
+
+        world.observeSceneBy(this, "There is nothing for the $this to take here...", Critical)
+        return Pass
     }
 }

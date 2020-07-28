@@ -2,6 +2,7 @@ package facets.passive
 
 import commands.Move
 import entity.position
+import events.Critical
 import extensions.optional
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -21,6 +22,8 @@ object Movable : BaseFacet<GameContext>() {
             world.fetchBlockAt(position).ifPresent { block ->
                 if (block.transfer(source, currentBlock)) {
                     result = Consumed
+                } else {
+                    world.observeSceneBy(source, "The $source can't move there...", Critical)
                 }
             }
 
