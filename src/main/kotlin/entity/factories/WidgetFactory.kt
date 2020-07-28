@@ -7,7 +7,7 @@ import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import attributes.flag.Opened
 import behaviors.Barrier
-import constants.GameTileRepository
+import constants.GameTile
 import entity.Door
 import entity.Wall
 import facets.passive.Diggable
@@ -19,7 +19,7 @@ object WidgetFactory {
     fun newWall(isDiggable: Boolean = true) = newGameEntityOfType(Wall) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTileRepository.WALL),
+                EntityTile(GameTile.WALL),
                 Obstacle,
                 Opaque)
         if (isDiggable) facets(Diggable)
@@ -28,8 +28,8 @@ object WidgetFactory {
     fun newDoor(isOpened: Boolean = false) = newGameEntityOfType(Door) {
         val baseAttributes = mutableListOf(
                 EntityPosition(),
-                EntityTile(GameTileRepository.DOOR),
-                OpenAppearance(GameTileRepository.DOOR.withCharacter('\'')))
+                EntityTile(GameTile.DOOR),
+                OpenAppearance(GameTile.DOOR.withCharacter('\'')))
 
         if (isOpened) {
             baseAttributes.add(Opened)

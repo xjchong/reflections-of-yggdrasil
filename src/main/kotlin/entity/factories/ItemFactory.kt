@@ -1,7 +1,7 @@
 package entity.factories
 
 import attributes.*
-import constants.GameTileRepository
+import constants.GameTile
 import entity.*
 import facets.passive.Consumable
 import facets.passive.Droppable
@@ -50,7 +50,7 @@ object ItemFactory {
     fun newEn() = newGameEntityOfType(En) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTileRepository.EN))
+                EntityTile(GameTile.EN))
         facets(Takeable, Droppable)
     }
 
@@ -61,7 +61,7 @@ object ItemFactory {
     fun newBatMeat() = newGameEntityOfType(BatMeat) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTileRepository.BAT_MEAT),
+                EntityTile(GameTile.BAT_MEAT),
                 ConsumableDetails(300))
         facets(Consumable, Droppable, Takeable)
     }
@@ -73,7 +73,7 @@ object ItemFactory {
     fun newDagger() = newGameEntityOfType(Dagger) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTileRepository.DAGGER),
+                EntityTile(GameTile.DAGGER),
                 EquippableDetails(OneHanded,
                         reliability = 0.6,
                         efficiency = 1.1
@@ -85,7 +85,7 @@ object ItemFactory {
     fun newSword() = newGameEntityOfType(Sword) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTileRepository.SWORD),
+                EntityTile(GameTile.SWORD),
                 EquippableDetails(OneHanded,
                         reliability = 0.8,
                         efficiency = 1.2
@@ -96,7 +96,7 @@ object ItemFactory {
     fun newStaff() = newGameEntityOfType(Staff) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTileRepository.STAFF),
+                EntityTile(GameTile.STAFF),
                 EquippableDetails(TwoHanded,
                         reliability = 0.7,
                         efficiency = 1.1
@@ -107,7 +107,7 @@ object ItemFactory {
     fun newLightArmor() = newGameEntityOfType(LightArmor) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTileRepository.LIGHT_ARMOR),
+                EntityTile(GameTile.LIGHT_ARMOR),
                 EquippableDetails(Chest,
                         reliability = 0.8,
                         efficiency = 0.2
@@ -118,7 +118,7 @@ object ItemFactory {
     fun newMediumArmor() = newGameEntityOfType(MediumArmor) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTileRepository.MEDIUM_ARMOR),
+                EntityTile(GameTile.MEDIUM_ARMOR),
                 EquippableDetails(Chest,
                         reliability = 0.8,
                         efficiency = 0.3
@@ -129,7 +129,7 @@ object ItemFactory {
     fun newHeavyArmor() = newGameEntityOfType(HeavyArmor) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTileRepository.HEAVY_ARMOR),
+                EntityTile(GameTile.HEAVY_ARMOR),
                 EquippableDetails(Chest,
                         reliability = 0.8,
                         efficiency = 0.35
@@ -139,7 +139,7 @@ object ItemFactory {
 
     fun newJacket() = newGameEntityOfType(Jacket) {
         attributes(
-                EntityTile(GameTileRepository.JACKET),
+                EntityTile(GameTile.JACKET),
                 EntityPosition(),
                 EquippableDetails(Chest,
                         reliability = 0.6,

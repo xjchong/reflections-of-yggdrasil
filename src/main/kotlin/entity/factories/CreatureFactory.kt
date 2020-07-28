@@ -5,7 +5,7 @@ import attributes.flag.Obstacle
 import behaviors.*
 import commands.Attack
 import commands.Open
-import constants.GameTileRepository
+import constants.GameTile
 import entity.*
 import facets.active.ActionAttempting
 import facets.active.InventoryInspecting
@@ -39,7 +39,7 @@ object CreatureFactory {
                 Alliance(Adventurer),
                 EnemyList(),
                 EntityPosition(),
-                EntityTile(GameTileRepository.PLAYER),
+                EntityTile(GameTile.PLAYER),
                 EntityActions(Open::class, Attack::class),
                 FocusTarget(),
                 Equipments(initialChest = ItemFactory.newJacket()),
@@ -69,7 +69,7 @@ object CreatureFactory {
                 Alliance(Monster),
                 EntityActions(Attack::class),
                 EntityPosition(),
-                EntityTile(GameTileRepository.BAT),
+                EntityTile(GameTile.BAT),
                 Inventory(1).apply {
                     add(ItemFactory.newBatMeat())
                 },
@@ -91,7 +91,7 @@ object CreatureFactory {
                 Alliance(Monster),
                 EntityActions(Attack::class),
                 EntityPosition(),
-                EntityTile(GameTileRepository.FUNGUS),
+                EntityTile(GameTile.FUNGUS),
                 Obstacle,
                 proliferation,
 
@@ -110,7 +110,7 @@ object CreatureFactory {
         attributes(
                 EntityActions(Attack::class),
                 EntityPosition(),
-                EntityTile(GameTileRepository.ZOMBIE),
+                EntityTile(GameTile.ZOMBIE),
                 Inventory(5).apply {
                     add(ItemFactory.newRandomArmor())
                     add(ItemFactory.newRandomWeapon())

@@ -1,7 +1,7 @@
 package block
 import GameColor
 import attributes.Memory
-import constants.GameTileRepository
+import constants.GameTile
 import entity.AnyEntity
 import entity.isObstacle
 import entity.position
@@ -20,7 +20,7 @@ import org.hexworks.zircon.api.data.base.BaseBlock
 import utilities.DebugConfig
 
 class GameBlock(private val position: Position3D,
-                private var defaultTile: Tile = GameTileRepository.FLOOR,
+                private var defaultTile: Tile = GameTile.FLOOR,
                 private val currentEntities: MutableList<AnyEntity> = mutableListOf(),
                 private var isRevealed: Boolean = false)
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
@@ -43,26 +43,26 @@ class GameBlock(private val position: Position3D,
         get() {
             val entityTiles = currentEntities.map { it.tile }
             val contentTile = when {
-                entityTiles.contains(GameTileRepository.PLAYER) -> GameTileRepository.PLAYER
+                entityTiles.contains(GameTile.PLAYER) -> GameTile.PLAYER
                 entityTiles.isNotEmpty() -> entityTiles.last()
                 else -> defaultTile
             }.run { flashColor?.let { withBackgroundColor(it) } ?: run { this } }
 
             val topTile = when {
-                DebugConfig.shouldRevealWorld -> GameTileRepository.EMPTY
-                isRevealed -> GameTileRepository.EMPTY
+                DebugConfig.shouldRevealWorld -> GameTile.EMPTY
+                isRevealed -> GameTile.EMPTY
                 else -> getMemoryTile()
             }
 
             return persistentMapOf(
                 Pair(BlockTileType.TOP, topTile),
                 Pair(BlockTileType.CONTENT, contentTile),
-                Pair(BlockTileType.BOTTOM, GameTileRepository.FLOOR)
+                Pair(BlockTileType.BOTTOM, GameTile.FLOOR)
             )
         }
 
     val isWall: Boolean
-        get() = Maybe.ofNullable(currentEntities.firstOrNull { it.tile == GameTileRepository.WALL }).isPresent
+        get() = Maybe.ofNullable(currentEntities.firstOrNull { it.tile == GameTile.WALL }).isPresent
 
     val isUnoccupied: Boolean
         get() = currentEntities.isEmpty()
@@ -121,11 +121,11 @@ class GameBlock(private val position: Position3D,
     }
 
     private fun getMemoryTile(): CharacterTile {
-        var memoryTile: CharacterTile = GameTileRepository.UNREVEALED
+        var memoryTile: CharacterTile = GameTile.UNREVEALED
 
         memory?.let {
             val snapshot = it.snapshots.lastOrNull()
-            val tile = snapshot?.tile ?: GameTileRepository.FLOOR
+            val tile = snapshot?.tile ?: GameTile.FLOOR
 
             val fogginess = (MIN_MEMORY_FOGGINESS
                     + ((turn - it.turn) * MIN_MEMORY_FOGGINESS / it.strength))
