@@ -10,8 +10,9 @@ import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.component.Container
 import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.screen.Screen
+import org.hexworks.zircon.api.uievent.KeyCode
 
-class DebugColorDialog(screen: Screen) : Dialog(screen) {
+class DebugColorDialog(screen: Screen) : Dialog(screen, closeKey = KeyCode.BACK_QUOTE) {
 
     companion object {
         val DIALOG_SIZE = Size.create(40, 19)

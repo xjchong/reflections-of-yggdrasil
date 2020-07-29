@@ -13,12 +13,15 @@ import org.hexworks.zircon.internal.component.modal.EmptyModalResult
 
 abstract class Dialog(
         private val screen: Screen,
-        withClose: Boolean = true
+        withClose: Boolean = true,
+        closeKey: KeyCode? = null
 ) : ModalFragment<EmptyModalResult> {
 
     abstract val container: Container
 
     final override val root: Modal<EmptyModalResult> by lazy {
+        val initTime = System.currentTimeMillis()
+
         ModalBuilder.newBuilder<EmptyModalResult>()
                 .withComponent(container)
                 .withParentSize(screen.size)
@@ -28,8 +31,11 @@ abstract class Dialog(
                         container.addFragment(CloseButtonFragment(modal, container))
 
                         modal.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, _ ->
-                            when (event.code) {
-                                KeyCode.ESCAPE -> modal.close(EmptyModalResult)
+                            if (System.currentTimeMillis() - initTime > 100) { // Prevent modal from closing before player even sees it, due to the keypress which opened it.
+                                when (event.code) {
+                                    KeyCode.ESCAPE -> modal.close(EmptyModalResult)
+                                    closeKey -> modal.close(EmptyModalResult)
+                                }
                             }
 
                             Processed

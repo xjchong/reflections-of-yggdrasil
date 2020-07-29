@@ -149,7 +149,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
     }
 
     private fun setupInputHandlers() {
-        screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { keyEvent, _ ->
+        screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { keyEvent, phase ->
             pressedKeys.add(keyEvent.code)
 
             if (pressedKeys.contains(KeyCode.SHIFT)) {
@@ -181,7 +181,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                 return@handleKeyboardEvents Processed
             }
 
-            if (keyEvent.code == KeyCode.KEY_L) {
+            if (keyEvent.code == GameConfig.LOG_KEY) {
                 screen.openModal(LogHistoryDialog(screen, logHistory))
                 return@handleKeyboardEvents Processed
             }

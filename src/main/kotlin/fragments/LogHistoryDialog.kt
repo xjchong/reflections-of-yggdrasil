@@ -12,7 +12,7 @@ import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.screen.Screen
 
 
-class LogHistoryDialog(screen: Screen, history: List<ParagraphBuilder>) : Dialog(screen) {
+class LogHistoryDialog(screen: Screen, history: List<ParagraphBuilder>) : Dialog(screen, closeKey = GameConfig.LOG_KEY) {
 
     companion object {
         val DIALOG_SIZE = Size.create(GameConfig.LOG_WIDTH, GameConfig.LOG_HISTORY_MAX + 3)
