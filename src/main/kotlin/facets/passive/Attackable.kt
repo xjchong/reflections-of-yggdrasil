@@ -1,13 +1,13 @@
 package facets.passive
 
 import GameColor
-import attributes.CombatStats
-import attributes.FocusTarget
-import attributes.KillTarget
-import attributes.StatusDetails
+import attributes.*
 import commands.Attack
 import commands.Destroy
-import entity.*
+import entity.defenseModifier
+import entity.executeBlockingCommand
+import entity.getAttribute
+import entity.isAlliedWith
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -16,25 +16,21 @@ import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
-object Attackable : BaseFacet<GameContext>() {
+object Attackable : BaseFacet<GameContext>(CombatStats::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(Attack::class) { (context, attacker, target) ->
-            if (attacker.isAlliedWith(target)) {
-                return@responseWhenCommandIs Pass
-            }
+            if (attacker.isAlliedWith(target)) return@responseWhenCommandIs Pass
 
-            target.getAttribute(CombatStats::class)?.run {
-                // Attacker phase
-                var incomingDamage = attacker.attackRating
-                attacker.getAttribute(CombatStats::class)?.dockStamina(20)
+            val targetCombatStats = target.getAttribute(CombatStats::class) ?: return@responseWhenCommandIs Pass
+            val attackerCombatStats = attacker.getAttribute(CombatStats::class) ?: return@responseWhenCommandIs Pass
+            val attackerStrategies = attacker.getAttribute(AttackStrategies::class) ?: return@responseWhenCommandIs Pass
+            val attackerStrategy = attackerStrategies.strategies.random()
 
-                // Target phase
-                val guard = target.getAttribute(StatusDetails::class)?.guard ?: 0
-                incomingDamage *= target.defenseModifier
-                if (guard > 0) incomingDamage *= 0.25
+            val incomingDamage = attackerStrategy.rollDamage(attackerCombatStats).toDouble()
+            val finalDamage = (incomingDamage * target.defenseModifier).toInt().coerceAtLeast(1)
 
-                val finalDamage = incomingDamage.toInt().coerceAtLeast(1)
+            targetCombatStats.run {
                 dockHealth(finalDamage)
 
                 // Update focus targets of the combatants.
@@ -50,14 +46,14 @@ object Attackable : BaseFacet<GameContext>() {
                     }
                 }
 
-                context.world.observeSceneBy(attacker, "The $attacker hits the $target for ${finalDamage}!")
+                context.world.observeSceneBy(attacker, "The $attacker ${attackerStrategy.description} the $target for ${finalDamage}!")
                 context.world.flash(attacker, GameColor.ATTACK_FLASH)
 
                 if (health <= 0) {
                     context.world.flash(target, GameColor.DESTROY_FLASH)
                     target.executeBlockingCommand(Destroy(context, target, cause = "the $attacker"))
                 } else {
-                    if (guard > 0) {
+                    if (target.getAttribute(StatusDetails::class)?.guard ?: 0 > 0) {
                         context.world.flash(target, GameColor.GUARD_FLASH)
                     } else {
                         context.world.flash(target, GameColor.DAMAGE_FLASH)

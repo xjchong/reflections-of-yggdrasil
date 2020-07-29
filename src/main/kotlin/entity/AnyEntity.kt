@@ -48,19 +48,15 @@ val AnyEntity.isPlayer: Boolean
 val AnyEntity.isOpaque: Boolean
     get() = this.findAttribute(Opaque::class).isPresent
 
-val AnyEntity.attackRating: Double
-    get() {
-        val combatRating = getAttribute(CombatStats::class)?.attackRating ?: 0.0
-        val equipmentsModifier = getAttribute(Equipments::class)?.attackModifier ?: 0.5
-        return combatRating * equipmentsModifier
-    }
-
 val AnyEntity.defenseModifier: Double
     get() {
+        val guard = getAttribute(StatusDetails::class)?.guard ?: 0
+        val guardModifier = if (guard > 0) 0.5 else 1.0
         val stamina = getAttribute(CombatStats::class)?.stamina ?: 0
         val staminaModifier = if (stamina > 0) 0.5 else 1.0
         val equipmentsModifier = getAttribute(Equipments::class)?.defenseModifier ?: 1.0
-        return staminaModifier * equipmentsModifier
+
+        return staminaModifier * equipmentsModifier * guardModifier
     }
 
 // This can be updated to support other types of 'vision'.

@@ -5,10 +5,14 @@ import org.hexworks.amethyst.api.Attribute
 
 
 class AttackStrategies(
-        val strategies: MutableList<AttackStrategy> = mutableListOf()
+        vararg var strategies: AttackStrategy
 ) : Attribute {
 
-    val maxRange: Int = 1 // TODO: Calculate this based on the current available strategies.
+    val minRange
+        get() = strategies.map { it.minRange }.min() ?: 0
+
+    val maxRange
+        get() = strategies.map { it.maxRange }.max() ?: 0
 }
 
 

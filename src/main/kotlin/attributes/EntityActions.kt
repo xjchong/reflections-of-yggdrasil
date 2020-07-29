@@ -2,9 +2,9 @@ package attributes
 
 import commands.EntityAction
 import entity.AnyEntity
+import game.GameContext
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.entity.EntityType
-import game.GameContext
 import kotlin.reflect.KClass
 
 class EntityActions(
