@@ -23,7 +23,7 @@ object Droppable : BaseFacet<GameContext>() {
 
                 // Attempt to drop the entity somewhere unoccupied. Otherwise, just stack it at the original position.
                 fetchBlockAt(idealPosition).ifPresent { block ->
-                    if (!block.isUnoccupied) {
+                    if (block.entities.any { it != owner }) {
                         for (neighborPos in idealPosition.neighbors()) {
                             val neighborBlock = fetchBlockAt(neighborPos).optional
 
