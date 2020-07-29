@@ -10,6 +10,7 @@ import constants.GameConfig
 import events.*
 import extensions.withStyle
 import fragments.DebugColorDialog
+import fragments.LogHistoryDialog
 import fragments.PlayerInfoFragment
 import game.Game
 import org.hexworks.cobalt.events.api.KeepSubscription
@@ -41,6 +42,7 @@ class CustomGameArea(
 class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuilder.defaultGame()) : BaseView(tileGrid) {
 
     private val pressedKeys: MutableSet<KeyCode> = mutableSetOf()
+    private val logHistory: MutableList<ParagraphBuilder> = mutableListOf() // TODO: Make a separate log object.
 
     override fun onDock() {
         super.onDock()
@@ -73,10 +75,9 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
     }
 
     private fun setupLogArea() {
-        val logWidth = GameConfig.WINDOW_WIDTH - GameConfig.SIDEBAR_WIDTH
 
         val logArea = Components.logArea()
-                .withSize(logWidth, GameConfig.LOG_HEIGHT)
+                .withSize(GameConfig.LOG_WIDTH, GameConfig.LOG_HEIGHT)
                 .withDecorations(box(boxType = BoxType.SINGLE, title = "Log"))
                 .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
                 .build()
@@ -93,10 +94,18 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                 Special -> GameColor.GREEN
             }
 
-            logArea.addParagraph(ParagraphBuilder.newBuilder()
+            val paragraphBuilder = ParagraphBuilder.newBuilder()
                     .withStyle(logColor)
-                    .withText(event.message),
-                    withNewLine = false)
+                    .withText(event.message)
+
+            logArea.addParagraph(paragraphBuilder, withNewLine = false)
+            logHistory.add(paragraphBuilder)
+
+            if (logHistory.size > GameConfig.LOG_HISTORY_MAX * 2) {
+                val latestHistory = logHistory.takeLast(GameConfig.LOG_HISTORY_MAX)
+                logHistory.clear()
+                logHistory.addAll(latestHistory)
+            }
 
             KeepSubscription
         }
@@ -169,6 +178,11 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
             // Debug command for showing the colors used in game.
             if (keyEvent.code == KeyCode.BACK_QUOTE) {
                 screen.openModal(DebugColorDialog(screen))
+                return@handleKeyboardEvents Processed
+            }
+
+            if (keyEvent.code == KeyCode.KEY_L) {
+                screen.openModal(LogHistoryDialog(screen, logHistory))
                 return@handleKeyboardEvents Processed
             }
 

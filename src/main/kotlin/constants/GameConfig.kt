@@ -12,11 +12,13 @@ object GameConfig {
     val TITLE = "Reflections of Yggdrasil"
 
     const val SIDEBAR_WIDTH = 29
-    const val LOG_HEIGHT = 8
     const val TARGET_BAR_HEIGHT = 3
     const val ENMITY_LIST_HEIGHT = 21
     const val WINDOW_WIDTH = 88
     const val WINDOW_HEIGHT = 52
+    const val LOG_HEIGHT = 8
+    const val LOG_WIDTH = WINDOW_WIDTH - SIDEBAR_WIDTH
+    const val LOG_HISTORY_MAX = 40
 
     const val TREASURE_PER_LEVEL = 10
     const val CREATURES_PER_LEVEL = 30
