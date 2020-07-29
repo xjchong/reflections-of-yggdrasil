@@ -1,5 +1,6 @@
 package facets.passive
 
+import behaviors.InputReceiving
 import commands.Move
 import entity.position
 import events.Critical
@@ -22,7 +23,7 @@ object Movable : BaseFacet<GameContext>() {
             world.fetchBlockAt(position).ifPresent { block ->
                 if (block.transfer(source, currentBlock)) {
                     result = Consumed
-                } else {
+                } else if (source.findFacet(InputReceiving::class).isPresent) {
                     world.observeSceneBy(source, "The $source can't move there...", Critical)
                 }
             }

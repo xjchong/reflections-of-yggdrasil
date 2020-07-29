@@ -12,6 +12,7 @@ import facets.active.InventoryInspecting
 import facets.passive.Attackable
 import facets.passive.Destructible
 import facets.passive.Movable
+import facets.passive.StatusInflictable
 import kotlin.random.Random
 
 
@@ -46,6 +47,7 @@ object CreatureFactory {
                 Equipments(initialChest = ItemFactory.newJacket()),
                 Inventory(10),
                 Obstacle,
+                StatusDetails(),
                 Vigilance.create(10),
                 Vision(5),
                 VisualMemory(excludedFacets = mutableSetOf(Movable)),
@@ -57,8 +59,8 @@ object CreatureFactory {
                         skill = .33,
                         luck = .34
                 ))
-        behaviors(StaminaUser, VisionUser, FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
-        facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable)
+        behaviors(StatusUpdater, StaminaUser, VisionUser, FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
+        facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusInflictable)
     }
 
     /**

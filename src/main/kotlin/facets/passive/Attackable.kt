@@ -4,6 +4,7 @@ import GameColor
 import attributes.CombatStats
 import attributes.FocusTarget
 import attributes.KillTarget
+import attributes.StatusDetails
 import commands.Attack
 import commands.Destroy
 import entity.*
@@ -29,8 +30,10 @@ object Attackable : BaseFacet<GameContext>() {
                 attacker.getAttribute(CombatStats::class)?.dockStamina(20)
 
                 // Target phase
+                val guard = target.getAttribute(StatusDetails::class)?.guard ?: 0
                 incomingDamage *= target.defenseModifier
-                dockHealth(incomingDamage.toInt())
+                if (guard > 0) incomingDamage *= 0.25
+                dockHealth(incomingDamage.toInt().coerceAtLeast(1))
 
                 // Update focus targets of the combatants.
                 if (health > 0) {
@@ -52,7 +55,11 @@ object Attackable : BaseFacet<GameContext>() {
                     context.world.flash(target, GameColor.DESTROY_FLASH)
                     target.executeBlockingCommand(Destroy(context, target, cause = "the $attacker"))
                 } else {
-                    context.world.flash(target, GameColor.DAMAGE_FLASH)
+                    if (guard > 0) {
+                        context.world.flash(target, GameColor.BLUE)
+                    } else {
+                        context.world.flash(target, GameColor.DAMAGE_FLASH)
+                    }
                 }
             }
 

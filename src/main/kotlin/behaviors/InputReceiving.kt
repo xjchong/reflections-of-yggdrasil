@@ -30,6 +30,7 @@ object InputReceiving : BaseFacet<GameContext>() {
                     is ConsumeInputEvent -> event.consumable.run { executeCommand(Consume(context, this, entity)) }
                     is DropInputEvent -> event.droppable.run { executeCommand(Drop(context, this, entity, position)) }
                     is EquipInputEvent -> event.equipment.run { executeCommand(Equip(context, this, entity)) }
+                    is GuardInputEvent -> entity.executeCommand(Guard(context, entity))
                     is InventoryInputEvent -> entity.executeCommand(InspectInventory(context, entity))
                     is MoveInputEvent -> {
                         val nextPosition = position.withRelative(event.relativePosition)
