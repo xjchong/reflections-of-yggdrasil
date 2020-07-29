@@ -1,8 +1,7 @@
 package attributes
 
-import entity.AnyEntity
-import game.GameContext
+import models.StatusEffect
 import org.hexworks.amethyst.api.Attribute
 
 
-data class ConsumableDetails(val execute: (context: GameContext, source: AnyEntity, target: AnyEntity) -> Unit): Attribute
+data class ConsumableDetails(val effects: List<StatusEffect>): Attribute

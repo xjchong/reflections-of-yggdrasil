@@ -12,7 +12,7 @@ import facets.active.InventoryInspecting
 import facets.passive.Attackable
 import facets.passive.Destructible
 import facets.passive.Movable
-import facets.passive.StatusInflictable
+import facets.passive.StatusApplicable
 import kotlin.random.Random
 
 
@@ -60,7 +60,7 @@ object CreatureFactory {
                         luck = .34
                 ))
         behaviors(StatusUpdater, StaminaUser, VisionUser, FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
-        facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusInflictable)
+        facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusApplicable)
     }
 
     /**

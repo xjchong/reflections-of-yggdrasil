@@ -1,7 +1,9 @@
 package facets.passive
 
 import attributes.ConsumableDetails
+import commands.ApplyStatus
 import commands.Consume
+import entity.executeBlockingCommand
 import entity.getAttribute
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -17,7 +19,9 @@ object Consumable : BaseFacet<GameContext>(ConsumableDetails::class) {
             context.world.observeSceneBy(consumer, "The $consumer consumes the $consumable.")
 
             consumable.getAttribute(ConsumableDetails::class)?.run {
-                execute(context, consumable, consumer)
+                for (effect in effects) {
+                    consumer.executeBlockingCommand(ApplyStatus(context, consumable, consumer, effect))
+                }
             }
 
             Consumed
