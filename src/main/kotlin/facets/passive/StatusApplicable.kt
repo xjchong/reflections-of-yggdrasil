@@ -8,9 +8,11 @@ import commands.Guard
 import entity.AnyEntity
 import entity.getAttribute
 import events.Critical
+import events.Notice
 import events.Special
 import game.GameContext
 import models.Heal
+import models.Poison
 import models.StatusEffect
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -25,8 +27,11 @@ object StatusApplicable : BaseFacet<GameContext>(StatusDetails::class) {
         var response: Response = Pass
 
         command.whenCommandIs(ApplyStatus::class) { (context, source, target, effect) ->
+            if (Math.random() > effect.chance) return@whenCommandIs false
+
             response = when (effect.type) {
                 is Heal -> applyHeal(context, source, target, effect)
+                is Poison -> applyPoison(context, source, target, effect)
             }
 
             true
@@ -56,6 +61,15 @@ object StatusApplicable : BaseFacet<GameContext>(StatusDetails::class) {
 
         targetCombatStats.gainHealth(effect.potency)
         context.world.observeSceneBy(target, "The $source heals the $target for ${effect.potency}!", Special)
+
+        return Consumed
+    }
+
+    private fun applyPoison(context: GameContext, source: AnyEntity, target: AnyEntity, effect: StatusEffect): Response {
+        val targetStatusDetails = target.getAttribute(StatusDetails::class) ?: return Pass
+
+        targetStatusDetails.poison += effect.potency
+        context.world.observeSceneBy(target, "The $target is poisoned by the $source!", Notice)
 
         return Consumed
     }

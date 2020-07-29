@@ -1,14 +1,15 @@
 package entity.factories
 
 import attributes.*
-import models.Heal
-import models.StatusEffect
 import constants.GameTile
 import entity.*
 import facets.passive.Consumable
 import facets.passive.Droppable
 import facets.passive.Equippable
 import facets.passive.Takeable
+import models.Heal
+import models.Poison
+import models.StatusEffect
 import kotlin.random.Random
 
 
@@ -64,7 +65,10 @@ object ItemFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTile.BAT_MEAT),
-                ConsumableDetails(effects = listOf(StatusEffect(Heal, 20))))
+                ConsumableDetails(effects = listOf(
+                        StatusEffect(Heal, 20, 0.9),
+                        StatusEffect(Poison, 5, 0.1)
+                )))
         facets(Consumable, Droppable, Takeable)
     }
 

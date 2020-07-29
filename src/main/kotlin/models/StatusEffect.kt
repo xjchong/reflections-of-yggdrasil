@@ -11,3 +11,4 @@ data class StatusEffect(
 sealed class StatusEffectType
 
 object Heal : StatusEffectType()
+object Poison : StatusEffectType() { const val damage = 5 }
