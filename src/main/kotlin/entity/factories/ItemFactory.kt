@@ -1,6 +1,7 @@
 package entity.factories
 
 import attributes.*
+import commands.Heal
 import constants.GameTile
 import entity.*
 import facets.passive.Consumable
@@ -62,7 +63,9 @@ object ItemFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTile.BAT_MEAT),
-                ConsumableDetails(300))
+                ConsumableDetails() { context, source, target ->
+                    target.executeBlockingCommand(Heal(context, source, target, 20))
+                })
         facets(Consumable, Droppable, Takeable)
     }
 

@@ -33,7 +33,9 @@ object Attackable : BaseFacet<GameContext>() {
                 val guard = target.getAttribute(StatusDetails::class)?.guard ?: 0
                 incomingDamage *= target.defenseModifier
                 if (guard > 0) incomingDamage *= 0.25
-                dockHealth(incomingDamage.toInt().coerceAtLeast(1))
+
+                val finalDamage = incomingDamage.toInt().coerceAtLeast(1)
+                dockHealth(finalDamage)
 
                 // Update focus targets of the combatants.
                 if (health > 0) {
@@ -48,7 +50,7 @@ object Attackable : BaseFacet<GameContext>() {
                     }
                 }
 
-                context.world.observeSceneBy(attacker, "The $attacker hits the $target for ${incomingDamage.toInt()}!")
+                context.world.observeSceneBy(attacker, "The $attacker hits the $target for ${finalDamage}!")
                 context.world.flash(attacker, GameColor.ATTACK_FLASH)
 
                 if (health <= 0) {

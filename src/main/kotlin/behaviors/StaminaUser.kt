@@ -20,7 +20,7 @@ object StaminaUser : ForegroundBehavior(CombatStats::class) {
         val alertLevel = entity.getAttribute(Vigilance::class)?.alertLevel
         if (alertLevel != null && alertLevel > 0) return true
 
-        entity.getAttribute(CombatStats::class)?.regenStamina(5)
+        entity.getAttribute(CombatStats::class)?.gainStamina(5)
         return true
     }
 }

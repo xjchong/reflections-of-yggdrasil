@@ -120,12 +120,16 @@ class CombatStats(
         return getBarLabel(width, staminaProperty, maxStaminaProperty, color)
     }
 
-    fun regenStamina(amount: Int) {
+    fun gainStamina(amount: Int) {
         staminaProperty.value = (stamina + amount).coerceAtMost(maxStamina)
     }
 
     fun dockStamina(amount: Int) {
         staminaProperty.value = (stamina - amount).coerceAtLeast(0)
+    }
+
+    fun gainHealth(amount: Int) {
+        healthProperty.value = (health + amount).coerceAtMost(maxHealth)
     }
 
     fun dockHealth(amount: Int) {
