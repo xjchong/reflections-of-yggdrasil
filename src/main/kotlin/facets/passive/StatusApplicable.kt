@@ -67,6 +67,11 @@ object StatusApplicable : BaseFacet<GameContext>(StatusDetails::class) {
 
     private fun applyPoison(context: GameContext, source: AnyEntity, target: AnyEntity, effect: StatusEffect): Response {
         val targetStatusDetails = target.getAttribute(StatusDetails::class) ?: return Pass
+        val luck = target.getAttribute(CombatStats::class)?.luck ?: 0.0
+        if (Math.random() < luck / 2) {
+            context.world.observeSceneBy(target, "The $target avoids being poisoned by the $source by some luck...", Notice)
+            return Consumed
+        }
 
         targetStatusDetails.poison += effect.potency
         context.world.observeSceneBy(target, "The $target is poisoned by the $source!", Notice)
