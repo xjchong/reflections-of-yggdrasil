@@ -9,6 +9,7 @@ import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.Modifiers
 import org.hexworks.zircon.api.component.AttachedComponent
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Fragment
@@ -28,6 +29,16 @@ class FocusTarget : DisplayableAttribute {
             .build().apply {
                 updateComponent(this)
                 targetProperty.onChange {
+                    it.oldValue.ifPresent { oldTarget ->
+                        oldTarget.findAttribute(EntityTile::class).get().tile =
+                                oldTarget.tile.withRemovedModifiers(Modifiers.border())
+                    }
+
+                    it.newValue.ifPresent { newTarget ->
+                        newTarget.findAttribute(EntityTile::class).get().tile =
+                                newTarget.tile.withAddedModifiers(Modifiers.border())
+                    }
+
                     updateComponent(this)
                 }
             }
