@@ -1,10 +1,12 @@
 package facets.passive
 
+import GameColor
 import attributes.CombatStats
 import attributes.StatusDetails
 import commands.Guard
 import commands.Heal
 import entity.getAttribute
+import events.Critical
 import events.Special
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -20,9 +22,14 @@ object StatusInflictable : BaseFacet<GameContext>(StatusDetails::class) {
         var response: Response = Pass
 
         command.whenCommandIs(Guard::class) { (context, entity) ->
+            if (entity.getAttribute(CombatStats::class)?.dockStamina(5) == false) {
+                context.world.observeSceneBy(entity, "The $entity doesn't have enough stamina to guard!", Critical)
+                return@whenCommandIs false
+            }
+
             entity.findAttribute(StatusDetails::class).ifPresent { statusDetails ->
                 statusDetails.guard = 1
-                entity.getAttribute(CombatStats::class)?.dockStamina(5)
+                context.world.flash(entity, GameColor.GUARD_FLASH)
                 context.world.observeSceneBy(entity, "The $entity guards against attacks!")
                 response = Consumed
             }

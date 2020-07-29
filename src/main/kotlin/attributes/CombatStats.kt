@@ -124,8 +124,12 @@ class CombatStats(
         staminaProperty.value = (stamina + amount).coerceAtMost(maxStamina)
     }
 
-    fun dockStamina(amount: Int) {
+    fun dockStamina(amount: Int): Boolean {
+        if (stamina == 0) return false
+
         staminaProperty.value = (stamina - amount).coerceAtLeast(0)
+
+        return true
     }
 
     fun gainHealth(amount: Int) {

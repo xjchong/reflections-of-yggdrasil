@@ -58,7 +58,7 @@ object Attackable : BaseFacet<GameContext>() {
                     target.executeBlockingCommand(Destroy(context, target, cause = "the $attacker"))
                 } else {
                     if (guard > 0) {
-                        context.world.flash(target, GameColor.BLUE)
+                        context.world.flash(target, GameColor.GUARD_FLASH)
                     } else {
                         context.world.flash(target, GameColor.DAMAGE_FLASH)
                     }
