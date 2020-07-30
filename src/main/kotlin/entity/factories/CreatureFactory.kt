@@ -97,7 +97,7 @@ object CreatureFactory {
         attributes(
                 Alliance(Monster),
                 AttackStrategies(SporeAttack(listOf(
-                        StatusEffect(Poison, 10, 0.5)
+                        StatusEffect(Poison, 3, 0.5)
                 ))),
                 EntityActions(),
                 EntityPosition(),

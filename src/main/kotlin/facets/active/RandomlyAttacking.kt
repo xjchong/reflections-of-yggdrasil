@@ -4,7 +4,6 @@ import attributes.AttackStrategies
 import attributes.CombatStats
 import attributes.Equipments
 import commands.Attack
-import models.AttackDetails
 import commands.AttemptAttack
 import entity.AnyEntity
 import entity.executeBlockingCommand
@@ -12,6 +11,7 @@ import entity.getAttribute
 import entity.position
 import extensions.optional
 import game.GameContext
+import models.AttackDetails
 import models.AttackStrategy
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Pass
@@ -36,7 +36,8 @@ object RandomlyAttacking : BaseFacet<GameContext>() {
              val attackDetails = AttackDetails(
                      attackStrategy.rollDamage(attackerCombatStats),
                      attackStrategy.description,
-                     attackStrategy.type)
+                     attackStrategy.type,
+                     attackStrategy.statusEffects)
 
             attacker.executeBlockingCommand(Attack(context, attacker, target, attackDetails))
         }

@@ -28,7 +28,7 @@ object StatusUpdater : ForegroundBehavior() {
         entity.getAttribute(CombatStats::class)?.run {
             val damage = Poison.damage
 
-            context.world.observeSceneBy(entity, "The $entity is poisoned for $damage...", Flavor)
+            context.world.observeSceneBy(entity, "The $entity takes $damage poison damage...", Flavor)
             context.world.flash(entity, GameColor.POISON_FLASH)
             dockHealth(damage)
         }

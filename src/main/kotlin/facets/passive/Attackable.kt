@@ -5,6 +5,7 @@ import attributes.CombatStats
 import attributes.FocusTarget
 import attributes.KillTarget
 import attributes.StatusDetails
+import commands.ApplyStatus
 import commands.Attack
 import commands.Destroy
 import entity.defenseModifier
@@ -56,6 +57,10 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
                     } else {
                         context.world.flash(target, GameColor.DAMAGE_FLASH)
                     }
+                }
+
+                for (effect in details.effects) {
+                    target.executeBlockingCommand(ApplyStatus(context, attacker, target, effect))
                 }
             }
 
