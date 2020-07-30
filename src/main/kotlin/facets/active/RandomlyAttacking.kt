@@ -46,16 +46,15 @@ object RandomlyAttacking : BaseFacet<GameContext>() {
         val innateStrategies = getAttribute(AttackStrategies::class)?.strategies ?: arrayOf()
         val mainHand = getAttribute(Equipments::class)?.mainHand?.optional
         val equipmentStrategies = mainHand?.getAttribute(AttackStrategies::class)?.strategies ?: arrayOf()
-        val allStrategies = AttackStrategies(*innateStrategies, *equipmentStrategies)
 
-        return allStrategies
+        return AttackStrategies(*innateStrategies, *equipmentStrategies)
     }
 
     private fun AnyEntity.pickAttackStrategy(context: GameContext, target: AnyEntity,
                                              attackStrategies: AttackStrategies): AttackStrategy? {
         val attackerPos = position
         val targetPos = target.position
-        val currentRange = max((attackerPos.x - targetPos.x).absoluteValue, (attackerPos.y - targetPos.y))
+        val currentRange = max((attackerPos.x - targetPos.x).absoluteValue, (attackerPos.y - targetPos.y).absoluteValue)
 
         val viableStrategies = attackStrategies.strategies.filter {
             it.minRange <= currentRange && it.maxRange >= currentRange
