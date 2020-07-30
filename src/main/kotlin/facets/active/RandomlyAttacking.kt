@@ -4,7 +4,7 @@ import attributes.AttackStrategies
 import attributes.CombatStats
 import attributes.Equipments
 import commands.Attack
-import commands.AttackDetails
+import models.AttackDetails
 import commands.AttemptAttack
 import entity.AnyEntity
 import entity.executeBlockingCommand
