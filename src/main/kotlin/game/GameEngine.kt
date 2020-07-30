@@ -21,6 +21,7 @@ class GameEngine(
     private val lowPriorityEntities = mutableListOf<AnyEntity>()
     private val defaultPriorityEntities = mutableListOf<AnyEntity>()
     private val highPriorityEntities = mutableListOf<AnyEntity>()
+    private val noBehaviorEntities = mutableListOf<AnyEntity>() // This is dangerous because I may want to add behaviors dynamically to entities later.
     private var inputReceivingEntity: AnyEntity? = null
 
     @Synchronized
@@ -29,6 +30,11 @@ class GameEngine(
     }
 
     @Synchronized fun addEntityWithPriority(entity: AnyEntity, priority: Int = PRIORITY_DEFAULT) {
+        if (entity.hasBehaviors.not()) {
+            noBehaviorEntities.add(entity)
+            return
+        }
+
         when (priority) {
             PRIORITY_LOW -> lowPriorityEntities.add(entity)
             PRIORITY_DEFAULT -> defaultPriorityEntities.add(entity)
@@ -44,6 +50,7 @@ class GameEngine(
         if (inputReceivingEntity?.id == entity.id) {
             inputReceivingEntity = null
         }
+        if (noBehaviorEntities.remove(entity)) return
     }
 
     @Synchronized
