@@ -7,9 +7,7 @@ import facets.passive.Consumable
 import facets.passive.Droppable
 import facets.passive.Equippable
 import facets.passive.Takeable
-import models.Heal
-import models.Poison
-import models.StatusEffect
+import models.*
 import kotlin.random.Random
 
 
@@ -78,6 +76,7 @@ object ItemFactory {
 
     fun newDagger() = newGameEntityOfType(Dagger) {
         attributes(
+                AttackStrategies(TechnicalWeaponCut()),
                 EntityPosition(),
                 EntityTile(GameTile.DAGGER),
                 EquippableDetails(OneHanded,
@@ -90,6 +89,7 @@ object ItemFactory {
 
     fun newSword() = newGameEntityOfType(Sword) {
         attributes(
+                AttackStrategies(BalancedWeaponCut()),
                 EntityPosition(),
                 EntityTile(GameTile.SWORD),
                 EquippableDetails(OneHanded,
@@ -101,6 +101,7 @@ object ItemFactory {
 
     fun newStaff() = newGameEntityOfType(Staff) {
         attributes(
+                AttackStrategies(TechnicalWeaponBash()),
                 EntityPosition(),
                 EntityTile(GameTile.STAFF),
                 EquippableDetails(TwoHanded,
