@@ -31,6 +31,7 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
             val finalDamage = (incomingDamage * target.defenseModifier).toInt().coerceAtLeast(1)
 
             targetCombatStats.run {
+                attackerCombatStats.dockStamina(attackerStrategy.staminaCost)
                 dockHealth(finalDamage)
 
                 // Update focus targets of the combatants.

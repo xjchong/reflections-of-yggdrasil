@@ -2,17 +2,23 @@ package models
 
 import attributes.CombatStats
 
-interface AttackStrategy {
+abstract class AttackStrategy(val description: String, 
+                              val attackEfficiency: AttackEfficiency, 
+                              val type: AttackType, val staminaCost: Int = AVERAGE_STAM_COST) {
+    
+    companion object {
+        const val VERY_LOW_STAM_COST = 10
+        const val LOW_STAM_COST = 15
+        const val AVERAGE_STAM_COST = 20
+        const val HIGH_STAM_COST = 22
+        const val VERY_HIGH_STAM_COST = 25
+    }
 
-    val description: String
-    val powerEfficiency: Double
-    val techEfficiency: Double
-    val maxCritChance: Double
-    val maxCritBonus: Double
-    val staminaCost: Int
-    val statusEffects: List<StatusEffect>
-    val minRange: Int
-    val maxRange: Int
+    open val maxCritChance: Double = 0.5
+    open val maxCritBonus: Double = 1.5
+    open val statusEffects: List<StatusEffect> = listOf()
+    open val minRange: Int = 1
+    open val maxRange: Int = 1
 
     fun averageDamage(combatStats: CombatStats): Int {
         val critDamageChance = critChance(combatStats)
@@ -30,14 +36,12 @@ interface AttackStrategy {
             finalDamage = critDamage(combatStats)
         }
 
-        combatStats.dockStamina(staminaCost)
-
         return finalDamage.toInt().coerceAtLeast(1)
     }
 
     private fun rawDamage(combatStats: CombatStats): Double {
-        val powerDamage = combatStats.power * powerEfficiency * 100
-        val techDamage = combatStats.skill * techEfficiency * 100
+        val powerDamage = combatStats.power * attackEfficiency.powerEfficiency * 100
+        val techDamage = combatStats.skill * attackEfficiency.techEfficiency * 100
 
         return powerDamage + techDamage
     }
@@ -52,13 +56,90 @@ interface AttackStrategy {
 }
 
 
-data class HitAttack(override val powerEfficiency: Double = 1.0, override val techEfficiency: Double = 1.0) : AttackStrategy {
+open class AttackEfficiency(val powerEfficiency: Double, val techEfficiency: Double)
+object VeryPowerfulAttackEfficiency : AttackEfficiency(1.1, 0.3)
+object PowerfulAttackEfficiency : AttackEfficiency(0.7, 0.4)
+object BalancedAttackEfficiency : AttackEfficiency(0.5, 0.5)
+object TechnicalAttackEfficiency : AttackEfficiency(0.3, 0.6)
+object VeryTechnicalAttackEfficiency : AttackEfficiency(0.05, 0.8)
 
-    override val description: String = "hits"
-    override val maxCritChance: Double = 0.5
-    override val maxCritBonus: Double = 1.5
-    override val staminaCost: Int = 20
-    override val statusEffects: List<StatusEffect> = listOf()
-    override val maxRange: Int = 1
-    override val minRange: Int = 1
-}
+
+sealed class AttackType
+object Cut : AttackType()
+object Stab : AttackType()
+object Bash : AttackType()
+
+data class SporeAttack(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("spores", AttackEfficiency(0.1, 0.1), Bash, VERY_LOW_STAM_COST)
+
+data class WeakClawAttack(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("claws", AttackEfficiency(0.2, 0.3), Bash, AVERAGE_STAM_COST)
+
+data class ClawAttack(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("claws", AttackEfficiency(0.4, 0.6), Bash, AVERAGE_STAM_COST)
+
+data class StrongClawAttack(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("claws", AttackEfficiency(0.6, 0.8), Bash, HIGH_STAM_COST)
+
+data class WeakBiteAttack(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("bites", AttackEfficiency(0.3, 0.2), Bash, AVERAGE_STAM_COST)
+
+data class BiteAttack(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("bites", AttackEfficiency(0.6, 0.4), Bash, AVERAGE_STAM_COST)
+
+data class StrongBiteAttack(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("bites", AttackEfficiency(0.8, 0.6), Bash, HIGH_STAM_COST)
+
+data class WeakPunchAttack(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("punches", AttackEfficiency(0.2, 0.2), Bash, AVERAGE_STAM_COST)
+
+data class PunchAttack(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("punches", AttackEfficiency(0.5, 0.5), Bash, AVERAGE_STAM_COST)
+
+data class StrongPunchAttack(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("punches", AttackEfficiency(0.7, 0.7), Bash, HIGH_STAM_COST)
+
+data class VeryTechnicalWeaponCut(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("cuts", VeryTechnicalAttackEfficiency, Cut, VERY_LOW_STAM_COST)
+
+data class TechnicalWeaponCut(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("slices", TechnicalAttackEfficiency, Cut, LOW_STAM_COST)
+
+data class BalancedWeaponCut(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("slashes", BalancedAttackEfficiency, Cut, AVERAGE_STAM_COST)
+
+data class PowerfulWeaponCut(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("cleaves", PowerfulAttackEfficiency, Cut, HIGH_STAM_COST)
+
+data class VeryPowerfulWeaponCut(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("rends", VeryPowerfulAttackEfficiency, Cut, VERY_HIGH_STAM_COST)
+
+data class VeryTechnicalWeaponStab(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("needles", VeryTechnicalAttackEfficiency, Stab, VERY_LOW_STAM_COST)
+
+data class TechnicalWeaponStab(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("stabs", TechnicalAttackEfficiency, Stab, LOW_STAM_COST)
+
+data class BalancedWeaponStab(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("pierces", BalancedAttackEfficiency, Stab, AVERAGE_STAM_COST)
+
+data class PowerfulWeaponStab(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("gores", PowerfulAttackEfficiency, Stab, HIGH_STAM_COST)
+
+data class VeryPowerfulWeaponStab(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("impales", VeryPowerfulAttackEfficiency, Stab, VERY_HIGH_STAM_COST)
+
+data class VeryTechnicalWeaponBash(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("hits", VeryTechnicalAttackEfficiency, Bash, VERY_LOW_STAM_COST)
+
+data class TechnicalWeaponBash(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("strikes", TechnicalAttackEfficiency, Bash, LOW_STAM_COST)
+
+data class BalancedWeaponBash(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("bashes", BalancedAttackEfficiency, Bash, AVERAGE_STAM_COST)
+
+data class PowerfulWeaponBash(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("bludgeons", PowerfulAttackEfficiency, Bash, HIGH_STAM_COST)
+
+data class VeryPowerfulWeaponBash(override val statusEffects: List<StatusEffect> = listOf())
+    : AttackStrategy("crushes", VeryPowerfulAttackEfficiency, Bash, VERY_HIGH_STAM_COST)

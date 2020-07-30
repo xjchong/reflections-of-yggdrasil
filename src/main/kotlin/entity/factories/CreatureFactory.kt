@@ -13,7 +13,7 @@ import facets.passive.Attackable
 import facets.passive.Destructible
 import facets.passive.Movable
 import facets.passive.StatusApplicable
-import models.HitAttack
+import models.*
 import kotlin.random.Random
 
 
@@ -40,7 +40,7 @@ object CreatureFactory {
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(
                 Alliance(Adventurer),
-                AttackStrategies(HitAttack()),
+                AttackStrategies(WeakPunchAttack()),
                 EnemyList(),
                 EntityPosition(),
                 EntityTile(GameTile.PLAYER),
@@ -72,7 +72,7 @@ object CreatureFactory {
     fun newBat() = newGameEntityOfType(Bat) {
         attributes(
                 Alliance(Monster),
-                AttackStrategies(HitAttack()),
+                AttackStrategies(BiteAttack()),
                 EntityActions(Attack::class),
                 EntityPosition(),
                 EntityTile(GameTile.BAT),
@@ -95,7 +95,9 @@ object CreatureFactory {
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 0.6) { newFungus(it) }) = newGameEntityOfType(Fungus) {
         attributes(
                 Alliance(Monster),
-                AttackStrategies(HitAttack()),
+                AttackStrategies(SporeAttack(listOf(
+                        StatusEffect(Poison, 10, 0.5)
+                ))),
                 EntityActions(Attack::class),
                 EntityPosition(),
                 EntityTile(GameTile.FUNGUS),
@@ -116,7 +118,9 @@ object CreatureFactory {
     fun newRat(profliferation: Proliferation = Proliferation(0.02, 0.9) { newRat(it) }) = newGameEntityOfType(Rat) {
         attributes(
                 Alliance(Monster),
-                AttackStrategies(HitAttack()),
+                AttackStrategies(WeakBiteAttack(listOf(
+                        StatusEffect(Poison, 2, 0.3)
+                ))),
                 EntityActions(Attack::class),
                 EntityPosition(),
                 EntityTile(GameTile.RAT),
@@ -139,7 +143,7 @@ object CreatureFactory {
 
     fun newZombie() = newGameEntityOfType(Zombie) {
         attributes(
-                AttackStrategies(HitAttack()),
+                AttackStrategies(BiteAttack(), WeakClawAttack()),
                 EntityActions(Attack::class),
                 EntityPosition(),
                 EntityTile(GameTile.ZOMBIE),
