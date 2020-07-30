@@ -91,18 +91,18 @@ class Equipments(initialMainHand: AnyEntity? = null,
                 it.optional?.details?.type == Feet
             }
 
-    private val mainHand: Maybe<AnyEntity> by mainHandProp.asDelegate()
-    private val offHand: Maybe<AnyEntity> by offHandProp.asDelegate()
-    private val neck: Maybe<AnyEntity> by neckProp.asDelegate()
-    private val leftFinger: Maybe<AnyEntity> by mainFingerProp.asDelegate()
-    private val rightFinger: Maybe<AnyEntity> by offFingerProp.asDelegate()
-    private val wrists: Maybe<AnyEntity> by wristsProp.asDelegate()
-    private val head: Maybe<AnyEntity> by headProp.asDelegate()
-    private val hands: Maybe<AnyEntity> by handsProp.asDelegate()
-    private val chest: Maybe<AnyEntity> by chestProp.asDelegate()
-    private val waist: Maybe<AnyEntity> by waistProp.asDelegate()
-    private val legs: Maybe<AnyEntity> by legsProp.asDelegate()
-    private val feet: Maybe<AnyEntity> by feetProp.asDelegate()
+    val mainHand: Maybe<AnyEntity> by mainHandProp.asDelegate()
+    val offHand: Maybe<AnyEntity> by offHandProp.asDelegate()
+    val neck: Maybe<AnyEntity> by neckProp.asDelegate()
+    val leftFinger: Maybe<AnyEntity> by mainFingerProp.asDelegate()
+    val rightFinger: Maybe<AnyEntity> by offFingerProp.asDelegate()
+    val wrists: Maybe<AnyEntity> by wristsProp.asDelegate()
+    val head: Maybe<AnyEntity> by headProp.asDelegate()
+    val hands: Maybe<AnyEntity> by handsProp.asDelegate()
+    val chest: Maybe<AnyEntity> by chestProp.asDelegate()
+    val waist: Maybe<AnyEntity> by waistProp.asDelegate()
+    val legs: Maybe<AnyEntity> by legsProp.asDelegate()
+    val feet: Maybe<AnyEntity> by feetProp.asDelegate()
 
     val defenseRating: Int
         get() = {

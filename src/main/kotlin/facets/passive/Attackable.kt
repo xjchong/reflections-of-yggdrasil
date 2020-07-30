@@ -1,7 +1,10 @@
 package facets.passive
 
 import GameColor
-import attributes.*
+import attributes.CombatStats
+import attributes.FocusTarget
+import attributes.KillTarget
+import attributes.StatusDetails
 import commands.Attack
 import commands.Destroy
 import entity.defenseModifier
@@ -19,19 +22,13 @@ import org.hexworks.amethyst.api.entity.EntityType
 object Attackable : BaseFacet<GameContext>(CombatStats::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Attack::class) { (context, attacker, target) ->
+        return command.responseWhenCommandIs(Attack::class) { (context, attacker, target, details) ->
             if (attacker.isAlliedWith(target)) return@responseWhenCommandIs Pass
 
             val targetCombatStats = target.getAttribute(CombatStats::class) ?: return@responseWhenCommandIs Pass
-            val attackerCombatStats = attacker.getAttribute(CombatStats::class) ?: return@responseWhenCommandIs Pass
-            val attackerStrategies = attacker.getAttribute(AttackStrategies::class) ?: return@responseWhenCommandIs Pass
-            val attackerStrategy = attackerStrategies.strategies.random()
-
-            val incomingDamage = attackerStrategy.rollDamage(attackerCombatStats).toDouble()
-            val finalDamage = (incomingDamage * target.defenseModifier).toInt().coerceAtLeast(1)
+            val finalDamage = (details.damage * target.defenseModifier).toInt().coerceAtLeast(1)
 
             targetCombatStats.run {
-                attackerCombatStats.dockStamina(attackerStrategy.staminaCost)
                 dockHealth(finalDamage)
 
                 // Update focus targets of the combatants.
@@ -47,7 +44,7 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
                     }
                 }
 
-                context.world.observeSceneBy(attacker, "The $attacker ${attackerStrategy.description} the $target for ${finalDamage}!")
+                context.world.observeSceneBy(attacker, "The $attacker ${details.description} the $target for ${finalDamage}!")
                 context.world.flash(attacker, GameColor.ATTACK_FLASH)
 
                 if (health <= 0) {

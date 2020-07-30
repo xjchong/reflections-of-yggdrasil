@@ -1,9 +1,12 @@
 package behaviors
 
-import attributes.KillTarget
 import commands.AttemptAnyAction
+import commands.AttemptAttack
 import commands.Move
-import entity.*
+import entity.AnyEntity
+import entity.isAlliedWith
+import entity.position
+import entity.sensedPositions
 import extensions.neighbors
 import extensions.optional
 import game.GameContext
@@ -15,53 +18,45 @@ object DumbChaser : ForegroundBehavior() {
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val world = context.world
         var isChasing = false
+        var enemy: AnyEntity? = null
 
         for (sensedPos in entity.sensedPositions.minus(entity.position)) {
             world.fetchBlockAt(sensedPos).ifPresent { block ->
-                block.entities.firstOrNull { !entity.isAlliedWith(it) }?.let { target ->
-                    val targetPos = target.position
-                    val entityPos = entity.position
-                    val greedyPos = getGreedyPosition(entityPos, targetPos)
-                    var nextPosition = greedyPos
-
-                    if (greedyPos != target.position
-                            && world.fetchBlockAt(greedyPos).optional?.isObstructed == true) {
-
-                        // The greedy position is blocked, and not by the target, so try other potential positions.
-                        val potentialMoves = entityPos.neighbors().filter { potentialPos ->
-                            if (world.fetchBlockAt(potentialPos).optional?.isObstructed != false) {
-                                return@filter false
-                            }
-
-                            when { // Get a position in the general direction of the target.
-                                potentialPos == greedyPos -> false // This position was already determined to be blocked.
-                                targetPos > entityPos -> potentialPos > entityPos
-                                else -> potentialPos < entityPos
-                            }
-                        }
-
-                        potentialMoves.firstOrNull()?.let { nextPosition = it }
-                    }
-
-                    entity.getAttribute(KillTarget::class)?.target = target
-
-                    if (entity.executeBlockingCommand(AttemptAnyAction(context, entity, nextPosition)) == Pass) {
-                        entity.executeBlockingCommand(Move(context, entity, nextPosition))
-                    }
-
-                    isChasing = true
-                }
+                block.entities.firstOrNull { !entity.isAlliedWith(it) }?.let { enemy = it }
             }
-            if (isChasing) break
+
+            if (enemy != null) break
         }
 
-        return isChasing
+        return enemy?.let { handleEnemy(context, entity, it)
+        } ?: handleNoEnemy(context, entity)
+    }
+
+    private suspend fun handleEnemy(context: GameContext, attacker: AnyEntity, target: AnyEntity): Boolean {
+        attacker.executeCommand(AttemptAttack(context, attacker, target)).let {
+            if (it is Pass) {
+                moveToEnemy(context, attacker, target)
+            }
+        }
+
+        return true
+    }
+
+    private suspend fun moveToEnemy(context: GameContext, chaser: AnyEntity, target: AnyEntity): Boolean {
+        val nextPosition = getGreedyPosition(context, chaser.position, target.position)
+
+        if (chaser.executeCommand(AttemptAnyAction(context, chaser, nextPosition)) == Pass) {
+            chaser.executeCommand(Move(context, chaser, nextPosition))
+        }
+
+        return true
     }
 
     /**
      * Returns a neighboring position that is closest to the target position.
      */
-    private fun getGreedyPosition(chaserPos: Position3D, targetPos: Position3D): Position3D {
+    private fun getGreedyPosition(context: GameContext, chaserPos: Position3D, targetPos: Position3D): Position3D {
+        val world = context.world
         val (targetX, targetY) = targetPos
         val (chaserX, chaserY) = chaserPos
 
@@ -77,6 +72,31 @@ object DumbChaser : ForegroundBehavior() {
             else -> 0
         }
 
-        return chaserPos.withRelativeX(greedyX).withRelativeY(greedyY)
+        val greedyPos = chaserPos.withRelativeX(greedyX).withRelativeY(greedyY)
+        var nextPosition = greedyPos
+
+        if (greedyPos != targetPos && world.fetchBlockAt(greedyPos).optional?.isObstructed == true) {
+
+            // The greedy position is blocked, and not by the target, so try other potential positions.
+            val potentialMoves = chaserPos.neighbors().filter { potentialPos ->
+                if (world.fetchBlockAt(potentialPos).optional?.isObstructed != false) {
+                    return@filter false
+                }
+
+                when { // Get a position in the general direction of the target.
+                    potentialPos == greedyPos -> false // This position was already determined to be blocked.
+                    targetPos > chaserPos -> potentialPos > chaserPos
+                    else -> potentialPos < chaserPos
+                }
+            }
+
+            potentialMoves.firstOrNull()?.let { nextPosition = it }
+        }
+
+        return nextPosition
+    }
+
+    private suspend fun handleNoEnemy(context: GameContext, entity: AnyEntity): Boolean {
+        return false
     }
 }

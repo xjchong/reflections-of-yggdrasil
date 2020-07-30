@@ -3,12 +3,13 @@ package entity.factories
 import attributes.*
 import attributes.flag.Obstacle
 import behaviors.*
-import commands.Attack
+import commands.AttemptAttack
 import commands.Open
 import constants.GameTile
 import entity.*
 import facets.active.ActionAttempting
 import facets.active.InventoryInspecting
+import facets.active.RandomlyAttacking
 import facets.passive.Attackable
 import facets.passive.Destructible
 import facets.passive.Movable
@@ -44,7 +45,7 @@ object CreatureFactory {
                 EnemyList(),
                 EntityPosition(),
                 EntityTile(GameTile.PLAYER),
-                EntityActions(Open::class, Attack::class),
+                EntityActions(AttemptAttack::class, Open::class),
                 FocusTarget(),
                 Equipments(initialChest = ItemFactory.newJacket()),
                 Inventory(10),
@@ -62,7 +63,7 @@ object CreatureFactory {
                         luck = .34
                 ))
         behaviors(StatusUpdater, StaminaUser, VisionUser, FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
-        facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusApplicable)
+        facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusApplicable, RandomlyAttacking)
     }
 
     /**
@@ -73,7 +74,7 @@ object CreatureFactory {
         attributes(
                 Alliance(Monster),
                 AttackStrategies(BiteAttack()),
-                EntityActions(Attack::class),
+                EntityActions(AttemptAttack::class),
                 EntityPosition(),
                 EntityTile(GameTile.BAT),
                 Inventory(1).apply {
@@ -89,7 +90,7 @@ object CreatureFactory {
                         power = 0.3
                 ))
         behaviors(VisionUser, Wanderer)
-        facets(ActionAttempting, Attackable, Destructible, Movable)
+        facets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
     }
 
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 0.6) { newFungus(it) }) = newGameEntityOfType(Fungus) {
@@ -98,7 +99,7 @@ object CreatureFactory {
                 AttackStrategies(SporeAttack(listOf(
                         StatusEffect(Poison, 10, 0.5)
                 ))),
-                EntityActions(Attack::class),
+                EntityActions(),
                 EntityPosition(),
                 EntityTile(GameTile.FUNGUS),
                 Obstacle,
@@ -112,21 +113,21 @@ object CreatureFactory {
                 ),
                 Vision(2))
         behaviors(DumbChaser, Proliferator, VisionUser)
-        facets(ActionAttempting, Attackable, Destructible)
+        facets(ActionAttempting, Attackable, Destructible, RandomlyAttacking)
     }
 
-    fun newRat(profliferation: Proliferation = Proliferation(0.02, 0.9) { newRat(it) }) = newGameEntityOfType(Rat) {
+    fun newRat(proliferation: Proliferation = Proliferation(0.02, 0.9) { newRat(it) }) = newGameEntityOfType(Rat) {
         attributes(
                 Alliance(Monster),
                 AttackStrategies(WeakBiteAttack(listOf(
                         StatusEffect(Poison, 2, 0.3)
                 ))),
-                EntityActions(Attack::class),
+                EntityActions(),
                 EntityPosition(),
                 EntityTile(GameTile.RAT),
                 KillTarget(),
                 Obstacle,
-                profliferation,
+                proliferation,
                 Vision(3),
 
                 CombatStats.create(
@@ -137,14 +138,14 @@ object CreatureFactory {
                 )
         )
         behaviors(DumbChaser or Wanderer, Proliferator, VisionUser)
-        facets(ActionAttempting, Attackable, Destructible, Movable)
+        facets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
     }
 
 
     fun newZombie() = newGameEntityOfType(Zombie) {
         attributes(
                 AttackStrategies(BiteAttack(), WeakClawAttack()),
-                EntityActions(Attack::class),
+                EntityActions(),
                 EntityPosition(),
                 EntityTile(GameTile.ZOMBIE),
                 Inventory(5).apply {
@@ -161,6 +162,6 @@ object CreatureFactory {
                         power = 0.5
                 ))
         behaviors(DumbChaser or Wanderer, StaminaUser, VisionUser)
-        facets(ActionAttempting, Attackable, Destructible, Movable)
+        facets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
     }
 }
