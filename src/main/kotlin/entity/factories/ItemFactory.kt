@@ -86,10 +86,10 @@ object ItemFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTile.BAT_MEAT),
-                ConsumableDetails(effects = listOf(
+                ConsumableDetails(
                         StatusEffect(Heal, 20, 0.9),
                         StatusEffect(Poison, 5, 0.1)
-                )))
+                ))
         facets(Consumable, Droppable, Takeable)
     }
 
