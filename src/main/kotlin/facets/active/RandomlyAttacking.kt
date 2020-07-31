@@ -44,11 +44,15 @@ object RandomlyAttacking : BaseFacet<GameContext>() {
     }
 
     private fun AnyEntity.getAttackStrategies(context: GameContext): AttackStrategies {
-        val innateStrategies = getAttribute(AttackStrategies::class)?.strategies ?: arrayOf()
+        val innateStrategies: List<AttackStrategy> = getAttribute(AttackStrategies::class)?.strategies ?: listOf()
         val mainHand = getAttribute(Equipments::class)?.mainHand?.optional
-        val equipmentStrategies = mainHand?.getAttribute(AttackStrategies::class)?.strategies ?: arrayOf()
+        val mainHandStrategies: List<AttackStrategy> = mainHand?.getAttribute(AttackStrategies::class)?.strategies
+                ?: listOf()
 
-        return AttackStrategies(*innateStrategies, *equipmentStrategies)
+        return AttackStrategies().apply {
+            strategies.addAll(innateStrategies)
+            strategies.addAll(mainHandStrategies)
+        }
     }
 
     private fun AnyEntity.pickAttackStrategy(context: GameContext, target: AnyEntity,
