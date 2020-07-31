@@ -26,10 +26,10 @@ object CreatureFactory {
 
     fun newRandomCreature(): AnyEntity {
         return when (Random.nextInt(100)) {
-            in 0..19 -> newBat()
-            in 20..29 -> newRat()
+            in 0..29 -> newBat()
             in 30..59 -> newFungus()
-            in 60..99 -> newZombie()
+            in 60..89 -> newZombie()
+            in 90..99 -> newRat()
             else -> newZombie()
         }
     }
