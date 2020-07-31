@@ -4,6 +4,8 @@ import block.GameBlock
 import entity.*
 import events.*
 import org.hexworks.amethyst.api.entity.Entity
+import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
+import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.data.Position3D
@@ -22,12 +24,13 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     private val sceneObservers: MutableSet<AnyEntity> = mutableSetOf()
     private var lastVisiblePositions: MutableSet<Position3D> = mutableSetOf()
 
-    var turn: Long = 0 // Represents how much game time has passed.
-        private set
+    private val turnProperty: Property<Long> = createPropertyFrom(0) // Represents how much game time has passed.
+    val turn: Long by turnProperty.asDelegate()
 
     init {
         startingBlocks.forEach { (pos, block) ->
             setBlockAt(pos, block)
+            block.turnProperty.updateFrom(turnProperty)
             block.entities.forEach {entity ->
                 engine.addEntity(entity)
                 entity.position = pos
@@ -188,11 +191,6 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     private fun updateTurn() {
-        turn++
-        actualSize.fetchPositions().forEach { pos ->
-            fetchBlockAt(pos).ifPresent { block ->
-                block.setTurn(turn)
-            }
-        }
+        turnProperty.updateValue(turn + 1)
     }
 }

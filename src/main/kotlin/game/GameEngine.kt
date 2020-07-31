@@ -6,6 +6,7 @@ import entity.AnyEntity
 import kotlinx.coroutines.*
 import org.hexworks.amethyst.api.Engine
 import org.hexworks.amethyst.api.Pass
+import utilities.DebugConfig
 import kotlin.coroutines.CoroutineContext
 
 class GameEngine(
@@ -55,6 +56,7 @@ class GameEngine(
 
     @Synchronized
     override fun update(context: GameContext): Job {
+        val updateStartTime = System.currentTimeMillis()
         return launch {
             inputReceivingEntity?.run {
                 if (this.executeCommand(Input(context, this, context.event)) == Pass) {
@@ -73,6 +75,8 @@ class GameEngine(
             async {
                 inputReceivingEntity?.update(context)
             }.await()
+
+            if (DebugConfig.shouldLogUpdateSpeed) println("${System.currentTimeMillis() - updateStartTime}")
         }
     }
 

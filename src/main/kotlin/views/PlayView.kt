@@ -169,6 +169,11 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                 return@handleKeyboardEvents Processed
             }
 
+            if (keyEvent.code == KeyCode.KEY_Q) {
+                DebugConfig.apply { shouldLogUpdateSpeed = !shouldLogUpdateSpeed }
+                return@handleKeyboardEvents Processed
+            }
+
             // Debug command for revealing all tiles.
             if (keyEvent.code == KeyCode.BACKSLASH) {
                 DebugConfig.apply { shouldRevealWorld = !shouldRevealWorld }

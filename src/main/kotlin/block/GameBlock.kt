@@ -10,6 +10,8 @@ import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
+import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.data.BlockTileType
@@ -36,8 +38,11 @@ class GameBlock(private val position: Position3D,
     }
 
     private var memory: Memory? = null
-    private var turn: Long = 0
     private var flashColor: TileColor? = null
+    private var flashCountdown: Int = 0
+
+    val turnProperty: Property<Long> = createPropertyFrom(0)
+    private val turn: Long by turnProperty.asDelegate()
 
     override var tiles: PersistentMap<BlockTileType, Tile> = persistentMapOf()
         get() {
@@ -53,6 +58,8 @@ class GameBlock(private val position: Position3D,
                 isRevealed -> GameTile.EMPTY
                 else -> getMemoryTile()
             }
+
+            updateFlash()
 
             return persistentMapOf(
                 Pair(BlockTileType.TOP, topTile),
@@ -108,14 +115,25 @@ class GameBlock(private val position: Position3D,
         this.memory = memory
     }
 
-    fun setTurn(turn: Long) {
-        this.turn = turn
-    }
-
     fun flash(color: TileColor) {
         flashColor = color.withAlpha(200)
+        flashCountdown = 8
+        // Blocking to display a flash can make more sense visually at times, but the delay can be annoying to play with.
+//        return
         runBlocking {
-            delay(75)
+            delay(30)
+            flashColor = null
+        }
+    }
+
+    /**
+     * This an alternative method for displaying flash on tiles, which does not block.
+     */
+    private fun updateFlash() {
+        return
+        flashCountdown = (flashCountdown - 1).coerceAtLeast(0)
+
+        if (flashCountdown == 0) {
             flashColor = null
         }
     }
