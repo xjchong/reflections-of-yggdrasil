@@ -45,7 +45,7 @@ class VisualMemory(
 
         entities.forEach {
             if (canAccept(it)) {
-                snapshots.add(EntitySnapshot(it.type, it.tile))
+                snapshots.add(EntitySnapshot(it.type, it.tile.withNoModifiers()))
             }
         }
 
