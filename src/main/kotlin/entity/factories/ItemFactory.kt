@@ -130,11 +130,11 @@ object ItemFactory {
                 EntityPosition(),
                 EntityTile(GameTile.LIGHT_ARMOR),
                 EquippableDetails(Chest),
-                Resistances(mutableListOf(
+                Resistances(
                         Resistance(Cut, OCCASIONAL, MODERATE_RESISTANCE),
                         Resistance(Stab, OCCASIONAL, SMALL_RESISTANCE),
                         Resistance(Bash, OCCASIONAL, MODERATE_RESISTANCE)
-                )))
+                ))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -143,11 +143,11 @@ object ItemFactory {
                 EntityPosition(),
                 EntityTile(GameTile.MEDIUM_ARMOR),
                 EquippableDetails(Chest),
-                Resistances(mutableListOf(
+                Resistances(
                         Resistance(Cut, VERY_RELIABLE, LARGE_RESISTANCE),
                         Resistance(Stab, OCCASIONAL, MODERATE_RESISTANCE),
                         Resistance(Bash, RELIABLE, SMALL_RESISTANCE)
-                )))
+                ))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -156,11 +156,11 @@ object ItemFactory {
                 EntityPosition(),
                 EntityTile(GameTile.HEAVY_ARMOR),
                 EquippableDetails(Chest),
-                Resistances(mutableListOf(
+                Resistances(
                         Resistance(Cut, VERY_RELIABLE, LARGE_RESISTANCE),
                         Resistance(Stab, VERY_RELIABLE, LARGE_RESISTANCE),
                         Resistance(Bash, VERY_RELIABLE, MODERATE_RESISTANCE)
-                )))
+                ))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -169,11 +169,11 @@ object ItemFactory {
                 EntityTile(GameTile.JACKET),
                 EntityPosition(),
                 EquippableDetails(Chest),
-                Resistances(mutableListOf(
+                Resistances(
                         Resistance(Cut, VERY_UNRELIABLE, SMALL_RESISTANCE),
                         Resistance(Stab, VERY_UNRELIABLE, SMALL_RESISTANCE),
                         Resistance(Bash, VERY_UNRELIABLE, TINY_RESISTANCE)
-                )))
+                ))
         facets(Droppable, Takeable, Equippable)
     }
 }
