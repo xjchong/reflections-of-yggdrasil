@@ -14,6 +14,29 @@ import kotlin.random.Random
 object ItemFactory {
 
     /**
+     * RESISTANCE CONVENIENCE CONSTANTS
+     */
+
+    const val VERY_UNRELIABLE = 0.2
+    const val UNRELIABLE = 0.35
+    const val OCCASIONAL = 0.5
+    const val RELIABLE = 0.65
+    const val VERY_RELIABLE = 0.8
+    const val CONSTANT = 1.0
+
+    const val HUGE_WEAKNESS = 1.8
+    const val LARGE_WEAKNESS = 1.65
+    const val MODERATE_WEAKNESS = 1.5
+    const val SMALL_WEAKNESS = 1.35
+    const val TINY_WEAKNESS = 1.2
+    const val TINY_RESISTANCE = 0.8
+    const val SMALL_RESISTANCE = 0.65
+    const val MODERATE_RESISTANCE = 0.5
+    const val LARGE_RESISTANCE = 0.35
+    const val HUGE_RESISTANCE = 0.2
+    const val IMMUNITY = 0.0
+
+    /**
      * UTILITY
      */
 
@@ -79,10 +102,7 @@ object ItemFactory {
                 AttackStrategies(TechnicalWeaponCut()),
                 EntityPosition(),
                 EntityTile(GameTile.DAGGER),
-                EquippableDetails(OneHanded,
-                        reliability = 0.6,
-                        efficiency = 1.1
-                ))
+                EquippableDetails(OneHanded))
 
         facets(Droppable, Takeable, Equippable)
     }
@@ -92,10 +112,7 @@ object ItemFactory {
                 AttackStrategies(BalancedWeaponCut()),
                 EntityPosition(),
                 EntityTile(GameTile.SWORD),
-                EquippableDetails(OneHanded,
-                        reliability = 0.8,
-                        efficiency = 1.2
-                ))
+                EquippableDetails(OneHanded))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -104,10 +121,7 @@ object ItemFactory {
                 AttackStrategies(TechnicalWeaponBash()),
                 EntityPosition(),
                 EntityTile(GameTile.STAFF),
-                EquippableDetails(TwoHanded,
-                        reliability = 0.7,
-                        efficiency = 1.1
-                ))
+                EquippableDetails(TwoHanded))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -115,10 +129,12 @@ object ItemFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTile.LIGHT_ARMOR),
-                EquippableDetails(Chest,
-                        reliability = 0.8,
-                        efficiency = 0.2
-                ))
+                EquippableDetails(Chest),
+                Resistances(mutableListOf(
+                        Resistance(Cut, OCCASIONAL, MODERATE_RESISTANCE),
+                        Resistance(Stab, OCCASIONAL, SMALL_RESISTANCE),
+                        Resistance(Bash, OCCASIONAL, MODERATE_RESISTANCE)
+                )))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -126,10 +142,12 @@ object ItemFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTile.MEDIUM_ARMOR),
-                EquippableDetails(Chest,
-                        reliability = 0.8,
-                        efficiency = 0.3
-                ))
+                EquippableDetails(Chest),
+                Resistances(mutableListOf(
+                        Resistance(Cut, VERY_RELIABLE, LARGE_RESISTANCE),
+                        Resistance(Stab, OCCASIONAL, MODERATE_RESISTANCE),
+                        Resistance(Bash, RELIABLE, SMALL_RESISTANCE)
+                )))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -137,10 +155,12 @@ object ItemFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTile.HEAVY_ARMOR),
-                EquippableDetails(Chest,
-                        reliability = 0.8,
-                        efficiency = 0.35
-                ))
+                EquippableDetails(Chest),
+                Resistances(mutableListOf(
+                        Resistance(Cut, VERY_RELIABLE, LARGE_RESISTANCE),
+                        Resistance(Stab, VERY_RELIABLE, LARGE_RESISTANCE),
+                        Resistance(Bash, VERY_RELIABLE, MODERATE_RESISTANCE)
+                )))
         facets(Droppable, Takeable, Equippable)
     }
 
@@ -148,10 +168,12 @@ object ItemFactory {
         attributes(
                 EntityTile(GameTile.JACKET),
                 EntityPosition(),
-                EquippableDetails(Chest,
-                        reliability = 0.6,
-                        efficiency = 0.1
-                ))
+                EquippableDetails(Chest),
+                Resistances(mutableListOf(
+                        Resistance(Cut, VERY_UNRELIABLE, SMALL_RESISTANCE),
+                        Resistance(Stab, VERY_UNRELIABLE, SMALL_RESISTANCE),
+                        Resistance(Bash, VERY_UNRELIABLE, TINY_RESISTANCE)
+                )))
         facets(Droppable, Takeable, Equippable)
     }
 }

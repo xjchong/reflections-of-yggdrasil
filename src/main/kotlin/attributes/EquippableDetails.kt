@@ -3,22 +3,7 @@ package attributes
 import org.hexworks.amethyst.api.Attribute
 
 
-data class EquippableDetails(
-        val type: EquippableType,
-        val reliability: Double,
-        val efficiency: Double
-) : Attribute {
-
-    val attackModifier: Double
-        get() {
-            return if (Math.random() < reliability) efficiency else 1.0
-        }
-
-    val defenseModifier: Double
-        get() {
-            return if (Math.random() < reliability) efficiency else 0.0
-        }
-}
+data class EquippableDetails(val type: EquippableType) : Attribute
 
 
 sealed class EquippableType

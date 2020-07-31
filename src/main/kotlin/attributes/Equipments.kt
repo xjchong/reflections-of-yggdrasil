@@ -6,6 +6,7 @@ import entity.getAttribute
 import entity.tile
 import extensions.create
 import extensions.optional
+import models.Resistance
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
@@ -104,45 +105,6 @@ class Equipments(initialMainHand: AnyEntity? = null,
     val legs: Maybe<AnyEntity> by legsProp.asDelegate()
     val feet: Maybe<AnyEntity> by feetProp.asDelegate()
 
-    val defenseRating: Int
-        get() = {
-            val allProps = listOf(mainHandProp, offHandProp, neckProp, mainFingerProp, offFingerProp,
-                    wristsProp, headProp, handsProp, chestProp, waistProp, legsProp, feetProp)
-
-            0
-        }()
-
-    val attackModifier: Double
-        get() {
-            var mainHandModifier = 1.0
-            var offHandModifier = 0.0
-
-            mainHand.optional?.details?.run {
-                mainHandModifier = attackModifier
-            }
-
-            offHand.optional?.details?.run {
-                if (type == OneHanded) {
-                    offHandModifier = attackModifier
-                }
-            }
-
-            return mainHandModifier + offHandModifier
-        }
-
-    val defenseModifier: Double
-        get() {
-            var damageModifier = listOf(head, hands, chest, waist, legs, feet).fold(1.0) { modifier, armor ->
-                modifier * (1.0 - (armor.optional?.details?.defenseModifier ?: 0.0))
-            }
-
-            offHand.optional?.details?.run {
-                if (type == OneHanded) damageModifier *= defenseModifier
-            }
-
-            return damageModifier
-        }
-
     override fun toComponent(width: Int): Component {
         val textBoxBuilder = Components.textBox(width)
 
@@ -203,6 +165,22 @@ class Equipments(initialMainHand: AnyEntity? = null,
         }
 
         return unequipped
+    }
+
+    fun resistancesFor(type: Any): List<Resistance> {
+        val resistances: MutableList<Resistance> = mutableListOf()
+
+        listOf(mainHand, offHand,
+                head, chest, hands, waist, legs, feet,
+                neck, leftFinger, rightFinger, wrists).forEach { equipment ->
+            equipment.ifPresent {
+                val equipmentResistances: List<Resistance> = it.getAttribute(Resistances::class)?.resistances ?: listOf()
+
+                resistances.addAll(equipmentResistances.filter { it.type == type })
+            }
+        }
+
+        return resistances
     }
 
     private fun setupInfo(width: Int,

@@ -1,18 +1,17 @@
 package facets.passive
 
 import GameColor
-import attributes.CombatStats
-import attributes.FocusTarget
-import attributes.KillTarget
-import attributes.StatusDetails
+import attributes.*
 import commands.ApplyStatus
 import commands.Attack
 import commands.Destroy
-import entity.defenseModifier
+import entity.AnyEntity
 import entity.executeBlockingCommand
 import entity.getAttribute
 import entity.isAlliedWith
 import game.GameContext
+import models.AttackDetails
+import models.Resistance
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
@@ -27,7 +26,8 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
             if (attacker.isAlliedWith(target)) return@responseWhenCommandIs Pass
 
             val targetCombatStats = target.getAttribute(CombatStats::class) ?: return@responseWhenCommandIs Pass
-            val finalDamage = (details.damage * target.defenseModifier).toInt().coerceAtLeast(1)
+            val finalDetails = target.applyResistances(details)
+            val finalDamage = finalDetails.damage
 
             targetCombatStats.run {
                 dockHealth(finalDamage)
@@ -66,5 +66,23 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
 
             Consumed
         }
+    }
+
+    private fun AnyEntity.applyResistances(details: AttackDetails): AttackDetails {
+        val innateResistances: List<Resistance> = getAttribute(Resistances::class)?.resistances?.filter {
+            it.type == details.type
+        } ?: listOf()
+
+        val equipmentResistances: List<Resistance> = getAttribute(Equipments::class)?.resistancesFor(details.type)
+                ?: listOf()
+
+        var incomingDamage = details.damage.toDouble()
+
+        innateResistances.forEach { incomingDamage *= it.rollModifier }
+        equipmentResistances.forEach { incomingDamage *= it.rollModifier }
+
+        val finalDamage = incomingDamage.toInt().coerceAtLeast(1)
+
+        return AttackDetails(finalDamage, details.description, details.type, details.effects)
     }
 }
