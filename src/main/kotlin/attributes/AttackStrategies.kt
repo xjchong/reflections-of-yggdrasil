@@ -14,5 +14,3 @@ class AttackStrategies(vararg strategies: AttackStrategy) : Attribute {
     val maxRange
         get() = strategies.map { it.maxRange }.max() ?: 0
 }
-
-
