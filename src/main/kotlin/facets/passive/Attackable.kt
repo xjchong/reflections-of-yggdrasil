@@ -76,10 +76,12 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
         val equipmentResistances: List<Resistance> = getAttribute(Equipments::class)?.resistancesFor(details.type)
                 ?: listOf()
 
+        val guard = getAttribute(StatusDetails::class)?.guard ?: 0
         var incomingDamage = details.damage.toDouble()
 
         innateResistances.forEach { incomingDamage *= it.rollModifier }
         equipmentResistances.forEach { incomingDamage *= it.rollModifier }
+        if (guard > 0) incomingDamage *= 0.25
 
         val finalDamage = incomingDamage.toInt().coerceAtLeast(1)
 
