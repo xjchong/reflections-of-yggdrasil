@@ -51,6 +51,7 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
                 if (health <= 0) {
                     context.world.flash(target, GameColor.DESTROY_FLASH)
                     target.executeBlockingCommand(Destroy(context, target, cause = "the $attacker"))
+                    attacker.getAttribute(KillTarget::class)?.target = null
                 } else {
                     if (target.getAttribute(StatusDetails::class)?.guard ?: 0 > 0) {
                         context.world.flash(target, GameColor.GUARD_FLASH)

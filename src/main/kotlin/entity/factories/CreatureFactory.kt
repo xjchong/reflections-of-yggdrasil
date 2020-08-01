@@ -108,8 +108,8 @@ object CreatureFactory {
                 proliferation,
 
                 CombatStats.create(
-                        maxHealth = 50,
-                        maxStamina = 10,
+                        maxHealth = 20,
+                        maxStamina = 1,
                         stamina = 0,
                         power = 0.1
                 ),
