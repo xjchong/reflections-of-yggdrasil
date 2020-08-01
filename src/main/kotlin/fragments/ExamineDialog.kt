@@ -22,7 +22,7 @@ class ExamineDialog(screen: Screen, entity: AnyEntity) : Dialog(screen) {
     override val container: Container = Components.panel()
             .withDecorations(box(boxType = BoxType.TOP_BOTTOM_DOUBLE), shadow())
             .withSize(DIALOG_SIZE)
-            .withStyle(GameColor.FOREGROUND, GameColor.BACKGROUND)
+            .withStyle(GameColor.FOREGROUND, GameColor.FROSTED_BACKGROUND)
             .build().apply {
                 addComponent(Components.textBox(DIALOG_SIZE.width - 3)
                         .addInlineComponent(Components.label()
