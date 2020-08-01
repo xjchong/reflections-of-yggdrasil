@@ -112,12 +112,12 @@ class CombatStats(
                 addComponent(statsPanel)
             }
 
-    fun getHealthBarLabel(width: Int, color: TileColor): Label {
-        return getBarLabel(width, healthProperty, maxHealthProperty, color)
+    fun getHealthBarLabel(width: Int, color: TileColor, isCompact: Boolean = false): Label {
+        return getBarLabel(width, healthProperty, maxHealthProperty, color, isCompact)
     }
 
-    fun getStaminaBarLabel(width: Int, color: TileColor): Label {
-        return getBarLabel(width, staminaProperty, maxStaminaProperty, color)
+    fun getStaminaBarLabel(width: Int, color: TileColor, isCompact: Boolean = false): Label {
+        return getBarLabel(width, staminaProperty, maxStaminaProperty, color, isCompact)
     }
 
     fun gainStamina(amount: Int) {
@@ -140,8 +140,10 @@ class CombatStats(
         healthProperty.value = (health - amount).coerceAtLeast(0)
     }
 
-    private fun getBarLabel(width: Int, valueProp: Property<Int>, maxValueProp: Property<Int>, color: TileColor): Label {
-        val barLabel = setupBar(width, valueProp, maxValueProp, color)
+    private fun getBarLabel(width: Int, valueProp: Property<Int>, maxValueProp: Property<Int>, color: TileColor,
+                            isCompact: Boolean = false): Label {
+        val barLabel = setupBar(width, valueProp, maxValueProp, color, isCompact)
+
         valueProp.onChange {
             updateBar(barLabel, valueProp.value, maxValueProp.value)
         }
@@ -149,7 +151,8 @@ class CombatStats(
         return barLabel
     }
 
-    private fun setupBar(width: Int, valueProp: Property<Int>, maxValueProp: Property<Int>, color: TileColor): Label {
+    private fun setupBar(width: Int, valueProp: Property<Int>, maxValueProp: Property<Int>, color: TileColor,
+                         isCompact: Boolean = false): Label {
         val barLabelSize = Size.create(width - 1, 1)
         val barLabel = Components.label()
                 .withSize(barLabelSize)
@@ -158,7 +161,11 @@ class CombatStats(
                 .build()
 
         barLabel.handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
-            barLabel.textProperty.value = " ${valueProp.value}/${maxValueProp.value}"
+            barLabel.textProperty.value = if (isCompact) {
+                " ${valueProp.value}"
+            } else {
+                " ${valueProp.value}/${maxValueProp.value}"
+            }
             Processed
         }
 

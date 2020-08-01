@@ -86,10 +86,10 @@ class EnemyListRow(width: Int, entity: AnyEntity) : Fragment {
                         .withSize(NAME_LENGTH, 1)
                         .withText(entity.name.capitalize()))
                 addComponent(leftCapLabel.createCopy().build())
-                addComponent(combatStats.getHealthBarLabel(barLength, GameColor.DARK_RED))
+                addComponent(combatStats.getHealthBarLabel(barLength, GameColor.DARK_RED, isCompact = true))
                 addComponent(rightCapLabel.createCopy().build())
                 addComponent(leftCapLabel.createCopy().build())
-                addComponent(combatStats.getStaminaBarLabel(barLength, GameColor.LIGHT_YELLOW))
+                addComponent(combatStats.getStaminaBarLabel(barLength, GameColor.LIGHT_YELLOW, isCompact = true))
                 addComponent(rightCapLabel.createCopy().build())
 
                 handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
