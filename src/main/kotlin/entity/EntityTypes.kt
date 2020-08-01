@@ -2,6 +2,10 @@ package entity
 
 import org.hexworks.amethyst.api.base.BaseEntityType
 
+object NoType : BaseEntityType(
+        name = "no type"
+)
+
 /**
  * CREATURE
  */
@@ -74,17 +78,17 @@ object Staff : BaseEntityType(
         description = "A wooden staff made of birch. It has seen some use"
 )
 
-object LightArmor : BaseEntityType(
+object LeatherTunic : BaseEntityType(
         name = "leather tunic",
         description = "A tunic made of rugged leather. It is very comfortable."
 )
 
-object MediumArmor : BaseEntityType(
+object Chainmail : BaseEntityType(
         name = "chainmail",
         description = "A sturdy chainmail armor made of interlocking iron chains."
 )
 
-object HeavyArmor : BaseEntityType(
+object Platemail : BaseEntityType(
         name = "platemail",
         description = "A heavy and shiny platemail armor made of bronze."
 )

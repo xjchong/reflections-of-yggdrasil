@@ -4,6 +4,7 @@ import constants.GameConfig
 import entity.AnyEntity
 import entity.GameEntity
 import entity.Player
+import entity.factories.ArmorFactory
 import entity.factories.CreatureFactory
 import entity.factories.ItemFactory
 import events.WaitInputEvent
@@ -28,7 +29,7 @@ class GameBuilder(val worldSize: Size3D) {
         prepareWorld()
 
         addEntities(GameConfig.CREATURES_PER_LEVEL) { CreatureFactory.newRandomCreature() }
-        addEntities(GameConfig.EQUIPMENT_PER_LEVEL) { ItemFactory.newRandomEquipment() }
+        addEntities(GameConfig.EQUIPMENT_PER_LEVEL) { ArmorFactory.newRandomArmor() }
         addEntities(GameConfig.TREASURE_PER_LEVEL) { ItemFactory.newRandomTreasure() }
 
         val game = Game.create(
