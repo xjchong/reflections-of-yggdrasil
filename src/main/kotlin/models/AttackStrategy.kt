@@ -41,7 +41,7 @@ abstract class AttackStrategy(val description: String,
 
     private fun rawDamage(combatStats: CombatStats): Double {
         val powerDamage = combatStats.power * attackEfficiency.powerEfficiency * 100
-        val techDamage = combatStats.skill * attackEfficiency.techEfficiency * 100
+        val techDamage = combatStats.tech * attackEfficiency.techEfficiency * 100
 
         return powerDamage + techDamage
     }
@@ -51,7 +51,7 @@ abstract class AttackStrategy(val description: String,
     }
 
     private fun critChance(combatStats: CombatStats): Double {
-        return maxCritChance * combatStats.skill
+        return maxCritChance * combatStats.tech
     }
 }
 

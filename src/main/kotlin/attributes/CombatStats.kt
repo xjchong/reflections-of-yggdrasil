@@ -23,7 +23,7 @@ class CombatStats(
         val maxStaminaProperty: Property<Int>,
         val staminaProperty: Property<Int> = createPropertyFrom(maxStaminaProperty.value),
         private val powerProperty: Property<Double>,
-        private val skillProperty: Property<Double>,
+        private val techProperty: Property<Double>,
         private val luckProperty: Property<Double>
 ) : DisplayableAttribute {
 
@@ -32,27 +32,27 @@ class CombatStats(
     val maxStamina: Int by maxStaminaProperty.asDelegate()
     val stamina: Int by staminaProperty.asDelegate()
     val power: Double by powerProperty.asDelegate()
-    val skill: Double by skillProperty.asDelegate()
+    val tech: Double by techProperty.asDelegate()
     val luck: Double by luckProperty.asDelegate()
 
     val attackRating: Double
         get() {
             val staminaBonus = if (stamina > 0) 1.0 else 0.5
-            return (power + skill) * 100 * staminaBonus
+            return (power + tech) * 100 * staminaBonus
         }
 
     companion object {
 
         fun create(maxHealth: Int, health: Int = maxHealth,
                    maxStamina: Int, stamina: Int = maxStamina,
-                   power: Double = 0.0, skill: Double = 0.0, luck: Double = 0.0) =
+                   power: Double = 0.0, tech: Double = 0.0, luck: Double = 0.0) =
                 CombatStats(
                         maxHealthProperty = createPropertyFrom(maxHealth),
                         healthProperty = createPropertyFrom(health),
                         maxStaminaProperty = createPropertyFrom(maxStamina),
                         staminaProperty = createPropertyFrom(stamina),
                         powerProperty = createPropertyFrom(power),
-                        skillProperty = createPropertyFrom(skill),
+                        techProperty = createPropertyFrom(tech),
                         luckProperty = createPropertyFrom(luck)
                 )
     }
@@ -94,14 +94,14 @@ class CombatStats(
                                     .withStyle(GameColor.GREY)
                                     .withSize(width - 3, 1)
                                     .withText("POW ${power.toString().padStart(2)} ${Symbols.SINGLE_LINE_VERTICAL} " +
-                                            "TEC ${skill.toString().padStart(2)} ${Symbols.SINGLE_LINE_VERTICAL} " +
+                                            "TEC ${tech.toString().padStart(2)} ${Symbols.SINGLE_LINE_VERTICAL} " +
                                             "LUC ${luck.toString().padStart(2)}")
                                     .build()
 
                             statsLabel.textProperty.updateFrom(createPropertyFrom("POW ")
                                     .bindPlusWith(createPropertyFrom((power * 100).toInt().toString().padStart(2)))
                                     .bindPlusWith(createPropertyFrom(" ${Symbols.SINGLE_LINE_VERTICAL} TEC "))
-                                    .bindPlusWith(createPropertyFrom((skill * 100).toInt().toString().padStart(2)))
+                                    .bindPlusWith(createPropertyFrom((tech * 100).toInt().toString().padStart(2)))
                                     .bindPlusWith(createPropertyFrom(" ${Symbols.SINGLE_LINE_VERTICAL} LUC "))
                                     .bindPlusWith(createPropertyFrom((luck * 100).toInt().toString().padStart(2))))
 

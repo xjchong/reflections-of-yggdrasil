@@ -59,7 +59,7 @@ object CreatureFactory {
                         maxHealth = 100,
                         maxStamina = 100,
                         power = .33,
-                        skill = .33,
+                        tech = .33,
                         luck = .34
                 ))
         behaviors(StatusUpdater, StaminaUser, VisionUser, FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
@@ -87,7 +87,8 @@ object CreatureFactory {
                 CombatStats.create(
                         maxHealth = 60,
                         maxStamina = 50,
-                        power = 0.3
+                        power = 0.1,
+                        tech = 0.2
                 ))
         behaviors(VisionUser, Wanderer)
         facets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
@@ -133,8 +134,8 @@ object CreatureFactory {
                 CombatStats.create(
                         maxHealth = 60,
                         maxStamina = 10,
-                        power = 0.2,
-                        skill = 0.2
+                        power = 0.1,
+                        tech = 0.1
                 )
         )
         behaviors(DumbChaser or Wanderer, Proliferator, VisionUser)
@@ -144,7 +145,7 @@ object CreatureFactory {
 
     fun newZombie() = newGameEntityOfType(Zombie) {
         attributes(
-                AttackStrategies(BiteAttack(), WeakClawAttack()),
+                AttackStrategies(WeakBiteAttack(), WeakClawAttack()),
                 EntityActions(),
                 EntityPosition(),
                 EntityTile(GameTile.ZOMBIE),
@@ -159,7 +160,7 @@ object CreatureFactory {
                 CombatStats.create(
                         maxHealth = 80,
                         maxStamina = 50,
-                        power = 0.5
+                        power = 0.4
                 ))
         behaviors(DumbChaser or Wanderer, StaminaUser, VisionUser)
         facets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
