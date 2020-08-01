@@ -8,6 +8,7 @@ import builders.GameBuilder
 import builders.InventoryModalBuilder
 import constants.GameConfig
 import events.*
+import extensions.create
 import extensions.withStyle
 import fragments.DebugColorDialog
 import fragments.ExamineDialog
@@ -18,7 +19,9 @@ import org.hexworks.cobalt.events.api.KeepSubscription
 import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.builder.component.ParagraphBuilder
+import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.component.ComponentAlignment
+import org.hexworks.zircon.api.component.ComponentStyleSet
 import org.hexworks.zircon.api.data.Block
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
@@ -26,10 +29,7 @@ import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.game.base.BaseGameArea
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.grid.TileGrid
-import org.hexworks.zircon.api.uievent.KeyCode
-import org.hexworks.zircon.api.uievent.KeyboardEventType
-import org.hexworks.zircon.api.uievent.Pass
-import org.hexworks.zircon.api.uievent.Processed
+import org.hexworks.zircon.api.uievent.*
 import org.hexworks.zircon.api.view.base.BaseView
 import org.hexworks.zircon.internal.Zircon
 import utilities.DebugConfig
@@ -80,6 +80,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
         val logArea = Components.logArea()
                 .withSize(GameConfig.LOG_WIDTH, GameConfig.LOG_HEIGHT)
+                .withStyle(GameColor.FOREGROUND, GameColor.BACKGROUND)
                 .withDecorations(box(boxType = BoxType.SINGLE, title = "Log"))
                 .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
                 .build()
@@ -97,7 +98,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
             }
 
             val paragraphBuilder = ParagraphBuilder.newBuilder()
-                    .withStyle(logColor)
+                    .withStyle(logColor, TileColor.transparent())
                     .withText(event.message)
 
             logArea.addParagraph(paragraphBuilder, withNewLine = false)
@@ -110,6 +111,19 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
             }
 
             KeepSubscription
+        }
+
+        logArea.handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
+            logArea.componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, GameColor.SECONDARY_BACKGROUND)
+            Processed
+        }
+        logArea.handleMouseEvents(MouseEventType.MOUSE_EXITED) { _, _ ->
+            logArea.componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, GameColor.BACKGROUND)
+            Processed
+        }
+        logArea.handleMouseEvents(MouseEventType.MOUSE_RELEASED) { _, _ ->
+            screen.openModal(LogHistoryDialog(screen, logHistory))
+            StopPropagation
         }
     }
 
