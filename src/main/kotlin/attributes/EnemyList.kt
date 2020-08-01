@@ -3,13 +3,17 @@ package attributes
 import GameColor
 import entity.AnyEntity
 import entity.tile
+import events.ExamineEvent
+import extensions.create
 import extensions.withStyle
 import org.hexworks.zircon.api.Components
-import org.hexworks.zircon.api.component.AttachedComponent
-import org.hexworks.zircon.api.component.Component
-import org.hexworks.zircon.api.component.Fragment
-import org.hexworks.zircon.api.component.VBox
+import org.hexworks.zircon.api.color.TileColor
+import org.hexworks.zircon.api.component.*
 import org.hexworks.zircon.api.graphics.Symbols
+import org.hexworks.zircon.api.uievent.MouseEventType
+import org.hexworks.zircon.api.uievent.Processed
+import org.hexworks.zircon.api.uievent.StopPropagation
+import org.hexworks.zircon.internal.Zircon
 
 
 class EnemyList : DisplayableAttribute {
@@ -76,7 +80,7 @@ class EnemyListRow(width: Int, entity: AnyEntity) : Fragment {
 
                 addComponent(Components.label()
                         .withSize(2, 1)
-                        .withStyle(entity.tile.foregroundColor)
+                        .withStyle(entity.tile.foregroundColor, TileColor.transparent())
                         .withText(entity.tile.character.toString()))
                 addComponent(Components.header()
                         .withSize(NAME_LENGTH, 1)
@@ -87,5 +91,18 @@ class EnemyListRow(width: Int, entity: AnyEntity) : Fragment {
                 addComponent(leftCapLabel.createCopy().build())
                 addComponent(combatStats.getStaminaBarLabel(barLength, GameColor.LIGHT_YELLOW))
                 addComponent(rightCapLabel.createCopy().build())
+
+                handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
+                    componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, GameColor.SECONDARY_BACKGROUND)
+                    Processed
+                }
+                handleMouseEvents(MouseEventType.MOUSE_EXITED) { _, _ ->
+                    componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, GameColor.BACKGROUND)
+                    Processed
+                }
+                handleMouseEvents(MouseEventType.MOUSE_RELEASED) { _, _ ->
+                    Zircon.eventBus.publish(ExamineEvent(entity))
+                    StopPropagation
+                }
             }
 }
