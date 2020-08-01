@@ -1,9 +1,7 @@
 package attributes
 
 import GameColor
-import entity.AnyEntity
-import entity.getAttribute
-import entity.tile
+import entity.*
 import events.ExamineEvent
 import extensions.create
 import extensions.withStyle
@@ -34,13 +32,11 @@ class FocusTarget : DisplayableAttribute {
                 updateComponent(this)
                 targetProperty.onChange {
                     it.oldValue.ifPresent { oldTarget ->
-                        oldTarget.findAttribute(EntityTile::class).get().tile =
-                                oldTarget.tile.withRemovedModifiers(Modifiers.border())
+                        oldTarget.removeTileModifiers(Modifiers.border())
                     }
 
                     it.newValue.ifPresent { newTarget ->
-                        newTarget.findAttribute(EntityTile::class).get().tile =
-                                newTarget.tile.withAddedModifiers(Modifiers.border())
+                        newTarget.addTileModifiers(Modifiers.border())
                     }
 
                     updateComponent(this)
