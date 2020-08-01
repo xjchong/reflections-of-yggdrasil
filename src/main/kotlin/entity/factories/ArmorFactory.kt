@@ -1,6 +1,7 @@
 package entity.factories
 
 import attributes.*
+import builders.AnyEntityBuilder
 import constants.GameTile
 import entity.*
 import facets.passive.Droppable

@@ -1,6 +1,7 @@
 package entity.factories
 
 import attributes.*
+import builders.newGameEntityOfType
 import constants.GameTile
 import entity.*
 import facets.passive.Consumable

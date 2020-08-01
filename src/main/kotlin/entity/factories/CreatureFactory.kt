@@ -3,6 +3,7 @@ package entity.factories
 import attributes.*
 import attributes.flag.Obstacle
 import behaviors.*
+import builders.newGameEntityOfType
 import commands.AttemptAttack
 import commands.Open
 import constants.GameTile

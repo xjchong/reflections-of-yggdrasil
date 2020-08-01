@@ -1,4 +1,4 @@
-package entity.factories
+package builders
 
 import entity.AnyEntity
 import entity.NoType

@@ -7,6 +7,7 @@ import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import attributes.flag.Opened
 import behaviors.Barrier
+import builders.newGameEntityOfType
 import constants.GameTile
 import entity.Door
 import entity.Wall
