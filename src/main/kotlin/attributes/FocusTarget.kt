@@ -4,17 +4,21 @@ import GameColor
 import entity.AnyEntity
 import entity.getAttribute
 import entity.tile
+import events.ExamineEvent
+import extensions.create
 import extensions.withStyle
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Modifiers
-import org.hexworks.zircon.api.component.AttachedComponent
-import org.hexworks.zircon.api.component.Component
-import org.hexworks.zircon.api.component.Fragment
-import org.hexworks.zircon.api.component.HBox
+import org.hexworks.zircon.api.color.TileColor
+import org.hexworks.zircon.api.component.*
 import org.hexworks.zircon.api.graphics.Symbols
+import org.hexworks.zircon.api.uievent.MouseEventType
+import org.hexworks.zircon.api.uievent.Processed
+import org.hexworks.zircon.api.uievent.UIEventResponse
+import org.hexworks.zircon.internal.Zircon
 
 class FocusTarget : DisplayableAttribute {
 
@@ -73,7 +77,7 @@ class FocusTargetRow(width: Int, entity: AnyEntity) : Fragment {
             .build().apply {
                 addComponent(Components.label()
                         .withSize(2, 1)
-                        .withStyle(entity.tile.foregroundColor)
+                        .withStyle(entity.tile.foregroundColor, TileColor.transparent())
                         .withText(entity.tile.character.toString()))
                 addComponent(Components.header()
                         .withSize(NAME_LENGTH, 1)
@@ -98,6 +102,20 @@ class FocusTargetRow(width: Int, entity: AnyEntity) : Fragment {
                     addComponent(leftCapLabel.createCopy().build())
                     addComponent(combatStats.getStaminaBarLabel(barLength, GameColor.LIGHT_YELLOW))
                     addComponent(rightCapLabel.createCopy().build())
+                }
+
+                // Highlight the focus bar area, and show the examine dialog on mouse release.
+                handleMouseEvents(MouseEventType.MOUSE_RELEASED) { _, _ ->
+                    Zircon.eventBus.publish(ExamineEvent(entity))
+                    UIEventResponse.stopPropagation()
+                }
+                handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
+                    componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, GameColor.SECONDARY_BACKGROUND)
+                    Processed
+                }
+                handleMouseEvents(MouseEventType.MOUSE_EXITED) { _, _ ->
+                    componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, GameColor.BACKGROUND)
+                    Processed
                 }
             }
 }

@@ -154,7 +154,7 @@ class CombatStats(
         val barLabel = Components.label()
                 .withSize(barLabelSize)
                 .withText(getBarString(barLabelSize.width, valueProp.value, maxValueProp.value))
-                .withStyle(color)
+                .withStyle(color, TileColor.transparent())
                 .build()
 
         barLabel.handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
