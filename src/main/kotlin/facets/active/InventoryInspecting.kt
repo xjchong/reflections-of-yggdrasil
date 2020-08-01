@@ -4,10 +4,7 @@ import attributes.Inventory
 import commands.InspectInventory
 import entity.getAttribute
 import entity.position
-import events.ConsumeInputEvent
-import events.DropInputEvent
-import events.EquipInputEvent
-import events.InventoryMenuEvent
+import events.*
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -26,6 +23,9 @@ object InventoryInspecting : BaseFacet<GameContext>() {
             entity.getAttribute(Inventory::class)?.let { inventory ->
                 InventoryMenuEvent.publish(
                         inventory,
+                        onExamine = {
+                            ExamineEvent.publish(it)
+                        },
                         onDrop = { content ->
                             world.update(DropInputEvent(content))
                         },

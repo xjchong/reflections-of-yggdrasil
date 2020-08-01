@@ -24,6 +24,10 @@ class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
             .withText("Equip")
             .build()
 
+    val examineButton = Components.button()
+            .withText("Look")
+            .build()
+
     override val root: Component = Components.hbox()
             .withSpacing(1)
             .withSize(width, 1)
@@ -35,6 +39,7 @@ class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
                 addComponent(Components.label()
                         .withSize(InventoryFragment.NAME_COLUMN_WIDTH, 1)
                         .withText(entity.name.capitalize()))
+                addComponent(examineButton)
                 addComponent(dropButton)
                 entity.whenFacetIs<Consumable> { addComponent(consumeButton) }
                 entity.whenFacetIs<Equippable> { addComponent(equipButton) }

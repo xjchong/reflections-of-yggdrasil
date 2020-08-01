@@ -26,6 +26,7 @@ class InventoryModalBuilder(private val screen: Screen) {
     }
 
     fun build(inventory: Inventory,
+              onExamine: (AnyEntity) -> Unit,
               onDrop: (AnyEntity) -> Unit,
               onConsume: (AnyEntity) -> Unit,
               onEquip: (AnyEntity) -> Unit
@@ -39,7 +40,7 @@ class InventoryModalBuilder(private val screen: Screen) {
         val inventoryFragment = InventoryFragment(
                 inventory,
                 DIALOG_SIZE.width - 3,
-                onDrop, onConsume, onEquip)
+                onExamine, onDrop, onConsume, onEquip)
 
         val closeButton = Components.button()
                 .withText("Close")

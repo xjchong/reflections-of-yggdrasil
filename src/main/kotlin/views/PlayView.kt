@@ -10,6 +10,7 @@ import constants.GameConfig
 import events.*
 import extensions.withStyle
 import fragments.DebugColorDialog
+import fragments.ExamineDialog
 import fragments.LogHistoryDialog
 import fragments.PlayerInfoFragment
 import game.Game
@@ -55,6 +56,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
         setupInputHandlers()
 
         subscribeToInventoryMenuEvent()
+        subscribeToExamineEvent()
 
         screen.theme = GameConfig.THEME
     }
@@ -228,12 +230,20 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
     private fun subscribeToInventoryMenuEvent() {
         Zircon.eventBus.subscribeTo<InventoryMenuEvent>(key = InventoryMenuEvent.KEY) { event ->
-            val (inventory, onDrop, onConsume, onEquip) = event
+            val (inventory, onExamine, onDrop, onConsume, onEquip) = event
             val inventoryModal = InventoryModalBuilder(screen).build(
-                   inventory, onDrop, onConsume, onEquip
+                   inventory, onExamine, onDrop, onConsume, onEquip
             )
 
             screen.openModal(inventoryModal)
+
+            KeepSubscription
+        }
+    }
+
+    private fun subscribeToExamineEvent() {
+        Zircon.eventBus.subscribeTo<ExamineEvent>(key = ExamineEvent.KEY) { event ->
+            screen.openModal(ExamineDialog(screen, event.entity))
 
             KeepSubscription
         }
