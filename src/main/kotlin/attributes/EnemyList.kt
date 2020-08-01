@@ -2,11 +2,14 @@ package attributes
 
 import GameColor
 import entity.AnyEntity
+import entity.addTileModifiers
+import entity.removeTileModifiers
 import entity.tile
 import events.ExamineEvent
 import extensions.create
 import extensions.withStyle
 import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.Modifiers
 import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.component.*
 import org.hexworks.zircon.api.graphics.Symbols
@@ -25,7 +28,6 @@ class EnemyList : DisplayableAttribute {
             .withSpacing(1)
             .withSize(width - 3, height = 19)
             .build().apply {
-
                 vBox = this
             }
 
@@ -34,6 +36,7 @@ class EnemyList : DisplayableAttribute {
             enemyEntries.filter {
                 !newEnemies.contains(it.entity)
             }.forEach { oldEnemyEntry ->
+                oldEnemyEntry.entity.removeTileModifiers(Modifiers.blink())
                 oldEnemyEntry.attachedRow.detach()
                 enemyEntries.remove(oldEnemyEntry)
             }
@@ -94,10 +97,12 @@ class EnemyListRow(width: Int, entity: AnyEntity) : Fragment {
 
                 handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
                     componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, GameColor.SECONDARY_BACKGROUND)
+                    entity.addTileModifiers(Modifiers.blink())
                     Processed
                 }
                 handleMouseEvents(MouseEventType.MOUSE_EXITED) { _, _ ->
                     componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, GameColor.BACKGROUND)
+                    entity.removeTileModifiers(Modifiers.blink())
                     Processed
                 }
                 handleMouseEvents(MouseEventType.MOUSE_RELEASED) { _, _ ->

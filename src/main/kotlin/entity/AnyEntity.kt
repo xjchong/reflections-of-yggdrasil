@@ -16,6 +16,7 @@ import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Position3D
+import org.hexworks.zircon.api.modifier.Modifier
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
@@ -64,6 +65,18 @@ fun AnyEntity.isAlliedWith(entity: AnyEntity): Boolean {
     val otherFaction = entity.getAttribute(Alliance::class)?.faction
 
     return (thisFaction == otherFaction && thisFaction != null)
+}
+
+fun AnyEntity.addTileModifiers(vararg modifiers: Modifier) {
+    getAttribute(EntityTile::class)?.run {
+        tile = tile.withAddedModifiers(*modifiers)
+    }
+}
+
+fun AnyEntity.removeTileModifiers(vararg modifiers: Modifier) {
+    getAttribute(EntityTile::class)?.run {
+        tile = tile.withRemovedModifiers(*modifiers)
+    }
 }
 
 fun <T : Attribute> AnyEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
