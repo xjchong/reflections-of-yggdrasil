@@ -44,7 +44,7 @@ object ArmorFactory {
         }
     }
 
-    fun newLeatherTunic() = newChestArmorBuilder(LeatherTunic, GameTile.LIGHT_ARMOR)
+    fun newLeatherTunic() = newArmorBuilder(Chest, LeatherTunic, GameTile.LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, MODERATE_RESISTANCE),
@@ -52,7 +52,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, MODERATE_RESISTANCE)))
             .build()
 
-    fun newChainmail() = newChestArmorBuilder(Chainmail, GameTile.MEDIUM_ARMOR)
+    fun newChainmail() = newArmorBuilder(Chest, Chainmail, GameTile.MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_RELIABLE, LARGE_RESISTANCE),
@@ -60,7 +60,7 @@ object ArmorFactory {
                             Resistance(Bash, RELIABLE, SMALL_RESISTANCE)))
             .build()
 
-    fun newPlatemail() = newChestArmorBuilder(Platemail, GameTile.HEAVY_ARMOR)
+    fun newPlatemail() = newArmorBuilder(Chest, Platemail, GameTile.HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_RELIABLE, LARGE_RESISTANCE),
@@ -68,7 +68,7 @@ object ArmorFactory {
                             Resistance(Bash, VERY_RELIABLE, MODERATE_RESISTANCE)))
             .build()
 
-    fun newJacket() = newChestArmorBuilder(Jacket, GameTile.JACKET)
+    fun newJacket() = newArmorBuilder(Chest, Jacket, GameTile.JACKET)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_UNRELIABLE, SMALL_RESISTANCE),
@@ -76,10 +76,10 @@ object ArmorFactory {
                             Resistance(Bash, VERY_UNRELIABLE, TINY_RESISTANCE)))
             .build()
 
-    private fun newChestArmorBuilder(type: EntityType, tile: CharacterTile) = AnyEntityBuilder.newBuilder(type)
+    private fun newArmorBuilder(equipType: EquippableType, type: EntityType, tile: CharacterTile) = AnyEntityBuilder.newBuilder(type)
             .withAttributes(
                     EntityTile(tile),
                     EntityPosition(),
-                    EquippableDetails(Chest))
+                    EquippableDetails(equipType))
             .withFacets(Droppable, Takeable, Equippable)
 }

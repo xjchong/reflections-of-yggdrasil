@@ -1,30 +1,22 @@
 package entity.factories
 
-import attributes.*
+import attributes.ConsumableDetails
+import attributes.EntityPosition
+import attributes.EntityTile
 import builders.newGameEntityOfType
 import constants.GameTile
-import entity.*
+import entity.AnyEntity
+import entity.BatMeat
+import entity.En
 import facets.passive.Consumable
 import facets.passive.Droppable
-import facets.passive.Equippable
 import facets.passive.Takeable
-import models.*
-import kotlin.random.Random
+import models.Heal
+import models.Poison
+import models.StatusEffect
 
 
 object ItemFactory {
-
-    /**
-     * UTILITY
-     */
-
-    fun newRandomWeapon(): AnyEntity {
-        return when (Random.nextInt(3)) {
-            0 -> newDagger()
-            1 -> newStaff()
-            else -> newSword()
-        }
-    }
 
     fun newRandomTreasure(): AnyEntity {
         return newEn()
@@ -54,37 +46,5 @@ object ItemFactory {
                         StatusEffect(Poison, 5, 0.1)
                 ))
         facets(Consumable, Droppable, Takeable)
-    }
-
-    /**
-     * EQUIPMENT
-     */
-
-    fun newDagger() = newGameEntityOfType(Dagger) {
-        attributes(
-                AttackStrategies(TechnicalWeaponCut()),
-                EntityPosition(),
-                EntityTile(GameTile.DAGGER),
-                EquippableDetails(OneHanded))
-
-        facets(Droppable, Takeable, Equippable)
-    }
-
-    fun newSword() = newGameEntityOfType(Sword) {
-        attributes(
-                AttackStrategies(BalancedWeaponCut()),
-                EntityPosition(),
-                EntityTile(GameTile.SWORD),
-                EquippableDetails(OneHanded))
-        facets(Droppable, Takeable, Equippable)
-    }
-
-    fun newStaff() = newGameEntityOfType(Staff) {
-        attributes(
-                AttackStrategies(TechnicalWeaponBash()),
-                EntityPosition(),
-                EntityTile(GameTile.STAFF),
-                EquippableDetails(TwoHanded))
-        facets(Droppable, Takeable, Equippable)
     }
 }

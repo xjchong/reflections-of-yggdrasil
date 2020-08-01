@@ -48,7 +48,9 @@ object CreatureFactory {
                 EntityTile(GameTile.PLAYER),
                 EntityActions(AttemptAttack::class, Open::class),
                 FocusTarget(),
-                Equipments(initialChest = ArmorFactory.newJacket()),
+                Equipments(
+                        initialMainHand = WeaponFactory.newClub(),
+                        initialChest = ArmorFactory.newJacket()),
                 Inventory(10),
                 Obstacle,
                 StatusDetails(),
@@ -152,7 +154,7 @@ object CreatureFactory {
                 EntityTile(GameTile.ZOMBIE),
                 Inventory(5).apply {
                     add(ArmorFactory.newRandomArmor())
-                    add(ItemFactory.newRandomWeapon())
+                    add(WeaponFactory.newRandomWeapon())
                 },
                 KillTarget(),
                 Obstacle,
