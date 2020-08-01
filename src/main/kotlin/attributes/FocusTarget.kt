@@ -15,7 +15,7 @@ import org.hexworks.zircon.api.component.*
 import org.hexworks.zircon.api.graphics.Symbols
 import org.hexworks.zircon.api.uievent.MouseEventType
 import org.hexworks.zircon.api.uievent.Processed
-import org.hexworks.zircon.api.uievent.UIEventResponse
+import org.hexworks.zircon.api.uievent.StopPropagation
 import org.hexworks.zircon.internal.Zircon
 
 class FocusTarget : DisplayableAttribute {
@@ -103,7 +103,7 @@ class FocusTargetRow(width: Int, entity: AnyEntity) : Fragment {
                 // Highlight the focus bar area, and show the examine dialog on mouse release.
                 handleMouseEvents(MouseEventType.MOUSE_RELEASED) { _, _ ->
                     Zircon.eventBus.publish(ExamineEvent(entity))
-                    UIEventResponse.stopPropagation()
+                    StopPropagation
                 }
                 handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
                     componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, GameColor.SECONDARY_BACKGROUND)

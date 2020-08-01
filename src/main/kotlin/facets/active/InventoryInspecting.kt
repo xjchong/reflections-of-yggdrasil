@@ -23,9 +23,6 @@ object InventoryInspecting : BaseFacet<GameContext>() {
             entity.getAttribute(Inventory::class)?.let { inventory ->
                 InventoryMenuEvent.publish(
                         inventory,
-                        onExamine = {
-                            ExamineEvent.publish(it)
-                        },
                         onDrop = { content ->
                             world.update(DropInputEvent(content))
                         },

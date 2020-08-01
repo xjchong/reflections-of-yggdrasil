@@ -8,7 +8,6 @@ import org.hexworks.zircon.internal.Zircon
 
 data class InventoryMenuEvent(
         val inventory: Inventory,
-        val onExamine: (AnyEntity) -> Unit,
         val onDrop: (AnyEntity) -> Unit,
         val onConsume: (AnyEntity) -> Unit,
         val onEquip: (AnyEntity) -> Unit
@@ -17,10 +16,10 @@ data class InventoryMenuEvent(
     companion object {
         val KEY = "InventoryMenuEvent"
 
-        fun publish(inventory: Inventory, onExamine: (AnyEntity) -> Unit, onDrop: (AnyEntity) -> Unit,
+        fun publish(inventory: Inventory, onDrop: (AnyEntity) -> Unit,
                  onConsume: (AnyEntity) -> Unit, onEquip: (AnyEntity) -> Unit) {
            Zircon.eventBus.publish(InventoryMenuEvent(
-                   inventory, onExamine, onDrop, onConsume, onEquip
+                   inventory, onDrop, onConsume, onEquip
            ))
         }
     }

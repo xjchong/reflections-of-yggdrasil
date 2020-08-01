@@ -6,13 +6,10 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.AttachedComponent
 import org.hexworks.zircon.api.component.Fragment
 import org.hexworks.zircon.api.component.VBox
-import org.hexworks.zircon.api.uievent.MouseEventType
-import org.hexworks.zircon.api.uievent.Processed
 
 class InventoryFragment(
         private val inventory: Inventory,
         private val width: Int,
-        private val onExamine: (AnyEntity) -> Unit,
         private val onDrop: (AnyEntity) -> Unit,
         private val onConsume: (AnyEntity) -> Unit,
         private val onEquip: (AnyEntity) -> Unit
@@ -62,10 +59,6 @@ class InventoryFragment(
         attachedRows.add(attachedInventoryRow)
 
         with (inventoryRow) {
-            examineButton.handleMouseEvents(MouseEventType.MOUSE_RELEASED) { _, _ ->
-                onExamine(entity)
-                Processed
-            }
             dropButton.onActivated { onDrop(entity) }
             consumeButton.onActivated { onConsume(entity) }
             equipButton.onActivated { onEquip(entity) }

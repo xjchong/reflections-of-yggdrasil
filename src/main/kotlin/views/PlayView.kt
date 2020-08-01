@@ -250,9 +250,9 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
     private fun subscribeToInventoryMenuEvent() {
         Zircon.eventBus.subscribeTo<InventoryMenuEvent>(key = InventoryMenuEvent.KEY) { event ->
-            val (inventory, onExamine, onDrop, onConsume, onEquip) = event
+            val (inventory, onDrop, onConsume, onEquip) = event
             val inventoryModal = InventoryModalBuilder(screen).build(
-                   inventory, onExamine, onDrop, onConsume, onEquip
+                   inventory, onDrop, onConsume, onEquip
             )
 
             screen.openModal(inventoryModal)
