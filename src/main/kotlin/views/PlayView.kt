@@ -77,15 +77,21 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
     }
 
     private fun setupLogArea() {
-
-        val logArea = Components.logArea()
+        val logAreaContainer = Components.panel()
                 .withSize(GameConfig.LOG_WIDTH, GameConfig.LOG_HEIGHT)
-                .withStyle(GameColor.FOREGROUND, GameColor.BACKGROUND)
-                .withDecorations(box(boxType = BoxType.SINGLE, title = "Log"))
+                .withDecorations(box(BoxType.SINGLE, title = "Log"))
                 .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
                 .build()
 
-        screen.addComponent(logArea)
+        val logArea = Components.logArea()
+                .withSize(GameConfig.LOG_WIDTH - 2, GameConfig.LOG_HEIGHT - 2)
+                .withStyle(GameColor.FOREGROUND, GameColor.BACKGROUND)
+                .withAlignmentWithin(logAreaContainer, ComponentAlignment.CENTER)
+                .build()
+
+        logAreaContainer.addComponent(logArea)
+
+        screen.addComponent(logAreaContainer)
 
         Zircon.eventBus.subscribeTo<GameLogEvent>(key = GameLogEvent.KEY) { event ->
             val logColor = when (event.type) {
