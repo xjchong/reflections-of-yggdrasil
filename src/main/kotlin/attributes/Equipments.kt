@@ -158,9 +158,21 @@ class Equipments(initialMainHand: AnyEntity? = null,
                     unequipped = mainHand.optional
                     mainHandProp.value = Maybe.of(equipment)
                 }
+                Head -> {
+                    unequipped = head.optional
+                    headProp.value = Maybe.of(equipment)
+                }
                 Chest -> {
                     unequipped = chest.optional
                     chestProp.value = Maybe.of(equipment)
+                }
+                Hands -> {
+                    unequipped = hands.optional
+                    handsProp.value = Maybe.of(equipment)
+                }
+                Legs -> {
+                    unequipped = legs.optional
+                    legsProp.value = Maybe.of(equipment)
                 }
             }
         }
