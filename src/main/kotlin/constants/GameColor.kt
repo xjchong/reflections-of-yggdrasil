@@ -16,7 +16,7 @@ object GameColor {
 
     val BROWN       	= hexColor("402c14")
     val LIGHT_BROWN     = BROWN.light
-    val DARK_BROWN      = BROWN.dark
+    val DARK_BROWN      = hexColor("362109")
 
     val PINK        	= hexColor("d33682")
     val LIGHT_PINK      = PINK.light
