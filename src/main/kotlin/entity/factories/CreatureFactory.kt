@@ -135,7 +135,7 @@ object CreatureFactory {
                 Vision(3),
 
                 CombatStats.create(
-                        maxHealth = 60,
+                        maxHealth = 40,
                         maxStamina = 10,
                         power = 0.1,
                         tech = 0.1
