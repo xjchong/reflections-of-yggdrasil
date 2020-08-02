@@ -3,6 +3,7 @@ package entity.factories
 import attributes.*
 import attributes.flag.Obstacle
 import behaviors.*
+import builders.AnyEntityBuilder
 import builders.newGameEntityOfType
 import commands.AttemptAttack
 import commands.Open
@@ -16,7 +17,8 @@ import facets.passive.Destructible
 import facets.passive.Movable
 import facets.passive.StatusApplicable
 import models.*
-import kotlin.random.Random
+import utilities.WeightedCollection
+import utilities.WeightedEntry
 
 
 object CreatureFactory {
@@ -26,13 +28,16 @@ object CreatureFactory {
      */
 
     fun newRandomCreature(): AnyEntity {
-        return when (Random.nextInt(100)) {
-            in 0..29 -> newBat()
-            in 30..59 -> newFungus()
-            in 60..89 -> newZombie()
-            in 90..99 -> newRat()
-            else -> newZombie()
-        }
+        val weightedCreatures: WeightedCollection<() -> AnyEntity> = WeightedCollection(
+                WeightedEntry({ newBat() }, 9),
+                WeightedEntry({ newFungus() }, 5),
+                WeightedEntry({ newRat() }, 5),
+                WeightedEntry({ newZombie() }, 5)
+        )
+
+        val sample = weightedCreatures.sample()!!
+
+        return sample()
     }
 
     /**
@@ -65,7 +70,7 @@ object CreatureFactory {
                         tech = .33,
                         luck = .34
                 ))
-        behaviors(StatusUpdater, StaminaUser, VisionUser, FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
+        behaviors(StatusUpdater, StaminaRegenerator, VisionUser, FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
         facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusApplicable, RandomlyAttacking)
     }
 
@@ -73,10 +78,15 @@ object CreatureFactory {
      * COMBATANT
      */
 
-    fun newBat() = newGameEntityOfType(Bat) {
-        attributes(
+    fun newBat() = AnyEntityBuilder.newBuilder(Bat)
+            .withAttributes(
                 Alliance(Monster),
                 AttackStrategies(BiteAttack()),
+                CombatStats.create(
+                        maxHealth = 60,
+                        maxStamina = 50,
+                        power = 0.1,
+                        tech = 0.2),
                 EntityActions(AttemptAttack::class),
                 EntityPosition(),
                 EntityTile(GameTile.BAT),
@@ -85,87 +95,71 @@ object CreatureFactory {
                 },
                 KillTarget(),
                 Obstacle,
-                Vision(3),
+                Vision(3))
+            .withBehaviors(VisionUser, Wanderer)
+            .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
+            .build()
 
-                CombatStats.create(
-                        maxHealth = 60,
-                        maxStamina = 50,
-                        power = 0.1,
-                        tech = 0.2
-                ))
-        behaviors(VisionUser, Wanderer)
-        facets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
-    }
-
-    fun newFungus(proliferation: Proliferation = Proliferation(0.02, 0.6) { newFungus(it) }) = newGameEntityOfType(Fungus) {
-        attributes(
+    fun newFungus(proliferation: Proliferation = Proliferation(0.02, 0.6) { newFungus(it) }) = AnyEntityBuilder.newBuilder(Fungus)
+            .withAttributes(
                 Alliance(Monster),
                 AttackStrategies(SporeAttack(listOf(
                         StatusEffect(Poison, 3, 0.5)
                 ))),
-                EntityActions(),
-                EntityPosition(),
-                EntityTile(GameTile.FUNGUS),
-                Obstacle,
-                proliferation,
-
                 CombatStats.create(
                         maxHealth = 20,
                         maxStamina = 1,
                         stamina = 0,
-                        power = 0.1
-                ),
+                        power = 0.1),
+                EntityPosition(),
+                EntityTile(GameTile.FUNGUS),
+                Obstacle,
+                proliferation,
                 Vision(2))
-        behaviors(DumbChaser, Proliferator, VisionUser)
-        facets(ActionAttempting, Attackable, Destructible, RandomlyAttacking)
-    }
+            .withBehaviors(VisionUser, DumbChaser, Proliferator)
+            .withFacets(Attackable, Destructible, RandomlyAttacking)
+            .build()
 
-    fun newRat(proliferation: Proliferation = Proliferation(0.02, 0.9) { newRat(it) }) = newGameEntityOfType(Rat) {
-        attributes(
+
+    fun newRat(proliferation: Proliferation = Proliferation(0.02, 0.9) { newRat(it) }) = AnyEntityBuilder.newBuilder(Rat)
+            .withAttributes(
                 Alliance(Monster),
                 AttackStrategies(WeakBiteAttack(listOf(
                         StatusEffect(Poison, 2, 0.3)
                 ))),
-                EntityActions(),
+                CombatStats.create(
+                        maxHealth = 40,
+                        maxStamina = 10,
+                        power = 0.1,
+                        tech = 0.1),
                 EntityPosition(),
                 EntityTile(GameTile.RAT),
                 KillTarget(),
                 Obstacle,
                 proliferation,
-                Vision(3),
+                Vision(7))
+            .withBehaviors(VisionUser, DumbChaser or Wanderer, Proliferator)
+            .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
+            .build()
 
-                CombatStats.create(
-                        maxHealth = 40,
-                        maxStamina = 10,
-                        power = 0.1,
-                        tech = 0.1
-                )
-        )
-        behaviors(DumbChaser or Wanderer, Proliferator, VisionUser)
-        facets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
-    }
-
-
-    fun newZombie() = newGameEntityOfType(Zombie) {
-        attributes(
-                AttackStrategies(WeakBiteAttack(), WeakClawAttack()),
-                EntityActions(),
-                EntityPosition(),
-                EntityTile(GameTile.ZOMBIE),
-                Inventory(5).apply {
-                    add(ArmorFactory.newRandomArmor())
-                    add(WeaponFactory.newRandomWeapon())
-                },
-                KillTarget(),
-                Obstacle,
-                Vision(5),
-
-                CombatStats.create(
-                        maxHealth = 80,
-                        maxStamina = 50,
-                        power = 0.4
-                ))
-        behaviors(DumbChaser or Wanderer, StaminaUser, VisionUser)
-        facets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
-    }
+    fun newZombie() = AnyEntityBuilder.newBuilder(Zombie)
+            .withAttributes(
+                    AttackStrategies(WeakBiteAttack(), WeakClawAttack()),
+                    EntityPosition(),
+                    EntityTile(GameTile.ZOMBIE),
+                    CombatStats.create(
+                            maxHealth = 80,
+                            maxStamina = 50,
+                            power = 0.4
+                    ),
+                    Inventory(5).apply {
+                        add(WeaponFactory.newRandomWeapon())
+                        add(ArmorFactory.newRandomArmor())
+                    },
+                    KillTarget(),
+                    Obstacle,
+                    Vision(5))
+            .withBehaviors(VisionUser, DumbChaser or Wanderer, StaminaRegenerator)
+            .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
+            .build()
 }

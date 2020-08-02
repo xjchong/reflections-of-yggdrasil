@@ -8,7 +8,7 @@ import entity.getAttribute
 import game.GameContext
 
 
-object StaminaUser : ForegroundBehavior(CombatStats::class) {
+object StaminaRegenerator : ForegroundBehavior(CombatStats::class) {
 
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         if (context.inBackground) return true
