@@ -13,7 +13,8 @@ import models.Resistance
 import models.Stab
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.CharacterTile
-import kotlin.random.Random
+import utilities.WeightedCollection
+import utilities.WeightedEntry
 
 object ArmorFactory {
 
@@ -37,11 +38,51 @@ object ArmorFactory {
     const val IMMUNITY = 0.0
 
     fun newRandomArmor(): AnyEntity {
-        return when (Random.nextInt(3)) {
-            0 -> newLeatherTunic()
-            1 -> newChainmail()
-            else -> newPlatemail()
-        }
+        val weightedCollection: WeightedCollection<() -> AnyEntity> = WeightedCollection(
+                WeightedEntry({ newSimpleCap() }, 10),
+                WeightedEntry({ newFancyCap() }, 10),
+                WeightedEntry({ newAncientCap() }, 10),
+                WeightedEntry({ newSimpleHelm() }, 5),
+                WeightedEntry({ newFancyHelm() }, 5),
+                WeightedEntry({ newAncientHelm() }, 5),
+                WeightedEntry({ newSimpleSallet() }, 2),
+                WeightedEntry({ newFancySallet() }, 2),
+                WeightedEntry({ newAncientSallet() }, 2),
+
+                WeightedEntry({ newSimpleJacket() }, 10),
+                WeightedEntry({ newFancyJacket() }, 10),
+                WeightedEntry({ newAncientJacket() }, 10),
+                WeightedEntry({ newSimpleHauberk() }, 5),
+                WeightedEntry({ newFancyHauberk() }, 5),
+                WeightedEntry({ newAncientHauberk() }, 5),
+                WeightedEntry({ newSimpleCuirass() }, 2),
+                WeightedEntry({ newFancyCuirass() }, 2),
+                WeightedEntry({ newAncientCuirass() }, 2),
+
+                WeightedEntry({ newSimpleGloves() }, 10),
+                WeightedEntry({ newFancyGloves() }, 10),
+                WeightedEntry({ newAncientGloves() }, 10),
+                WeightedEntry({ newSimpleBracers() }, 5),
+                WeightedEntry({ newFancyBracers() }, 5),
+                WeightedEntry({ newAncientBracers() }, 5),
+                WeightedEntry({ newSimpleGauntlets() }, 2),
+                WeightedEntry({ newFancyGauntlets() }, 2),
+                WeightedEntry({ newAncientGauntlets() }, 2),
+
+                WeightedEntry({ newSimpleShoes() }, 10),
+                WeightedEntry({ newFancyShoes() }, 10),
+                WeightedEntry({ newAncientShoes() }, 10),
+                WeightedEntry({ newSimpleBoots() }, 5),
+                WeightedEntry({ newFancyBoots() }, 5),
+                WeightedEntry({ newAncientBoots() }, 5),
+                WeightedEntry({ newSimpleGreaves() }, 2),
+                WeightedEntry({ newFancyGreaves() }, 2),
+                WeightedEntry({ newAncientGreaves() }, 2)
+        )
+
+        val sample = weightedCollection.sample()!!
+
+        return sample()
     }
 
     // HEAD

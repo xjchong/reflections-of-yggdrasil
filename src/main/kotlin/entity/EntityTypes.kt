@@ -99,7 +99,7 @@ object FancyCap : BaseEntityType(
 )
 
 object AncientCap : BaseEntityType(
-        name = "artisan cap"
+        name = "ancient cap"
 )
 
 object SimpleHelm : BaseEntityType(
