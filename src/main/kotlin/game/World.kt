@@ -65,6 +65,8 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     fun flash(entity: AnyEntity, color: TileColor) {
+        if (!sceneObservers.any { it.sensedPositions.contains(entity.position) }) return
+
         fetchBlockAt(entity.position).ifPresent {
             it.flash(color)
         }
