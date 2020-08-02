@@ -78,6 +78,178 @@ object Staff : BaseEntityType(
         description = "A wooden staff made of birch. It has seen some use"
 )
 
+object Club : BaseEntityType(
+        name = "club",
+        description = "A wooden club. It doesn't give you an edge over your opponent (haha)."
+)
+
+
+/**
+ * ARMOR
+ */
+
+// HEAD
+
+object SimpleCap : BaseEntityType(
+        name = "simple cap"
+)
+
+object FancyCap : BaseEntityType(
+        name = "fancy cap"
+)
+
+object AncientCap : BaseEntityType(
+        name = "artisan cap"
+)
+
+object SimpleHelm : BaseEntityType(
+        name = "simple helm"
+)
+
+object FancyHelm : BaseEntityType(
+        name = "fancy helm"
+)
+
+object AncientHelm : BaseEntityType(
+        name = "ancient helm"
+)
+
+object SimpleSallet : BaseEntityType(
+        name = "simple sallet"
+)
+
+object FancySallet : BaseEntityType(
+        name = "fancy sallet"
+)
+
+object AncientSallet : BaseEntityType(
+        name = "ancient sallet"
+)
+
+// BODY
+
+object SimpleJacket : BaseEntityType(
+        name = "simple jacket"
+)
+
+object FancyJacket : BaseEntityType(
+        name = "fancy jacket"
+)
+
+object AncientJacket : BaseEntityType(
+        name = "ancient jacket"
+)
+
+object SimpleHauberk : BaseEntityType(
+        name = "simple hauberk"
+)
+
+object FancyHauberk : BaseEntityType(
+        name = "fancy hauberk"
+)
+
+object AncientHauberk : BaseEntityType(
+        name = "ancient hauberk"
+)
+
+object SimpleCuirass : BaseEntityType(
+        name = "simple cuirass"
+)
+
+object FancyCuirass : BaseEntityType(
+        name = "fancy cuirass"
+)
+
+object AncientCuirass : BaseEntityType(
+        name = "ancient cuirass"
+)
+
+// ARMS
+
+object SimpleGloves : BaseEntityType(
+        name = "simple gloves"
+)
+
+object FancyGloves : BaseEntityType(
+        name = "fancy gloves"
+)
+
+object AncientGloves : BaseEntityType(
+        name = "ancient gloves"
+)
+
+object SimpleBracers : BaseEntityType(
+        name = "simple bracers"
+)
+
+object FancyBracers : BaseEntityType(
+        name = "fancy bracers"
+)
+
+object AncientBracers : BaseEntityType(
+        name = "ancient bracers"
+)
+
+object SimpleGauntlets : BaseEntityType(
+        name = "simple gauntlets"
+)
+
+object FancyGauntlets : BaseEntityType(
+        name = "fancy gauntlets"
+)
+
+object AncientGauntlets : BaseEntityType(
+        name = "ancient gauntlets"
+)
+
+// LEGS
+
+object SimpleShoes : BaseEntityType(
+        name = "simple shoes"
+)
+
+object FancyShoes : BaseEntityType(
+        name = "fancy shoes"
+)
+
+object AncientShoes : BaseEntityType(
+        name = "ancient shoes"
+)
+
+object SimpleBoots : BaseEntityType(
+        name = "simple boots"
+)
+
+object FancyBoots : BaseEntityType(
+        name = "fancy boots"
+)
+
+object AncientBoots : BaseEntityType(
+        name = "ancient boots"
+)
+
+object SimpleGreaves : BaseEntityType(
+        name = "simple greaves"
+)
+
+object FancyGreaves : BaseEntityType(
+        name = "fancy greaves"
+)
+
+object AncientGreaves : BaseEntityType(
+        name = "ancient greaves"
+)
+
+/**
+ * TO BE DEPRECATED
+ */
+
+
+object Jacket : BaseEntityType(
+        name = "jacket",
+        description = "Dirty and rugged jacket made of leather."
+)
+
 object LeatherTunic : BaseEntityType(
         name = "leather tunic",
         description = "A tunic made of rugged leather. It is very comfortable."
@@ -91,15 +263,5 @@ object Chainmail : BaseEntityType(
 object Platemail : BaseEntityType(
         name = "platemail",
         description = "A heavy and shiny platemail armor made of bronze."
-)
-
-object Club : BaseEntityType(
-        name = "club",
-        description = "A wooden club. It doesn't give you an edge over your opponent (haha)."
-)
-
-object Jacket : BaseEntityType(
-        name = "jacket",
-        description = "Dirty and rugged jacket made of leather."
 )
 

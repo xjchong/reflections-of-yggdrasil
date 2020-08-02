@@ -52,15 +52,32 @@ object GameTile {
     val EN = newCharacterTile('$', GameColor.LIGHT_CYAN)
 
     /**
-     * EQUIPMENT
+     * WEAPONS
      */
 
     val CLUB = newCharacterTile('\\', GameColor.BROWN)
     val DAGGER = newCharacterTile('|', GameColor.WHITE)
-    val JACKET = newCharacterTile('(', GameColor.GREY)
+    val STAFF = newCharacterTile('/', GameColor.BROWN)
+    val SWORD = newCharacterTile('|', GameColor.WHITE)
+
+    /**
+     * ARMOR
+     */
+
     val LIGHT_ARMOR = newCharacterTile('(', GameColor.GREEN)
     val MEDIUM_ARMOR = newCharacterTile('[', GameColor.GREY)
     val HEAVY_ARMOR = newCharacterTile('[', GameColor.WHITE)
-    val STAFF = newCharacterTile('/', GameColor.BROWN)
-    val SWORD = newCharacterTile('|', GameColor.WHITE)
+    val JACKET = newCharacterTile('(', GameColor.GREY)
+
+    val COMMON_LIGHT_ARMOR = newCharacterTile('(', GameColor.DARK_GREEN)
+    val UNCOMMON_LIGHT_ARMOR = newCharacterTile('(', GameColor.GREEN)
+    val RARE_LIGHT_ARMOR = newCharacterTile('(', GameColor.LIGHT_GREEN)
+
+    val COMMON_MEDIUM_ARMOR = newCharacterTile('[', GameColor.DARK_BROWN)
+    val UNCOMMON_MEDIUM_ARMOR = newCharacterTile('[', GameColor.BROWN)
+    val RARE_MEDIUM_ARMOR = newCharacterTile('[', GameColor.LIGHT_BROWN)
+
+    val COMMON_HEAVY_ARMOR  = newCharacterTile(']', GameColor.LIGHT_GREY)
+    val UNCOMMON_HEAVY_ARMOR  = newCharacterTile(']', GameColor.WHITE)
+    val RARE_HEAVY_ARMOR  = newCharacterTile(']', GameColor.LIGHT_CYAN)
 }

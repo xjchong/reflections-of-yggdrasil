@@ -25,6 +25,10 @@ object WeaponFactory {
         }
     }
 
+    /**
+     * TO BE DEPRECATED
+     */
+
     fun newRustyDagger() = newWeaponBuilder(OneHanded, Dagger, GameTile.DAGGER)
             .withAddedAttributes(AttackStrategies(TechnicalWeaponCut()))
             .build()
@@ -40,6 +44,10 @@ object WeaponFactory {
     fun newClub() = newWeaponBuilder(OneHanded, Club, GameTile.CLUB)
             .withAddedAttributes(AttackStrategies(VeryTechnicalWeaponBash()))
             .build()
+
+    /**
+     * HELPERS
+     */
 
     private fun newWeaponBuilder(equipType: EquippableType, type: EntityType, tile: CharacterTile) = AnyEntityBuilder.newBuilder(type)
             .withAttributes(
