@@ -24,11 +24,9 @@ class Equipments(initialMainHand: AnyEntity? = null,
                  initialOffFinger: AnyEntity? = null,
                  initialWrists: AnyEntity? = null,
                  initialHead: AnyEntity? = null,
-                 initialHands: AnyEntity? = null,
-                 initialChest: AnyEntity? = null,
-                 initialWaist: AnyEntity? = null,
-                 initialLegs: AnyEntity? = null,
-                 initialFeet: AnyEntity? = null
+                 initialArms: AnyEntity? = null,
+                 initialBody: AnyEntity? = null,
+                 initialLegs: AnyEntity? = null
 ) : DisplayableAttribute {
 
     private val mainHandProp: Property<Maybe<AnyEntity>> =
@@ -68,29 +66,19 @@ class Equipments(initialMainHand: AnyEntity? = null,
                 it.optional?.details?.type == Head
             }
 
-    private val handsProp: Property<Maybe<AnyEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialHands)) {
-                it.optional?.details?.type == Hands
+    private val armsProp: Property<Maybe<AnyEntity>> =
+            createPropertyFrom(Maybe.ofNullable(initialArms)) {
+                it.optional?.details?.type == Arms
             }
 
-    private val chestProp: Property<Maybe<AnyEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialChest)) {
-                it.optional?.details?.type == Chest
-            }
-
-    private val waistProp: Property<Maybe<AnyEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialWaist)) {
-                it.optional?.details?.type == Waist
+    private val bodyProp: Property<Maybe<AnyEntity>> =
+            createPropertyFrom(Maybe.ofNullable(initialBody)) {
+                it.optional?.details?.type == Body
             }
 
     private val legsProp: Property<Maybe<AnyEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialLegs)) {
                 it.optional?.details?.type == Legs
-            }
-
-    private val feetProp: Property<Maybe<AnyEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialFeet)) {
-                it.optional?.details?.type == Feet
             }
 
     val mainHand: Maybe<AnyEntity> by mainHandProp.asDelegate()
@@ -100,11 +88,9 @@ class Equipments(initialMainHand: AnyEntity? = null,
     val rightFinger: Maybe<AnyEntity> by offFingerProp.asDelegate()
     val wrists: Maybe<AnyEntity> by wristsProp.asDelegate()
     val head: Maybe<AnyEntity> by headProp.asDelegate()
-    val hands: Maybe<AnyEntity> by handsProp.asDelegate()
-    val chest: Maybe<AnyEntity> by chestProp.asDelegate()
-    val waist: Maybe<AnyEntity> by waistProp.asDelegate()
+    val arms: Maybe<AnyEntity> by armsProp.asDelegate()
+    val body: Maybe<AnyEntity> by bodyProp.asDelegate()
     val legs: Maybe<AnyEntity> by legsProp.asDelegate()
-    val feet: Maybe<AnyEntity> by feetProp.asDelegate()
 
     override fun toComponent(width: Int): Component {
         val textBoxBuilder = Components.textBox(width)
@@ -118,20 +104,14 @@ class Equipments(initialMainHand: AnyEntity? = null,
         val headInfo = setupInfo(width, textBoxBuilder, "Head  :", head, headProp)
         headProp.onChange { updateInfo(headInfo, head) }
 
-        val chestInfo = setupInfo(width, textBoxBuilder, "Chest :", chest, chestProp)
-        chestProp.onChange { updateInfo(chestInfo, chest) }
+        val chestInfo = setupInfo(width, textBoxBuilder, "Body  :", body, bodyProp)
+        bodyProp.onChange { updateInfo(chestInfo, body) }
 
-        val handsInfo = setupInfo(width, textBoxBuilder, "Hands :", hands, handsProp)
-        handsProp.onChange { updateInfo(handsInfo, hands) }
-
-        val waistInfo = setupInfo(width, textBoxBuilder, "Waist :", waist, waistProp)
-        waistProp.onChange { updateInfo(waistInfo, waist) }
+        val handsInfo = setupInfo(width, textBoxBuilder, "Arms  :", arms, armsProp)
+        armsProp.onChange { updateInfo(handsInfo, arms) }
 
         val legsInfo = setupInfo(width, textBoxBuilder, "Legs  :", legs, legsProp)
         legsProp.onChange { updateInfo(legsInfo, legs) }
-
-        val feetInfo = setupInfo(width, textBoxBuilder, "Feet  :", feet, feetProp)
-        feetProp.onChange { updateInfo(feetInfo, feet) }
 
         val neckInfo = setupInfo(width, textBoxBuilder, "Neck  :", neck, neckProp)
         neckProp.onChange { updateInfo(neckInfo, neck) }
@@ -162,13 +142,13 @@ class Equipments(initialMainHand: AnyEntity? = null,
                     unequipped = head.optional
                     headProp.value = Maybe.of(equipment)
                 }
-                Chest -> {
-                    unequipped = chest.optional
-                    chestProp.value = Maybe.of(equipment)
+                Body -> {
+                    unequipped = body.optional
+                    bodyProp.value = Maybe.of(equipment)
                 }
-                Hands -> {
-                    unequipped = hands.optional
-                    handsProp.value = Maybe.of(equipment)
+                Arms -> {
+                    unequipped = arms.optional
+                    armsProp.value = Maybe.of(equipment)
                 }
                 Legs -> {
                     unequipped = legs.optional
@@ -184,7 +164,7 @@ class Equipments(initialMainHand: AnyEntity? = null,
         val resistances: MutableList<Resistance> = mutableListOf()
 
         listOf(mainHand, offHand,
-                head, chest, hands, waist, legs, feet,
+                head, body, arms, legs,
                 neck, leftFinger, rightFinger, wrists).forEach { equipment ->
             equipment.ifPresent {
                 val equipmentResistances: List<Resistance> = it.getAttribute(Resistances::class)?.resistances ?: listOf()

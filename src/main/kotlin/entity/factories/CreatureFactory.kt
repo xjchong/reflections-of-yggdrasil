@@ -50,7 +50,7 @@ object CreatureFactory {
                 FocusTarget(),
                 Equipments(
                         initialMainHand = WeaponFactory.newClub(),
-                        initialChest = ArmorFactory.newSimpleJacket()),
+                        initialBody = ArmorFactory.newSimpleJacket()),
                 Inventory(10),
                 Obstacle,
                 StatusDetails(),
