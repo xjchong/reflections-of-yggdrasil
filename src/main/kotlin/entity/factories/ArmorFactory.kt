@@ -382,42 +382,6 @@ object ArmorFactory {
             .build()
 
     /**
-     * TO BE DEPRECATED
-     */
-
-    fun newLeatherTunic() = newArmorBuilder(Chest, LeatherTunic, GameTile.LIGHT_ARMOR)
-            .withAddedAttributes(
-                    Resistances(
-                            Resistance(Cut, OCCASIONAL, MODERATE_RESISTANCE),
-                            Resistance(Stab, OCCASIONAL, SMALL_RESISTANCE),
-                            Resistance(Bash, OCCASIONAL, MODERATE_RESISTANCE)))
-            .build()
-
-    fun newChainmail() = newArmorBuilder(Chest, Chainmail, GameTile.MEDIUM_ARMOR)
-            .withAddedAttributes(
-                    Resistances(
-                            Resistance(Cut, VERY_RELIABLE, LARGE_RESISTANCE),
-                            Resistance(Stab, OCCASIONAL, MODERATE_RESISTANCE),
-                            Resistance(Bash, RELIABLE, SMALL_RESISTANCE)))
-            .build()
-
-    fun newPlatemail() = newArmorBuilder(Chest, Platemail, GameTile.HEAVY_ARMOR)
-            .withAddedAttributes(
-                    Resistances(
-                            Resistance(Cut, VERY_RELIABLE, LARGE_RESISTANCE),
-                            Resistance(Stab, VERY_RELIABLE, LARGE_RESISTANCE),
-                            Resistance(Bash, VERY_RELIABLE, MODERATE_RESISTANCE)))
-            .build()
-
-    fun newJacket() = newArmorBuilder(Chest, Jacket, GameTile.JACKET)
-            .withAddedAttributes(
-                    Resistances(
-                            Resistance(Cut, VERY_UNRELIABLE, SMALL_RESISTANCE),
-                            Resistance(Stab, VERY_UNRELIABLE, SMALL_RESISTANCE),
-                            Resistance(Bash, VERY_UNRELIABLE, TINY_RESISTANCE)))
-            .build()
-
-    /**
      * HELPERS
      */
 

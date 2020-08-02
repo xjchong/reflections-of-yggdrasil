@@ -239,29 +239,3 @@ object FancyGreaves : BaseEntityType(
 object AncientGreaves : BaseEntityType(
         name = "ancient greaves"
 )
-
-/**
- * TO BE DEPRECATED
- */
-
-
-object Jacket : BaseEntityType(
-        name = "jacket",
-        description = "Dirty and rugged jacket made of leather."
-)
-
-object LeatherTunic : BaseEntityType(
-        name = "leather tunic",
-        description = "A tunic made of rugged leather. It is very comfortable."
-)
-
-object Chainmail : BaseEntityType(
-        name = "chainmail",
-        description = "A sturdy chainmail armor made of interlocking iron chains."
-)
-
-object Platemail : BaseEntityType(
-        name = "platemail",
-        description = "A heavy and shiny platemail armor made of bronze."
-)
-
