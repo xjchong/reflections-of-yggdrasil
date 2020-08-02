@@ -12,6 +12,7 @@ import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.builder.component.TextBoxBuilder
+import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.ComponentStyleSet
 import org.hexworks.zircon.api.component.Label
@@ -209,7 +210,7 @@ class Equipments(initialMainHand: AnyEntity? = null,
 
         charLabel.componentStyleSet = ComponentStyleSet.create(
                 equipment.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
-                backgroundColor = GameColor.SECONDARY_BACKGROUND)
+                backgroundColor = TileColor.transparent())
         charLabel.textProperty.value = if (itemChar != null) itemChar.toString() else "" // Don't fold this expression, as nullChar.toString == "n"
         nameLabel.textProperty.value = equipment.optional?.name?.capitalize() ?: "-"
     }
