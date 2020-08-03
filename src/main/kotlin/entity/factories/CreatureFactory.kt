@@ -115,8 +115,9 @@ object CreatureFactory {
                     EntityTile(GameTile.CRAB),
                     KillTarget(),
                     Obstacle,
+                    ShuffleBias(),
                     Vision(2))
-            .withBehaviors(VisionUser, DumbChaser or Wanderer)
+            .withBehaviors(VisionUser, DumbChaser or Shuffler)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
