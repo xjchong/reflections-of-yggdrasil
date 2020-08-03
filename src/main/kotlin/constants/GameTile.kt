@@ -34,6 +34,7 @@ object GameTile {
      */
 
     val BAT = newCharacterTile('b', GameColor.DARK_BLUE)
+    val CRAB = newCharacterTile('c', GameColor.ORANGE)
     val FUNGUS = newCharacterTile(',', GameColor.GREEN)
     val PLAYER = newCharacterTile('@', GameColor.YELLOW)
     val RAT = newCharacterTile('r', GameColor.LIGHT_GREY)

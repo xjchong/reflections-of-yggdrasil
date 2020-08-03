@@ -30,6 +30,7 @@ object CreatureFactory {
     fun newRandomCreature(): AnyEntity {
         val weightedCreatures: WeightedCollection<() -> AnyEntity> = WeightedCollection(
                 WeightedEntry({ newBat() }, 9),
+                WeightedEntry({ newCrab() }, 7),
                 WeightedEntry({ newFungus() }, 5),
                 WeightedEntry({ newRat() }, 5),
                 WeightedEntry({ newZombie() }, 5)
@@ -99,6 +100,26 @@ object CreatureFactory {
             .withBehaviors(VisionUser, Wanderer)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
+
+    fun newCrab() = AnyEntityBuilder.newBuilder(Crab)
+            .withAttributes(
+                    Alliance(Monster),
+                    AttackStrategies(WeakClawAttack()),
+                    CombatStats.create(
+                            maxHealth = 60,
+                            maxStamina = 80,
+                            power = 0.2,
+                            tech = 0.1),
+                    EntityActions(AttemptAttack::class),
+                    EntityPosition(),
+                    EntityTile(GameTile.CRAB),
+                    KillTarget(),
+                    Obstacle,
+                    Vision(2))
+            .withBehaviors(VisionUser, DumbChaser or Wanderer)
+            .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
+            .build()
+
 
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 0.6) { newFungus(it) }) = AnyEntityBuilder.newBuilder(Fungus)
             .withAttributes(

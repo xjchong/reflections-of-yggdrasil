@@ -14,6 +14,10 @@ object Bat : BaseEntityType(
         name = "bat"
 )
 
+object Crab : BaseEntityType(
+        name = "crab"
+)
+
 object Fungus : BaseEntityType(
         name = "fungus"
 )
