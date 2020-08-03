@@ -158,6 +158,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         val size = presence.size
 
         presence.map.clear()
+        presence.updateLastPosition(entity.position)
 
         fun findNextPosition(candidates: Set<Position3D>, remainingSize: Int) {
             if (remainingSize == 0) return

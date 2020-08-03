@@ -83,22 +83,23 @@ object CreatureFactory {
 
     fun newBat() = AnyEntityBuilder.newBuilder(Bat)
             .withAttributes(
-                Alliance(Monster),
-                AttackStrategies(BiteAttack()),
-                CombatStats.create(
-                        maxHealth = 60,
-                        maxStamina = 50,
-                        power = 0.1,
-                        tech = 0.2),
-                EntityActions(AttemptAttack::class),
-                EntityPosition(),
-                EntityTile(GameTile.BAT),
-                Inventory(1).apply {
-                    add(ItemFactory.newBatMeat())
-                },
-                KillTarget(),
-                Obstacle,
-                Vision(3))
+                    Alliance(Monster),
+                    AttackStrategies(BiteAttack()),
+                    CombatStats.create(
+                            maxHealth = 60,
+                            maxStamina = 50,
+                            power = 0.1,
+                            tech = 0.2),
+                    EntityActions(AttemptAttack::class),
+                    EntityPosition(),
+                    EntityTile(GameTile.BAT),
+                    Inventory(1).apply {
+                        add(ItemFactory.newBatMeat())
+                    },
+                    KillTarget(),
+                    Obstacle,
+                    Presence(),
+                    Vision(3))
             .withBehaviors(VisionUser, Wanderer)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
@@ -116,6 +117,7 @@ object CreatureFactory {
                     EntityTile(GameTile.CRAB),
                     KillTarget(),
                     Obstacle,
+                    Presence(),
                     Resistances(
                             Resistance(Cut, 1.0, 0.2),
                             Resistance(Stab, 0.5, 0.5),
@@ -130,20 +132,21 @@ object CreatureFactory {
 
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 0.6) { newFungus(it) }) = AnyEntityBuilder.newBuilder(Fungus)
             .withAttributes(
-                Alliance(Monster),
-                AttackStrategies(SporeAttack(listOf(
-                        StatusEffect(Poison, 3, 0.5)
-                ))),
-                CombatStats.create(
-                        maxHealth = 20,
-                        maxStamina = 1,
-                        stamina = 0,
-                        power = 0.1),
-                EntityPosition(),
-                EntityTile(GameTile.FUNGUS),
-                Obstacle,
-                proliferation,
-                Vision(2))
+                    Alliance(Monster),
+                    AttackStrategies(SporeAttack(listOf(
+                            StatusEffect(Poison, 3, 0.5)
+                    ))),
+                    CombatStats.create(
+                            maxHealth = 20,
+                            maxStamina = 1,
+                            stamina = 0,
+                            power = 0.1),
+                    EntityPosition(),
+                    EntityTile(GameTile.FUNGUS),
+                    Obstacle,
+                    Presence(),
+                    proliferation,
+                    Vision(2))
             .withBehaviors(VisionUser, DumbChaser, Proliferator)
             .withFacets(Attackable, Destructible, RandomlyAttacking)
             .build()
@@ -151,21 +154,22 @@ object CreatureFactory {
 
     fun newRat(proliferation: Proliferation = Proliferation(0.02, 0.9) { newRat(it) }) = AnyEntityBuilder.newBuilder(Rat)
             .withAttributes(
-                Alliance(Monster),
-                AttackStrategies(WeakBiteAttack(listOf(
-                        StatusEffect(Poison, 2, 0.3)
-                ))),
-                CombatStats.create(
-                        maxHealth = 40,
-                        maxStamina = 10,
-                        power = 0.1,
-                        tech = 0.1),
-                EntityPosition(),
-                EntityTile(GameTile.RAT),
-                KillTarget(),
-                Obstacle,
-                proliferation,
-                Smell(6))
+                    Alliance(Monster),
+                    AttackStrategies(WeakBiteAttack(listOf(
+                            StatusEffect(Poison, 2, 0.3)
+                    ))),
+                    CombatStats.create(
+                            maxHealth = 40,
+                            maxStamina = 10,
+                            power = 0.1,
+                            tech = 0.1),
+                    EntityPosition(),
+                    EntityTile(GameTile.RAT),
+                    KillTarget(),
+                    Obstacle,
+                    Presence(),
+                    proliferation,
+                    Smell(6))
             .withBehaviors(SmellUser, DumbChaser or Wanderer, Proliferator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
@@ -186,6 +190,7 @@ object CreatureFactory {
                     },
                     KillTarget(),
                     Obstacle,
+                    Presence(),
                     Vision(5))
             .withBehaviors(VisionUser, DumbChaser or Wanderer, StaminaRegenerator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
