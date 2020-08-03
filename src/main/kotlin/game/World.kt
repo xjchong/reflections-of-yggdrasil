@@ -1,8 +1,9 @@
 package game
-import attributes.Vision
+import attributes.flag.BlocksSmell
 import block.GameBlock
 import entity.*
 import events.*
+import extensions.neighbors
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
@@ -148,10 +149,26 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         return position
     }
 
-    private fun isVisionBlockedAt(position: Position3D): Boolean {
-        return fetchBlockAt(position).fold(whenEmpty = { false }, whenPresent = {
-            it.entities.any(AnyEntity::isOpaque)
-        })
+    fun findSmellablePositionsFor(origin: Position3D, radius: Int): Iterable<Position3D> {
+        val smellablePositions = mutableSetOf<Position3D>()
+
+        fun findNextPosition(candidates: Set<Position3D>, remainingRadius: Int) {
+            if (remainingRadius == 0) return
+            val nextCandidates = mutableSetOf<Position3D>()
+
+            for (candidate in candidates) {
+                if (isSmellBlockedAt(candidate) || smellablePositions.contains(candidate)) continue
+
+                smellablePositions.add(candidate)
+                nextCandidates.addAll(candidate.neighbors(false))
+            }
+
+            findNextPosition(nextCandidates, remainingRadius - 1)
+        }
+
+        findNextPosition(setOf(origin), radius)
+
+        return smellablePositions
     }
 
     fun findVisiblePositionsFor(origin: Position3D, radius: Int): Iterable<Position3D> {
@@ -171,13 +188,12 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     fun updateFowAt(entity: AnyEntity) {
-        val vision = entity.getAttribute(Vision::class) ?: return
         val nextHiddenPositions: MutableSet<Position3D> = mutableSetOf()
         nextHiddenPositions.addAll(lastVisiblePositions)
 
-        vision.visiblePositions.forEach { visiblePos ->
-            nextHiddenPositions.remove(visiblePos)
-            fetchBlockAt(visiblePos).ifPresent { block ->
+        entity.sensedPositions.forEach { sensedPosition ->
+            nextHiddenPositions.remove(sensedPosition)
+            fetchBlockAt(sensedPosition).ifPresent { block ->
                 block.reveal()
             }
         }
@@ -189,10 +205,22 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
 
         lastVisiblePositions.clear()
-        lastVisiblePositions.addAll(vision.visiblePositions)
+        lastVisiblePositions.addAll(entity.sensedPositions)
     }
 
     private fun updateTurn() {
         turnProperty.updateValue(turn + 1)
+    }
+
+    private fun isSmellBlockedAt(position: Position3D): Boolean {
+        return fetchBlockAt(position).fold(whenEmpty = { false }, whenPresent = { block ->
+            block.entities.any { it.findAttribute(BlocksSmell::class).isPresent }
+        })
+    }
+
+    private fun isVisionBlockedAt(position: Position3D): Boolean {
+        return fetchBlockAt(position).fold(whenEmpty = { false }, whenPresent = {
+            it.entities.any(AnyEntity::isOpaque)
+        })
     }
 }

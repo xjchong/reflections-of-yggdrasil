@@ -50,11 +50,12 @@ val AnyEntity.isOpaque: Boolean
     get() = this.findAttribute(Opaque::class).isPresent
 
 // This can be updated to support other types of 'vision'.
-val AnyEntity.sensedPositions: List<Position3D>
+val AnyEntity.sensedPositions: Set<Position3D>
     get() {
-        val vision = getAttribute(Vision::class) ?: return listOf()
+        val visiblePositions = getAttribute(Vision::class)?.visiblePositions ?: mutableSetOf()
+        val smellablePositions = getAttribute(Smell::class)?.smellablePositions ?: mutableSetOf()
 
-        return vision.visiblePositions.toList()
+        return visiblePositions + smellablePositions
     }
 
 fun AnyEntity.isAlliedWith(entity: AnyEntity): Boolean {

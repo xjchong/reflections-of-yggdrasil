@@ -3,6 +3,7 @@ package entity.factories
 import attributes.EntityPosition
 import attributes.EntityTile
 import attributes.OpenAppearance
+import attributes.flag.BlocksSmell
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import attributes.flag.Opened
@@ -19,6 +20,7 @@ object WidgetFactory {
 
     fun newWall(isDiggable: Boolean = true) = newGameEntityOfType(Wall) {
         attributes(
+                BlocksSmell,
                 EntityPosition(),
                 EntityTile(GameTile.WALL),
                 Obstacle,
@@ -37,6 +39,7 @@ object WidgetFactory {
         } else {
             baseAttributes.add(Obstacle)
             baseAttributes.add(Opaque)
+            baseAttributes.add(BlocksSmell)
         }
 
         attributes(*baseAttributes.toTypedArray())

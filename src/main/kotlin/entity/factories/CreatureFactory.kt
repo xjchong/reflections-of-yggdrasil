@@ -137,8 +137,8 @@ object CreatureFactory {
                 KillTarget(),
                 Obstacle,
                 proliferation,
-                Vision(7))
-            .withBehaviors(VisionUser, DumbChaser or Wanderer, Proliferator)
+                Smell(6))
+            .withBehaviors(SmellUser, DumbChaser or Wanderer, Proliferator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 

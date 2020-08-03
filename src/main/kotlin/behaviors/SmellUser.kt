@@ -1,17 +1,17 @@
 package behaviors
 
 import attributes.EnemyList
-import attributes.Vision
+import attributes.Smell
 import entity.*
 import game.GameContext
 
-object VisionUser : ForegroundBehavior(Vision::class) {
+object SmellUser : ForegroundBehavior(Smell::class) {
 
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
-        val vision = entity.getAttribute(Vision::class) ?: return false
+        val smell = entity.getAttribute(Smell::class) ?: return false
 
-        vision.visiblePositions.clear()
-        vision.visiblePositions.addAll(context.world.findVisiblePositionsFor(entity.position, vision.radius))
+        smell.smellablePositions.clear()
+        smell.smellablePositions.addAll(context.world.findSmellablePositionsFor(entity.position, smell.radius))
 
         entity.getAttribute(EnemyList::class)?.run {
             val newEnemies: MutableList<AnyEntity> = mutableListOf()

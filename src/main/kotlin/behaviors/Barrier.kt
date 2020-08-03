@@ -1,5 +1,6 @@
 package behaviors
 
+import attributes.flag.BlocksSmell
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
 import attributes.flag.Opened
@@ -14,6 +15,9 @@ object Barrier : ForegroundBehavior() {
                 removeAttribute(Obstacle)
                 findAttribute(Opaque::class).ifPresent {
                     removeAttribute(Opaque)
+                }
+                findAttribute(BlocksSmell::class).ifPresent {
+                    removeAttribute(BlocksSmell)
                 }
             }
         }
