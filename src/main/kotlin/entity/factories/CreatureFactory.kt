@@ -104,17 +104,21 @@ object CreatureFactory {
     fun newCrab() = AnyEntityBuilder.newBuilder(Crab)
             .withAttributes(
                     Alliance(Monster),
-                    AttackStrategies(WeakClawAttack()),
+                    AttackStrategies(ClawAttack()),
                     CombatStats.create(
                             maxHealth = 60,
                             maxStamina = 80,
-                            power = 0.2,
-                            tech = 0.1),
+                            power = 0.2),
                     EntityActions(AttemptAttack::class),
                     EntityPosition(),
                     EntityTile(GameTile.CRAB),
                     KillTarget(),
                     Obstacle,
+                    Resistances(
+                            Resistance(Cut, 1.0, 0.2),
+                            Resistance(Stab, 0.5, 0.5),
+                            Resistance(Bash, 1.0, 1.5)
+                    ),
                     ShuffleBias(),
                     Vision(2))
             .withBehaviors(VisionUser, DumbChaser or Shuffler)
