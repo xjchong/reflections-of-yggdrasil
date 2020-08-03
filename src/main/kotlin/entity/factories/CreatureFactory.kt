@@ -59,6 +59,7 @@ object CreatureFactory {
                         initialBody = ArmorFactory.newSimpleJacket()),
                 Inventory(10),
                 Obstacle,
+                Presence(),
                 StatusDetails(),
                 Vigilance.create(10),
                 Vision(5),
@@ -71,7 +72,8 @@ object CreatureFactory {
                         tech = .33,
                         luck = .34
                 ))
-        behaviors(StatusUpdater, StaminaRegenerator, VisionUser, FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
+        behaviors(PresenceUpdater, StatusUpdater, StaminaRegenerator, VisionUser,
+                FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
         facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusApplicable, RandomlyAttacking)
     }
 

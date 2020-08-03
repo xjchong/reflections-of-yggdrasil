@@ -1,8 +1,10 @@
 package constants
 
 import GameColor
+import attributes.Presence
 import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.data.CharacterTile
+import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.graphics.Symbols
 
@@ -19,6 +21,31 @@ object GameTile {
     }
 
     val EMPTY: CharacterTile = Tile.empty()
+
+    fun presenceTile(presence: Presence?, position: Position3D): CharacterTile {
+        if (presence == null) return GameTile.EMPTY
+
+        val value = presence.map[position]
+        val charCode = when(value) {
+            null, 0 -> 32
+            in (1..9) -> 48 + value
+            in (10..35) -> 55 + value
+            else -> 32
+        }
+
+        val colorInterpolator = TileColor.create(255, 255, 0)
+                .interpolateTo(TileColor.create(255, 0, 0))
+        val ratio = if (value != null) {
+            (value.toDouble() / presence.size.toDouble()).coerceAtMost(1.0)
+        } else {
+            1.0
+        }
+
+        return newCharacterTile(
+                charCode.toChar(),
+                colorInterpolator.getColorAtRatio(ratio).withAlpha(50),
+                backgroundColor = TileColor.transparent())
+    }
 
     /**
      * WIDGET

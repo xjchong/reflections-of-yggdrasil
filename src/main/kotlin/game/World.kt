@@ -1,4 +1,5 @@
 package game
+import attributes.Presence
 import attributes.flag.BlocksSmell
 import block.GameBlock
 import entity.*
@@ -81,6 +82,9 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     fun addEntity(entity: AnyEntity, position: Position3D) {
         if (entity.isPlayer) {
             engine.setInputReceivingEntity(entity)
+            blocks.forEach {
+                it.value.presence = entity.getAttribute(Presence::class)
+            }
         } else {
             engine.addEntityWithPriority(entity, GameEngine.PRIORITY_DEFAULT)
         }
@@ -149,6 +153,31 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         return position
     }
 
+    fun updatePresence(entity: AnyEntity): Boolean {
+        val presence = entity.getAttribute(Presence::class) ?: return false
+        val size = presence.size
+
+        presence.map.clear()
+
+        fun findNextPosition(candidates: Set<Position3D>, remainingSize: Int) {
+            if (remainingSize == 0) return
+            val nextCandidates = mutableSetOf<Position3D>()
+
+            for (candidate in candidates) {
+                if (presence.map.containsKey(candidate) || isPresenceBlockedAt(candidate)) continue
+
+                presence.map[candidate] = size - remainingSize
+                nextCandidates.addAll(candidate.neighbors(false))
+            }
+
+            findNextPosition(nextCandidates, remainingSize - 1)
+        }
+
+        findNextPosition(setOf(entity.position), presence.size)
+
+        return true
+    }
+
     fun findSmellablePositionsFor(origin: Position3D, radius: Int): Iterable<Position3D> {
         val smellablePositions = mutableSetOf<Position3D>()
 
@@ -210,6 +239,12 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
     private fun updateTurn() {
         turnProperty.updateValue(turn + 1)
+    }
+
+    private fun isPresenceBlockedAt(position: Position3D): Boolean {
+        return fetchBlockAt(position).fold(whenEmpty = {false}, whenPresent = { block ->
+            block.isWall
+        })
     }
 
     private fun isSmellBlockedAt(position: Position3D): Boolean {

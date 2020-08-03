@@ -1,11 +1,9 @@
 package block
 import GameColor
 import attributes.Memory
+import attributes.Presence
 import constants.GameTile
-import entity.AnyEntity
-import entity.isObstacle
-import entity.position
-import entity.tile
+import entity.*
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.delay
@@ -22,7 +20,7 @@ import org.hexworks.zircon.api.data.base.BaseBlock
 import utilities.DebugConfig
 
 class GameBlock(private val position: Position3D,
-                private var defaultTile: Tile = GameTile.FLOOR,
+                private var defaultTile: CharacterTile = GameTile.FLOOR,
                 private val currentEntities: MutableList<AnyEntity> = mutableListOf(),
                 private var isRevealed: Boolean = false)
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
@@ -40,6 +38,7 @@ class GameBlock(private val position: Position3D,
     private var memory: Memory? = null
     private var flashColor: TileColor? = null
     private var flashCountdown: Int = 0
+    var presence: Presence? = null
 
     val turnProperty: Property<Long> = createPropertyFrom(0)
     private val turn: Long by turnProperty.asDelegate()
@@ -54,8 +53,11 @@ class GameBlock(private val position: Position3D,
             }.run { flashColor?.let { withBackgroundColor(it) } ?: run { this } }
 
             val topTile = when {
-                DebugConfig.shouldRevealWorld -> GameTile.EMPTY
-                isRevealed -> GameTile.EMPTY
+                (isRevealed || DebugConfig.shouldRevealWorld) -> {
+                    if (DebugConfig.shouldShowPresence) {
+                        GameTile.presenceTile(presence, position)
+                    } else GameTile.EMPTY
+                }
                 else -> getMemoryTile()
             }
 
@@ -69,7 +71,7 @@ class GameBlock(private val position: Position3D,
         }
 
     val isWall: Boolean
-        get() = Maybe.ofNullable(currentEntities.firstOrNull { it.tile == GameTile.WALL }).isPresent
+        get() = Maybe.ofNullable(currentEntities.firstOrNull { it.type == Wall }).isPresent
 
     val isUnoccupied: Boolean
         get() = currentEntities.isEmpty()
