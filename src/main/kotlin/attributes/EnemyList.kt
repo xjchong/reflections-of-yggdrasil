@@ -43,7 +43,7 @@ class EnemyList : DisplayableAttribute {
 
             val currentEnemies = enemyEntries.map { it.entity }
 
-            newEnemies.take(10).forEach {
+            newEnemies.take(10 - currentEnemies.size).forEach {
                 if (!currentEnemies.contains(it)) {
                     val newEnemyRow = EnemyListRow(vBox.width, it)
                     val newAttachedEnemyRow = vBox.addFragment(newEnemyRow)
