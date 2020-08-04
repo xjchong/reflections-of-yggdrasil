@@ -1,12 +1,10 @@
 package behaviors
 
+import attributes.Presence
 import commands.AttemptAnyAction
 import commands.AttemptAttack
 import commands.Move
-import entity.AnyEntity
-import entity.isAlliedWith
-import entity.position
-import entity.sensedPositions
+import entity.*
 import extensions.neighbors
 import extensions.optional
 import game.GameContext
@@ -43,7 +41,27 @@ object DumbChaser : ForegroundBehavior() {
     }
 
     private suspend fun moveToEnemy(context: GameContext, chaser: AnyEntity, target: AnyEntity): Boolean {
-        val nextPosition = getGreedyPosition(context, chaser.position, target.position)
+        val targetPresence = target.getAttribute(Presence::class)
+        var nextPosition: Position3D = Position3D.unknown()
+
+        // Attempt to get the next move using presence maps.
+        if (targetPresence != null) {
+            var lowestPresenceVal: Int? = null
+
+            for (neighbor in chaser.position.neighbors()) {
+                val presenceVal = targetPresence.map[neighbor] ?: continue
+
+                if (lowestPresenceVal == null || presenceVal < lowestPresenceVal) {
+                    nextPosition = neighbor
+                    lowestPresenceVal = presenceVal
+                }
+            }
+        }
+
+        // If couldn't use presence maps to get next best move, then attempt an even simpler greedy approach.
+        if (nextPosition == Position3D.unknown()) {
+            nextPosition = getGreedyPosition(context, chaser.position, target.position)
+        }
 
         if (chaser.executeCommand(AttemptAnyAction(context, chaser, nextPosition)) == Pass) {
             chaser.executeCommand(Move(context, chaser, nextPosition))
