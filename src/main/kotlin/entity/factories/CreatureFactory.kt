@@ -32,7 +32,7 @@ object CreatureFactory {
                 WeightedEntry({ newBat() }, 9),
                 WeightedEntry({ newCrab() }, 7),
                 WeightedEntry({ newFungus() }, 5),
-                WeightedEntry({ newRat() }, 5),
+                WeightedEntry({ newRat() }, 3),
                 WeightedEntry({ newZombie() }, 5)
         )
 
@@ -125,7 +125,7 @@ object CreatureFactory {
                     ),
                     ShuffleBias(),
                     Vision(2))
-            .withBehaviors(VisionUser, DumbFleer or DumbChaser or Shuffler)
+            .withBehaviors(VisionUser, DumbChaser or Shuffler)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -192,7 +192,7 @@ object CreatureFactory {
                     Obstacle,
                     Presence(),
                     Vision(5))
-            .withBehaviors(VisionUser, DumbFleer or DumbChaser or Wanderer, StaminaRegenerator)
+            .withBehaviors(VisionUser, DumbChaser or Wanderer, StaminaRegenerator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 }
