@@ -100,7 +100,7 @@ object CreatureFactory {
                     Obstacle,
                     Presence(),
                     Vision(3))
-            .withBehaviors(VisionUser, Wanderer)
+            .withBehaviors(VisionUser, DumbFleer or Wanderer)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -125,7 +125,7 @@ object CreatureFactory {
                     ),
                     ShuffleBias(),
                     Vision(2))
-            .withBehaviors(VisionUser, DumbChaser or Shuffler)
+            .withBehaviors(VisionUser, DumbFleer or DumbChaser or Shuffler)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -170,7 +170,7 @@ object CreatureFactory {
                     Presence(),
                     proliferation,
                     Smell(6))
-            .withBehaviors(SmellUser, DumbChaser or Wanderer, Proliferator)
+            .withBehaviors(SmellUser, DumbFleer or DumbChaser or Wanderer, Proliferator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -192,7 +192,7 @@ object CreatureFactory {
                     Obstacle,
                     Presence(),
                     Vision(5))
-            .withBehaviors(VisionUser, DumbChaser or Wanderer, StaminaRegenerator)
+            .withBehaviors(VisionUser, DumbFleer or DumbChaser or Wanderer, StaminaRegenerator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 }

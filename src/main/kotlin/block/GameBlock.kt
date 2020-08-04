@@ -54,7 +54,7 @@ class GameBlock(private val position: Position3D,
 
             val topTile = when {
                 (isRevealed || DebugConfig.shouldRevealWorld) -> {
-                    if (DebugConfig.shouldShowPresence) {
+                    if (DebugConfig.presenceTypeShown > 0) {
                         GameTile.presenceTile(presence, position)
                     } else GameTile.EMPTY
                 }

@@ -15,7 +15,6 @@ object DumbChaser : ForegroundBehavior() {
 
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val world = context.world
-        var isChasing = false
         var enemy: AnyEntity? = null
 
         for (sensedPos in entity.sensedPositions.minus(entity.position)) {
@@ -46,14 +45,14 @@ object DumbChaser : ForegroundBehavior() {
 
         // Attempt to get the next move using presence maps.
         if (targetPresence != null) {
-            var lowestPresenceVal: Int? = null
+            var lowestApproachVal: Int? = null
 
             for (neighbor in chaser.position.neighbors()) {
-                val presenceVal = targetPresence.map[neighbor] ?: continue
+                val approachVal = targetPresence.approachMap[neighbor] ?: continue
 
-                if (lowestPresenceVal == null || presenceVal < lowestPresenceVal) {
+                if (lowestApproachVal == null || approachVal < lowestApproachVal) {
                     nextPosition = neighbor
-                    lowestPresenceVal = presenceVal
+                    lowestApproachVal = approachVal
                 }
             }
         }

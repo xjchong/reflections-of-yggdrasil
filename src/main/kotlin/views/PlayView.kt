@@ -209,7 +209,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
             }
 
             if (keyEvent.code == KeyCode.KEY_P) {
-                DebugConfig.apply { shouldShowPresence = ! shouldShowPresence }
+                DebugConfig.apply { presenceTypeShown = (presenceTypeShown + 1) % 3 }
                 return@handleKeyboardEvents Processed
             }
 

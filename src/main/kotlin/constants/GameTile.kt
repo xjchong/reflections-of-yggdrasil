@@ -7,6 +7,7 @@ import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.graphics.Symbols
+import utilities.DebugConfig
 
 
 object GameTile {
@@ -25,7 +26,11 @@ object GameTile {
     fun presenceTile(presence: Presence?, position: Position3D): CharacterTile {
         if (presence == null) return GameTile.EMPTY
 
-        val value = presence.map[position]
+        val value = when (DebugConfig.presenceTypeShown) {
+            1 -> presence.approachMap[position]
+            else -> presence.avoidanceMap[position]
+        }
+
         val charCode = when(value) {
             null, 0 -> 32
             in (1..9) -> 48 + value

@@ -155,26 +155,49 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
     fun updatePresence(entity: AnyEntity): Boolean {
         val presence = entity.getAttribute(Presence::class) ?: return false
+        val avoidanceStarters = mutableSetOf<Position3D>()
         val size = presence.size
 
-        presence.map.clear()
+        presence.approachMap.clear()
+        presence.avoidanceMap.clear()
         presence.updateLastPosition(entity.position)
 
-        fun findNextPosition(candidates: Set<Position3D>, remainingSize: Int) {
+        fun findNextApproach(candidates: Set<Position3D>, remainingSize: Int) {
             if (remainingSize == 0) return
             val nextCandidates = mutableSetOf<Position3D>()
 
             for (candidate in candidates) {
-                if (presence.map.containsKey(candidate) || isPresenceBlockedAt(candidate)) continue
+                if (presence.approachMap.containsKey(candidate) || isPresenceBlockedAt(candidate)) continue
 
-                presence.map[candidate] = size - remainingSize
+                presence.approachMap[candidate] = size - remainingSize
+                nextCandidates.addAll(candidate.neighbors(false))
+
+                if (remainingSize == 1) {
+                    avoidanceStarters.add(candidate)
+                }
+            }
+
+            findNextApproach(nextCandidates, remainingSize - 1)
+        }
+
+        findNextApproach(setOf(entity.position), presence.size)
+
+        fun findNextAvoidance(candidates: Set<Position3D>, value: Int) {
+            if (candidates.isEmpty()) return
+            val nextCandidates = mutableSetOf<Position3D>()
+
+            for (candidate in candidates) {
+                if (presence.approachMap.containsKey(candidate).not()) continue
+                if (presence.avoidanceMap.containsKey(candidate)) continue
+
+                presence.avoidanceMap[candidate] = value
                 nextCandidates.addAll(candidate.neighbors(false))
             }
 
-            findNextPosition(nextCandidates, remainingSize - 1)
+            findNextAvoidance(nextCandidates, value + 1)
         }
 
-        findNextPosition(setOf(entity.position), presence.size)
+        findNextAvoidance(avoidanceStarters, 0)
 
         return true
     }
