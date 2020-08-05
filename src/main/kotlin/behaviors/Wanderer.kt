@@ -1,16 +1,22 @@
 package behaviors
 
+import attributes.Goal
+import attributes.Goals
 import commands.AttemptAnyAction
 import commands.Move
 import entity.AnyEntity
+import entity.executeBlockingCommand
+import entity.getAttribute
 import entity.position
 import extensions.neighbors
 import extensions.optional
 import game.GameContext
+import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
+import org.hexworks.zircon.api.data.Position3D
 
 
-object Wanderer : ForegroundBehavior() {
+object Wanderer : ForegroundBehavior(Goals::class) {
 
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val position = entity.position
@@ -21,15 +27,21 @@ object Wanderer : ForegroundBehavior() {
                 block != null && !block.isWall
             }
 
-            nextPosition?.let {
-                if (entity.executeCommand(AttemptAnyAction(context, entity, it)) == Pass) {
-                    entity.executeCommand(Move(context, entity, it))
-                }
-
-                return true
+            if (nextPosition != null) {
+                return entity.addWanderGoal(context, nextPosition)
             }
         }
 
         return false
+    }
+
+    private suspend fun AnyEntity.addWanderGoal(context: GameContext, nextPosition: Position3D): Boolean {
+        return getAttribute(Goals::class)?.list?.add(Goal("Wander", 50) {
+            if (executeBlockingCommand(AttemptAnyAction(context, this, nextPosition)) == Pass) {
+                executeBlockingCommand(Move(context, this, nextPosition)) == Consumed
+            } else {
+                true
+            }
+        }) == true
     }
 }

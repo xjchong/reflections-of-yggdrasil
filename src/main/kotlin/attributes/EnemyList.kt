@@ -21,6 +21,7 @@ import org.hexworks.zircon.internal.Zircon
 
 class EnemyList : DisplayableAttribute {
 
+    val enemies: MutableList<AnyEntity> = mutableListOf()
     private val enemyEntries: MutableList<EnemyListEntry> = mutableListOf()
     private var vBox: VBox? = null
 
@@ -32,6 +33,9 @@ class EnemyList : DisplayableAttribute {
             }
 
     fun updateEnemies(newEnemies: List<AnyEntity>) {
+        enemies.clear()
+        enemies.addAll(newEnemies)
+
         vBox?.let { vBox ->
             enemyEntries.filter {
                 !newEnemies.contains(it.entity)

@@ -93,6 +93,7 @@ object CreatureFactory {
                     EntityActions(AttemptAttack::class),
                     EntityPosition(),
                     EntityTile(GameTile.BAT),
+                    Goals(),
                     Inventory(1).apply {
                         add(ItemFactory.newBatMeat())
                     },
@@ -100,7 +101,7 @@ object CreatureFactory {
                     Obstacle,
                     Presence(),
                     Vision(3))
-            .withBehaviors(VisionUser, DumbFleer or Wanderer)
+            .withBehaviors(VisionUser, Fleer, Wanderer, GoalEvaluator)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -143,11 +144,12 @@ object CreatureFactory {
                             power = 0.1),
                     EntityPosition(),
                     EntityTile(GameTile.FUNGUS),
+                    Goals(),
                     Obstacle,
                     Presence(),
                     proliferation,
                     Vision(2))
-            .withBehaviors(VisionUser, DumbChaser, Proliferator)
+            .withBehaviors(VisionUser, Attacker, GoalEvaluator, Proliferator)
             .withFacets(Attackable, Destructible, RandomlyAttacking)
             .build()
 
@@ -165,12 +167,13 @@ object CreatureFactory {
                             tech = 0.1),
                     EntityPosition(),
                     EntityTile(GameTile.RAT),
+                    Goals(),
                     KillTarget(),
                     Obstacle,
                     Presence(),
                     proliferation,
                     Smell(6))
-            .withBehaviors(SmellUser, DumbFleer or DumbChaser or Wanderer, Proliferator)
+            .withBehaviors(SmellUser, Attacker, Fleer, Chaser, Wanderer, GoalEvaluator, Proliferator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -184,6 +187,7 @@ object CreatureFactory {
                             maxStamina = 50,
                             power = 0.4
                     ),
+                    Goals(),
                     Inventory(5).apply {
                         add(WeaponFactory.newRandomWeapon())
                         add(ArmorFactory.newRandomArmor())
@@ -192,7 +196,7 @@ object CreatureFactory {
                     Obstacle,
                     Presence(),
                     Vision(5))
-            .withBehaviors(VisionUser, DumbChaser or Wanderer, StaminaRegenerator)
+            .withBehaviors(VisionUser, Attacker, Chaser, Wanderer, GoalEvaluator, StaminaRegenerator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 }
