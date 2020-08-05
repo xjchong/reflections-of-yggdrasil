@@ -6,8 +6,9 @@ import constants.GameTile
 import entity.*
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
@@ -60,8 +61,6 @@ class GameBlock(private val position: Position3D,
                 }
                 else -> getMemoryTile()
             }
-
-            updateFlash()
 
             return persistentMapOf(
                 Pair(BlockTileType.TOP, topTile),
@@ -120,22 +119,9 @@ class GameBlock(private val position: Position3D,
     fun flash(color: TileColor) {
         flashColor = color.withAlpha(200)
         flashCountdown = 8
-        // Blocking to display a flash can make more sense visually at times, but the delay can be annoying to play with.
-//        return
-        runBlocking {
+
+        GlobalScope.launch {
             delay(30)
-            flashColor = null
-        }
-    }
-
-    /**
-     * This an alternative method for displaying flash on tiles, which does not block.
-     */
-    private fun updateFlash() {
-        return
-        flashCountdown = (flashCountdown - 1).coerceAtLeast(0)
-
-        if (flashCountdown == 0) {
             flashColor = null
         }
     }
