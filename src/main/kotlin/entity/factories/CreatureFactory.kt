@@ -101,7 +101,7 @@ object CreatureFactory {
                     Obstacle,
                     Presence(),
                     Senses(vision = 3))
-            .withBehaviors(SensoryUser, Fleer, Wanderer, GoalEvaluator)
+            .withBehaviors(PresenceUpdater, SensoryUser, Fleer, Wanderer, GoalEvaluator)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -126,7 +126,7 @@ object CreatureFactory {
                     ),
                     ShuffleBias(),
                     Senses(vision = 2))
-            .withBehaviors(SensoryUser, DumbChaser or Shuffler)
+            .withBehaviors(PresenceUpdater, SensoryUser, DumbChaser or Shuffler)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -149,7 +149,7 @@ object CreatureFactory {
                     Presence(),
                     proliferation,
                     Senses(vision = 2))
-            .withBehaviors(SensoryUser, Attacker, GoalEvaluator, Proliferator)
+            .withBehaviors(PresenceUpdater, SensoryUser, Attacker, GoalEvaluator, Proliferator)
             .withFacets(Attackable, Destructible, RandomlyAttacking)
             .build()
 
@@ -173,7 +173,7 @@ object CreatureFactory {
                     Presence(),
                     proliferation,
                     Senses(vision = 3, smell = 6))
-            .withBehaviors(SensoryUser, Attacker, Fleer, Chaser, Wanderer, GoalEvaluator, Proliferator)
+            .withBehaviors(PresenceUpdater, SensoryUser, Attacker, Fleer, Chaser, Wanderer, GoalEvaluator, Proliferator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -196,7 +196,7 @@ object CreatureFactory {
                     Obstacle,
                     Presence(),
                     Senses(vision = 5))
-            .withBehaviors(SensoryUser, Attacker, Chaser, Wanderer, GoalEvaluator, StaminaRegenerator)
+            .withBehaviors(PresenceUpdater, SensoryUser, Attacker, Chaser, Wanderer, GoalEvaluator, StaminaRegenerator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 }
