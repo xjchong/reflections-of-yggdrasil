@@ -1,7 +1,6 @@
 package block
 import GameColor
 import attributes.Memory
-import attributes.Presence
 import constants.GameTile
 import entity.*
 import extensions.optional
@@ -42,7 +41,6 @@ class GameBlock(private val position: Position3D,
     private var memory: Memory? = null
     private var flashColor: TileColor? = null
     private var flashCountdown: Int = 0
-    var presence: Presence? = null
 
     val turnProperty: Property<Long> = createPropertyFrom(0)
     private val turn: Long by turnProperty.asDelegate()
@@ -57,11 +55,7 @@ class GameBlock(private val position: Position3D,
             }.run { flashColor?.let { withBackgroundColor(it) } ?: run { this } }
 
             val topTile = when {
-                (isRevealed || DebugConfig.shouldRevealWorld) -> {
-                    if (DebugConfig.presenceTypeShown > 0) {
-                        GameTile.presenceTile(presence, position)
-                    } else GameTile.EMPTY
-                }
+                (isRevealed || DebugConfig.shouldRevealWorld) -> GameTile.EMPTY
                 else -> getMemoryTile()
             }
 

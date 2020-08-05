@@ -59,7 +59,6 @@ object CreatureFactory {
                         initialBody = ArmorFactory.newSimpleJacket()),
                 Inventory(10),
                 Obstacle,
-                Presence(),
                 StatusDetails(),
                 Vigilance.create(10),
                 Senses(vision = 6),
@@ -72,7 +71,7 @@ object CreatureFactory {
                         tech = .33,
                         luck = .34
                 ))
-        behaviors(PresenceUpdater, StatusUpdater, StaminaRegenerator, SensoryUser,
+        behaviors(StatusUpdater, StaminaRegenerator, SensoryUser,
                 FocusTargetUser, EnemyListUser, VisualRememberer, VigilanceUser, FogOfWarUser)
         facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusApplicable, RandomlyAttacking)
     }
@@ -99,9 +98,8 @@ object CreatureFactory {
                     },
                     KillTarget(),
                     Obstacle,
-                    Presence(),
                     Senses(vision = 3))
-            .withBehaviors(PresenceUpdater, SensoryUser, Fleer, Wanderer, GoalEvaluator)
+            .withBehaviors(SensoryUser, Fleer, Wanderer, GoalEvaluator)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -116,9 +114,9 @@ object CreatureFactory {
                     EntityActions(AttemptAttack::class),
                     EntityPosition(),
                     EntityTile(GameTile.CRAB),
+                    Goals(),
                     KillTarget(),
                     Obstacle,
-                    Presence(),
                     Resistances(
                             Resistance(Cut, 1.0, 0.2),
                             Resistance(Stab, 0.5, 0.5),
@@ -126,7 +124,7 @@ object CreatureFactory {
                     ),
                     ShuffleBias(),
                     Senses(vision = 2))
-            .withBehaviors(PresenceUpdater, SensoryUser, DumbChaser or Shuffler)
+            .withBehaviors(SensoryUser, Attacker or Shuffler, GoalEvaluator)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -146,10 +144,9 @@ object CreatureFactory {
                     EntityTile(GameTile.FUNGUS),
                     Goals(),
                     Obstacle,
-                    Presence(),
                     proliferation,
                     Senses(vision = 2))
-            .withBehaviors(PresenceUpdater, SensoryUser, Attacker, GoalEvaluator, Proliferator)
+            .withBehaviors(SensoryUser, Attacker, GoalEvaluator, Proliferator)
             .withFacets(Attackable, Destructible, RandomlyAttacking)
             .build()
 
@@ -170,10 +167,9 @@ object CreatureFactory {
                     Goals(),
                     KillTarget(),
                     Obstacle,
-                    Presence(),
                     proliferation,
                     Senses(vision = 3, smell = 6))
-            .withBehaviors(PresenceUpdater, SensoryUser, Attacker, Fleer, Chaser, Wanderer, GoalEvaluator, Proliferator)
+            .withBehaviors(SensoryUser, Attacker, Fleer, Chaser, Wanderer, GoalEvaluator, Proliferator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -194,9 +190,8 @@ object CreatureFactory {
                     },
                     KillTarget(),
                     Obstacle,
-                    Presence(),
                     Senses(vision = 5))
-            .withBehaviors(PresenceUpdater, SensoryUser, Attacker, Chaser, Wanderer, GoalEvaluator, StaminaRegenerator)
+            .withBehaviors(SensoryUser, Attacker, Chaser, Wanderer, GoalEvaluator, StaminaRegenerator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 }

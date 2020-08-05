@@ -1,6 +1,5 @@
 package game
 import attributes.EntityActions
-import attributes.Presence
 import attributes.flag.BlocksSmell
 import attributes.flag.Opened
 import block.GameBlock
@@ -86,9 +85,6 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     fun addEntity(entity: AnyEntity, position: Position3D) {
         if (entity.isPlayer) {
             engine.setInputReceivingEntity(entity)
-            blocks.forEach {
-                it.value.presence = entity.getAttribute(Presence::class)
-            }
         } else {
             engine.addEntityWithPriority(entity, GameEngine.PRIORITY_DEFAULT)
         }
@@ -158,6 +154,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     fun getMovementCost(entity: AnyEntity, from: Position3D, to: Position3D): Double {
+        // TODO: Use entity properly to consider the movement cost.
         val block = fetchBlockAt(to).optional ?: return 999.0
         val isDiagonal = from.x != to.x && from.y != to.y
 
@@ -175,55 +172,6 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
 
         return if (isDiagonal) blockValue * 1.4 else blockValue
-    }
-
-    fun updatePresence(entity: AnyEntity): Boolean {
-        val presence = entity.getAttribute(Presence::class) ?: return false
-        val avoidanceStarters = mutableSetOf<Position3D>()
-        val size = presence.size
-
-        presence.approachMap.clear()
-        presence.avoidanceMap.clear()
-        presence.updateLastPosition(entity.position)
-
-        fun findNextApproach(candidates: Set<Position3D>, remainingSize: Int) {
-            if (remainingSize == 0) return
-            val nextCandidates = mutableSetOf<Position3D>()
-
-            for (candidate in candidates) {
-                if (presence.approachMap.containsKey(candidate) || isPresenceBlockedAt(candidate)) continue
-
-                presence.approachMap[candidate] = size - remainingSize
-                nextCandidates.addAll(candidate.neighbors(false))
-
-                if (remainingSize == 1) {
-                    avoidanceStarters.add(candidate)
-                }
-            }
-
-            findNextApproach(nextCandidates, remainingSize - 1)
-        }
-
-        findNextApproach(setOf(entity.position), presence.size)
-
-        fun findNextAvoidance(candidates: Set<Position3D>, value: Int) {
-            if (candidates.isEmpty()) return
-            val nextCandidates = mutableSetOf<Position3D>()
-
-            for (candidate in candidates) {
-                if (presence.approachMap.containsKey(candidate).not()) continue
-                if (presence.avoidanceMap.containsKey(candidate)) continue
-
-                presence.avoidanceMap[candidate] = value
-                nextCandidates.addAll(candidate.neighbors(false))
-            }
-
-            findNextAvoidance(nextCandidates, value + 1)
-        }
-
-        findNextAvoidance(avoidanceStarters, 0)
-
-        return true
     }
 
     fun findSmellablePositionsFor(origin: Position3D, radius: Int): Iterable<Position3D> {
@@ -287,12 +235,6 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
     private fun updateTurn() {
         turnProperty.updateValue(turn + 1)
-    }
-
-    private fun isPresenceBlockedAt(position: Position3D): Boolean {
-        return fetchBlockAt(position).fold(whenEmpty = {false}, whenPresent = { block ->
-            block.isWall
-        })
     }
 
     private fun isSmellBlockedAt(position: Position3D): Boolean {
