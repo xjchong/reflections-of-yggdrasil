@@ -4,41 +4,43 @@ import attributes.*
 import commands.AttemptAnyAction
 import commands.Move
 import entity.AnyEntity
+import entity.executeBlockingCommand
 import entity.getAttribute
 import entity.position
 import extensions.optional
 import game.GameContext
-import org.hexworks.amethyst.api.Pass
+import org.hexworks.amethyst.api.Consumed
 import org.hexworks.zircon.api.data.Position3D
 
 object Shuffler : ForegroundBehavior() {
+
+    val GOAL_KEY = "Shuffle"
 
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val shuffleBias = entity.getAttribute(ShuffleBias::class) ?: return false
         val position = entity.position
 
-        if (!position.isUnknown) {
-            val currentBiasType = shuffleBias.type
-            val fallbackBiasType = currentBiasType.randomlyRotated()
-            var nextPosition = getNextPositionForBias(currentBiasType, position)
+        if (position.isUnknown) return false
 
-            for (nextBias in listOf(currentBiasType.flipped(), fallbackBiasType, fallbackBiasType.flipped())) {
-                if (context.world.fetchBlockAt(nextPosition).optional?.isObstructed == true) {
-                    shuffleBias.type = nextBias
-                    nextPosition = getNextPositionForBias(nextBias, position)
-                }
-            }
+        val currentBiasType = shuffleBias.type
+        val fallbackBiasType = currentBiasType.randomlyRotated()
+        var nextPosition = getNextPositionForBias(currentBiasType, position)
 
-            nextPosition.let {
-                if (entity.executeCommand(AttemptAnyAction(context, entity, it)) == Pass) {
-                    entity.executeCommand(Move(context, entity, it))
-                }
-
-                return true
+        for (nextBias in listOf(currentBiasType.flipped(), fallbackBiasType, fallbackBiasType.flipped())) {
+            if (context.world.fetchBlockAt(nextPosition).optional?.isObstructed == true) {
+                shuffleBias.type = nextBias
+                nextPosition = getNextPositionForBias(nextBias, position)
             }
         }
 
-        return false
+        return entity.addShuffleGoal(context, nextPosition)
+    }
+
+    private fun AnyEntity.addShuffleGoal(context: GameContext, nextPosition: Position3D): Boolean {
+        return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY, 20) {
+            executeBlockingCommand(AttemptAnyAction(context, this, nextPosition)) == Consumed
+                    || executeBlockingCommand(Move(context, this, nextPosition)) == Consumed
+        }) == true
     }
 
     private fun getNextPositionForBias(shuffleBiasType: ShuffleBiasType, position: Position3D): Position3D {

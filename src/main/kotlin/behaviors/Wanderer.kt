@@ -12,7 +12,6 @@ import extensions.neighbors
 import extensions.optional
 import game.GameContext
 import org.hexworks.amethyst.api.Consumed
-import org.hexworks.amethyst.api.Pass
 import org.hexworks.zircon.api.data.Position3D
 
 
@@ -38,12 +37,9 @@ object Wanderer : ForegroundBehavior(Goals::class) {
     }
 
     private fun AnyEntity.addWanderGoal(context: GameContext, nextPosition: Position3D): Boolean {
-        return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY, 50) {
-            if (executeBlockingCommand(AttemptAnyAction(context, this, nextPosition)) == Pass) {
-                executeBlockingCommand(Move(context, this, nextPosition)) == Consumed
-            } else {
-                true
-            }
+        return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY, 20) {
+            executeBlockingCommand(AttemptAnyAction(context, this, nextPosition)) == Consumed
+                    || executeBlockingCommand(Move(context, this, nextPosition)) == Consumed
         }) == true
     }
 }
