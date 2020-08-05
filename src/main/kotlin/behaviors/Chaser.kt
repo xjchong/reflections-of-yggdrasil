@@ -27,7 +27,7 @@ object Chaser : ForegroundBehavior(Goals::class) {
     }
 
     private fun AnyEntity.addChaseGoal(context: GameContext, target: AnyEntity): Boolean {
-        return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY, 70) {
+        return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY, 60) {
             val nextPosition = AStar.getPath(position, target.position) { from, to ->
                 context.world.getMovementCost(this, from, to)
             }.first()

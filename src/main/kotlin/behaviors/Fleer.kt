@@ -3,54 +3,57 @@ package behaviors
 import attributes.CombatStats
 import attributes.Goal
 import attributes.Goals
-import attributes.Presence
+import attributes.Senses
 import commands.Move
 import entity.*
 import extensions.neighbors
+import extensions.optional
 import game.GameContext
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.zircon.api.data.Position3D
+import utilities.DijkstraMapping
 
 object Fleer : ForegroundBehavior(Goals::class) {
 
+    val GOAL_KEY = "Flee"
+
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val world = context.world
-        var enemy: AnyEntity?
+        val senses = entity.getAttribute(Senses::class) ?: return false
+        val sensedEnemies = senses.sensedEntities.filter { !entity.isAlliedWith(it) }
 
-        for (sensedPos in entity.sensedPositions.minus(entity.position)) {
-            enemy = world.fetchEntitiesAt(sensedPos).firstOrNull {
-                !entity.isAlliedWith(it)
-            }
-
-            if (enemy != null) {
-                return entity.addFleeGoal(context, enemy)
-            }
-        }
-
-        return false
+        return if (sensedEnemies.isNotEmpty()) entity.addFleeGoal(context, sensedEnemies) else false
     }
 
-    private fun AnyEntity.addFleeGoal(context: GameContext, target: AnyEntity): Boolean {
-        val targetPresence = target.getAttribute(Presence::class) ?: return false
+    private fun AnyEntity.addFleeGoal(context: GameContext, sensedEnemies: List<AnyEntity>): Boolean {
         val combatStats = getAttribute(CombatStats::class) ?: return false
-        var nextPosition = Position3D.unknown()
-        var lowestAvoidanceVal: Int? = null
-
-        for (neighbor in position.neighbors()) {
-            val avoidanceVal = targetPresence.avoidanceMap[neighbor] ?: continue
-
-            if (lowestAvoidanceVal == null || avoidanceVal < lowestAvoidanceVal) {
-                nextPosition = neighbor
-                lowestAvoidanceVal = avoidanceVal
-            }
-        }
-
-        if (nextPosition == Position3D.unknown()) return false
+        val senses = getAttribute(Senses::class) ?: return false
 
         return getAttribute(Goals::class)?.list?.add(Goal(
-                "Flee",
-                100 - combatStats.health / combatStats.maxHealth * 100) {
-            executeBlockingCommand(Move(context, this, nextPosition)) == Consumed
+                GOAL_KEY,
+                100 - (combatStats.health.toDouble() / combatStats.maxHealth.toDouble() * 100).toInt()) {
+            val avoidanceMap = DijkstraMapping.getAvoidanceMap(sensedEnemies.map { it.position }.toSet(), senses.maxRange) {
+                val block = context.world.fetchBlockAt(it).optional ?: return@getAvoidanceMap true
+                !canPass(block)
+            }
+
+            var nextPosition = Position3D.unknown()
+            var lowestAvoidanceVal: Int? = null
+
+            for (neighbor in position.neighbors()) {
+                val avoidanceVal = avoidanceMap[neighbor] ?: continue
+
+                if (lowestAvoidanceVal == null || avoidanceVal < lowestAvoidanceVal) {
+                    nextPosition = neighbor
+                    lowestAvoidanceVal = avoidanceVal
+                }
+            }
+
+            if (nextPosition == Position3D.unknown()) {
+                false
+            } else {
+                executeBlockingCommand(Move(context, this, nextPosition)) == Consumed
+            }
         }) == true
     }
 }

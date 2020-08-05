@@ -3,8 +3,10 @@ package entity
 import attributes.*
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
+import block.GameBlock
 import extensions.optional
 import facets.passive.AdaptableSyntax
+import facets.passive.Movable
 import facets.passive.Takeable
 import game.GameContext
 import kotlinx.coroutines.runBlocking
@@ -56,6 +58,16 @@ val AnyEntity.sensedPositions: Set<Position3D>
 
         return senses.sensedPositions
     }
+
+fun AnyEntity.canPass(block: GameBlock): Boolean {
+    for (entity in block.entities) {
+        if (entity.findFacet(Movable::class).isPresent
+                && entity.getAttribute(EntityPosition::class)?.lastPosition != entity.position) continue
+        if (entity.findAttribute(Obstacle::class).isPresent) return false
+    }
+
+    return true
+}
 
 fun AnyEntity.isAlliedWith(entity: AnyEntity): Boolean {
     if (this.id == entity.id) return true

@@ -12,6 +12,8 @@ import kotlin.math.max
 
 object Attacker : ForegroundBehavior(Goals::class) {
 
+    val GOAL_KEY = "AttemptAttack"
+
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val world = context.world
         val attackStrategies = entity.getAttribute(AttackStrategies::class)
@@ -36,7 +38,7 @@ object Attacker : ForegroundBehavior(Goals::class) {
     }
 
     private fun AnyEntity.addAttemptAttackGoal(context: GameContext, target: AnyEntity): Boolean {
-        return getAttribute(Goals::class)?.list?.add(Goal("AttemptAttack",100) {
+        return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY,70) {
             executeBlockingCommand(AttemptAttack(context, this, target)) == Consumed
         }) == true
     }

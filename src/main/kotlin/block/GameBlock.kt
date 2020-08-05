@@ -25,7 +25,7 @@ import kotlin.reflect.full.isSuperclassOf
 
 class GameBlock(private val position: Position3D,
                 private var defaultTile: CharacterTile = GameTile.FLOOR,
-                val currentEntities: MutableList<AnyEntity> = mutableListOf(),
+                private val currentEntities: MutableList<AnyEntity> = mutableListOf(),
                 private var isRevealed: Boolean = false)
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
 
@@ -130,7 +130,7 @@ class GameBlock(private val position: Position3D,
     }
 
     inline fun <reified T: EntityType> hasType(noinline fn: ((AnyEntity) -> Boolean)? = null): Boolean {
-        val entity: AnyEntity = Maybe.ofNullable(currentEntities.firstOrNull {
+        val entity: AnyEntity = Maybe.ofNullable(entities.firstOrNull {
             T::class.isSuperclassOf(it.type::class)
         }).optional ?: return false
 

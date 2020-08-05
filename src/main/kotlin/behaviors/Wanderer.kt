@@ -18,6 +18,8 @@ import org.hexworks.zircon.api.data.Position3D
 
 object Wanderer : ForegroundBehavior(Goals::class) {
 
+    val GOAL_KEY = "Wander"
+
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val position = entity.position
 
@@ -36,7 +38,7 @@ object Wanderer : ForegroundBehavior(Goals::class) {
     }
 
     private fun AnyEntity.addWanderGoal(context: GameContext, nextPosition: Position3D): Boolean {
-        return getAttribute(Goals::class)?.list?.add(Goal("Wander", 50) {
+        return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY, 50) {
             if (executeBlockingCommand(AttemptAnyAction(context, this, nextPosition)) == Pass) {
                 executeBlockingCommand(Move(context, this, nextPosition)) == Consumed
             } else {
