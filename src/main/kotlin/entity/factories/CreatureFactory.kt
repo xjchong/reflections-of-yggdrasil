@@ -73,7 +73,7 @@ object CreatureFactory {
                         luck = .34
                 ))
         behaviors(PresenceUpdater, StatusUpdater, StaminaRegenerator, SensoryUser,
-                FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
+                FocusTargetUser, EnemyListUser, VisualRememberer, VigilanceUser, FogOfWarUser)
         facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusApplicable, RandomlyAttacking)
     }
 
