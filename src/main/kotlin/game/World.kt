@@ -29,7 +29,6 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     private val engine: GameEngine = GameEngine()
     private val sceneObservers: MutableSet<AnyEntity> = mutableSetOf()
     private var lastSensedPositions: MutableSet<Position3D> = mutableSetOf()
-    var playerStartPos: Position3D = Position3D.unknown()
 
     private val turnProperty: Property<Long> = createPropertyFrom(0) // Represents how much game time has passed.
     val turn: Long by turnProperty.asDelegate()
@@ -71,10 +70,10 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
     }
 
-    fun flash(entity: AnyEntity, color: TileColor) {
-        if (!sceneObservers.any { it.sensedPositions.contains(entity.position) }) return
+    fun flash(position: Position3D, color: TileColor) {
+        if (!sceneObservers.any { it.sensedPositions.contains(position) }) return
 
-        fetchBlockAt(entity.position).ifPresent {
+        fetchBlockAt(position).ifPresent {
             it.flash(color)
         }
     }
@@ -90,7 +89,6 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
             blocks.forEach {
                 it.value.presence = entity.getAttribute(Presence::class)
             }
-            playerStartPos = position
         } else {
             engine.addEntityWithPriority(entity, GameEngine.PRIORITY_DEFAULT)
         }

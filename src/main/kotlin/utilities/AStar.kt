@@ -42,6 +42,7 @@ object AStar {
 
         val path = mutableListOf<Position3D>()
 
+        currentPosition = cameFrom[currentPosition] ?: goal
         while (currentPosition != goal) {
             path.add(currentPosition)
             currentPosition = cameFrom[currentPosition] ?: goal

@@ -2,27 +2,24 @@ package behaviors
 
 import attributes.Goal
 import attributes.Goals
-import attributes.Presence
+import attributes.Senses
 import commands.Move
 import entity.*
-import extensions.neighbors
 import game.GameContext
 import org.hexworks.amethyst.api.Consumed
-import org.hexworks.zircon.api.data.Position3D
+import utilities.AStar
 
 object Chaser : ForegroundBehavior(Goals::class) {
 
+    val GOAL_KEY = "Chase"
+
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val world = context.world
-        var enemy: AnyEntity?
+        val senses = entity.getAttribute(Senses::class) ?: return false
 
-        for (sensedPos in entity.sensedPositions.minus(entity.position)) {
-            enemy = world.fetchEntitiesAt(sensedPos).firstOrNull {
-                !entity.isAlliedWith(it)
-            }
-
-            if (enemy != null) {
-                return entity.addChaseGoal(context, enemy)
+        for (sensedEntity in senses.sensedEntities) {
+            if (!entity.isAlliedWith(sensedEntity)) {
+                return entity.addChaseGoal(context, sensedEntity)
             }
         }
 
@@ -30,22 +27,11 @@ object Chaser : ForegroundBehavior(Goals::class) {
     }
 
     private fun AnyEntity.addChaseGoal(context: GameContext, target: AnyEntity): Boolean {
-        val targetPresence = target.getAttribute(Presence::class) ?: return false
-        var nextPosition = Position3D.unknown()
-        var lowestApproachVal: Int? = null
+        val nextPosition = AStar.getPath(position, target.position) { from, to ->
+            context.world.getMovementCost(this, from, to)
+        }.first()
 
-        for (neighbor in position.neighbors()) {
-            val approachVal = targetPresence.approachMap[neighbor] ?: continue
-
-            if (lowestApproachVal == null || approachVal < lowestApproachVal) {
-                nextPosition = neighbor
-                lowestApproachVal = approachVal
-            }
-        }
-
-        if (nextPosition == Position3D.unknown()) return false
-
-        return getAttribute(Goals::class)?.list?.add(Goal("Chase", 70) {
+        return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY, 70) {
             executeBlockingCommand(Move(context, this, nextPosition)) == Consumed
         }) == true
     }

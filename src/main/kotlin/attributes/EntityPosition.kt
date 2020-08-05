@@ -8,4 +8,11 @@ class EntityPosition(initialPosition: Position3D = Position3D.unknown()) : Attri
     private val positionProperty = createPropertyFrom(initialPosition)
 
     var position: Position3D by positionProperty.asDelegate()
+    var lastPosition = Position3D.unknown()
+
+    init {
+        positionProperty.onChange {
+            lastPosition = it.oldValue
+        }
+    }
 }

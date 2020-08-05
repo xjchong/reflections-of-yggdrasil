@@ -8,6 +8,7 @@ import entity.*
 import game.GameContext
 import org.hexworks.amethyst.api.Consumed
 import kotlin.math.absoluteValue
+import kotlin.math.max
 
 object Attacker : ForegroundBehavior(Goals::class) {
 
@@ -16,8 +17,7 @@ object Attacker : ForegroundBehavior(Goals::class) {
         val attackStrategies = entity.getAttribute(AttackStrategies::class)
         val attackRange = ((attackStrategies?.minRange ?: 0)..(attackStrategies?.maxRange ?: 0))
         val inRangePositions = entity.sensedPositions.minus(entity.position).filter { sensedPos ->
-            (sensedPos.x - entity.position.x).absoluteValue in attackRange ||
-                    (sensedPos.y - entity.position.y).absoluteValue in attackRange
+            max((sensedPos.x - entity.position.x).absoluteValue, (sensedPos.y - entity.position.y).absoluteValue) in attackRange
         }
 
         var inRangeEnemy: AnyEntity?

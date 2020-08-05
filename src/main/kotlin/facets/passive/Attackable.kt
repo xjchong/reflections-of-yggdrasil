@@ -5,10 +5,7 @@ import attributes.*
 import commands.ApplyStatus
 import commands.Attack
 import commands.Destroy
-import entity.AnyEntity
-import entity.executeBlockingCommand
-import entity.getAttribute
-import entity.isAlliedWith
+import entity.*
 import game.GameContext
 import models.AttackDetails
 import models.Resistance
@@ -46,17 +43,17 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
                 }
 
                 context.world.observeSceneBy(attacker, "The $attacker ${details.description} the $target for ${finalDamage}!")
-                context.world.flash(attacker, GameColor.ATTACK_FLASH)
+                context.world.flash(attacker.position, GameColor.ATTACK_FLASH)
 
                 if (health <= 0) {
-                    context.world.flash(target, GameColor.DESTROY_FLASH)
+                    context.world.flash(target.position, GameColor.DESTROY_FLASH)
                     target.executeBlockingCommand(Destroy(context, target, cause = "the $attacker"))
                     attacker.getAttribute(KillTarget::class)?.target = null
                 } else {
                     if (target.getAttribute(StatusDetails::class)?.guard ?: 0 > 0) {
-                        context.world.flash(target, GameColor.GUARD_FLASH)
+                        context.world.flash(target.position, GameColor.GUARD_FLASH)
                     } else {
-                        context.world.flash(target, GameColor.DAMAGE_FLASH)
+                        context.world.flash(target.position, GameColor.DAMAGE_FLASH)
                     }
                 }
 

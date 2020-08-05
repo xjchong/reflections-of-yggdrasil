@@ -5,6 +5,7 @@ import attributes.CombatStats
 import attributes.StatusDetails
 import entity.AnyEntity
 import entity.getAttribute
+import entity.position
 import events.Flavor
 import game.GameContext
 import models.Poison
@@ -29,7 +30,7 @@ object StatusUpdater : ForegroundBehavior() {
             val damage = Poison.damage
 
             context.world.observeSceneBy(entity, "The $entity takes $damage poison damage...", Flavor)
-            context.world.flash(entity, GameColor.POISON_FLASH)
+            context.world.flash(entity.position, GameColor.POISON_FLASH)
             dockHealth(damage)
         }
     }
