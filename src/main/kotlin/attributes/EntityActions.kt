@@ -8,7 +8,7 @@ import org.hexworks.amethyst.api.entity.EntityType
 import kotlin.reflect.KClass
 
 class EntityActions(
-    private vararg val actions: KClass<out EntityAction<out EntityType, out EntityType>>
+    vararg val actions: KClass<out EntityAction<out EntityType, out EntityType>>
 ) : Attribute {
 
     fun createActionsFor(context: GameContext, source: AnyEntity, target: AnyEntity):

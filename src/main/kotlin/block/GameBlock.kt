@@ -4,11 +4,13 @@ import attributes.Memory
 import attributes.Presence
 import constants.GameTile
 import entity.*
+import extensions.optional
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
@@ -19,10 +21,11 @@ import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
 import utilities.DebugConfig
+import kotlin.reflect.full.isSuperclassOf
 
 class GameBlock(private val position: Position3D,
                 private var defaultTile: CharacterTile = GameTile.FLOOR,
-                private val currentEntities: MutableList<AnyEntity> = mutableListOf(),
+                val currentEntities: MutableList<AnyEntity> = mutableListOf(),
                 private var isRevealed: Boolean = false)
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
 
@@ -124,6 +127,14 @@ class GameBlock(private val position: Position3D,
             delay(30)
             flashColor = null
         }
+    }
+
+    inline fun <reified T: EntityType> hasType(noinline fn: ((AnyEntity) -> Boolean)? = null): Boolean {
+        val entity: AnyEntity = Maybe.ofNullable(currentEntities.firstOrNull {
+            T::class.isSuperclassOf(it.type::class)
+        }).optional ?: return false
+
+        return if (fn == null) true else fn(entity)
     }
 
     private fun getMemoryTile(): CharacterTile {

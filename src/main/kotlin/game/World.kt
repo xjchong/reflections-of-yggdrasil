@@ -1,10 +1,14 @@
 package game
+import attributes.EntityActions
 import attributes.Presence
 import attributes.flag.BlocksSmell
+import attributes.flag.Opened
 import block.GameBlock
+import commands.Open
 import entity.*
 import events.*
 import extensions.neighbors
+import extensions.optional
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
@@ -25,6 +29,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     private val engine: GameEngine = GameEngine()
     private val sceneObservers: MutableSet<AnyEntity> = mutableSetOf()
     private var lastSensedPositions: MutableSet<Position3D> = mutableSetOf()
+    var playerStartPos: Position3D = Position3D.unknown()
 
     private val turnProperty: Property<Long> = createPropertyFrom(0) // Represents how much game time has passed.
     val turn: Long by turnProperty.asDelegate()
@@ -85,6 +90,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
             blocks.forEach {
                 it.value.presence = entity.getAttribute(Presence::class)
             }
+            playerStartPos = position
         } else {
             engine.addEntityWithPriority(entity, GameEngine.PRIORITY_DEFAULT)
         }
@@ -133,7 +139,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
      */
     fun findEmptyLocationWithin(offset: Position3D, size: Size3D): Maybe<Position3D> {
         var position = Maybe.empty<Position3D>()
-        var maxTries = size.xLength * size.yLength
+        val maxTries = size.xLength * size.yLength
         var currentTry = 0
 
         while(position.isPresent.not() && currentTry < maxTries) {
@@ -151,6 +157,26 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
 
         return position
+    }
+
+    fun getMovementCost(entity: AnyEntity, from: Position3D, to: Position3D): Double {
+        val block = fetchBlockAt(to).optional ?: return 999.0
+        val isDiagonal = from.x != to.x && from.y != to.y
+
+        val blockValue = when {
+            block.hasType<Wall>() -> 999.0
+            block.hasType<Door>() { it.getAttribute(Opened::class) == null } -> {
+                if (entity.getAttribute(EntityActions::class)?.actions?.contains(Open::class) == true) {
+                    2.0 // If you can open doors...
+                } else {
+                    999.0 // Otherwise a door is basically a wall for most.
+                }
+            }
+            block.isObstructed -> 3.0
+            else -> 1.0
+        }
+
+        return if (isDiagonal) blockValue * 1.4 else blockValue
     }
 
     fun updatePresence(entity: AnyEntity): Boolean {
