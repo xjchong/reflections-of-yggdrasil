@@ -62,7 +62,7 @@ object CreatureFactory {
                 Presence(),
                 StatusDetails(),
                 Vigilance.create(10),
-                Vision(5),
+                Senses(vision = 6),
                 VisualMemory(excludedFacets = mutableSetOf(Movable)),
 
                 CombatStats.create(
@@ -72,7 +72,7 @@ object CreatureFactory {
                         tech = .33,
                         luck = .34
                 ))
-        behaviors(PresenceUpdater, StatusUpdater, StaminaRegenerator, VisionUser,
+        behaviors(PresenceUpdater, StatusUpdater, StaminaRegenerator, SensoryUser,
                 FocusTargetUser, VisualRememberer, VigilanceUser, FogOfWarUser)
         facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusApplicable, RandomlyAttacking)
     }
@@ -100,8 +100,8 @@ object CreatureFactory {
                     KillTarget(),
                     Obstacle,
                     Presence(),
-                    Vision(3))
-            .withBehaviors(VisionUser, Fleer, Wanderer, GoalEvaluator)
+                    Senses(vision = 3))
+            .withBehaviors(SensoryUser, Fleer, Wanderer, GoalEvaluator)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -125,8 +125,8 @@ object CreatureFactory {
                             Resistance(Bash, 1.0, 1.5)
                     ),
                     ShuffleBias(),
-                    Vision(2))
-            .withBehaviors(VisionUser, DumbChaser or Shuffler)
+                    Senses(vision = 2))
+            .withBehaviors(SensoryUser, DumbChaser or Shuffler)
             .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -148,8 +148,8 @@ object CreatureFactory {
                     Obstacle,
                     Presence(),
                     proliferation,
-                    Vision(2))
-            .withBehaviors(VisionUser, Attacker, GoalEvaluator, Proliferator)
+                    Senses(vision = 2))
+            .withBehaviors(SensoryUser, Attacker, GoalEvaluator, Proliferator)
             .withFacets(Attackable, Destructible, RandomlyAttacking)
             .build()
 
@@ -172,8 +172,8 @@ object CreatureFactory {
                     Obstacle,
                     Presence(),
                     proliferation,
-                    Smell(6))
-            .withBehaviors(SmellUser, Attacker, Fleer, Chaser, Wanderer, GoalEvaluator, Proliferator)
+                    Senses(vision = 3, smell = 6))
+            .withBehaviors(SensoryUser, Attacker, Fleer, Chaser, Wanderer, GoalEvaluator, Proliferator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 
@@ -195,8 +195,8 @@ object CreatureFactory {
                     KillTarget(),
                     Obstacle,
                     Presence(),
-                    Vision(5))
-            .withBehaviors(VisionUser, Attacker, Chaser, Wanderer, GoalEvaluator, StaminaRegenerator)
+                    Senses(vision = 5))
+            .withBehaviors(SensoryUser, Attacker, Chaser, Wanderer, GoalEvaluator, StaminaRegenerator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 }

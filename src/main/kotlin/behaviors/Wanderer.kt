@@ -35,7 +35,7 @@ object Wanderer : ForegroundBehavior(Goals::class) {
         return false
     }
 
-    private suspend fun AnyEntity.addWanderGoal(context: GameContext, nextPosition: Position3D): Boolean {
+    private fun AnyEntity.addWanderGoal(context: GameContext, nextPosition: Position3D): Boolean {
         return getAttribute(Goals::class)?.list?.add(Goal("Wander", 50) {
             if (executeBlockingCommand(AttemptAnyAction(context, this, nextPosition)) == Pass) {
                 executeBlockingCommand(Move(context, this, nextPosition)) == Consumed

@@ -1,6 +1,6 @@
 package behaviors
 
-import attributes.Vision
+import attributes.Senses
 import attributes.VisualMemory
 import entity.AnyEntity
 import entity.getAttribute
@@ -13,9 +13,9 @@ object VisualRememberer : ForegroundBehavior(VisualMemory::class) {
         val world = context.world
         val position = entity.position
         val visualMemory = entity.getAttribute(VisualMemory::class) ?: return false
-        val vision = entity.getAttribute(Vision::class) ?: return true
+        val senses = entity.getAttribute(Senses::class) ?: return true
 
-        vision.visiblePositions.forEach { visiblePos ->
+        senses.visiblePositions.forEach { visiblePos ->
             world.fetchBlockAt(visiblePos).ifPresent { block ->
                 visualMemory.remember(visiblePos, world.turn, block.entities.toList())
                 block.rememberAs(visualMemory.getMemoryAt(visiblePos))

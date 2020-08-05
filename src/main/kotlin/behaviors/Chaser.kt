@@ -14,7 +14,7 @@ object Chaser : ForegroundBehavior(Goals::class) {
 
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val world = context.world
-        var enemy: AnyEntity? = null
+        var enemy: AnyEntity?
 
         for (sensedPos in entity.sensedPositions.minus(entity.position)) {
             enemy = world.fetchEntitiesAt(sensedPos).firstOrNull {
@@ -29,7 +29,7 @@ object Chaser : ForegroundBehavior(Goals::class) {
         return false
     }
 
-    private suspend fun AnyEntity.addChaseGoal(context: GameContext, target: AnyEntity): Boolean {
+    private fun AnyEntity.addChaseGoal(context: GameContext, target: AnyEntity): Boolean {
         val targetPresence = target.getAttribute(Presence::class) ?: return false
         var nextPosition = Position3D.unknown()
         var lowestApproachVal: Int? = null

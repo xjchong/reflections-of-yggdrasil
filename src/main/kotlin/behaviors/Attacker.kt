@@ -20,7 +20,7 @@ object Attacker : ForegroundBehavior(Goals::class) {
                     (sensedPos.y - entity.position.y).absoluteValue in attackRange
         }
 
-        var inRangeEnemy: AnyEntity? = null
+        var inRangeEnemy: AnyEntity?
 
         for (inRangePos in inRangePositions) {
             inRangeEnemy = world.fetchEntitiesAt(inRangePos).firstOrNull {
@@ -35,7 +35,7 @@ object Attacker : ForegroundBehavior(Goals::class) {
         return false
     }
 
-    private suspend fun AnyEntity.addAttemptAttackGoal(context: GameContext, target: AnyEntity): Boolean {
+    private fun AnyEntity.addAttemptAttackGoal(context: GameContext, target: AnyEntity): Boolean {
         return getAttribute(Goals::class)?.list?.add(Goal("AttemptAttack",100) {
             executeBlockingCommand(AttemptAttack(context, this, target)) == Consumed
         }) == true

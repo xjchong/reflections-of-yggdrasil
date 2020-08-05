@@ -52,10 +52,9 @@ val AnyEntity.isOpaque: Boolean
 // This can be updated to support other types of 'vision'.
 val AnyEntity.sensedPositions: Set<Position3D>
     get() {
-        val visiblePositions = getAttribute(Vision::class)?.visiblePositions ?: mutableSetOf()
-        val smellablePositions = getAttribute(Smell::class)?.smellablePositions ?: mutableSetOf()
+        val senses = getAttribute(Senses::class) ?: return setOf()
 
-        return visiblePositions + smellablePositions
+        return senses.sensedPositions
     }
 
 fun AnyEntity.isAlliedWith(entity: AnyEntity): Boolean {

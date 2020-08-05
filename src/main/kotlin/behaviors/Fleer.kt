@@ -15,7 +15,7 @@ object Fleer : ForegroundBehavior(Goals::class) {
 
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val world = context.world
-        var enemy: AnyEntity? = null
+        var enemy: AnyEntity?
 
         for (sensedPos in entity.sensedPositions.minus(entity.position)) {
             enemy = world.fetchEntitiesAt(sensedPos).firstOrNull {
@@ -30,7 +30,7 @@ object Fleer : ForegroundBehavior(Goals::class) {
         return false
     }
 
-    private suspend fun AnyEntity.addFleeGoal(context: GameContext, target: AnyEntity): Boolean {
+    private fun AnyEntity.addFleeGoal(context: GameContext, target: AnyEntity): Boolean {
         val targetPresence = target.getAttribute(Presence::class) ?: return false
         val combatStats = getAttribute(CombatStats::class) ?: return false
         var nextPosition = Position3D.unknown()
