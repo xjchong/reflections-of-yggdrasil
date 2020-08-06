@@ -184,6 +184,8 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                         MoveInputEvent(relativePosition = Position3D.create(-1, 1, 0))
                     pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.DOWN, KeyCode.RIGHT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(1, 1, 0))
+                    pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.SPACE)) ->
+                        GuardInputEvent()
                     else -> null
                 } ?: return@handleKeyboardEvents Pass
 
@@ -237,7 +239,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                     MoveInputEvent(relativePosition = Position3D.create(1, -1, 0))
                 KeyCode.COMMA, KeyCode.DIGIT_5, KeyCode.NUMPAD_5 -> WaitInputEvent()
 
-                KeyCode.SPACE -> GuardInputEvent()
+                KeyCode.SPACE -> ContextualInputEvent()
                 KeyCode.KEY_G -> TakeInputEvent()
                 KeyCode.KEY_I  -> InventoryInputEvent()
                 else -> null

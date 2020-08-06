@@ -1,10 +1,12 @@
 package facets.passive
 
 import attributes.EntityTile
-import attributes.OpenAppearance
-import attributes.flag.Opened
+import attributes.OpenableDetails
+import commands.Close
 import commands.Open
+import entity.AnyEntity
 import entity.getAttribute
+import events.Notice
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -16,20 +18,39 @@ import org.hexworks.amethyst.api.entity.EntityType
 object Openable : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Open::class) { (_, _, target) ->
-            with(target.asMutableEntity()) {
-                if (findAttribute(Opened::class).isPresent) return@responseWhenCommandIs Pass
+        var response: Response = Pass
 
-                val entityTile = getAttribute(EntityTile::class)
-                val openAppearance = getAttribute(OpenAppearance::class)
+        if (command.whenCommandIs(Open::class) { it.target.open(it.context) }) response = Consumed
+        else if (command.whenCommandIs(Close::class) { it.target.close(it.context) }) response = Consumed
 
-                openAppearance?.tile?.let {
-                    entityTile?.tile = it
-                }
-                addAttribute(Opened)
+        return response
+    }
 
-                Consumed
-            }
+    private fun AnyEntity.open(context: GameContext): Boolean {
+        val details = getAttribute(OpenableDetails::class) ?: return false
+
+        if (details.isOpen) {
+            context.world.observeSceneBy(this, "The $this is already opened!", Notice)
+            return false
         }
+
+        getAttribute(EntityTile::class)?.tile = details.openAppearance
+        details.isOpen = true
+
+        return true
+    }
+
+    private fun AnyEntity.close(context: GameContext): Boolean {
+        val details = getAttribute(OpenableDetails::class) ?: return false
+
+        if (!details.isOpen) {
+            context.world.observeSceneBy(this, "The $this is already closed!", Notice)
+            return false
+        }
+
+        getAttribute(EntityTile::class)?.tile = details.closedAppearance
+        details.isOpen = false
+
+        return true
     }
 }

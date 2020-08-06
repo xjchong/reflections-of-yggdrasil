@@ -1,7 +1,7 @@
 package game
+import attributes.OpenableDetails
 import attributes.flag.BlocksSmell
 import attributes.flag.Opaque
-import attributes.flag.Opened
 import block.GameBlock
 import entity.*
 import events.*
@@ -159,7 +159,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
         val blockValue = when {
             block.hasType<Wall>() -> 999.0
-            block.hasType<Door>() { it.getAttribute(Opened::class) == null } -> 999.0
+            block.hasType<Door>() { it.getAttribute(OpenableDetails::class)?.isOpen != true } -> 999.0
             block.isObstructed -> 3.0
             else -> 1.0
         }

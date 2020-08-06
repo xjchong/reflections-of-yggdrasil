@@ -2,11 +2,10 @@ package entity.factories
 
 import attributes.EntityPosition
 import attributes.EntityTile
-import attributes.OpenAppearance
+import attributes.OpenableDetails
 import attributes.flag.BlocksSmell
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
-import attributes.flag.Opened
 import behaviors.Barrier
 import builders.newGameEntityOfType
 import constants.GameTile
@@ -28,15 +27,16 @@ object WidgetFactory {
         if (isDiggable) facets(Diggable)
     }
 
-    fun newDoor(isOpened: Boolean = false) = newGameEntityOfType(Door) {
+    fun newDoor(isOpen: Boolean = false) = newGameEntityOfType(Door) {
         val baseAttributes = mutableListOf(
                 EntityPosition(),
-                EntityTile(GameTile.DOOR),
-                OpenAppearance(GameTile.DOOR.withCharacter('\'')))
+                EntityTile(GameTile.CLOSED_DOOR),
+                OpenableDetails(
+                        openAppearance = GameTile.OPEN_DOOR,
+                        closedAppearance = GameTile.CLOSED_DOOR,
+                        isOpen = isOpen))
 
-        if (isOpened) {
-            baseAttributes.add(Opened)
-        } else {
+        if (!isOpen) {
             baseAttributes.add(Obstacle)
             baseAttributes.add(Opaque)
             baseAttributes.add(BlocksSmell)

@@ -44,7 +44,8 @@ object GameTile {
 
     val FLOOR = newCharacterTile(Symbols.INTERPUNCT, GameColor.GREY)
     val WALL = newCharacterTile('#', GameColor.GREY)
-    val DOOR = newCharacterTile('+', GameColor.GREY, GameColor.BROWN)
+    val CLOSED_DOOR = newCharacterTile('+', GameColor.GREY, GameColor.BROWN)
+    val OPEN_DOOR = newCharacterTile('\'', GameColor.GREY, GameColor.BROWN)
     val UNREVEALED = newCharacterTile(' ', GameColor.BLACK, GameColor.BLACK)
 
     /**

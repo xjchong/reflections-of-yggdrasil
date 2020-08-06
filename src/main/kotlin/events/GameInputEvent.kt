@@ -11,6 +11,8 @@ sealed class GameInputEvent {
 
 class ConsumeInputEvent(val consumable: AnyEntity) : GameInputEvent()
 
+class ContextualInputEvent() : GameInputEvent()
+
 class DropInputEvent(val droppable: AnyEntity) : GameInputEvent()
 
 class EquipInputEvent(val equipment: AnyEntity) : GameInputEvent()

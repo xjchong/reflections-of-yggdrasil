@@ -3,11 +3,13 @@ package behaviors
 import attributes.AttackStrategies
 import attributes.CombatStats
 import attributes.Equipments
-import attributes.Inventory
+import attributes.OpenableDetails
 import commands.*
 import entity.*
 import events.*
+import extensions.neighbors
 import extensions.optional
+import facets.passive.Attackable
 import facets.passive.Openable
 import facets.passive.Takeable
 import game.GameContext
@@ -32,6 +34,7 @@ object InputReceiving : BaseFacet<GameContext>() {
             runBlocking {
                 response = when (event) {
                     is ConsumeInputEvent -> event.consumable.run { executeCommand(Consume(context, this, entity)) }
+                    is ContextualInputEvent -> if (entity.tryContextualActions(context, entity.position)) Consumed else Pass
                     is DropInputEvent -> event.droppable.run { executeCommand(Drop(context, this, entity, position)) }
                     is EquipInputEvent -> event.equipment.run { executeCommand(Equip(context, this, entity)) }
                     is GuardInputEvent -> entity.executeCommand(Guard(context, entity))
@@ -58,10 +61,37 @@ object InputReceiving : BaseFacet<GameContext>() {
         }
     }
 
+    // Try any possible contextual actions. TODO: This should prompt for further instruction if multiple are possible.
+    private suspend fun AnyEntity.tryContextualActions(context: GameContext, position: Position3D): Boolean {
+        val world = context.world
+        val samePositionEntities = world.fetchEntitiesAt(position)
+        val takeable = samePositionEntities.filter{ it != this }.firstOrNull { it.hasFacet<Takeable>() }
+
+        if (takeable != null) {
+            return takeable.executeCommand(Take(context, this, takeable)) == Consumed
+        }
+
+        val neighborEntities = position.neighbors(false).flatMap { world.fetchEntitiesAt(it) }
+
+        val enemies = neighborEntities.filter { !this.isAlliedWith(it) && it.hasFacet<Attackable>() }
+        if (enemies.size > 1) return false
+        if (enemies.size == 1) {
+            return tryAttack(context, enemies)
+        }
+
+        val openables = neighborEntities.filter { it.hasFacet<Openable>() }
+        if (openables.size > 1) return false
+        if (openables.size == 1) {
+
+            return tryClose(context, openables) || tryOpen(context, openables)
+        }
+
+        return false
+    }
+
     private suspend fun AnyEntity.tryTake(context: GameContext, position: Position3D): Response {
         val world = context.world
         val block = world.fetchBlockAt(position).optional ?: return Pass
-        val inventory = getAttribute(Inventory::class)
 
         for (entity in block.entities.reversed()) {
             if (entity.findFacet(Takeable::class).isPresent) {
@@ -76,7 +106,17 @@ object InputReceiving : BaseFacet<GameContext>() {
     private suspend fun AnyEntity.tryOpen(context: GameContext, entities: List<AnyEntity>): Boolean {
         val openable = entities.firstOrNull { it.hasFacet<Openable>() } ?: return false
 
+        if (openable.getAttribute(OpenableDetails::class)?.isOpen != false) return false
+
         return openable.executeCommand(Open(context, this, openable)) == Consumed
+    }
+
+    private suspend fun AnyEntity.tryClose(context: GameContext, entities: List<AnyEntity>): Boolean {
+        val openable = entities.firstOrNull { it.hasFacet<Openable>() } ?: return false
+
+        if (openable.getAttribute(OpenableDetails::class)?.isOpen != true) return false
+
+        return openable.executeCommand(Close(context, this, openable)) == Consumed
     }
 
     private suspend fun AnyEntity.tryAttack(context: GameContext, entities: List<AnyEntity>): Boolean {
