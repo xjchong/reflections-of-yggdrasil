@@ -5,7 +5,7 @@ import org.hexworks.zircon.api.data.Position3D
 
 object GameBlockFactory {
 
-    fun door(position: Position3D) = GameBlock.createWith(position, WidgetFactory.newDoor())
+    fun door(position: Position3D, isOpen: Boolean = false) = GameBlock.createWith(position, WidgetFactory.newDoor(isOpen))
 
     fun floor(position: Position3D) = GameBlock(position)
 

@@ -21,7 +21,7 @@ object WidgetFactory {
     fun newDoor(isOpen: Boolean = false) = newGameEntityOfType(Door) {
         val baseAttributes = mutableListOf(
                 EntityPosition(),
-                EntityTile(GameTile.CLOSED_DOOR),
+                EntityTile(if (isOpen) GameTile.OPEN_DOOR else GameTile.CLOSED_DOOR),
                 OpenableDetails(
                         openAppearance = GameTile.OPEN_DOOR,
                         closedAppearance = GameTile.CLOSED_DOOR,

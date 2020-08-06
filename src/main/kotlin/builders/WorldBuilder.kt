@@ -16,6 +16,12 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     companion object {
         const val WALL_REGION_ID = -1
+
+        const val GRASS_START_CHANCE = 0.1
+        const val GRASS_SPREAD_CHANCE = 2.0
+        const val GRASS_DECAY_RATE = 1.5
+
+        const val DOOR_OPEN_CHANCE = 0.2
     }
 
     private val width = worldSize.xLength
@@ -96,12 +102,9 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     private fun placeRoom(level: Int, x: Int, y: Int, roomWidth: Int, roomHeight: Int, regionId: Int) {
         val grassStarters = mutableSetOf<Position3D>()
-        val grassStartChance = 0.1
-        val grassSpreadChance = 2.0
-        val grassSpreadDecayRate = 1.5
 
         forSlice(Position3D.create(x, y, level), roomWidth, roomHeight) { pos ->
-            if ((pos.x == x || pos.y == y) && Math.random() < grassStartChance) {
+            if ((pos.x == x || pos.y == y) && Math.random() < GRASS_START_CHANCE) {
                 grassStarters.add(pos)
             }
 
@@ -121,10 +124,10 @@ class WorldBuilder(private val worldSize: Size3D) {
                 nextCandidates.addAll(candidate.adjacentNeighbors(false))
             }
 
-            spreadGrass(nextCandidates, spreadChance / grassSpreadDecayRate)
+            spreadGrass(nextCandidates, spreadChance / GRASS_DECAY_RATE)
         }
 
-        spreadGrass(grassStarters, grassSpreadChance)
+        spreadGrass(grassStarters, GRASS_SPREAD_CHANCE)
     }
 
     private fun isRoomSafe(x: Int, y: Int, level: Int, roomWidth: Int, roomHeight: Int): Boolean {
@@ -196,6 +199,7 @@ class WorldBuilder(private val worldSize: Size3D) {
             var needsMerge = true
             var isDisjoint = true
             val canCreateExtra = extraDoorsCount < maxExtraDoors && Math.random() < extraDoorPercent
+            val isDoorOpen = Math.random() < DOOR_OPEN_CHANCE
 
             for (mergedSet in mergedRegionIds) {
                 val intersectionSize = mergedSet.intersect(adjacentRegions).size
@@ -208,10 +212,10 @@ class WorldBuilder(private val worldSize: Size3D) {
             }
 
             if (needsMerge) {
-                blocks[pos] = GameBlockFactory.door(pos)
+                blocks[pos] = GameBlockFactory.door(pos, isDoorOpen)
                 if (isDisjoint) mergedRegionIds.add(adjacentRegions)
             } else if (canCreateExtra) {
-                blocks[pos] = GameBlockFactory.door(pos)
+                blocks[pos] = GameBlockFactory.door(pos, isDoorOpen)
                 extraDoorsCount++
             }
         }
@@ -246,7 +250,7 @@ class WorldBuilder(private val worldSize: Size3D) {
         for (wallPos in getAllWallPositions(level)) {
             if (Math.random() >= removalPercent) continue
             if (wallPos.adjacentNeighbors(false).all { neighborPos ->
-                        blocks[neighborPos]?.isWall == false }) {
+                        blocks[neighborPos]?.isObstructed == false }) {
                 blocks[wallPos] = GameBlockFactory.floor(wallPos)
             }
         }
