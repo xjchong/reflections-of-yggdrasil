@@ -59,6 +59,10 @@ object Door : BaseEntityType(
         name = "door"
 )
 
+object Grass : BaseEntityType(
+        name = "grass"
+)
+
 object Wall : BaseEntityType(
         name = "wall"
 )

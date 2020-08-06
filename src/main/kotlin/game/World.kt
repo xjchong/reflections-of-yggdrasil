@@ -143,7 +143,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
             )
 
             fetchBlockAt(pos).map { block ->
-                if (block.isUnoccupied) position = Maybe.of(pos)
+                if (!block.isObstructed) position = Maybe.of(pos)
             }
 
             currentTry++

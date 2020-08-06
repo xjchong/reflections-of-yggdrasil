@@ -10,22 +10,13 @@ import behaviors.Barrier
 import builders.newGameEntityOfType
 import constants.GameTile
 import entity.Door
+import entity.Grass
 import entity.Wall
 import facets.passive.Diggable
 import facets.passive.Openable
 
 
 object WidgetFactory {
-
-    fun newWall(isDiggable: Boolean = true) = newGameEntityOfType(Wall) {
-        attributes(
-                BlocksSmell,
-                EntityPosition(),
-                EntityTile(GameTile.WALL),
-                Obstacle,
-                Opaque)
-        if (isDiggable) facets(Diggable)
-    }
 
     fun newDoor(isOpen: Boolean = false) = newGameEntityOfType(Door) {
         val baseAttributes = mutableListOf(
@@ -45,5 +36,21 @@ object WidgetFactory {
         attributes(*baseAttributes.toTypedArray())
         behaviors(Barrier)
         facets(Openable)
+    }
+
+    fun newGrass() = newGameEntityOfType(Grass) {
+        attributes(
+                EntityPosition(),
+                EntityTile(GameTile.GRASS))
+    }
+
+    fun newWall(isDiggable: Boolean = true) = newGameEntityOfType(Wall) {
+        attributes(
+                BlocksSmell,
+                EntityPosition(),
+                EntityTile(GameTile.WALL),
+                Obstacle,
+                Opaque)
+        if (isDiggable) facets(Diggable)
     }
 }
