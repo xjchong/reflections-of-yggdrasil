@@ -2,12 +2,9 @@ package entity
 
 import attributes.*
 import attributes.flag.Obstacle
-import attributes.flag.Opaque
 import block.GameBlock
 import extensions.optional
-import facets.passive.AdaptableSyntax
 import facets.passive.Movable
-import facets.passive.Takeable
 import game.GameContext
 import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Attribute
@@ -20,7 +17,6 @@ import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.modifier.Modifier
 import kotlin.reflect.KClass
-import kotlin.reflect.full.isSuperclassOf
 
 
 typealias AnyEntity = Entity<EntityType, GameContext>
@@ -37,19 +33,7 @@ val AnyEntity.tile: CharacterTile
     get() = this.findAttribute(EntityTile::class).get().tile
 
 val AnyEntity.symbol: String
-    get() = this.findAttribute(EntityTile::class).get().tile.character.toString()
-
-val AnyEntity.isObstacle: Boolean
-    get() = findAttribute(Obstacle::class).isPresent
-
-val AnyEntity.isTakeable: Boolean
-    get() = findFacet(Takeable::class).isPresent
-
-val AnyEntity.isPlayer: Boolean
-    get() = this.type == Player
-
-val AnyEntity.isOpaque: Boolean
-    get() = this.findAttribute(Opaque::class).isPresent
+    get() = tile.character.toString()
 
 // This can be updated to support other types of 'vision'.
 val AnyEntity.sensedPositions: Set<Position3D>
@@ -59,6 +43,7 @@ val AnyEntity.sensedPositions: Set<Position3D>
         return senses.sensedPositions
     }
 
+// This can be updated depending on the entity, and what it is trying to pass.
 fun AnyEntity.canPass(block: GameBlock): Boolean {
     for (entity in block.entities) {
         if (entity.findFacet(Movable::class).isPresent
@@ -91,37 +76,20 @@ fun AnyEntity.removeTileModifiers(vararg modifiers: Modifier) {
     }
 }
 
-fun <T : Attribute> AnyEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
-
-fun AnyEntity.syntaxFor(owner: AdaptableSyntax, subKey: String? = null): String {
-    val syntax = getAttribute(EntitySyntax::class)?.getFor(owner, subKey)
-    return syntax ?: owner.defaultSyntax(subKey)
-}
-
 fun AnyEntity.executeBlockingCommand(command: Command<out EntityType, GameContext>): Response {
     return runBlocking { executeCommand(command) }
 }
 
-inline fun <reified T : EntityType> Iterable<AnyEntity>.filterType() : List<Entity<T, GameContext>> {
-    return filter { T::class.isSuperclassOf(it.type::class) }.toList() as List<Entity<T, GameContext>>
-}
+fun <T : Attribute> AnyEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
 
-inline fun <reified T : EntityType> AnyEntity.whenTypeIs(fn: GameEntity<T>.() -> Unit) {
-    if (T::class.isSuperclassOf(this.type::class)) {
-        (this as GameEntity<T>).run(fn)
-    }
-}
-
-inline fun <reified T : EntityType> AnyEntity.isType(): Boolean {
-    return T::class.isSuperclassOf(this.type::class)
+inline fun <reified T : Attribute> AnyEntity.hasAttribute(): Boolean {
+    return findAttribute(T::class).isPresent
 }
 
 inline fun <reified T : BaseFacet<GameContext>> AnyEntity.hasFacet(): Boolean {
-    return this.findFacet(T::class).isPresent
+    return findFacet(T::class).isPresent
 }
 
 inline fun <reified T : BaseFacet<GameContext>> AnyEntity.whenFacetIs(fn: (AnyEntity) -> Unit) {
-    if (this.findFacet(T::class).isPresent) {
-        fn(this)
-    }
+    if (findFacet(T::class).isPresent) fn(this)
 }

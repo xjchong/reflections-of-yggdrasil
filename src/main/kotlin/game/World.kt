@@ -1,5 +1,6 @@
 package game
 import attributes.flag.BlocksSmell
+import attributes.flag.Opaque
 import attributes.flag.Opened
 import block.GameBlock
 import entity.*
@@ -81,7 +82,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
      * given [Entity].
      */
     fun addEntity(entity: AnyEntity, position: Position3D) {
-        if (entity.isPlayer) {
+        if (entity.type == Player) {
             engine.setInputReceivingEntity(entity)
         } else {
             engine.addEntityWithPriority(entity, GameEngine.PRIORITY_DEFAULT)
@@ -236,8 +237,8 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     private fun isVisionBlockedAt(position: Position3D): Boolean {
-        return fetchBlockAt(position).fold(whenEmpty = { false }, whenPresent = {
-            it.entities.any(AnyEntity::isOpaque)
+        return fetchBlockAt(position).fold(whenEmpty = { false }, whenPresent = { block ->
+            block.entities.any { it.hasAttribute<Opaque>() }
         })
     }
 }
