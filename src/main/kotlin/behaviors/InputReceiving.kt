@@ -68,7 +68,7 @@ object InputReceiving : BaseFacet<GameContext>() {
         val takeable = samePositionEntities.filter{ it != this }.firstOrNull { it.hasFacet<Takeable>() }
 
         if (takeable != null) {
-            return takeable.executeCommand(Take(context, this, takeable)) == Consumed
+            return takeable.executeCommand(Take(context, takeable, this)) == Consumed
         }
 
         val neighborEntities = position.neighbors(false).flatMap { world.fetchEntitiesAt(it) }
