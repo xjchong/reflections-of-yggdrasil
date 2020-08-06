@@ -21,11 +21,11 @@ interface AdaptableSyntax {
     fun defaultSyntax(subKey: String? = null): String
 }
 
-object Destructible : BaseFacet<GameContext>(), AdaptableSyntax {
+object Destroyable : BaseFacet<GameContext>(), AdaptableSyntax {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(Destroy::class) { (context, entity, cause) ->
-            context.world.observeSceneBy(entity, "The $entity is ${entity.syntaxFor(Destructible)} by $cause.", Notice)
+            context.world.observeSceneBy(entity, "The $entity is ${entity.syntaxFor(Destroyable)} by $cause.", Notice)
 
             entity.getAttribute(Inventory::class)?.let { inventory ->
                 inventory.contents.forEach { item ->
@@ -43,7 +43,7 @@ object Destructible : BaseFacet<GameContext>(), AdaptableSyntax {
         return "killed"
     }
 
-    fun withDestroyedVerb(verb: String, syntax: EntitySyntax): Destructible {
+    fun withDestroyedVerb(verb: String, syntax: EntitySyntax): Destroyable {
         syntax.putFor(this, verb)
         return this
     }

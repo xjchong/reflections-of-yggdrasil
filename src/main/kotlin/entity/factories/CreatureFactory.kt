@@ -89,7 +89,7 @@ object CreatureFactory {
                     Obstacle,
                     Senses(vision = 3))
             .withBehaviors(SensoryUser, RandomAttacker, Fleer, Wanderer, GoalEvaluator)
-            .withFacets(Attackable, Destructible, Movable)
+            .withFacets(Attackable, Destroyable, Movable)
             .build()
 
     fun newCrab() = AnyEntityBuilder.newBuilder(Crab)
@@ -113,7 +113,7 @@ object CreatureFactory {
                     ShuffleBias(),
                     Senses(vision = 2))
             .withBehaviors(SensoryUser, RandomAttacker, Shuffler, GoalEvaluator)
-            .withFacets(Attackable, Destructible, Movable)
+            .withFacets(Attackable, Destroyable, Movable)
             .build()
 
 
@@ -135,7 +135,7 @@ object CreatureFactory {
                     proliferation,
                     Senses(vision = 2))
             .withBehaviors(SensoryUser, RandomAttacker, GoalEvaluator, Proliferator)
-            .withFacets(Attackable, Destructible)
+            .withFacets(Attackable, Destroyable)
             .build()
 
 
@@ -158,7 +158,7 @@ object CreatureFactory {
                     proliferation,
                     Senses(vision = 3, smell = 6))
             .withBehaviors(SensoryUser, RandomAttacker, Fleer, Chaser, Wanderer, GoalEvaluator, Proliferator)
-            .withFacets(Attackable, Destructible, Movable)
+            .withFacets(Attackable, Destroyable, Movable)
             .build()
 
     fun newZombie() = AnyEntityBuilder.newBuilder(Zombie)
@@ -180,6 +180,6 @@ object CreatureFactory {
                     Obstacle,
                     Senses(vision = 5))
             .withBehaviors(StatusUpdater, SensoryUser, RandomAttacker, Chaser, Wanderer, GoalEvaluator)
-            .withFacets(Attackable, Destructible, Movable)
+            .withFacets(Attackable, Destroyable, Movable)
             .build()
 }
