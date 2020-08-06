@@ -71,8 +71,7 @@ object CreatureFactory {
                         tech = .33,
                         luck = .34
                 ))
-        behaviors(StatusUpdater, StaminaRegenerator, SensoryUser,
-                FocusTargetUser, EnemyListUser, VisualRememberer, VigilanceUser, FogOfWarUser)
+        behaviors(StatusUpdater, SensoryUser, FocusTargetUser, EnemyListUser, VisualRememberer, VigilanceUser, FogOfWarUser)
         facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusApplicable, RandomlyAttacking)
     }
 
@@ -191,7 +190,7 @@ object CreatureFactory {
                     KillTarget(),
                     Obstacle,
                     Senses(vision = 5))
-            .withBehaviors(SensoryUser, Attacker, Chaser, Wanderer, GoalEvaluator, StaminaRegenerator)
+            .withBehaviors(StatusUpdater, SensoryUser, Attacker, Chaser, Wanderer, GoalEvaluator)
             .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
             .build()
 }
