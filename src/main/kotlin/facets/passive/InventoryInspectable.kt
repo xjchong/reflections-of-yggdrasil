@@ -1,10 +1,12 @@
-package facets.active
+package facets.passive
 
 import attributes.Inventory
 import commands.InspectInventory
 import entity.getAttribute
-import entity.position
-import events.*
+import events.ConsumeInputEvent
+import events.DropInputEvent
+import events.EquipInputEvent
+import events.InventoryMenuEvent
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -13,12 +15,11 @@ import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
 
-object InventoryInspecting : BaseFacet<GameContext>() {
+object InventoryInspectable : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenCommandIs(InspectInventory::class) { (context, entity) ->
             val world = context.world
-            val position = entity.position
 
             entity.getAttribute(Inventory::class)?.let { inventory ->
                 InventoryMenuEvent.publish(

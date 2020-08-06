@@ -11,7 +11,7 @@ import constants.GameTile
 import entity.*
 import facets.active.ActionAttempting
 import facets.active.EquipmentFirstAttacking
-import facets.active.InventoryInspecting
+import facets.passive.InventoryInspectable
 import facets.active.RandomlyAttacking
 import facets.passive.Attackable
 import facets.passive.Destructible
@@ -73,7 +73,7 @@ object CreatureFactory {
                         luck = .34
                 ))
         behaviors(StatusUpdater, SensoryUser, FocusTargetUser, EnemyListUser, VisualRememberer, VigilanceUser, FogOfWarUser)
-        facets(InputReceiving, ActionAttempting, Attackable, InventoryInspecting, Movable, StatusApplicable, EquipmentFirstAttacking)
+        facets(InputReceiving, ActionAttempting, Attackable, InventoryInspectable, Movable, StatusApplicable, EquipmentFirstAttacking)
     }
 
     /**
