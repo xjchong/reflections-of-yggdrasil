@@ -1,6 +1,9 @@
 package models
 
 import attributes.CombatStats
+import org.hexworks.zircon.api.data.Position3D
+import kotlin.math.absoluteValue
+import kotlin.math.max
 
 abstract class AttackStrategy(val description: String, 
                               val attackEfficiency: AttackEfficiency, 
@@ -19,6 +22,13 @@ abstract class AttackStrategy(val description: String,
     open val statusEffects: List<StatusEffect> = listOf()
     open val minRange: Int = 1
     open val maxRange: Int = 1
+
+    val range: IntRange
+        get() = (minRange..maxRange)
+
+    fun inRange(attackerPos: Position3D, targetPos: Position3D): Boolean {
+        return max((attackerPos.x - targetPos.x).absoluteValue, (attackerPos.y - targetPos.y).absoluteValue) in range
+    }
 
     fun averageDamage(combatStats: CombatStats): Int {
         val critDamageChance = critChance(combatStats)

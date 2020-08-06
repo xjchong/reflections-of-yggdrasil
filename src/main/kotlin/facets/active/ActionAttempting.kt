@@ -36,7 +36,7 @@ object ActionAttempting : BaseFacet<GameContext>(EntityActions::class) {
 
             for (action in actions) {
                 if (target.executeBlockingCommand(action) is Consumed) {
-                    result = org.hexworks.amethyst.api.Consumed
+                    result = Consumed
                     break
                 }
             }
