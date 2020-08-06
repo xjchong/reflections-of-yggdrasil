@@ -1,7 +1,6 @@
 package behaviors
 
 import attributes.*
-import commands.AttemptAnyAction
 import commands.Move
 import entity.AnyEntity
 import entity.executeBlockingCommand
@@ -9,7 +8,6 @@ import entity.getAttribute
 import entity.position
 import extensions.optional
 import game.GameContext
-import org.hexworks.amethyst.api.Consumed
 import org.hexworks.zircon.api.data.Position3D
 
 object Shuffler : ForegroundBehavior() {
@@ -38,8 +36,7 @@ object Shuffler : ForegroundBehavior() {
 
     private fun AnyEntity.addShuffleGoal(context: GameContext, nextPosition: Position3D): Boolean {
         return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY, 20) {
-            executeBlockingCommand(AttemptAnyAction(context, this, nextPosition)) == Consumed
-                    || executeBlockingCommand(Move(context, this, nextPosition)) == Consumed
+            executeBlockingCommand(Move(context, this, nextPosition))
         }) == true
     }
 

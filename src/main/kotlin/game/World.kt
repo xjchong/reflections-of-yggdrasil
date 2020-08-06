@@ -1,9 +1,7 @@
 package game
-import attributes.EntityActions
 import attributes.flag.BlocksSmell
 import attributes.flag.Opened
 import block.GameBlock
-import commands.Open
 import entity.*
 import events.*
 import extensions.neighbors
@@ -160,13 +158,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
         val blockValue = when {
             block.hasType<Wall>() -> 999.0
-            block.hasType<Door>() { it.getAttribute(Opened::class) == null } -> {
-                if (entity.getAttribute(EntityActions::class)?.actions?.contains(Open::class) == true) {
-                    2.0 // If you can open doors...
-                } else {
-                    999.0 // Otherwise a door is basically a wall for most.
-                }
-            }
+            block.hasType<Door>() { it.getAttribute(Opened::class) == null } -> 999.0
             block.isObstructed -> 3.0
             else -> 1.0
         }

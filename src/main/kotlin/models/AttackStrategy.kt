@@ -26,7 +26,7 @@ abstract class AttackStrategy(val description: String,
     val range: IntRange
         get() = (minRange..maxRange)
 
-    fun inRange(attackerPos: Position3D, targetPos: Position3D): Boolean {
+    fun isInRange(attackerPos: Position3D, targetPos: Position3D): Boolean {
         return max((attackerPos.x - targetPos.x).absoluteValue, (attackerPos.y - targetPos.y).absoluteValue) in range
     }
 

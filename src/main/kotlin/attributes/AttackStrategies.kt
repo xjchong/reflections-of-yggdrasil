@@ -2,6 +2,9 @@ package attributes
 
 import models.AttackStrategy
 import org.hexworks.amethyst.api.Attribute
+import org.hexworks.zircon.api.data.Position3D
+import kotlin.math.absoluteValue
+import kotlin.math.max
 
 
 class AttackStrategies(vararg strategies: AttackStrategy) : Attribute {
@@ -13,4 +16,11 @@ class AttackStrategies(vararg strategies: AttackStrategy) : Attribute {
 
     val maxRange
         get() = strategies.map { it.maxRange }.max() ?: 0
+
+    val range: IntRange
+        get() = (minRange..maxRange)
+
+    fun isInRange(attackerPos: Position3D, targetPos: Position3D): Boolean {
+        return max((attackerPos.x - targetPos.x).absoluteValue, (attackerPos.y - targetPos.y).absoluteValue) in range
+    }
 }

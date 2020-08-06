@@ -6,7 +6,6 @@ import attributes.Senses
 import commands.Move
 import entity.*
 import game.GameContext
-import org.hexworks.amethyst.api.Consumed
 import utilities.AStar
 
 object Chaser : ForegroundBehavior(Goals::class) {
@@ -32,7 +31,7 @@ object Chaser : ForegroundBehavior(Goals::class) {
                 context.world.getMovementCost(this, from, to)
             }.first()
 
-            executeBlockingCommand(Move(context, this, nextPosition)) == Consumed
+            executeBlockingCommand(Move(context, this, nextPosition))
         }) == true
     }
 }

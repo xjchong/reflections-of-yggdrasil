@@ -4,6 +4,7 @@ import attributes.Goals
 import entity.AnyEntity
 import entity.getAttribute
 import game.GameContext
+import org.hexworks.amethyst.api.Consumed
 
 object GoalEvaluator : ForegroundBehavior(Goals::class) {
 
@@ -14,7 +15,7 @@ object GoalEvaluator : ForegroundBehavior(Goals::class) {
         goals?.clear()
 
         for (goal in sortedGoals) {
-            if (goal.execute()) {
+            if (goal.execute() == Consumed) {
                 return true
             }
         }

@@ -1,6 +1,7 @@
 package attributes
 
 import org.hexworks.amethyst.api.Attribute
+import org.hexworks.amethyst.api.Response
 
 class Goals : Attribute {
 
@@ -8,4 +9,4 @@ class Goals : Attribute {
     var lastGoal: Goal? = null
 }
 
-data class Goal(val name: String, val weight: Int, val execute: () -> Boolean)
+data class Goal(val name: String, val weight: Int, val execute: () -> Response)

@@ -9,7 +9,7 @@ import entity.*
 import extensions.neighbors
 import extensions.optional
 import game.GameContext
-import org.hexworks.amethyst.api.Consumed
+import org.hexworks.amethyst.api.Pass
 import org.hexworks.zircon.api.data.Position3D
 import utilities.DijkstraMapping
 
@@ -50,9 +50,9 @@ object Fleer : ForegroundBehavior(Goals::class) {
             }
 
             if (nextPosition == Position3D.unknown()) {
-                false
+                Pass
             } else {
-                executeBlockingCommand(Move(context, this, nextPosition)) == Consumed
+                executeBlockingCommand(Move(context, this, nextPosition))
             }
         }) == true
     }

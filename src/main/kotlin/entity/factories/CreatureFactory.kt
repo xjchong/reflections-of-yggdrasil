@@ -5,18 +5,9 @@ import attributes.flag.Obstacle
 import behaviors.*
 import builders.AnyEntityBuilder
 import builders.newGameEntityOfType
-import commands.AttemptAttack
-import commands.Open
 import constants.GameTile
 import entity.*
-import facets.active.ActionAttempting
-import facets.active.EquipmentFirstAttacking
-import facets.passive.InventoryInspectable
-import facets.active.RandomlyAttacking
-import facets.passive.Attackable
-import facets.passive.Destructible
-import facets.passive.Movable
-import facets.passive.StatusApplicable
+import facets.passive.*
 import models.*
 import utilities.WeightedCollection
 import utilities.WeightedEntry
@@ -53,7 +44,6 @@ object CreatureFactory {
                 EnemyList(),
                 EntityPosition(),
                 EntityTile(GameTile.PLAYER),
-                EntityActions(AttemptAttack::class, Open::class),
                 FocusTarget(),
                 Equipments(
                         initialMainHand = WeaponFactory.newClub(),
@@ -73,7 +63,7 @@ object CreatureFactory {
                         luck = .34
                 ))
         behaviors(StatusUpdater, SensoryUser, FocusTargetUser, EnemyListUser, VisualRememberer, VigilanceUser, FogOfWarUser)
-        facets(InputReceiving, ActionAttempting, Attackable, InventoryInspectable, Movable, StatusApplicable, EquipmentFirstAttacking)
+        facets(InputReceiving, Attackable, InventoryInspectable, Movable, StatusApplicable)
     }
 
     /**
@@ -89,7 +79,6 @@ object CreatureFactory {
                             maxStamina = 50,
                             power = 0.1,
                             tech = 0.2),
-                    EntityActions(AttemptAttack::class),
                     EntityPosition(),
                     EntityTile(GameTile.BAT),
                     Goals(),
@@ -99,8 +88,8 @@ object CreatureFactory {
                     KillTarget(),
                     Obstacle,
                     Senses(vision = 3))
-            .withBehaviors(SensoryUser, Fleer, Wanderer, GoalEvaluator)
-            .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
+            .withBehaviors(SensoryUser, RandomAttacker, Fleer, Wanderer, GoalEvaluator)
+            .withFacets(Attackable, Destructible, Movable)
             .build()
 
     fun newCrab() = AnyEntityBuilder.newBuilder(Crab)
@@ -111,7 +100,6 @@ object CreatureFactory {
                             maxHealth = 60,
                             maxStamina = 80,
                             power = 0.2),
-                    EntityActions(AttemptAttack::class),
                     EntityPosition(),
                     EntityTile(GameTile.CRAB),
                     Goals(),
@@ -124,8 +112,8 @@ object CreatureFactory {
                     ),
                     ShuffleBias(),
                     Senses(vision = 2))
-            .withBehaviors(SensoryUser, Attacker or Shuffler, GoalEvaluator)
-            .withFacets(ActionAttempting, Attackable, Destructible, Movable, RandomlyAttacking)
+            .withBehaviors(SensoryUser, RandomAttacker, Shuffler, GoalEvaluator)
+            .withFacets(Attackable, Destructible, Movable)
             .build()
 
 
@@ -146,8 +134,8 @@ object CreatureFactory {
                     Obstacle,
                     proliferation,
                     Senses(vision = 2))
-            .withBehaviors(SensoryUser, Attacker, GoalEvaluator, Proliferator)
-            .withFacets(Attackable, Destructible, RandomlyAttacking)
+            .withBehaviors(SensoryUser, RandomAttacker, GoalEvaluator, Proliferator)
+            .withFacets(Attackable, Destructible)
             .build()
 
 
@@ -169,8 +157,8 @@ object CreatureFactory {
                     Obstacle,
                     proliferation,
                     Senses(vision = 3, smell = 6))
-            .withBehaviors(SensoryUser, Attacker, Fleer, Chaser, Wanderer, GoalEvaluator, Proliferator)
-            .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
+            .withBehaviors(SensoryUser, RandomAttacker, Fleer, Chaser, Wanderer, GoalEvaluator, Proliferator)
+            .withFacets(Attackable, Destructible, Movable)
             .build()
 
     fun newZombie() = AnyEntityBuilder.newBuilder(Zombie)
@@ -191,7 +179,7 @@ object CreatureFactory {
                     KillTarget(),
                     Obstacle,
                     Senses(vision = 5))
-            .withBehaviors(StatusUpdater, SensoryUser, Attacker, Chaser, Wanderer, GoalEvaluator)
-            .withFacets(Attackable, Destructible, Movable, RandomlyAttacking)
+            .withBehaviors(StatusUpdater, SensoryUser, RandomAttacker, Chaser, Wanderer, GoalEvaluator)
+            .withFacets(Attackable, Destructible, Movable)
             .build()
 }
