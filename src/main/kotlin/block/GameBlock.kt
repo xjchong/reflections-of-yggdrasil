@@ -7,9 +7,6 @@ import entity.*
 import extensions.optional
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
@@ -59,6 +56,8 @@ class GameBlock(private val position: Position3D,
                 (isRevealed || DebugConfig.shouldRevealWorld) -> GameTile.EMPTY
                 else -> getMemoryTile()
             }
+
+            updateFlash()
 
             return persistentMapOf(
                 Pair(BlockTileType.TOP, topTile),
@@ -116,10 +115,12 @@ class GameBlock(private val position: Position3D,
 
     fun flash(color: TileColor) {
         flashColor = color.withAlpha(200)
-        flashCountdown = 8
+        flashCountdown = 4
+    }
 
-        GlobalScope.launch {
-            delay(30)
+    private fun updateFlash() {
+        flashCountdown -= 1
+        if (flashCountdown <= 0) {
             flashColor = null
         }
     }
