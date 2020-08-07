@@ -53,5 +53,6 @@ object GameConfig {
         .withSize(Size.create(WINDOW_WIDTH, WINDOW_HEIGHT))
         .withDefaultTileset(TILESET)
         .withTitle(TITLE)
+        .withFpsLimit(30)
         .build()
 }
