@@ -10,6 +10,8 @@ abstract class AttackStrategy(val description: String,
                               val type: AttackType, val staminaCost: Int = AVERAGE_STAM_COST) {
     
     companion object {
+        const val INSUFFICIENT_STAM_PENALTY = 0.5
+        const val NO_STAM_COST = 0
         const val VERY_LOW_STAM_COST = 10
         const val LOW_STAM_COST = 15
         const val AVERAGE_STAM_COST = 20
@@ -44,6 +46,8 @@ abstract class AttackStrategy(val description: String,
 
         if (Math.random() < critChance(combatStats) && combatStats.stamina > 0) {
             finalDamage = critDamage(combatStats)
+        } else if (combatStats.stamina < staminaCost) {
+            finalDamage *= INSUFFICIENT_STAM_PENALTY
         }
 
         return finalDamage.toInt().coerceAtLeast(1)

@@ -39,7 +39,7 @@ object StatusApplicable : BaseFacet<GameContext>(StatusDetails::class) {
         }
 
         command.whenCommandIs(Guard::class) { (context, entity) ->
-            if (entity.getAttribute(CombatStats::class)?.dockStamina(5) == false) {
+            if (entity.getAttribute(CombatStats::class)?.dockStamina(0) == false) {
                 context.world.observeSceneBy(entity, "The $entity doesn't have enough stamina to guard!", Critical)
                 return@whenCommandIs false
             }

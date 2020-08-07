@@ -46,13 +46,14 @@ object StatusUpdater : ForegroundBehavior() {
     }
 
     private fun AnyEntity.updateStamina() {
-        // Entities with a target they are actively trying to kill don't regen stamina.
-        if (getAttribute(KillTarget::class)?.target != null) return
+        val combatStats = getAttribute(CombatStats::class) ?: return
 
-        // Entities that are not fully relaxed don't regen stamina.
-        val alertLevel = getAttribute(Vigilance::class)?.alertLevel
-        if (alertLevel != null && alertLevel > 0) return
+        val regenAmount = when {
+            getAttribute(KillTarget::class)?.target != null -> 2 // Entities with an active target.
+            getAttribute(Vigilance::class)?.alertLevel ?: 0 > 0 -> 2 // Entities still considered in combat.
+            else -> 20
+        }
 
-        getAttribute(CombatStats::class)?.gainStamina(20)
+        combatStats.gainStamina(regenAmount)
     }
 }
