@@ -172,11 +172,14 @@ object CreatureFactory {
                             power = 0.4
                     ),
                     Goals(),
-                    Inventory(5).apply {
-                        add(WeaponFactory.newRandomWeapon())
-                        add(ArmorFactory.newRandomArmor())
-                    },
                     KillTarget(),
+                    LootTable(
+                            WeightedEntry(30) { listOf(WeaponFactory.newRandomWeapon()) },
+                            WeightedEntry(30) { listOf(ArmorFactory.newRandomArmor()) },
+                            WeightedEntry(15) {
+                                listOf(WeaponFactory.newRandomWeapon(), ArmorFactory.newRandomArmor())
+                            }
+                    ),
                     Obstacle,
                     Senses(vision = 5))
             .withBehaviors(StatusUpdater, SensoryUser, RandomAttacker, Chaser, Wanderer, GoalEvaluator)
