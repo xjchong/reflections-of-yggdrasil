@@ -55,7 +55,6 @@ object GameColor {
      * EFFECTS
      */
 
-    val ATTACK_FLASH    = LIGHT_YELLOW
     val DAMAGE_FLASH    = RED
     val DESTROY_FLASH   = DARK_VIOLET
     val GUARD_FLASH     = BLUE

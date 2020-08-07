@@ -43,7 +43,6 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
                 }
 
                 context.world.observeSceneBy(attacker, "The $attacker ${details.description} the $target for ${finalDamage}!")
-                context.world.flash(attacker.position, GameColor.ATTACK_FLASH)
 
                 if (health <= 0) {
                     context.world.flash(target.position, GameColor.DESTROY_FLASH)
