@@ -4,12 +4,12 @@ import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 
 
-fun Property<Int>.toStringProperty(): Property<String> {
+fun Property<Int>.toStringProperty(transform: (Int) -> String = { it.toString() }): Property<String> {
     val intProp = this
 
     return createPropertyFrom("").apply {
         this.updateFrom(intProp) {
-            it.toString()
+            transform(it)
         }
     }
 }

@@ -1,5 +1,6 @@
 package entity.factories
 
+import attributes.CoinValue
 import attributes.ConsumableDetails
 import attributes.EntityPosition
 import attributes.EntityTile
@@ -7,27 +8,29 @@ import builders.newGameEntityOfType
 import constants.GameTile
 import entity.AnyEntity
 import entity.BatMeat
-import entity.En
+import entity.SmallCoins
 import facets.passive.Consumable
 import facets.passive.Droppable
 import facets.passive.Takeable
 import models.Heal
 import models.Poison
 import models.StatusEffect
+import kotlin.random.Random
 
 
 object ItemFactory {
 
     fun newRandomTreasure(): AnyEntity {
-        return newEn()
+        return newSmallCoins()
     }
 
     /**
      * TREASURE
      */
 
-    fun newEn() = newGameEntityOfType(En) {
+    fun newSmallCoins() = newGameEntityOfType(SmallCoins) {
         attributes(
+                CoinValue(Random.nextInt(5, 20)),
                 EntityPosition(),
                 EntityTile(GameTile.EN))
         facets(Takeable, Droppable)

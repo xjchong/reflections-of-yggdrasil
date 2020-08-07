@@ -1,5 +1,7 @@
 package facets.passive
 
+import attributes.CoinPouch
+import attributes.CoinValue
 import attributes.Inventory
 import commands.Take
 import entity.getAttribute
@@ -19,8 +21,13 @@ object Takeable : BaseFacet<GameContext>() {
         return command.responseWhenCommandIs(Take::class) { (context, takeable, taker) ->
             val world = context.world
             val inventory = taker.getAttribute(Inventory::class)
+            val coinPouch = taker.getAttribute(CoinPouch::class)
+            val coinValue = takeable.getAttribute(CoinValue::class)
 
-            if (inventory == null || inventory.isFull) {
+            if (coinValue != null && coinPouch?.addValue(coinValue.value) == true) {
+                world.removeEntity(takeable)
+                world.observeSceneBy(taker, "The $taker pockets the $takeable worth ${coinValue.value} en.")
+            } else if (inventory == null || inventory.isFull) {
                 world.observeSceneBy(taker, "The $taker has no room for the $takeable.", Critical)
             } else if (inventory.add(takeable)) {
                 world.removeEntity(takeable)

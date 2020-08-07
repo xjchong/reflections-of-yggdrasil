@@ -47,8 +47,8 @@ object BatMeat : BaseEntityType(
  * TREASURE
  */
 
-object En : BaseEntityType(
-        name = "en"
+object SmallCoins : BaseEntityType(
+        name = "small pile of coins"
 )
 
 /**

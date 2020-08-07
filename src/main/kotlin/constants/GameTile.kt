@@ -71,7 +71,7 @@ object GameTile {
      * TREASURE
      */
 
-    val EN = newCharacterTile('$', GameColor.LIGHT_CYAN)
+    val EN = newCharacterTile('$', GameColor.CYAN)
 
     /**
      * WEAPONS
