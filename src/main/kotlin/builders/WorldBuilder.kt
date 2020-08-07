@@ -2,6 +2,7 @@ package builders
 
 import block.GameBlock
 import block.GameBlockFactory
+import entity.AnyEntity
 import entity.factories.WidgetFactory
 import extensions.adjacentNeighbors
 import extensions.fetchPositionsForSlice
@@ -19,7 +20,11 @@ class WorldBuilder(private val worldSize: Size3D) {
 
         const val GRASS_START_CHANCE = 0.1
         const val GRASS_SPREAD_CHANCE = 2.0
-        const val GRASS_DECAY_RATE = 1.5
+        const val GRASS_DECAY_RATE = 0.6
+
+        const val POT_START_CHANCE = 0.05
+        const val POT_SPREAD_CHANCE = 0.5
+        const val POT_DECAY_RATE = 0.3
 
         const val DOOR_OPEN_CHANCE = 0.2
     }
@@ -102,17 +107,19 @@ class WorldBuilder(private val worldSize: Size3D) {
 
     private fun placeRoom(level: Int, x: Int, y: Int, roomWidth: Int, roomHeight: Int, regionId: Int) {
         val grassStarters = mutableSetOf<Position3D>()
+        val potStarters = mutableSetOf<Position3D>()
 
         forSlice(Position3D.create(x, y, level), roomWidth, roomHeight) { pos ->
-            if ((pos.x == x || pos.y == y) && Math.random() < GRASS_START_CHANCE) {
-                grassStarters.add(pos)
+            if (pos.x == x || pos.y == y) { // Only placing these widgets at the edge of the rooms.
+                if (Math.random() < GRASS_START_CHANCE) grassStarters.add(pos)
+                else if (Math.random() < POT_START_CHANCE) potStarters.add(pos)
             }
 
             blocks[pos] = GameBlockFactory.floor(pos)
             regionIds[pos] = nextRegionId
         }
 
-        fun spreadGrass(candidates: Set<Position3D>, spreadChance: Double) {
+        fun spreadWidget(candidates: Set<Position3D>, spreadChance: Double, decayRate: Double, builder: () -> AnyEntity) {
             if (candidates.isEmpty()) return
 
             val nextCandidates = mutableSetOf<Position3D>()
@@ -120,14 +127,21 @@ class WorldBuilder(private val worldSize: Size3D) {
             for (candidate in candidates) {
                 if (Math.random() >= spreadChance || blocks[candidate]?.isObstructed == true) continue
 
-                blocks[candidate]?.addEntity(WidgetFactory.newGrass())
+                blocks[candidate]?.addEntity(builder())
                 nextCandidates.addAll(candidate.adjacentNeighbors(false))
             }
 
-            spreadGrass(nextCandidates, spreadChance / GRASS_DECAY_RATE)
+            spreadWidget(nextCandidates, spreadChance * decayRate, decayRate, builder)
         }
 
-        spreadGrass(grassStarters, GRASS_SPREAD_CHANCE)
+        spreadWidget(grassStarters, GRASS_SPREAD_CHANCE, GRASS_DECAY_RATE) {
+            WidgetFactory.newGrass()
+        }
+
+        spreadWidget(potStarters, POT_SPREAD_CHANCE, POT_DECAY_RATE) {
+            WidgetFactory.newPot()
+        }
+
     }
 
     private fun isRoomSafe(x: Int, y: Int, level: Int, roomWidth: Int, roomHeight: Int): Boolean {
@@ -188,11 +202,12 @@ class WorldBuilder(private val worldSize: Size3D) {
         for (pos in positions) {
             val adjacentRegions: MutableSet<Int> = mutableSetOf()
 
-            pos.adjacentNeighbors(shouldShuffle = false).forEach { neighbor ->
-                adjacentRegions.add(regionIds[neighbor]?: WALL_REGION_ID)
-            }
+            for (neighbor in pos.adjacentNeighbors(false)) {
+                if (blocks[neighbor]?.isObstructed == true) continue
 
-            adjacentRegions.remove(WALL_REGION_ID)
+                val neighbourId = regionIds[neighbor] ?: continue
+                adjacentRegions.add(neighbourId)
+            }
 
             if (adjacentRegions.size != 2) continue // Does not connect two different regions.
 

@@ -11,6 +11,7 @@ import builders.newGameEntityOfType
 import constants.GameTile
 import entity.Door
 import entity.Grass
+import entity.Pot
 import entity.Wall
 import facets.passive.Diggable
 import facets.passive.Openable
@@ -42,6 +43,13 @@ object WidgetFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTile.GRASS))
+    }
+
+    fun newPot() = newGameEntityOfType(Pot) {
+        attributes(
+                EntityPosition(),
+                EntityTile(GameTile.POT),
+                Obstacle)
     }
 
     fun newWall(isDiggable: Boolean = true) = newGameEntityOfType(Wall) {

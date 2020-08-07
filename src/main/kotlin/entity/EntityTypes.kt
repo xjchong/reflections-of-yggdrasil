@@ -63,6 +63,10 @@ object Grass : BaseEntityType(
         name = "grass"
 )
 
+object Pot : BaseEntityType(
+        name = "pot"
+)
+
 object Wall : BaseEntityType(
         name = "wall"
 )
