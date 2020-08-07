@@ -11,7 +11,7 @@ sealed class GameInputEvent {
 
 class ConsumeInputEvent(val consumable: AnyEntity) : GameInputEvent()
 
-class ContextualInputEvent() : GameInputEvent()
+class ContextualInputEvent(val relativePosition: Position3D? = null) : GameInputEvent()
 
 class DropInputEvent(val droppable: AnyEntity) : GameInputEvent()
 

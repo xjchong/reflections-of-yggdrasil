@@ -34,7 +34,13 @@ object InputReceiving : BaseFacet<GameContext>() {
             runBlocking {
                 response = when (event) {
                     is ConsumeInputEvent -> event.consumable.run { executeCommand(Consume(context, this, entity)) }
-                    is ContextualInputEvent -> if (entity.tryContextualActions(context, entity.position)) Consumed else Pass
+                    is ContextualInputEvent -> {
+                        if (entity.tryContextualActions(context, entity.position, event.relativePosition)) {
+                            Consumed
+                        } else {
+                            Pass
+                        }
+                    }
                     is DropInputEvent -> event.droppable.run { executeCommand(Drop(context, this, entity, position)) }
                     is EquipInputEvent -> event.equipment.run { executeCommand(Equip(context, this, entity)) }
                     is GuardInputEvent -> entity.executeCommand(Guard(context, entity))
@@ -62,24 +68,32 @@ object InputReceiving : BaseFacet<GameContext>() {
     }
 
     // Try any possible contextual actions. TODO: This should prompt for further instruction if multiple are possible.
-    private suspend fun AnyEntity.tryContextualActions(context: GameContext, position: Position3D): Boolean {
+    private suspend fun AnyEntity.tryContextualActions(context: GameContext, position: Position3D,
+                                                       relativePosition: Position3D?): Boolean {
         val world = context.world
-        val samePositionEntities = world.fetchEntitiesAt(position)
-        val takeable = samePositionEntities.filter{ it != this }.firstOrNull { it.hasFacet<Takeable>() }
 
-        if (takeable != null) {
-            return takeable.executeCommand(Take(context, takeable, this)) == Consumed
+        if (relativePosition == null) {
+            val samePositionEntities = world.fetchEntitiesAt(position)
+            val takeable = samePositionEntities.filter{ it != this }.firstOrNull { it.hasFacet<Takeable>() }
+
+            if (takeable != null) {
+                return takeable.executeCommand(Take(context, takeable, this)) == Consumed
+            }
         }
 
-        val neighborEntities = position.neighbors(false).flatMap { world.fetchEntitiesAt(it) }
+        val otherPositionEntities = if (relativePosition != null) {
+            world.fetchEntitiesAt(position.withRelative(relativePosition))
+        } else {
+            position.neighbors(false).flatMap { world.fetchEntitiesAt(it) }
+        }
 
-        val enemies = neighborEntities.filter { this.isEnemiesWith(it) && it.hasFacet<Attackable>() }
+        val enemies = otherPositionEntities.filter { this.isEnemiesWith(it) && it.hasFacet<Attackable>() }
         if (enemies.size > 1) return false
         if (enemies.size == 1) {
             return tryAttack(context, enemies)
         }
 
-        val openables = neighborEntities.filter { it.hasFacet<Openable>() }
+        val openables = otherPositionEntities.filter { it.hasFacet<Openable>() }
         if (openables.size > 1) return false
         if (openables.size == 1) {
 

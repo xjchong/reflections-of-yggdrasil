@@ -176,16 +176,33 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
             if (pressedKeys.contains(KeyCode.SHIFT)) {
                 val comboInputEvent = when {
-                    pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.UP, KeyCode.LEFT)) ->
+                    pressedKeys.containsAll(setOf(KeyCode.SPACE, KeyCode.UP, KeyCode.LEFT)) ->
+                        ContextualInputEvent(relativePosition = Position3D.create(-1, -1, 0))
+                    pressedKeys.containsAll(setOf(KeyCode.SPACE, KeyCode.UP, KeyCode.RIGHT)) ->
+                        ContextualInputEvent(relativePosition = Position3D.create(1, -1, 0))
+                    pressedKeys.containsAll(setOf(KeyCode.SPACE, KeyCode.DOWN, KeyCode.LEFT)) ->
+                        ContextualInputEvent(relativePosition = Position3D.create(-1, 1, 0))
+                    pressedKeys.containsAll(setOf(KeyCode.SPACE, KeyCode.DOWN, KeyCode.RIGHT)) ->
+                        ContextualInputEvent(relativePosition = Position3D.create(1, 1, 0))
+                    pressedKeys.containsAll(setOf(KeyCode.SPACE, KeyCode.RIGHT)) ->
+                        ContextualInputEvent(relativePosition = Position3D.create(1, 0, 0))
+                    pressedKeys.containsAll(setOf(KeyCode.SPACE, KeyCode.DOWN)) ->
+                        ContextualInputEvent(relativePosition = Position3D.create(0, 1, 0))
+                    pressedKeys.containsAll(setOf(KeyCode.SPACE, KeyCode.LEFT)) ->
+                        ContextualInputEvent(relativePosition = Position3D.create(-1, 0, 0))
+                    pressedKeys.containsAll(setOf(KeyCode.SPACE, KeyCode.UP)) ->
+                        ContextualInputEvent(relativePosition = Position3D.create(0, -1, 0))
+
+                    pressedKeys.containsAll(setOf(KeyCode.UP, KeyCode.LEFT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(-1, -1, 0))
-                    pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.UP, KeyCode.RIGHT)) ->
+                    pressedKeys.containsAll(setOf(KeyCode.UP, KeyCode.RIGHT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(1, -1, 0))
-                    pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.DOWN, KeyCode.LEFT)) ->
+                    pressedKeys.containsAll(setOf(KeyCode.DOWN, KeyCode.LEFT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(-1, 1, 0))
-                    pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.DOWN, KeyCode.RIGHT)) ->
+                    pressedKeys.containsAll(setOf(KeyCode.DOWN, KeyCode.RIGHT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(1, 1, 0))
-                    pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.SPACE)) ->
-                        GuardInputEvent()
+
+                    pressedKeys.containsAll(setOf(KeyCode.SHIFT, KeyCode.KEY_Z)) -> GuardInputEvent()
                     else -> null
                 } ?: return@handleKeyboardEvents Pass
 
@@ -221,23 +238,11 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
             }
 
             val inputEvent = when (keyEvent.code) {
-                KeyCode.RIGHT, KeyCode.DIGIT_6, KeyCode.NUMPAD_6 ->
-                    MoveInputEvent(relativePosition = Position3D.create(1, 0, 0))
-                KeyCode.DOWN, KeyCode.DIGIT_2, KeyCode.NUMPAD_2 ->
-                    MoveInputEvent(relativePosition = Position3D.create(0, 1, 0))
-                KeyCode.LEFT, KeyCode.DIGIT_4, KeyCode.NUMPAD_4 ->
-                    MoveInputEvent(relativePosition = Position3D.create(-1, 0, 0))
-                KeyCode.UP, KeyCode.DIGIT_8, KeyCode.NUMPAD_8 ->
-                    MoveInputEvent(relativePosition = Position3D.create(0, -1, 0))
-                KeyCode.DIGIT_1 ->
-                    MoveInputEvent(relativePosition = Position3D.create(-1, 1, 0))
-                KeyCode.DIGIT_3 ->
-                    MoveInputEvent(relativePosition = Position3D.create(1, 1, 0))
-                KeyCode.DIGIT_7 ->
-                    MoveInputEvent(relativePosition = Position3D.create(-1, -1, 0))
-                KeyCode.DIGIT_9 ->
-                    MoveInputEvent(relativePosition = Position3D.create(1, -1, 0))
-                KeyCode.COMMA, KeyCode.DIGIT_5, KeyCode.NUMPAD_5 -> WaitInputEvent()
+                KeyCode.RIGHT -> MoveInputEvent(relativePosition = Position3D.create(1, 0, 0))
+                KeyCode.DOWN -> MoveInputEvent(relativePosition = Position3D.create(0, 1, 0))
+                KeyCode.LEFT -> MoveInputEvent(relativePosition = Position3D.create(-1, 0, 0))
+                KeyCode.UP -> MoveInputEvent(relativePosition = Position3D.create(0, -1, 0))
+                KeyCode.KEY_Z -> WaitInputEvent()
 
                 KeyCode.SPACE -> ContextualInputEvent()
                 KeyCode.KEY_G -> TakeInputEvent()
