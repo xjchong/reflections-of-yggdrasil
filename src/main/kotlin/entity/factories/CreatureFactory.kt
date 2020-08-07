@@ -139,7 +139,7 @@ object CreatureFactory {
             .build()
 
 
-    fun newRat(proliferation: Proliferation = Proliferation(0.02, 0.9) { newRat(it) }) = AnyEntityBuilder.newBuilder(Rat)
+    fun newRat(proliferation: Proliferation = Proliferation(0.02, 0.7) { newRat(it) }) = AnyEntityBuilder.newBuilder(Rat)
             .withAttributes(
                     FactionDetails(Monster, alliedFactions = setOf(Monster)),
                     AttackStrategies(WeakBiteAttack(listOf(
