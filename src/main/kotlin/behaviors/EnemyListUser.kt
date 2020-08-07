@@ -4,7 +4,7 @@ import attributes.EnemyList
 import attributes.Senses
 import entity.AnyEntity
 import entity.getAttribute
-import entity.isAlliedWith
+import entity.isEnemiesWith
 import game.GameContext
 
 object EnemyListUser : ForegroundBehavior(EnemyList::class) {
@@ -12,7 +12,7 @@ object EnemyListUser : ForegroundBehavior(EnemyList::class) {
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val senses = entity.getAttribute(Senses::class) ?: return false
         val sensedEnemies = senses.sensedEntities.filter {
-            !entity.isAlliedWith(it)
+            entity.isEnemiesWith(it)
         }
 
         entity.getAttribute(EnemyList::class)?.updateEnemies(sensedEnemies)

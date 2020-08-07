@@ -20,7 +20,7 @@ object Fleer : ForegroundBehavior(Goals::class) {
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val world = context.world
         val senses = entity.getAttribute(Senses::class) ?: return false
-        val sensedEnemies = senses.sensedEntities.filter { !entity.isAlliedWith(it) }
+        val sensedEnemies = senses.sensedEntities.filter { entity.isEnemiesWith(it) }
 
         return if (sensedEnemies.isNotEmpty()) entity.addFleeGoal(context, sensedEnemies) else false
     }

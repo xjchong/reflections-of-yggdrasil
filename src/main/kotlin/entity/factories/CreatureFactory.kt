@@ -39,7 +39,7 @@ object CreatureFactory {
 
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(
-                Alliance(Adventurer),
+                FactionDetails(Adventurer),
                 AttackStrategies(WeakPunchAttack()),
                 EnemyList(),
                 EntityPosition(),
@@ -72,7 +72,7 @@ object CreatureFactory {
 
     fun newBat() = AnyEntityBuilder.newBuilder(Bat)
             .withAttributes(
-                    Alliance(Monster),
+                    FactionDetails(Monster, alliedFactions = setOf(Monster)),
                     AttackStrategies(BiteAttack()),
                     CombatStats.create(
                             maxHealth = 60,
@@ -94,7 +94,7 @@ object CreatureFactory {
 
     fun newCrab() = AnyEntityBuilder.newBuilder(Crab)
             .withAttributes(
-                    Alliance(Monster),
+                    FactionDetails(Monster, alliedFactions = setOf(Monster)),
                     AttackStrategies(ClawAttack()),
                     CombatStats.create(
                             maxHealth = 60,
@@ -119,7 +119,7 @@ object CreatureFactory {
 
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 0.6) { newFungus(it) }) = AnyEntityBuilder.newBuilder(Fungus)
             .withAttributes(
-                    Alliance(Monster),
+                    FactionDetails(Monster, alliedFactions = setOf(Monster)),
                     AttackStrategies(SporeAttack(listOf(
                             StatusEffect(Poison, 3, 0.5)
                     ))),
@@ -141,7 +141,7 @@ object CreatureFactory {
 
     fun newRat(proliferation: Proliferation = Proliferation(0.02, 0.9) { newRat(it) }) = AnyEntityBuilder.newBuilder(Rat)
             .withAttributes(
-                    Alliance(Monster),
+                    FactionDetails(Monster, alliedFactions = setOf(Monster)),
                     AttackStrategies(WeakBiteAttack(listOf(
                             StatusEffect(Poison, 2, 0.3)
                     ))),

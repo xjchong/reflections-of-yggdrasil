@@ -23,7 +23,7 @@ object RandomAttacker : ForegroundBehavior(Goals::class) {
 
         for (inRangePos in inRangePositions) {
             inRangeEnemy = world.fetchEntitiesAt(inRangePos).firstOrNull {
-                !entity.isAlliedWith(it)
+                entity.isEnemiesWith(it)
             }
 
             if (inRangeEnemy != null) {

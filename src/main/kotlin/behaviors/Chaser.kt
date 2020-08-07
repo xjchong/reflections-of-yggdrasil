@@ -17,7 +17,7 @@ object Chaser : ForegroundBehavior(Goals::class) {
         val senses = entity.getAttribute(Senses::class) ?: return false
 
         for (sensedEntity in senses.sensedEntities) {
-            if (!entity.isAlliedWith(sensedEntity)) {
+            if (entity.isEnemiesWith(sensedEntity)) {
                 return entity.addChaseGoal(context, sensedEntity)
             }
         }

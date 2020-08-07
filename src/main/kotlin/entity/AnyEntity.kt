@@ -58,10 +58,21 @@ fun AnyEntity.isAlliedWith(entity: AnyEntity): Boolean {
     if (this.id == entity.id) return true
     if (entity.getAttribute(CombatStats::class) == null) return true
 
-    val thisFaction = getAttribute(Alliance::class)?.faction
-    val otherFaction = entity.getAttribute(Alliance::class)?.faction
+    val factionDetails = getAttribute(FactionDetails::class) ?: return false
+    val otherFaction = entity.getAttribute(FactionDetails::class)?.ownFaction
 
-    return (thisFaction == otherFaction && thisFaction != null)
+    return factionDetails.alliedFactions.contains(otherFaction)
+}
+
+fun AnyEntity.isEnemiesWith(entity: AnyEntity): Boolean {
+    if (this.id == entity.id) return false
+    if (entity.getAttribute(CombatStats::class) == null) return false
+
+    val factionDetails = getAttribute(FactionDetails::class) ?: return true
+    val otherFaction = entity.getAttribute(FactionDetails::class)?.ownFaction
+
+    return !factionDetails.alliedFactions.contains(otherFaction)
+            && !factionDetails.neutralFactions.contains(otherFaction)
 }
 
 fun AnyEntity.addTileModifiers(vararg modifiers: Modifier) {
