@@ -1,8 +1,6 @@
 package entity.factories
 
-import attributes.EntityPosition
-import attributes.EntityTile
-import attributes.OpenableDetails
+import attributes.*
 import attributes.flag.BlocksSmell
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
@@ -13,6 +11,8 @@ import entity.Door
 import entity.Grass
 import entity.Pot
 import entity.Wall
+import facets.passive.Attackable
+import facets.passive.Destroyable
 import facets.passive.Diggable
 import facets.passive.Openable
 
@@ -47,9 +47,17 @@ object WidgetFactory {
 
     fun newPot() = newGameEntityOfType(Pot) {
         attributes(
+                CombatStats.create(
+                        1, 1, 1, 0
+                ),
                 EntityPosition(),
                 EntityTile(GameTile.POT),
+                FactionDetails(Widget),
+                Inventory(1).apply {
+                    add(ItemFactory.newEn())
+                },
                 Obstacle)
+        facets(Attackable, Destroyable)
     }
 
     fun newWall(isDiggable: Boolean = true) = newGameEntityOfType(Wall) {

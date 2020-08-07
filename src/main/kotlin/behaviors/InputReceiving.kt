@@ -120,7 +120,7 @@ object InputReceiving : BaseFacet<GameContext>() {
     }
 
     private suspend fun AnyEntity.tryAttack(context: GameContext, entities: List<AnyEntity>): Boolean {
-        val target = entities.firstOrNull { isEnemiesWith(it) } ?: return false
+        val target = entities.firstOrNull { !isAlliedWith(it) } ?: return false
         val combatStats = getAttribute(CombatStats::class) ?: return false
         val innateStrategies = getAttribute(AttackStrategies::class)?.strategies ?: mutableListOf()
         val mainHand = getAttribute(Equipments::class)?.mainHand?.optional
