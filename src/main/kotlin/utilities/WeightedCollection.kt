@@ -3,7 +3,7 @@ package utilities
 import kotlin.random.Random
 
 
-data class WeightedEntry<T: Any>(val item: T, val weight: Int)
+data class WeightedEntry<T: Any>(val weight: Int, val item: T)
 
 class WeightedCollection<T: Any>(vararg entries: WeightedEntry<T>) {
 

@@ -7,14 +7,12 @@ import attributes.flag.Opaque
 import behaviors.Barrier
 import builders.newGameEntityOfType
 import constants.GameTile
-import entity.Door
-import entity.Grass
-import entity.Pot
-import entity.Wall
+import entity.*
 import facets.passive.Attackable
 import facets.passive.Destroyable
 import facets.passive.Diggable
 import facets.passive.Openable
+import utilities.WeightedEntry
 
 
 object WidgetFactory {
@@ -53,9 +51,12 @@ object WidgetFactory {
                 EntityPosition(),
                 EntityTile(GameTile.POT),
                 FactionDetails(Widget),
-                Inventory(1).apply {
-                    add(ItemFactory.newEn())
-                },
+                LootTable(
+                        WeightedEntry(50) { listOf(ItemFactory.newRandomTreasure()) },
+                        WeightedEntry(10) { listOf(WeaponFactory.newRandomWeapon()) },
+                        WeightedEntry(10) { listOf(ArmorFactory.newRandomArmor()) },
+                        WeightedEntry(30) { listOf<AnyEntity>() }
+                ),
                 Obstacle)
         facets(Attackable, Destroyable)
     }

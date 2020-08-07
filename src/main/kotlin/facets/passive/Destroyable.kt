@@ -1,6 +1,7 @@
 package facets.passive
 
 import attributes.Inventory
+import attributes.LootTable
 import commands.Destroy
 import commands.Drop
 import entity.executeBlockingCommand
@@ -24,6 +25,12 @@ object Destroyable : BaseFacet<GameContext>() {
             entity.getAttribute(Inventory::class)?.let { inventory ->
                 inventory.contents.forEach { item ->
                     item.executeBlockingCommand(Drop(context, item, entity, entity.position))
+                }
+            }
+
+            entity.getAttribute(LootTable::class)?.let { lootTable ->
+                lootTable.table.sample()?.invoke()?.forEach { loot ->
+                    loot.executeBlockingCommand(Drop(context, loot, entity, entity.position))
                 }
             }
 

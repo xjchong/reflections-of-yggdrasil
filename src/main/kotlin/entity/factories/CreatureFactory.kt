@@ -21,11 +21,11 @@ object CreatureFactory {
 
     fun newRandomCreature(): AnyEntity {
         val weightedCreatures: WeightedCollection<() -> AnyEntity> = WeightedCollection(
-                WeightedEntry({ newBat() }, 9),
-                WeightedEntry({ newCrab() }, 7),
-                WeightedEntry({ newFungus() }, 5),
-                WeightedEntry({ newRat() }, 3),
-                WeightedEntry({ newZombie() }, 5)
+                WeightedEntry(9) { newBat() },
+                WeightedEntry(7) { newCrab() },
+                WeightedEntry(5) { newFungus() },
+                WeightedEntry(3) { newRat() },
+                WeightedEntry(5) { newZombie() }
         )
 
         val sample = weightedCreatures.sample()!!
