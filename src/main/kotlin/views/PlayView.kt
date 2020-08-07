@@ -227,11 +227,6 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
                 return@handleKeyboardEvents Processed
             }
 
-            if (keyEvent.code == KeyCode.KEY_P) {
-                DebugConfig.apply { presenceTypeShown = (presenceTypeShown + 1) % 3 }
-                return@handleKeyboardEvents Processed
-            }
-
             if (keyEvent.code == GameConfig.LOG_KEY) {
                 screen.openModal(LogHistoryDialog(screen, logHistory))
                 return@handleKeyboardEvents Processed
