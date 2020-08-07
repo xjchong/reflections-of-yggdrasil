@@ -3,6 +3,7 @@ package builders
 import block.GameBlock
 import block.GameBlockFactory
 import entity.AnyEntity
+import entity.Door
 import entity.factories.WidgetFactory
 import extensions.adjacentNeighbors
 import extensions.fetchPositionsForSlice
@@ -203,7 +204,7 @@ class WorldBuilder(private val worldSize: Size3D) {
             val adjacentRegions: MutableSet<Int> = mutableSetOf()
 
             for (neighbor in pos.adjacentNeighbors(false)) {
-                if (blocks[neighbor]?.isObstructed == true) continue
+                if (blocks[neighbor]?.isObstructed == true || blocks[neighbor]?.hasType<Door>() == true) continue
 
                 val neighbourId = regionIds[neighbor] ?: continue
                 adjacentRegions.add(neighbourId)
