@@ -4,10 +4,10 @@ import attributes.Inventory
 import attributes.LootTable
 import commands.Destroy
 import commands.Drop
-import entity.executeBlockingCommand
 import entity.getAttribute
 import entity.position
 import events.Notice
+import extensions.responseWhenIs
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -19,19 +19,18 @@ import org.hexworks.amethyst.api.entity.EntityType
 object Destroyable : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Destroy::class) { (context, entity, cause) ->
+        return command.responseWhenIs(Destroy::class) { (context, entity, cause) ->
             context.world.observeSceneBy(entity, "The $entity is destroyed by $cause.", Notice)
 
-            entity.getAttribute(Inventory::class)?.let { inventory ->
-                inventory.contents.forEach { item ->
-                    item.executeBlockingCommand(Drop(context, item, entity, entity.position))
-                }
+            val inventory = entity.getAttribute(Inventory::class)
+            val lootTable = entity.getAttribute(LootTable::class)
+
+            inventory?.contents?.forEach { item ->
+                item.executeCommand(Drop(context, item, entity, entity.position))
             }
 
-            entity.getAttribute(LootTable::class)?.let { lootTable ->
-                lootTable.table.sample()?.invoke()?.forEach { loot ->
-                    loot.executeBlockingCommand(Drop(context, loot, entity, entity.position))
-                }
+            lootTable?.table?.sample()?.invoke()?.forEach { loot ->
+                loot.executeCommand(Drop(context, loot, entity, entity.position))
             }
 
             context.world.removeEntity(entity)

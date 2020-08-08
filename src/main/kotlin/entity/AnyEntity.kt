@@ -87,10 +87,6 @@ fun AnyEntity.removeTileModifiers(vararg modifiers: Modifier) {
     }
 }
 
-fun AnyEntity.executeBlockingCommand(command: Command<out EntityType, GameContext>): Response {
-    return runBlocking { executeCommand(command) }
-}
-
 fun <T : Attribute> AnyEntity.getAttribute(klass: KClass<T>): T? = findAttribute(klass).optional
 
 inline fun <reified T : Attribute> AnyEntity.hasAttribute(): Boolean {

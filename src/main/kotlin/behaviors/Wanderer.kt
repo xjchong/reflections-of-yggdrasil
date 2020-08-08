@@ -4,7 +4,6 @@ import attributes.Goal
 import attributes.Goals
 import commands.Move
 import entity.AnyEntity
-import entity.executeBlockingCommand
 import entity.getAttribute
 import entity.position
 import extensions.neighbors
@@ -35,8 +34,10 @@ object Wanderer : ForegroundBehavior(Goals::class) {
     }
 
     private fun AnyEntity.addWanderGoal(context: GameContext, nextPosition: Position3D): Boolean {
-        return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY, 20) {
-            executeBlockingCommand(Move(context, this, nextPosition))
-        }) == true
+        val goals = getAttribute(Goals::class) ?: return false
+
+        return goals.list.add(Goal(GOAL_KEY, 20) {
+            executeCommand(Move(context, this, nextPosition))
+        })
     }
 }

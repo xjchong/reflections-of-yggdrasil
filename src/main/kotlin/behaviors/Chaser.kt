@@ -4,7 +4,10 @@ import attributes.Goal
 import attributes.Goals
 import attributes.Senses
 import commands.Move
-import entity.*
+import entity.AnyEntity
+import entity.getAttribute
+import entity.isEnemiesWith
+import entity.position
 import game.GameContext
 import utilities.AStar
 
@@ -25,13 +28,13 @@ object Chaser : ForegroundBehavior(Goals::class) {
         return false
     }
 
-    private fun AnyEntity.addChaseGoal(context: GameContext, target: AnyEntity): Boolean {
+    private suspend fun AnyEntity.addChaseGoal(context: GameContext, target: AnyEntity): Boolean {
         return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY, 60) {
             val nextPosition = AStar.getPath(position, target.position) { from, to ->
                 context.world.getMovementCost(this, from, to)
             }.first()
 
-            executeBlockingCommand(Move(context, this, nextPosition))
+            executeCommand(Move(context, this, nextPosition))
         }) == true
     }
 }

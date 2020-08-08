@@ -3,7 +3,6 @@ package behaviors
 import attributes.*
 import commands.Move
 import entity.AnyEntity
-import entity.executeBlockingCommand
 import entity.getAttribute
 import entity.position
 import extensions.optional
@@ -35,9 +34,11 @@ object Shuffler : ForegroundBehavior() {
     }
 
     private fun AnyEntity.addShuffleGoal(context: GameContext, nextPosition: Position3D): Boolean {
-        return getAttribute(Goals::class)?.list?.add(Goal(GOAL_KEY, 20) {
-            executeBlockingCommand(Move(context, this, nextPosition))
-        }) == true
+        val goals = getAttribute(Goals::class) ?: return false
+
+        return goals.list.add(Goal(GOAL_KEY, 20) {
+            executeCommand(Move(context, this, nextPosition))
+        })
     }
 
     private fun getNextPositionForBias(shuffleBiasType: ShuffleBiasType, position: Position3D): Position3D {

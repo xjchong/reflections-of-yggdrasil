@@ -5,7 +5,11 @@ import attributes.*
 import commands.ApplyStatus
 import commands.Attack
 import commands.Destroy
-import entity.*
+import entity.AnyEntity
+import entity.getAttribute
+import entity.isAlliedWith
+import entity.position
+import extensions.responseWhenIs
 import game.GameContext
 import models.AttackDetails
 import models.Resistance
@@ -16,13 +20,14 @@ import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
+
 object Attackable : BaseFacet<GameContext>(CombatStats::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Attack::class) { (context, attacker, target, details) ->
-            if (attacker.isAlliedWith(target)) return@responseWhenCommandIs Pass
+        return command.responseWhenIs(Attack::class) { (context, attacker, target, details) ->
+            if (attacker.isAlliedWith(target)) return@responseWhenIs Pass
 
-            val targetCombatStats = target.getAttribute(CombatStats::class) ?: return@responseWhenCommandIs Pass
+            val targetCombatStats = target.getAttribute(CombatStats::class) ?: return@responseWhenIs Pass
             val finalDetails = target.applyResistances(details)
             val finalDamage = finalDetails.damage
 
@@ -46,7 +51,7 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
 
                 if (health <= 0) {
                     context.world.flash(target.position, GameColor.DESTROY_FLASH)
-                    target.executeBlockingCommand(Destroy(context, target, cause = "the $attacker"))
+                    target.executeCommand(Destroy(context, target, cause = "the $attacker"))
                     attacker.getAttribute(KillTarget::class)?.target = null
                 } else {
                     if (target.getAttribute(StatusDetails::class)?.guard ?: 0 > 0) {
@@ -57,7 +62,7 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
                 }
 
                 for (effect in details.effects) {
-                    target.executeBlockingCommand(ApplyStatus(context, attacker, target, effect))
+                    target.executeCommand(ApplyStatus(context, attacker, target, effect))
                 }
             }
 

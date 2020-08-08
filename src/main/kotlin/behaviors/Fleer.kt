@@ -26,10 +26,11 @@ object Fleer : ForegroundBehavior(Goals::class) {
     }
 
     private fun AnyEntity.addFleeGoal(context: GameContext, sensedEnemies: List<AnyEntity>): Boolean {
+        val goals = getAttribute(Goals::class) ?: return false
         val combatStats = getAttribute(CombatStats::class) ?: return false
         val senses = getAttribute(Senses::class) ?: return false
 
-        return getAttribute(Goals::class)?.list?.add(Goal(
+        return goals.list.add(Goal(
                 GOAL_KEY,
                 100 - (combatStats.health.toDouble() / combatStats.maxHealth.toDouble() * 100).toInt()) {
             val avoidanceMap = DijkstraMapping.getAvoidanceMap(sensedEnemies.map { it.position }.toSet(), senses.maxRange) {
@@ -52,8 +53,8 @@ object Fleer : ForegroundBehavior(Goals::class) {
             if (nextPosition == Position3D.unknown()) {
                 Pass
             } else {
-                executeBlockingCommand(Move(context, this, nextPosition))
+                executeCommand(Move(context, this, nextPosition))
             }
-        }) == true
+        })
     }
 }

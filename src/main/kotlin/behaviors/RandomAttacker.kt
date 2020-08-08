@@ -61,7 +61,7 @@ object RandomAttacker : ForegroundBehavior(Goals::class) {
         combatStats.dockStamina(strategy.staminaCost)
 
         return goals.list.add(Goal(GOAL_KEY, 70) {
-            executeBlockingCommand(Attack(context, this, target, AttackDetails.create(strategy, combatStats)))
+            executeCommand(Attack(context, this, target, AttackDetails.create(strategy, combatStats)))
         })
     }
 }

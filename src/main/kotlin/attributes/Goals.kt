@@ -9,4 +9,4 @@ class Goals : Attribute {
     var lastGoal: Goal? = null
 }
 
-data class Goal(val name: String, val weight: Int, val execute: () -> Response)
+data class Goal(val name: String, val weight: Int, val execute: suspend () -> Response)
