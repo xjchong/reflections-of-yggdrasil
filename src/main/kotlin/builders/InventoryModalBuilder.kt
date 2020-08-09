@@ -62,7 +62,7 @@ class InventoryModalBuilder(private val screen: Screen) {
 
         modal.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, _ ->
             when (event.code) {
-                KeyCode.KEY_I, KeyCode.ESCAPE -> modal.close(EmptyModalResult)
+                KeyCode.KEY_I, KeyCode.KEY_C, KeyCode.ESCAPE -> modal.close(EmptyModalResult)
             }
 
             Processed

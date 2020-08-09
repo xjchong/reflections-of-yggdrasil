@@ -241,7 +241,7 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
                 KeyCode.SPACE -> ContextualInputEvent()
                 KeyCode.KEY_G -> TakeInputEvent()
-                KeyCode.KEY_I  -> InventoryInputEvent()
+                KeyCode.KEY_I, KeyCode.KEY_C  -> InventoryInputEvent()
                 else -> null
             } ?: return@handleKeyboardEvents Pass
 
