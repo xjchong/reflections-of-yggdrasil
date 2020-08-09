@@ -37,8 +37,7 @@ class GameBlock(private val position: Position3D,
     }
 
     private var memory: Memory? = null
-    private var flashColor: TileColor? = null
-    private var flashCountdown: Int = 0
+    private var particleEffect: ParticleEffect? = null
 
     val turnProperty: Property<Long> = createPropertyFrom(0)
     private val turn: Long by turnProperty.asDelegate()
@@ -50,14 +49,16 @@ class GameBlock(private val position: Position3D,
                 entityTiles.contains(GameTile.PLAYER) -> GameTile.PLAYER
                 entityTiles.isNotEmpty() -> entityTiles.last()
                 else -> defaultTile
-            }.run { flashColor?.let { withBackgroundColor(it) } ?: run { this } }
+            }
 
             val topTile = when {
-                (isRevealed || DebugConfig.shouldRevealWorld) -> GameTile.EMPTY
+                (isRevealed || DebugConfig.shouldRevealWorld) -> GameTile.EMPTY.withBackgroundColor(
+                        particleEffect?.color ?: TileColor.transparent()
+                )
                 else -> getMemoryTile()
             }
 
-            updateFlash()
+            if (particleEffect?.update() == false) particleEffect = null
 
             return persistentMapOf(
                 Pair(BlockTileType.TOP, topTile),
@@ -113,16 +114,8 @@ class GameBlock(private val position: Position3D,
         this.memory = memory
     }
 
-    fun flash(color: TileColor) {
-        flashColor = color.withAlpha(200)
-        flashCountdown = 4
-    }
-
-    private fun updateFlash() {
-        flashCountdown -= 1
-        if (flashCountdown <= 0) {
-            flashColor = null
-        }
+    fun flash(color: TileColor, shouldFade: Boolean = true, duration: Int = 8) {
+        particleEffect = ParticleEffect(color, shouldFade, duration)
     }
 
     inline fun <reified T: EntityType> hasType(noinline fn: ((AnyEntity) -> Boolean)? = null): Boolean {
