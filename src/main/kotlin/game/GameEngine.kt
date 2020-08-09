@@ -1,8 +1,9 @@
 package game
 
-import facets.active.InputReceiving
 import commands.Input
 import entity.AnyEntity
+import entity.hasFacet
+import facets.active.InputReceiving
 import kotlinx.coroutines.*
 import org.hexworks.amethyst.api.Engine
 import org.hexworks.amethyst.api.Pass
@@ -13,79 +14,45 @@ class GameEngine(
     override val coroutineContext: CoroutineContext = Dispatchers.Default
 ) : Engine<GameContext>, CoroutineScope {
 
-    companion object {
-        const val PRIORITY_LOW = 0
-        const val PRIORITY_DEFAULT = 1
-        const val PRIORITY_HIGH = 2
-    }
-
-    private val lowPriorityEntities = mutableListOf<AnyEntity>()
-    private val defaultPriorityEntities = mutableListOf<AnyEntity>()
-    private val highPriorityEntities = mutableListOf<AnyEntity>()
-    private val noBehaviorEntities = mutableListOf<AnyEntity>() // This is dangerous because I may want to add behaviors dynamically to entities later.
     private var inputReceivingEntity: AnyEntity? = null
+    private val inputReceivingEntities: MutableList<AnyEntity> = mutableListOf()
+    private val nonInputReceivingEntities: MutableList<AnyEntity> = mutableListOf()
 
     @Synchronized
     override fun addEntity(entity: AnyEntity) {
-        addEntityWithPriority(entity)
-    }
+        if (entity.hasBehaviors.not()) return // Dangerous if there are entities that can have behaviors added dynamically.
 
-    @Synchronized fun addEntityWithPriority(entity: AnyEntity, priority: Int = PRIORITY_DEFAULT) {
-        if (entity.hasBehaviors.not()) {
-            noBehaviorEntities.add(entity)
-            return
-        }
-
-        when (priority) {
-            PRIORITY_LOW -> lowPriorityEntities.add(entity)
-            PRIORITY_DEFAULT -> defaultPriorityEntities.add(entity)
-            PRIORITY_HIGH -> highPriorityEntities.add(entity)
+        if (entity.hasFacet<InputReceiving>()) {
+            inputReceivingEntities.add(entity)
+        } else {
+            nonInputReceivingEntities.add(entity)
         }
     }
 
     @Synchronized
     override fun removeEntity(entity: AnyEntity) {
-        if (defaultPriorityEntities.remove(entity)) return
-        if (highPriorityEntities.remove(entity)) return
-        if (lowPriorityEntities.remove(entity)) return
-        if (inputReceivingEntity?.id == entity.id) {
-            inputReceivingEntity = null
-        }
-        if (noBehaviorEntities.remove(entity)) return
+        inputReceivingEntities.remove(entity)
     }
 
     @Synchronized
     override fun update(context: GameContext): Job {
         val updateStartTime = System.currentTimeMillis()
         return launch {
-            inputReceivingEntity?.run {
-                if (this.executeCommand(Input(context, this, context.event)) == Pass) {
+            for (inputEntity in inputReceivingEntities) {
+                if (inputEntity.executeCommand(Input(context, inputEntity, context.event)) == Pass) {
                     return@launch
                 }
             }
-            highPriorityEntities.filter { it.needsUpdate }.map {
+
+            nonInputReceivingEntities.filter { it.needsUpdate }.map {
                 async { it.update(context) }
             }.awaitAll()
-            defaultPriorityEntities.filter { it.needsUpdate }.map {
+
+            inputReceivingEntities.filter { it.needsUpdate }.map {
                 async { it.update(context) }
-            }.awaitAll()
-            lowPriorityEntities.filter { it.needsUpdate }.map {
-                async { it.update(context) }
-            }.awaitAll()
-            async {
-                inputReceivingEntity?.update(context)
-            }.await()
+            }
 
             if (DebugConfig.shouldLogUpdateSpeed) println("${System.currentTimeMillis() - updateStartTime}")
         }
-    }
-
-    fun setInputReceivingEntity(entity: AnyEntity) {
-        if (!entity.facets.contains(InputReceiving)) {
-            throw IllegalArgumentException("Can't set $entity as the input receiving entity for the game engine. " +
-                    "Does it have ${InputReceiving::class.simpleName}?")
-        }
-
-        inputReceivingEntity = entity
     }
 }

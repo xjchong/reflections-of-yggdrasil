@@ -91,11 +91,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
      * given [Entity].
      */
     fun addEntity(entity: AnyEntity, position: Position3D) {
-        if (entity.type == Player) {
-            engine.setInputReceivingEntity(entity)
-        } else {
-            engine.addEntityWithPriority(entity, GameEngine.PRIORITY_DEFAULT)
-        }
+        engine.addEntity(entity)
 
         entity.position = position
         fetchBlockAt(position).map { block ->

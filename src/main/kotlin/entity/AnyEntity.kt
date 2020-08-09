@@ -6,10 +6,8 @@ import block.GameBlock
 import extensions.optional
 import facets.passive.Movable
 import game.GameContext
-import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Attribute
-import org.hexworks.amethyst.api.Command
-import org.hexworks.amethyst.api.Response
+import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
@@ -99,4 +97,8 @@ inline fun <reified T : BaseFacet<GameContext>> AnyEntity.hasFacet(): Boolean {
 
 inline fun <reified T : BaseFacet<GameContext>> AnyEntity.whenFacetIs(fn: (AnyEntity) -> Unit) {
     if (findFacet(T::class).isPresent) fn(this)
+}
+
+inline fun <reified T : BaseBehavior<GameContext>> AnyEntity.hasBehavior(): Boolean {
+    return findBehavior(T::class).isPresent
 }
