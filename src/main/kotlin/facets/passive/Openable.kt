@@ -2,6 +2,9 @@ package facets.passive
 
 import attributes.EntityTile
 import attributes.OpenableDetails
+import attributes.flag.BlocksSmell
+import attributes.flag.Obstacle
+import attributes.flag.Opaque
 import commands.Close
 import commands.Open
 import entity.AnyEntity
@@ -36,6 +39,7 @@ object Openable : BaseFacet<GameContext>() {
 
         getAttribute(EntityTile::class)?.tile = details.openAppearance
         details.isOpen = true
+        handleBarrierState()
 
         return true
     }
@@ -50,7 +54,24 @@ object Openable : BaseFacet<GameContext>() {
 
         getAttribute(EntityTile::class)?.tile = details.closedAppearance
         details.isOpen = false
+        handleBarrierState()
 
         return true
+    }
+
+    private fun AnyEntity.handleBarrierState() {
+        val details = getAttribute(OpenableDetails::class) ?: return
+
+        with (this.asMutableEntity()) {
+            if (details.isOpen)  {
+                removeAttribute(Obstacle)
+                removeAttribute(BlocksSmell)
+                removeAttribute(Opaque)
+            } else {
+                addAttribute(Obstacle)
+                addAttribute(BlocksSmell)
+                addAttribute(Opaque)
+            }
+        }
     }
 }

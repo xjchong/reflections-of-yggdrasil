@@ -2,9 +2,9 @@ package entity.factories
 
 import attributes.*
 import attributes.flag.BlocksSmell
+import attributes.flag.IsBarrier
 import attributes.flag.Obstacle
 import attributes.flag.Opaque
-import behaviors.Barrier
 import builders.newGameEntityOfType
 import constants.GameTile
 import entity.*
@@ -19,6 +19,7 @@ object WidgetFactory {
 
     fun newDoor(isOpen: Boolean = false) = newGameEntityOfType(Door) {
         val baseAttributes = mutableListOf(
+                IsBarrier,
                 EntityPosition(),
                 EntityTile(if (isOpen) GameTile.OPEN_DOOR else GameTile.CLOSED_DOOR),
                 OpenableDetails(
@@ -33,7 +34,6 @@ object WidgetFactory {
         }
 
         attributes(*baseAttributes.toTypedArray())
-        behaviors(Barrier)
         facets(Openable)
     }
 
