@@ -4,20 +4,16 @@ import org.hexworks.zircon.api.color.TileColor
 
 
 class ParticleEffect(private val initialColor: TileColor,
-                     private val shouldFade: Boolean,
-                     private val totalDuration: Int) {
-
-    companion object {
-
-        const val INITIAL_ALPHA = 200.0
-    }
+                     private val totalDuration: Int,
+                     private val initialAlpha: Int,
+                     private val shouldFade: Boolean) {
 
     val color: TileColor?
         get() = {
             if (currentDuration > 0) {
                 val alpha = if (shouldFade) {
-                    (INITIAL_ALPHA * (currentDuration.toDouble() / totalDuration.toDouble()))
-                } else INITIAL_ALPHA
+                    (initialAlpha * (currentDuration.toDouble() / totalDuration.toDouble()))
+                } else initialAlpha.toDouble()
 
                 initialColor.withAlpha(alpha.toInt())
             } else {
@@ -25,7 +21,7 @@ class ParticleEffect(private val initialColor: TileColor,
             }
         }()
 
-    var currentAlpha = INITIAL_ALPHA
+    var currentAlpha = initialAlpha
     private var currentDuration = totalDuration
 
     fun update(): Boolean {

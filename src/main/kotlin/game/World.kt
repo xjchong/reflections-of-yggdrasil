@@ -3,6 +3,7 @@ import attributes.OpenableDetails
 import attributes.flag.BlocksSmell
 import attributes.flag.Opaque
 import block.GameBlock
+import constants.GameConfig
 import entity.*
 import events.*
 import extensions.neighbors
@@ -72,7 +73,15 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         if (!sceneObservers.any { it.sensedPositions.contains(position) }) return
 
         fetchBlockAt(position).ifPresent {
-            it.flash(color)
+            it.displayParticleEffect(color, GameConfig.FLASH_DURATION, 200)
+        }
+    }
+
+    fun motionBlur(oldPosition: Position3D, color: TileColor) {
+        if (!sceneObservers.any { it.sensedPositions.contains(oldPosition) }) return
+
+        fetchBlockAt(oldPosition).ifPresent {
+            it.displayParticleEffect(color, GameConfig.MOTION_BLUR_DURATION, 150)
         }
     }
 

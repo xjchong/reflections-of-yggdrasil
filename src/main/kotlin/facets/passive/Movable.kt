@@ -1,10 +1,12 @@
 package facets.passive
 
-import facets.active.InputReceiving
 import commands.Move
+import entity.hasFacet
 import entity.position
+import entity.tile
 import events.Critical
 import extensions.optional
+import facets.active.InputReceiving
 import game.GameContext
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
@@ -21,7 +23,12 @@ object Movable : BaseFacet<GameContext>() {
             val currentBlock = world.fetchBlockAt(source.position).optional ?: return@responseWhenCommandIs Pass
 
             world.fetchBlockAt(position).ifPresent { block ->
+                val oldPosition = source.position
                 if (block.transfer(source, currentBlock)) {
+                    if (!source.hasFacet<InputReceiving>()) {
+                        world.motionBlur(oldPosition, source.tile.foregroundColor)
+                    }
+
                     result = Consumed
                 } else if (source.findFacet(InputReceiving::class).isPresent) {
                     world.observeSceneBy(source, "The $source can't move there...", Critical)

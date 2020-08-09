@@ -114,8 +114,8 @@ class GameBlock(private val position: Position3D,
         this.memory = memory
     }
 
-    fun flash(color: TileColor, shouldFade: Boolean = true, duration: Int = 8) {
-        particleEffect = ParticleEffect(color, shouldFade, duration)
+    fun displayParticleEffect(color: TileColor, duration: Int, alpha: Int, shouldFade: Boolean = true)  {
+        particleEffect = ParticleEffect(color, duration, alpha, shouldFade)
     }
 
     inline fun <reified T: EntityType> hasType(noinline fn: ((AnyEntity) -> Boolean)? = null): Boolean {

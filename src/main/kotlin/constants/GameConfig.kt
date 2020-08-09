@@ -45,6 +45,9 @@ object GameConfig {
             WINDOW_HEIGHT - LOG_HEIGHT - TARGET_BAR_HEIGHT,
             1)
 
+    const val FLASH_DURATION = 8
+    const val MOTION_BLUR_DURATION = 30
+
     /**
      * CONVENIENCE
      */
