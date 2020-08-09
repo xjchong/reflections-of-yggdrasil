@@ -60,6 +60,7 @@ class InventoryModalBuilder(private val screen: Screen) {
         panel.addFragment(inventoryFragment)
         panel.addComponent(closeButton)
 
+        inventoryFragment.parentModal = modal
         modal.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, _ ->
             when (event.code) {
                 KeyCode.KEY_I, KeyCode.KEY_C, KeyCode.ESCAPE -> modal.close(EmptyModalResult)

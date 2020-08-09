@@ -2,10 +2,14 @@ package fragments
 
 import attributes.Inventory
 import entity.AnyEntity
+import events.ExamineEvent
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.AttachedComponent
 import org.hexworks.zircon.api.component.Fragment
 import org.hexworks.zircon.api.component.VBox
+import org.hexworks.zircon.api.component.modal.Modal
+import org.hexworks.zircon.internal.Zircon
+import org.hexworks.zircon.internal.component.modal.EmptyModalResult
 
 class InventoryFragment(
         private val inventory: Inventory,
@@ -15,6 +19,7 @@ class InventoryFragment(
         private val onEquip: (AnyEntity) -> Unit
 ) : Fragment {
 
+    var parentModal: Modal<EmptyModalResult>? = null
     private val attachedRows: MutableList<AttachedComponent> = mutableListOf()
 
     companion object {
@@ -62,6 +67,16 @@ class InventoryFragment(
             dropButton.onActivated { onDrop(entity) }
             consumeButton.onActivated { onConsume(entity) }
             equipButton.onActivated { onEquip(entity) }
+            onExamine = {
+                Zircon.eventBus.publish(ExamineEvent(entity) {
+                    returnModalFocus()
+                })
+            }
         }
+    }
+
+    // Return focus to the inventory modal, so that it can receive keyboard input.
+    private fun returnModalFocus() {
+        parentModal?.requestFocus()
     }
 }

@@ -4,7 +4,6 @@ import GameColor
 import entity.AnyEntity
 import entity.tile
 import entity.whenFacetIs
-import events.ExamineEvent
 import extensions.create
 import extensions.withStyle
 import facets.passive.Consumable
@@ -17,7 +16,6 @@ import org.hexworks.zircon.api.component.Fragment
 import org.hexworks.zircon.api.uievent.MouseEventType
 import org.hexworks.zircon.api.uievent.Processed
 import org.hexworks.zircon.api.uievent.StopPropagation
-import org.hexworks.zircon.internal.Zircon
 
 class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
 
@@ -32,6 +30,8 @@ class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
     val equipButton = Components.button()
             .withText("Equip")
             .build()
+
+    var onExamine: (() -> Unit)? = null
 
     /**
      * This unfortunate variable is used to prevent the mouse release event from triggering when something like
@@ -60,7 +60,7 @@ class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
                     Processed
                 }
                 handleMouseEvents(MouseEventType.MOUSE_EXITED) { _, _ ->
-                    componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, GameColor.BACKGROUND)
+                    componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, TileColor.transparent())
                     Processed
                 }
                 handleMouseEvents(MouseEventType.MOUSE_MOVED) { _, _ ->
@@ -69,7 +69,7 @@ class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
                 }
                 handleMouseEvents(MouseEventType.MOUSE_RELEASED) { _, _ ->
                     if (didMouseMoveAfterInit) {
-                        Zircon.eventBus.publish(ExamineEvent(entity))
+                        onExamine?.invoke()
                     }
                     StopPropagation
                 }

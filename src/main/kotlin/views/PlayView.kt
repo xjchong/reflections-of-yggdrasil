@@ -270,7 +270,13 @@ class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuil
 
     private fun subscribeToExamineEvent() {
         Zircon.eventBus.subscribeTo<ExamineEvent>(key = ExamineEvent.KEY) { event ->
-            screen.openModal(ExamineDialog(screen, event.entity))
+            val examineDialog = ExamineDialog(screen, event.entity)
+
+            examineDialog.root.onClosed {
+                event.callback()
+            }
+
+            screen.openModal(examineDialog)
 
             KeepSubscription
         }

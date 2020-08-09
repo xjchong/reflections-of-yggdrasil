@@ -6,14 +6,15 @@ import org.hexworks.zircon.internal.Zircon
 
 
 data class ExamineEvent(
-        val entity: AnyEntity
+        val entity: AnyEntity,
+        val callback: () -> Unit = {}
 ) : Event {
 
     companion object {
         val KEY = "ExamineEvent"
 
-        fun publish(entity: AnyEntity) {
-            Zircon.eventBus.publish(ExamineEvent(entity))
+        fun publish(entity: AnyEntity, callback: () -> Unit = {}) {
+            Zircon.eventBus.publish(ExamineEvent(entity, callback))
         }
     }
 
