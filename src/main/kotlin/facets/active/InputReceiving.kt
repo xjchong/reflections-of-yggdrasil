@@ -1,4 +1,4 @@
-package behaviors
+package facets.active
 
 import attributes.AttackStrategies
 import attributes.CombatStats

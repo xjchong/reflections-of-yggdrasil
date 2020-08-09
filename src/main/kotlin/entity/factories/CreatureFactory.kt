@@ -7,6 +7,7 @@ import builders.AnyEntityBuilder
 import builders.newGameEntityOfType
 import constants.GameTile
 import entity.*
+import facets.active.InputReceiving
 import facets.passive.*
 import models.*
 import utilities.WeightedCollection

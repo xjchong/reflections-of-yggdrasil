@@ -1,6 +1,6 @@
 package facets.passive
 
-import behaviors.InputReceiving
+import facets.active.InputReceiving
 import commands.Move
 import entity.position
 import events.Critical

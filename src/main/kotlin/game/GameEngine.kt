@@ -1,6 +1,6 @@
 package game
 
-import behaviors.InputReceiving
+import facets.active.InputReceiving
 import commands.Input
 import entity.AnyEntity
 import kotlinx.coroutines.*
