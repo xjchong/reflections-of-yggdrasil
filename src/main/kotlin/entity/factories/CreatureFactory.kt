@@ -42,6 +42,7 @@ object CreatureFactory {
         attributes(
                 FactionDetails(Adventurer),
                 AttackStrategies(WeakPunchAttack()),
+                AutoRunDetails(),
                 AutoTakeDetails(CoinValue::class),
                 CoinPouch.create(50),
                 EnemyList(),
@@ -67,7 +68,7 @@ object CreatureFactory {
                         tech = .33,
                         luck = .34
                 ))
-        behaviors(StatusUpdater, SensoryUser, AutoTaker, FocusTargetUser, EnemyListUser, VisualRememberer, VigilanceUser, FogOfWarUser)
+        behaviors(StatusUpdater, SensoryUser, AutoTaker, FocusTargetUser, EnemyListUser, VisualRememberer, VigilanceUser, FogOfWarUser, AutoRunner)
         facets(InputReceiving, Attackable, InventoryInspectable, Movable, StatusApplicable)
     }
 

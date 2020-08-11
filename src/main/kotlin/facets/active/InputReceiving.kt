@@ -1,13 +1,10 @@
 package facets.active
 
 import attributes.*
-import behaviors.Chaser
-import behaviors.GoalEvaluator
-import behaviors.RandomAttacker
-import behaviors.Wanderer
 import commands.*
 import entity.*
 import events.*
+import extensions.adjacentNeighbors
 import extensions.neighbors
 import extensions.optional
 import facets.passive.Attackable
@@ -73,19 +70,31 @@ object InputReceiving : BaseFacet<GameContext>() {
     }
 
     private suspend fun AnyEntity.autoRun(context: GameContext, inputEvent: AutoRunInputEvent): Response {
+        val autoRunDetails = getAttribute(AutoRunDetails::class) ?: return Pass
+        val initialMove = position.withRelative(inputEvent.relativePosition)
+
+        autoRunDetails.visited.add(position)
+
+        if (executeCommand(Move(context, this, initialMove)) == Pass) return Pass
+
         asMutableEntity().apply {
             removeFacet(InputReceiving)
-            addBehavior(Wanderer)
-            addBehavior(Chaser)
-            addBehavior(RandomAttacker)
-            addBehavior(GoalEvaluator)
+            autoRunDetails.apply {
+                shouldRun = true
+                initialDirection = inputEvent.relativePosition
+                expectedBoringFloorNeighborCount = position.adjacentNeighbors(false).count {
+                    isBoringFloor(context.world.fetchBlockAt(it).optional)
+                }
+            }
 
             inputEvent.onInterrupt = {
                 addFacet(InputReceiving)
-                removeBehavior(Wanderer)
-                removeBehavior(Chaser)
-                removeBehavior(RandomAttacker)
-                removeBehavior(GoalEvaluator)
+                autoRunDetails.apply {
+                    shouldRun = false
+                    initialDirection = Position3D.unknown()
+                    expectedBoringFloorNeighborCount = 0
+                    visited.clear()
+                }
             }
         }
 

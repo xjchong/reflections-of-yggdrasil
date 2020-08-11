@@ -20,7 +20,7 @@ import org.hexworks.zircon.api.data.base.BaseBlock
 import utilities.DebugConfig
 import kotlin.reflect.full.isSuperclassOf
 
-class GameBlock(private val position: Position3D,
+class GameBlock(val position: Position3D,
                 private var defaultTile: CharacterTile = GameTile.FLOOR,
                 private val currentEntities: MutableList<AnyEntity> = mutableListOf(),
                 private var isRevealed: Boolean = false)

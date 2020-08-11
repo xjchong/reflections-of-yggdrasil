@@ -178,7 +178,6 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
             onInterrupt?.let { interruptHandler ->
                 interruptHandler()
                 onInterrupt = null
-                return@handleKeyboardEvents Processed
             }
 
             if (pressedKeys.contains(KeyCode.SHIFT)) {
@@ -209,14 +208,17 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
                     pressedKeys.containsAll(setOf(KeyCode.DOWN, KeyCode.RIGHT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(1, 1, 0))
 
-                    pressedKeys.contains(KeyCode.KEY_X) -> {
-                        val event = AutoRunInputEvent(Position3D.defaultPosition())
-
-                        onInterrupt = {
-                            event.onInterrupt()
-                        }
-
-                        event
+                    pressedKeys.containsAll(setOf(KeyCode.KEY_X, KeyCode.RIGHT)) -> {
+                        getAutoRunInputEvent(Position3D.create(1, 0, 0))
+                    }
+                    pressedKeys.containsAll(setOf(KeyCode.KEY_X, KeyCode.DOWN)) -> {
+                        getAutoRunInputEvent(Position3D.create(0, 1, 0))
+                    }
+                    pressedKeys.containsAll(setOf(KeyCode.KEY_X, KeyCode.LEFT)) -> {
+                        getAutoRunInputEvent(Position3D.create(-1, 0, 0))
+                    }
+                    pressedKeys.containsAll(setOf(KeyCode.KEY_X, KeyCode.UP)) -> {
+                        getAutoRunInputEvent(Position3D.create(0, -1, 0))
                     }
                     else -> null
                 } ?: return@handleKeyboardEvents Pass
@@ -295,5 +297,15 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
 
             KeepSubscription
         }
+    }
+
+    private fun getAutoRunInputEvent(relativePosition: Position3D): AutoRunInputEvent {
+        val event = AutoRunInputEvent(relativePosition)
+
+        onInterrupt = {
+            event.onInterrupt()
+        }
+
+        return event
     }
 }
