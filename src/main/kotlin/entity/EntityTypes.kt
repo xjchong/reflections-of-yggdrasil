@@ -18,6 +18,10 @@ object Crab : BaseEntityType(
         name = "crab"
 )
 
+object Goblin : BaseEntityType(
+        name = "goblin"
+)
+
 object Fungus : BaseEntityType(
         name = "fungus"
 )

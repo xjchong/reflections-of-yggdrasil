@@ -85,6 +85,24 @@ object ArmorFactory {
         return sample()
     }
 
+    fun newRandomBody(): AnyEntity {
+        val weightedCollection: WeightedCollection<() -> AnyEntity> = WeightedCollection(
+                WeightedEntry(10) { newSimpleJacket() },
+                WeightedEntry(5) { newFancyJacket() },
+                WeightedEntry(2) { newAncientJacket() },
+                WeightedEntry(10) { newSimpleHauberk() },
+                WeightedEntry(5) { newFancyHauberk() },
+                WeightedEntry(2) { newAncientHauberk() },
+                WeightedEntry(10) { newSimpleCuirass() },
+                WeightedEntry(5) { newFancyCuirass() },
+                WeightedEntry(2) { newAncientCuirass() }
+        )
+
+        val sample = weightedCollection.sample()!!
+
+        return sample()
+    }
+
     // HEAD
 
     fun newSimpleCap() = newArmorBuilder(Head, SimpleCap, GameTile.COMMON_LIGHT_ARMOR)

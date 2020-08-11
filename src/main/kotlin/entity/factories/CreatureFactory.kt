@@ -24,6 +24,7 @@ object CreatureFactory {
         val weightedCreatures: WeightedCollection<() -> AnyEntity> = WeightedCollection(
                 WeightedEntry(9) { newBat() },
                 WeightedEntry(7) { newCrab() },
+                WeightedEntry(3) { newGoblin() },
                 WeightedEntry(5) { newFungus() },
                 WeightedEntry(3) { newRat() },
                 WeightedEntry(5) { newZombie() }
@@ -124,6 +125,37 @@ object CreatureFactory {
             .withFacets(Attackable, Destroyable, Movable)
             .build()
 
+    fun newGoblin() = AnyEntityBuilder.newBuilder(Goblin)
+            .withAttributes(
+                    AttackStrategies(PunchAttack()),
+                    CombatStats.create(
+                            maxHealth = 90,
+                            maxStamina = 100,
+                            power = 0.3,
+                            tech = 0.05
+                    ),
+                    EntityPosition(),
+                    EntityTile(GameTile.GOBLIN),
+                    EntityTime(),
+                    Equipments(
+                            initialMainHand = WeaponFactory.newRandomWeapon(),
+                            initialBody = ArmorFactory.newRandomBody()),
+                    ExplorerDetails(),
+                    FactionDetails(Monster, alliedFactions = setOf(Monster)),
+                    Goals(),
+                    KillTarget(),
+                    LootTable(
+                            WeightedEntry(30) { listOf(WeaponFactory.newRandomWeapon()) },
+                            WeightedEntry(30) { listOf(ArmorFactory.newRandomArmor()) },
+                            WeightedEntry(20) {
+                                listOf(WeaponFactory.newRandomWeapon(), ArmorFactory.newRandomArmor())
+                            }
+                    ),
+                    Obstacle,
+                    Senses(vision = 6))
+            .withBehaviors(StatusUpdater, SensoryUser, RandomAttacker, Fleer, Chaser, Explorer, GoalEvaluator)
+            .withFacets(Attackable, Destroyable, Movable)
+            .build()
 
     fun newFungus(proliferation: Proliferation = Proliferation(0.02, 0.6) { newFungus(it) }) = AnyEntityBuilder.newBuilder(Fungus)
             .withAttributes(
@@ -186,11 +218,12 @@ object CreatureFactory {
                     Goals(),
                     KillTarget(),
                     LootTable(
-                            WeightedEntry(30) { listOf(WeaponFactory.newRandomWeapon()) },
-                            WeightedEntry(30) { listOf(ArmorFactory.newRandomArmor()) },
-                            WeightedEntry(15) {
+                            WeightedEntry(20) { listOf(WeaponFactory.newRandomWeapon()) },
+                            WeightedEntry(20) { listOf(ArmorFactory.newRandomArmor()) },
+                            WeightedEntry(10) {
                                 listOf(WeaponFactory.newRandomWeapon(), ArmorFactory.newRandomArmor())
-                            }
+                            },
+                            WeightedEntry(20) { listOf<AnyEntity>() }
                     ),
                     Obstacle,
                     Senses(vision = 5))
