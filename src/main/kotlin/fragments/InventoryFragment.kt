@@ -22,31 +22,17 @@ class InventoryFragment(
     var parentModal: Modal<EmptyModalResult>? = null
     private val attachedRows: MutableList<AttachedComponent> = mutableListOf()
 
-    companion object {
-        const val NAME_COLUMN_WIDTH = 15
-        const val ACTIONS_COLUMN_WIDTH = 20
-    }
-
     override val root = Components.vbox()
             .withSize(width, inventory.size + 1)
             .build().apply {
-                addComponent(Components.hbox()
-                        .withSpacing(1)
-                        .withSize(width, 1)
-                        .build().apply {
-                            addComponent(Components.label().withText("").withSize(1, 1))
-                            addComponent(Components.header().withText("Name").withSize(NAME_COLUMN_WIDTH, 1))
-                            addComponent(Components.header().withText("Actions").withSize(ACTIONS_COLUMN_WIDTH, 1))
-                        })
-
-                    inventory.contents.forEach { item ->
-                        addInventoryRow(this, item)
-                    }
-
-                    inventory.currentHash.onChange {
-                        update(this)
-                    }
+                inventory.contents.forEach { item ->
+                    addInventoryRow(this, item)
                 }
+
+                inventory.currentHash.onChange {
+                    update(this)
+                }
+            }
 
     private fun update(vBox: VBox) {
         while (attachedRows.isNotEmpty()) {
@@ -65,7 +51,7 @@ class InventoryFragment(
         val attachedInventoryRow = vBox.addFragment(inventoryRow)
         attachedRows.add(attachedInventoryRow)
 
-        with (inventoryRow) {
+        with(inventoryRow) {
             dropButton.onActivated { onDrop(entity) }
             consumeButton.onActivated { onConsume(entity) }
             equipButton.onActivated { onEquip(entity) }

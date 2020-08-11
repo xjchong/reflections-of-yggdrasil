@@ -19,6 +19,10 @@ import org.hexworks.zircon.api.uievent.StopPropagation
 
 class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
 
+    companion object {
+        const val NAME_COLUMN_WIDTH = 15
+    }
+
     val dropButton = Components.button()
             .withText("Drop")
             .build()
@@ -49,7 +53,7 @@ class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
                         .withStyle(entity.tile.foregroundColor, TileColor.transparent())
                         .withText(entity.tile.character.toString()))
                 addComponent(Components.label()
-                        .withSize(InventoryFragment.NAME_COLUMN_WIDTH, 1)
+                        .withSize(NAME_COLUMN_WIDTH, 1)
                         .withText(entity.name.capitalize()))
                 addComponent(dropButton)
                 entity.whenFacetIs<Consumable> { addComponent(consumeButton) }
