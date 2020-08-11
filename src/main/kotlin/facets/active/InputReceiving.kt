@@ -56,12 +56,11 @@ object InputReceiving : BaseFacet<GameContext>() {
                         }
                     }
                     is TakeInputEvent -> entity.tryTake(context, position)
-                    is WaitInputEvent -> Consumed
+                    is WaitInputEvent -> {
+                        entity.spendTime(EntityTime.WAIT)
+                        Consumed
+                    }
                 }
-            }
-
-            if (response == Consumed) {
-                entity.spendTime(EntityTime.DEFAULT_TIME_COST)
             }
 
             response
@@ -148,11 +147,11 @@ object InputReceiving : BaseFacet<GameContext>() {
         if (!preferredAttackStrategy.isInRange(position, target.position)) return false
 
         combatStats.dockStamina(preferredAttackStrategy.staminaCost)
-        return executeCommand(Attack(context, this, target, AttackDetails(
-                preferredAttackStrategy.rollDamage(combatStats),
-                preferredAttackStrategy.description,
-                preferredAttackStrategy.type,
-                preferredAttackStrategy.statusEffects
-        ))) == Consumed
+
+        return executeCommand(Attack(
+                context,
+                this,
+                target,
+                AttackDetails.create(preferredAttackStrategy, combatStats))) == Consumed
     }
 }

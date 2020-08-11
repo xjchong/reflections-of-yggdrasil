@@ -6,7 +6,9 @@ data class AttackDetails(
         val damage: Int,
         val description: String,
         val type: AttackType,
-        val effects: List<StatusEffect> = listOf()
+        val effects: List<StatusEffect> = listOf(),
+        val timeCost: Long
+
 ) {
 
     companion object {
@@ -15,7 +17,8 @@ data class AttackDetails(
                     strategy.rollDamage(combatStats),
                     strategy.description,
                     strategy.type,
-                    strategy.statusEffects
+                    strategy.statusEffects,
+                    strategy.timeCost
             )
         }
     }

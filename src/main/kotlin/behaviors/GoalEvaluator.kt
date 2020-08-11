@@ -20,13 +20,12 @@ object GoalEvaluator : ForegroundBehavior(Goals::class) {
 
         for (goal in sortedGoals) {
             if (goal.execute() == Consumed) {
-                entity.spendTime(EntityTime.DEFAULT_TIME_COST)
                 return true
             }
         }
 
-        // If we didn't manage to execute any of our goals, then spend a default amount of time.
-        entity.spendTime(EntityTime.DEFAULT_TIME_COST)
+        // If we didn't manage to execute any of our goals, then spend a waiting amount of time.
+        entity.spendTime(EntityTime.WAIT)
         return false
     }
 }

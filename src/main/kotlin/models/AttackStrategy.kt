@@ -1,13 +1,15 @@
 package models
 
 import attributes.CombatStats
+import attributes.EntityTime
 import org.hexworks.zircon.api.data.Position3D
 import kotlin.math.absoluteValue
 import kotlin.math.max
 
 abstract class AttackStrategy(val description: String, 
                               val attackEfficiency: AttackEfficiency, 
-                              val type: AttackType, val staminaCost: Int = AVERAGE_STAM_COST) {
+                              val type: AttackType, val staminaCost: Int = AVERAGE_STAM_COST,
+                              val timeCost: Long = EntityTime.DEFAULT) {
     
     companion object {
         const val INSUFFICIENT_STAM_PENALTY = 0.5

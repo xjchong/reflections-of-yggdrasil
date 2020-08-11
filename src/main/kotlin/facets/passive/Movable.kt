@@ -1,8 +1,10 @@
 package facets.passive
 
+import attributes.EntityTime
 import commands.Move
 import entity.hasFacet
 import entity.position
+import entity.spendTime
 import entity.tile
 import events.Critical
 import extensions.optional
@@ -17,21 +19,22 @@ import org.hexworks.amethyst.api.entity.EntityType
 
 object Movable : BaseFacet<GameContext>() {
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Move::class) { (context, source, position) ->
+        return command.responseWhenCommandIs(Move::class) { (context, entity, position) ->
             var result: Response = Pass
             val world = context.world
-            val currentBlock = world.fetchBlockAt(source.position).optional ?: return@responseWhenCommandIs Pass
+            val currentBlock = world.fetchBlockAt(entity.position).optional ?: return@responseWhenCommandIs Pass
 
             world.fetchBlockAt(position).ifPresent { block ->
-                val oldPosition = source.position
-                if (block.transfer(source, currentBlock)) {
-                    if (!source.hasFacet<InputReceiving>()) {
-                        world.motionBlur(oldPosition, source.tile.foregroundColor)
+                val oldPosition = entity.position
+                if (block.transfer(entity, currentBlock)) {
+                    entity.spendTime(EntityTime.MOVE)
+                    if (!entity.hasFacet<InputReceiving>()) {
+                        world.motionBlur(oldPosition, entity.tile.foregroundColor)
                     }
 
                     result = Consumed
-                } else if (source.findFacet(InputReceiving::class).isPresent) {
-                    world.observeSceneBy(source, "The $source can't move there...", Critical)
+                } else if (entity.findFacet(InputReceiving::class).isPresent) {
+                    world.observeSceneBy(entity, "The $entity can't move there...", Critical)
                 }
             }
 

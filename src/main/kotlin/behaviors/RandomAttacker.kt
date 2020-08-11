@@ -58,9 +58,8 @@ object RandomAttacker : ForegroundBehavior(Goals::class) {
         val combatStats = getAttribute(CombatStats::class) ?: return false
         val strategy = pickAttackStrategy(context, target, strategies) ?: return false
 
-        combatStats.dockStamina(strategy.staminaCost)
-
         return goals.list.add(Goal(GOAL_KEY, 70) {
+            combatStats.dockStamina(strategy.staminaCost)
             executeCommand(Attack(context, this, target, AttackDetails.create(strategy, combatStats)))
         })
     }

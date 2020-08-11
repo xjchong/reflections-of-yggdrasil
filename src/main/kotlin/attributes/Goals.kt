@@ -13,4 +13,6 @@ class Goals : Attribute {
     }
 }
 
-data class Goal(val name: String, val weight: Int, val execute: suspend () -> Response)
+data class Goal(val name: String,
+                val weight: Int,
+                val execute: suspend () -> Response)

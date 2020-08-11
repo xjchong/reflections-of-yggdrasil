@@ -1,9 +1,11 @@
 package facets.passive
 
 import attributes.ConsumableDetails
+import attributes.EntityTime
 import commands.ApplyStatus
 import commands.Consume
 import entity.getAttribute
+import entity.spendTime
 import extensions.responseWhenIs
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -18,6 +20,7 @@ object Consumable : BaseFacet<GameContext>(ConsumableDetails::class) {
         return command.responseWhenIs(Consume::class) { (context, consumable, consumer) ->
             val details = consumable.getAttribute(ConsumableDetails::class)
 
+            consumer.spendTime(EntityTime.CONSUME)
             context.world.observeSceneBy(consumer, "The $consumer consumes the $consumable.")
 
             details?.effects?.forEach { effect ->

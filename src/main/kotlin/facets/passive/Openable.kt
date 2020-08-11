@@ -1,6 +1,7 @@
 package facets.passive
 
 import attributes.EntityTile
+import attributes.EntityTime
 import attributes.OpenableDetails
 import attributes.flag.BlocksSmell
 import attributes.flag.Obstacle
@@ -9,6 +10,7 @@ import commands.Close
 import commands.Open
 import entity.AnyEntity
 import entity.getAttribute
+import entity.spendTime
 import events.Notice
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -23,13 +25,13 @@ object Openable : BaseFacet<GameContext>() {
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         var response: Response = Pass
 
-        if (command.whenCommandIs(Open::class) { it.target.open(it.context) }) response = Consumed
-        else if (command.whenCommandIs(Close::class) { it.target.close(it.context) }) response = Consumed
+        if (command.whenCommandIs(Open::class) { it.target.open(it.context, it.source) }) response = Consumed
+        else if (command.whenCommandIs(Close::class) { it.target.close(it.context, it.source) }) response = Consumed
 
         return response
     }
 
-    private fun AnyEntity.open(context: GameContext): Boolean {
+    private fun AnyEntity.open(context: GameContext, source: AnyEntity): Boolean {
         val details = getAttribute(OpenableDetails::class) ?: return false
 
         if (details.isOpen) {
@@ -40,11 +42,12 @@ object Openable : BaseFacet<GameContext>() {
         getAttribute(EntityTile::class)?.tile = details.openAppearance
         details.isOpen = true
         handleBarrierState()
+        source.spendTime(EntityTime.OPEN)
 
         return true
     }
 
-    private fun AnyEntity.close(context: GameContext): Boolean {
+    private fun AnyEntity.close(context: GameContext, source: AnyEntity): Boolean {
         val details = getAttribute(OpenableDetails::class) ?: return false
 
         if (!details.isOpen) {
@@ -55,6 +58,7 @@ object Openable : BaseFacet<GameContext>() {
         getAttribute(EntityTile::class)?.tile = details.closedAppearance
         details.isOpen = false
         handleBarrierState()
+        source.spendTime(EntityTime.CLOSE)
 
         return true
     }

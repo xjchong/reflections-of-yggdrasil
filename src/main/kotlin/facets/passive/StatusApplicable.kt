@@ -2,12 +2,14 @@ package facets.passive
 
 import GameColor
 import attributes.CombatStats
+import attributes.EntityTime
 import attributes.StatusDetails
 import commands.ApplyStatus
 import commands.Guard
 import entity.AnyEntity
 import entity.getAttribute
 import entity.position
+import entity.spendTime
 import events.Critical
 import events.Notice
 import events.Special
@@ -46,6 +48,7 @@ object StatusApplicable : BaseFacet<GameContext>(StatusDetails::class) {
 
             entity.findAttribute(StatusDetails::class).ifPresent { statusDetails ->
                 statusDetails.guard = 1
+                entity.spendTime(EntityTime.GUARD)
                 context.world.flash(entity.position, GameColor.GUARD_FLASH)
                 context.world.observeSceneBy(entity, "The $entity guards against attacks!")
                 response = Consumed

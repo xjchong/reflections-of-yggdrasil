@@ -7,8 +7,8 @@ import commands.Attack
 import commands.Destroy
 import entity.AnyEntity
 import entity.getAttribute
-import entity.isAlliedWith
 import entity.position
+import entity.spendTime
 import extensions.responseWhenIs
 import game.GameContext
 import models.AttackDetails
@@ -25,11 +25,11 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenIs(Attack::class) { (context, attacker, target, details) ->
-            if (attacker.isAlliedWith(target)) return@responseWhenIs Pass
-
             val targetCombatStats = target.getAttribute(CombatStats::class) ?: return@responseWhenIs Pass
             val finalDetails = target.applyResistances(details)
             val finalDamage = finalDetails.damage
+
+            attacker.spendTime(details.timeCost)
 
             targetCombatStats.run {
                 dockHealth(finalDamage)
@@ -87,6 +87,6 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
 
         val finalDamage = incomingDamage.toInt().coerceAtLeast(1)
 
-        return AttackDetails(finalDamage, details.description, details.type, details.effects)
+        return AttackDetails(finalDamage, details.description, details.type, details.effects, details.timeCost)
     }
 }

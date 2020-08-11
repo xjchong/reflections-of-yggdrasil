@@ -1,8 +1,10 @@
 package facets.passive
 
+import attributes.EntityTime
 import attributes.Inventory
 import commands.Drop
 import entity.getAttribute
+import entity.spendTime
 import extensions.neighbors
 import extensions.optional
 import game.GameContext
@@ -37,6 +39,7 @@ object Droppable : BaseFacet<GameContext>() {
 
 
                 addEntity(droppable, actualDropPosition)
+                owner.spendTime(EntityTime.DROP)
                 observeSceneBy(owner, "The $owner drops the $droppable.")
             }
 
