@@ -8,6 +8,10 @@ class Goals : Attribute {
     val list = mutableListOf<Goal>()
     var lastGoal: Goal? = null
 
+    fun add(goal: Goal): Boolean {
+        return list.add(goal)
+    }
+
     fun clear() {
         list.clear()
     }
