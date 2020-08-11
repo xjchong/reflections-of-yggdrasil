@@ -15,7 +15,7 @@ data class EntitySnapshot(val type: EntityType, val tile: CharacterTile)
 
 data class Memory(val turn: Long, val strength: Double, val snapshots: List<EntitySnapshot>)
 
-class VisualMemory(
+class SensoryMemory(
         private val strength: Double = 100.0, // The base number of turns before the memory fades.
         private val memorizationRate: Double = 0.0, // The rate at which memories gain strength when reinforced. 0.04 is a good value if you want this effect. 0.0 disables reinforcement.
         private val memories: HashMap<Position3D, Memory> = hashMapOf(),

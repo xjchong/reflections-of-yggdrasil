@@ -1,5 +1,6 @@
 package game
 import attributes.OpenableDetails
+import attributes.SensoryMemory
 import attributes.flag.BlocksSmell
 import attributes.flag.Opaque
 import block.GameBlock
@@ -208,6 +209,12 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         )
 
         return visiblePositions
+    }
+
+    fun remember(memory: SensoryMemory, rememberer: AnyEntity, block: GameBlock) {
+        if (!sceneObservers.contains(rememberer)) return
+
+        block.rememberAs(memory.getMemoryAt(block.position))
     }
 
     fun updateFowAt(entity: AnyEntity) {

@@ -1,6 +1,7 @@
 package behaviors
 
 import attributes.Senses
+import attributes.SensoryMemory
 import entity.AnyEntity
 import entity.getAttribute
 import entity.position
@@ -26,6 +27,21 @@ object SensoryUser : ForegroundBehavior(Senses::class) {
 
         senses.sensedEntities = sensedEntities
 
+        entity.recordSensoryMemories(context)
+
         return true
+    }
+
+    private fun AnyEntity.recordSensoryMemories(context: GameContext) {
+        val senses = getAttribute(Senses::class) ?: return
+        val memory = getAttribute(SensoryMemory::class) ?: return
+        val world = context.world
+
+        senses.sensedPositions.forEach { sensedPos ->
+            world.fetchBlockAt(sensedPos).ifPresent { block ->
+                memory.remember(sensedPos, world.turn, block.entities.toList())
+                world.remember(memory, this, block)
+            }
+        }
     }
 }

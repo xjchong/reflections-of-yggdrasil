@@ -59,7 +59,7 @@ object CreatureFactory {
                 StatusDetails(),
                 Vigilance.create(10),
                 Senses(vision = 6),
-                VisualMemory(excludedFacets = mutableSetOf(Movable)),
+                SensoryMemory(excludedFacets = mutableSetOf(Movable)),
 
                 CombatStats.create(
                         maxHealth = 100,
@@ -68,7 +68,7 @@ object CreatureFactory {
                         tech = .33,
                         luck = .34
                 ))
-        behaviors(StatusUpdater, SensoryUser, AutoTaker, FocusTargetUser, EnemyListUser, VisualRememberer, VigilanceUser, FogOfWarUser, AutoRunner)
+        behaviors(StatusUpdater, SensoryUser, AutoTaker, FocusTargetUser, EnemyListUser, VigilanceUser, FogOfWarUser, AutoRunner)
         facets(InputReceiving, Attackable, InventoryInspectable, Movable, StatusApplicable)
     }
 
