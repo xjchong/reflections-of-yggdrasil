@@ -56,6 +56,8 @@ class InventoryFragment(
         inventory.contents.forEach { item ->
             addInventoryRow(vBox, item)
         }
+
+        returnModalFocus()
     }
 
     private fun addInventoryRow(vBox: VBox, entity: AnyEntity) {
