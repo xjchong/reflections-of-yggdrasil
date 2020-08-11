@@ -1,5 +1,6 @@
 package behaviors
 
+import attributes.CombatStats
 import attributes.EntityTime
 import attributes.Goals
 import entity.AnyEntity
@@ -12,6 +13,7 @@ object GoalEvaluator : ForegroundBehavior(Goals::class) {
 
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val goals = entity.getAttribute(Goals::class) ?: return false
+        val combatStats = entity.getAttribute(CombatStats::class)
         val sortedGoals = goals.list.toList().sortedBy { -it.weight }
 
         goals.clear()

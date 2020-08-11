@@ -178,7 +178,8 @@ object CreatureFactory {
                     CombatStats.create(
                             maxHealth = 80,
                             maxStamina = 50,
-                            power = 0.4
+                            power = 0.4,
+                            speed = 0.75
                     ),
                     Goals(),
                     KillTarget(),

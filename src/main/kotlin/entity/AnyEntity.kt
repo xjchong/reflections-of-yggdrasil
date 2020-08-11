@@ -45,7 +45,8 @@ val AnyEntity.sensedPositions: Set<Position3D>
     }
 
 fun AnyEntity.spendTime(amount: Long) {
-    getAttribute(EntityTime::class)?.spendTime(amount)
+    val speed = getAttribute(CombatStats::class)?.speed ?: 1.0
+    getAttribute(EntityTime::class)?.spendTime((amount / speed).toLong())
 }
 
 // This can be updated depending on the entity, and what it is trying to pass.

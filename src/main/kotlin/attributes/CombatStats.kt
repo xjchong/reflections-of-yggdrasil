@@ -18,13 +18,14 @@ import org.hexworks.zircon.api.uievent.Processed
 
 
 class CombatStats(
-        val maxHealthProperty: Property<Int>,
-        val healthProperty: Property<Int> = createPropertyFrom(maxHealthProperty.value),
-        val maxStaminaProperty: Property<Int>,
-        val staminaProperty: Property<Int> = createPropertyFrom(maxStaminaProperty.value),
+        private val maxHealthProperty: Property<Int>,
+        private val healthProperty: Property<Int> = createPropertyFrom(maxHealthProperty.value),
+        private val maxStaminaProperty: Property<Int>,
+        private val staminaProperty: Property<Int> = createPropertyFrom(maxStaminaProperty.value),
         private val powerProperty: Property<Double>,
         private val techProperty: Property<Double>,
-        private val luckProperty: Property<Double>
+        private val luckProperty: Property<Double>,
+        private val speedProperty: Property<Double>
 ) : DisplayableAttribute {
 
     val maxHealth: Int by maxHealthProperty.asDelegate()
@@ -34,12 +35,13 @@ class CombatStats(
     val power: Double by powerProperty.asDelegate()
     val tech: Double by techProperty.asDelegate()
     val luck: Double by luckProperty.asDelegate()
+    val speed: Double by speedProperty.asDelegate()
 
     companion object {
 
         fun create(maxHealth: Int, health: Int = maxHealth,
                    maxStamina: Int, stamina: Int = maxStamina,
-                   power: Double = 0.0, tech: Double = 0.0, luck: Double = 0.0) =
+                   power: Double = 0.0, tech: Double = 0.0, luck: Double = 0.0, speed: Double = 1.0) =
                 CombatStats(
                         maxHealthProperty = createPropertyFrom(maxHealth),
                         healthProperty = createPropertyFrom(health),
@@ -47,7 +49,8 @@ class CombatStats(
                         staminaProperty = createPropertyFrom(stamina),
                         powerProperty = createPropertyFrom(power),
                         techProperty = createPropertyFrom(tech),
-                        luckProperty = createPropertyFrom(luck)
+                        luckProperty = createPropertyFrom(luck),
+                        speedProperty = createPropertyFrom(speed)
                 )
     }
 
