@@ -11,20 +11,20 @@ object SensoryUser : ForegroundBehavior(Senses::class) {
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val senses = entity.getAttribute(Senses::class) ?: return false
 
-        senses.visiblePositions.clear()
         if (senses.vision > 0) {
-            senses.visiblePositions.addAll(context.world.findVisiblePositionsFor(entity.position, senses.vision))
+            senses.visiblePositions = (context.world.findVisiblePositionsFor(entity.position, senses.vision)).toSet()
         }
 
-        senses.smellablePositions.clear()
         if (senses.smell > 0) {
-            senses.smellablePositions.addAll(context.world.findSmellablePositionsFor(entity.position, senses.smell))
+            senses.smellablePositions = (context.world.findSmellablePositionsFor(entity.position, senses.smell)).toSet()
         }
 
-        senses.sensedEntities.clear()
+        val sensedEntities = mutableListOf<AnyEntity>()
         senses.sensedPositions.forEach { sensedPos ->
-            senses.sensedEntities.addAll(context.world.fetchEntitiesAt(sensedPos))
+            sensedEntities.addAll(context.world.fetchEntitiesAt(sensedPos))
         }
+
+        senses.sensedEntities = sensedEntities
 
         return true
     }

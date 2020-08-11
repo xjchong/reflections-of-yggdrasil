@@ -1,9 +1,6 @@
 package facets.active
 
-import attributes.AttackStrategies
-import attributes.CombatStats
-import attributes.Equipments
-import attributes.OpenableDetails
+import attributes.*
 import commands.*
 import entity.*
 import events.*
@@ -61,6 +58,10 @@ object InputReceiving : BaseFacet<GameContext>() {
                     is TakeInputEvent -> entity.tryTake(context, position)
                     is WaitInputEvent -> Consumed
                 }
+            }
+
+            if (response == Consumed) {
+                entity.spendTime(EntityTime.DEFAULT_TIME_COST)
             }
 
             response

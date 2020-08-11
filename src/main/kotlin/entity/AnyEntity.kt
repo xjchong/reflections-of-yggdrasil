@@ -33,6 +33,9 @@ val AnyEntity.tile: CharacterTile
 val AnyEntity.symbol: String
     get() = tile.character.toString()
 
+val AnyEntity.time: Long
+    get() = getAttribute(EntityTime::class)?.nextUpdateTime?.get() ?: Long.MAX_VALUE
+
 // This can be updated to support other types of 'vision'.
 val AnyEntity.sensedPositions: Set<Position3D>
     get() {
@@ -40,6 +43,10 @@ val AnyEntity.sensedPositions: Set<Position3D>
 
         return senses.sensedPositions
     }
+
+fun AnyEntity.spendTime(amount: Long) {
+    getAttribute(EntityTime::class)?.spendTime(amount)
+}
 
 // This can be updated depending on the entity, and what it is trying to pass.
 fun AnyEntity.canPass(block: GameBlock): Boolean {

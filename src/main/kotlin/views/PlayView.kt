@@ -40,7 +40,7 @@ class CustomGameArea(
         initialVisibleSize = visibleSize, initialActualSize = actualSize
 )
 
-class PlayView(private val tileGrid: TileGrid, private val game: Game = GameBuilder.defaultGame()) : BaseView(tileGrid) {
+class PlayView constructor(private val tileGrid: TileGrid, private val game: Game = GameBuilder.defaultGame()) : BaseView(tileGrid) {
 
     private val pressedKeys: MutableSet<KeyCode> = mutableSetOf()
     private val logHistory: MutableList<ParagraphBuilder> = mutableListOf() // TODO: Make a separate log object.

@@ -44,7 +44,7 @@ class GameBlock(private val position: Position3D,
 
     override var tiles: PersistentMap<BlockTileType, Tile> = persistentMapOf()
         get() {
-            val entityTiles = currentEntities.map { it.tile }
+            val entityTiles = entities.map { it.tile }
             val contentTile = when {
                 entityTiles.contains(GameTile.PLAYER) -> GameTile.PLAYER
                 entityTiles.isNotEmpty() -> entityTiles.last()

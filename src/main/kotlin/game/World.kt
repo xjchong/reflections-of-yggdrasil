@@ -25,9 +25,9 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         initialVisibleSize = visibleSize, initialActualSize = actualSize
 ) {
 
-    private val engine: GameEngine = GameEngine()
+    private val engine: GameEngine = GameEngine
     private val sceneObservers: MutableSet<AnyEntity> = mutableSetOf()
-    private var lastSensedPositions: MutableSet<Position3D> = mutableSetOf()
+    private var lastSensedPositions: Set<Position3D> = setOf()
 
     private val turnProperty: Property<Long> = createPropertyFrom(0) // Represents how much game time has passed.
     val turn: Long by turnProperty.asDelegate()
@@ -211,8 +211,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     fun updateFowAt(entity: AnyEntity) {
-        val nextHiddenPositions: MutableSet<Position3D> = mutableSetOf()
-        nextHiddenPositions.addAll(lastSensedPositions)
+        val nextHiddenPositions: MutableSet<Position3D> = lastSensedPositions.toMutableSet()
 
         entity.sensedPositions.forEach { sensedPosition ->
             nextHiddenPositions.remove(sensedPosition)
@@ -227,8 +226,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
             }
         }
 
-        lastSensedPositions.clear()
-        lastSensedPositions.addAll(entity.sensedPositions)
+        lastSensedPositions = entity.sensedPositions
     }
 
     private fun updateTurn() {

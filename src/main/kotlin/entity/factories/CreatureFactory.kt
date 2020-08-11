@@ -47,6 +47,7 @@ object CreatureFactory {
                 EnemyList(),
                 EntityPosition(),
                 EntityTile(GameTile.PLAYER),
+                EntityTime(),
                 FocusTarget(),
                 Equipments(
                         initialMainHand = WeaponFactory.newClub(),
@@ -84,6 +85,7 @@ object CreatureFactory {
                             tech = 0.2),
                     EntityPosition(),
                     EntityTile(GameTile.BAT),
+                    EntityTime(),
                     Goals(),
                     Inventory(1).apply {
                         add(ItemFactory.newBatMeat())
@@ -105,6 +107,7 @@ object CreatureFactory {
                             power = 0.2),
                     EntityPosition(),
                     EntityTile(GameTile.CRAB),
+                    EntityTime(),
                     Goals(),
                     KillTarget(),
                     Obstacle,
@@ -133,6 +136,7 @@ object CreatureFactory {
                             power = 0.1),
                     EntityPosition(),
                     EntityTile(GameTile.FUNGUS),
+                    EntityTime(),
                     Goals(),
                     Obstacle,
                     proliferation,
@@ -155,6 +159,7 @@ object CreatureFactory {
                             tech = 0.1),
                     EntityPosition(),
                     EntityTile(GameTile.RAT),
+                    EntityTime(),
                     Goals(),
                     KillTarget(),
                     Obstacle,
@@ -169,6 +174,7 @@ object CreatureFactory {
                     AttackStrategies(WeakBiteAttack(), WeakClawAttack()),
                     EntityPosition(),
                     EntityTile(GameTile.ZOMBIE),
+                    EntityTime(),
                     CombatStats.create(
                             maxHealth = 80,
                             maxStamina = 50,
