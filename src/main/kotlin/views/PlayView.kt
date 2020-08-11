@@ -44,6 +44,7 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
 
     private val pressedKeys: MutableSet<KeyCode> = mutableSetOf()
     private val logHistory: MutableList<ParagraphBuilder> = mutableListOf() // TODO: Make a separate log object.
+    private var onInterrupt: (() -> Unit)? = null
 
     override fun onDock() {
         super.onDock()
@@ -174,6 +175,12 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
         screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { keyEvent, phase ->
             pressedKeys.add(keyEvent.code)
 
+            onInterrupt?.let { interruptHandler ->
+                interruptHandler()
+                onInterrupt = null
+                return@handleKeyboardEvents Processed
+            }
+
             if (pressedKeys.contains(KeyCode.SHIFT)) {
                 val comboInputEvent = when {
                     pressedKeys.containsAll(setOf(KeyCode.SPACE, KeyCode.UP, KeyCode.LEFT)) ->
@@ -201,6 +208,16 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
                         MoveInputEvent(relativePosition = Position3D.create(-1, 1, 0))
                     pressedKeys.containsAll(setOf(KeyCode.DOWN, KeyCode.RIGHT)) ->
                         MoveInputEvent(relativePosition = Position3D.create(1, 1, 0))
+
+                    pressedKeys.contains(KeyCode.KEY_X) -> {
+                        val event = AutoRunInputEvent(Position3D.defaultPosition())
+
+                        onInterrupt = {
+                            event.onInterrupt()
+                        }
+
+                        event
+                    }
                     else -> null
                 } ?: return@handleKeyboardEvents Pass
 

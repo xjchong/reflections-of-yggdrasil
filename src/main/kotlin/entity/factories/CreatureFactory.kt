@@ -48,6 +48,7 @@ object CreatureFactory {
                 EntityPosition(),
                 EntityTile(GameTile.PLAYER),
                 EntityTime(),
+                Goals(),
                 FocusTarget(),
                 Equipments(
                         initialMainHand = WeaponFactory.newClub(),

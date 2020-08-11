@@ -9,6 +9,8 @@ sealed class GameInputEvent {
     open val type: GameUpdateMode = Foreground
 }
 
+class AutoRunInputEvent(val relativePosition: Position3D, var onInterrupt: () -> Unit = {}) : GameInputEvent()
+
 class ConsumeInputEvent(val consumable: AnyEntity) : GameInputEvent()
 
 class ContextualInputEvent(val relativePosition: Position3D? = null) : GameInputEvent()

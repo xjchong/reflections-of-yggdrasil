@@ -1,6 +1,10 @@
 package facets.active
 
 import attributes.*
+import behaviors.Chaser
+import behaviors.GoalEvaluator
+import behaviors.RandomAttacker
+import behaviors.Wanderer
 import commands.*
 import entity.*
 import events.*
@@ -30,6 +34,7 @@ object InputReceiving : BaseFacet<GameContext>() {
 
             runBlocking {
                 response = when (event) {
+                    is AutoRunInputEvent -> entity.autoRun(context, event)
                     is ConsumeInputEvent -> event.consumable.run { executeCommand(Consume(context, this, entity)) }
                     is ContextualInputEvent -> {
                         if (entity.tryContextualActions(context, entity.position, event.relativePosition)) {
@@ -65,6 +70,26 @@ object InputReceiving : BaseFacet<GameContext>() {
 
             response
         }
+    }
+
+    private suspend fun AnyEntity.autoRun(context: GameContext, inputEvent: AutoRunInputEvent): Response {
+        asMutableEntity().apply {
+            removeFacet(InputReceiving)
+            addBehavior(Wanderer)
+            addBehavior(Chaser)
+            addBehavior(RandomAttacker)
+            addBehavior(GoalEvaluator)
+
+            inputEvent.onInterrupt = {
+                addFacet(InputReceiving)
+                removeBehavior(Wanderer)
+                removeBehavior(Chaser)
+                removeBehavior(RandomAttacker)
+                removeBehavior(GoalEvaluator)
+            }
+        }
+
+        return Consumed
     }
 
     // Try any possible contextual actions. TODO: This should prompt for further instruction if multiple are possible.
