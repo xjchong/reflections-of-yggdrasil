@@ -6,6 +6,7 @@ import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.graphics.Symbols
+import withVariance
 
 
 object GameTile {
@@ -22,7 +23,7 @@ object GameTile {
     val EMPTY: CharacterTile = Tile.empty()
 
     fun dijkstraTile(value: Int, position: Position3D): CharacterTile {
-        val charCode = when(value) {
+        val charCode = when (value) {
             in (1..9) -> 48 + value
             in (10..35) -> 55 + value
             else -> 32
@@ -43,9 +44,11 @@ object GameTile {
      */
 
     val FLOOR = newCharacterTile(Symbols.INTERPUNCT, GameColor.GREY)
-    val GRASS = newCharacterTile('\"', GameColor.DARK_GREEN)
+    val GRASS: CharacterTile
+        get() = newCharacterTile('\"', GameColor.DARK_GREEN.withVariance())
     val POT = newCharacterTile(Symbols.SIGMA_LOWERCASE, GameColor.DARK_YELLOW)
-    val WALL = newCharacterTile('#', GameColor.GREY)
+    val WALL: CharacterTile
+        get() = newCharacterTile('#', GameColor.GREY.withVariance())
     val CLOSED_DOOR = newCharacterTile('+', GameColor.GREY, GameColor.BROWN)
     val OPEN_DOOR = newCharacterTile('\'', GameColor.GREY, GameColor.BROWN)
     val UNREVEALED = newCharacterTile(' ', GameColor.BLACK, GameColor.BLACK)
@@ -99,7 +102,7 @@ object GameTile {
     val UNCOMMON_MEDIUM_ARMOR = newCharacterTile('[', GameColor.BROWN)
     val RARE_MEDIUM_ARMOR = newCharacterTile('[', GameColor.LIGHT_BROWN)
 
-    val COMMON_HEAVY_ARMOR  = newCharacterTile(']', GameColor.LIGHT_GREY)
-    val UNCOMMON_HEAVY_ARMOR  = newCharacterTile(']', GameColor.WHITE)
-    val RARE_HEAVY_ARMOR  = newCharacterTile(']', GameColor.LIGHT_CYAN)
+    val COMMON_HEAVY_ARMOR = newCharacterTile(']', GameColor.LIGHT_GREY)
+    val UNCOMMON_HEAVY_ARMOR = newCharacterTile(']', GameColor.WHITE)
+    val RARE_HEAVY_ARMOR = newCharacterTile(']', GameColor.LIGHT_CYAN)
 }

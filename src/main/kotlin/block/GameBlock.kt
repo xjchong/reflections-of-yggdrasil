@@ -27,8 +27,8 @@ class GameBlock(private val position: Position3D,
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
 
     companion object {
-        const val MIN_MEMORY_FOGGINESS = 0.6
-        const val MAX_MEMORY_FOGGINESS = 0.92
+        const val MIN_MEMORY_FOGGINESS = 0.65
+        const val MAX_MEMORY_FOGGINESS = 0.82
 
         fun createWith(position: Position3D, entity: AnyEntity) = GameBlock(
                 position = position,

@@ -1,5 +1,6 @@
 import org.hexworks.zircon.api.builder.component.ColorThemeBuilder
 import org.hexworks.zircon.api.color.TileColor
+import kotlin.random.Random
 
 object GameColor {
 
@@ -103,4 +104,12 @@ object GameColor {
 
     private val TileColor.dark: TileColor
         get() = this.darkenByPercent(0.2).shade(0.2)
+}
+
+
+fun TileColor.withVariance(variance: Double = 0.2): TileColor {
+    return this
+            .lightenByPercent(Random.nextDouble(0.0, variance))
+            .desaturate(Random.nextDouble(0.0, variance))
+            .darkenByPercent(Random.nextDouble(0.0, variance))
 }

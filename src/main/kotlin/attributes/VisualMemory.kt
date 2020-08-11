@@ -17,7 +17,7 @@ data class Memory(val turn: Long, val strength: Double, val snapshots: List<Enti
 
 class VisualMemory(
         private val strength: Double = 100.0, // The base number of turns before the memory fades.
-        private val memorizationRate: Double = 0.04, // The rate at which memories gain strength when reinforced.
+        private val memorizationRate: Double = 0.0, // The rate at which memories gain strength when reinforced. 0.04 is a good value if you want this effect. 0.0 disables reinforcement.
         private val memories: HashMap<Position3D, Memory> = hashMapOf(),
         private val timestamps: HashMap<Position3D, Int> = hashMapOf(),
         private val requiredAttributes: Set<Attribute> = mutableSetOf(),
