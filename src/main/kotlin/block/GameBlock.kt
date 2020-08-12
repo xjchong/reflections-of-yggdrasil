@@ -1,7 +1,7 @@
 package block
 import GameColor
 import attributes.Memory
-import attributes.flag.Obstacle
+import attributes.flag.IsObstacle
 import constants.GameTile
 import entity.*
 import extensions.optional
@@ -74,7 +74,7 @@ class GameBlock(val position: Position3D,
         get() = currentEntities.isEmpty()
 
     val obstacle: Maybe<AnyEntity>
-        get() = Maybe.ofNullable(currentEntities.firstOrNull { it.hasAttribute<Obstacle>() })
+        get() = Maybe.ofNullable(currentEntities.firstOrNull { it.hasAttribute<IsObstacle>() })
 
     val isObstructed: Boolean
         get() = obstacle.isPresent

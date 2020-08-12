@@ -4,9 +4,9 @@ import attributes.*
 import builders.AnyEntityBuilder
 import constants.GameTile
 import entity.*
-import facets.passive.Droppable
-import facets.passive.Equippable
-import facets.passive.Takeable
+import facets.Droppable
+import facets.Equippable
+import facets.Takeable
 import models.Bash
 import models.Cut
 import models.Resistance
@@ -408,5 +408,9 @@ object ArmorFactory {
                     EntityTile(tile),
                     EntityPosition(),
                     EquippableDetails(equipType))
-            .withFacets(Droppable, Takeable, Equippable)
+            .withFacets(
+                Droppable,
+                Takeable,
+                Equippable
+            )
 }

@@ -160,6 +160,21 @@ class Equipments(initialMainHand: AnyEntity? = null,
         return unequipped
     }
 
+    fun resistances(): List<Resistance> {
+        val resistances = mutableListOf<Resistance>()
+
+        listOf(mainHand, offHand,
+            head, body, arms, legs,
+            neck, leftFinger, rightFinger, wrists).forEach { equipment ->
+            equipment.ifPresent {
+                val equipmentResistances: List<Resistance> = it.getAttribute(Resistances::class)?.resistances ?: listOf()
+                resistances.addAll(equipmentResistances)
+            }
+        }
+
+        return resistances
+    }
+
     fun resistancesFor(type: Any): List<Resistance> {
         val resistances: MutableList<Resistance> = mutableListOf()
 

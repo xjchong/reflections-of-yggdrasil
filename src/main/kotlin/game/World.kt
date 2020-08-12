@@ -1,8 +1,8 @@
 package game
 import attributes.OpenableDetails
 import attributes.SensoryMemory
-import attributes.flag.BlocksSmell
-import attributes.flag.Opaque
+import attributes.flag.IsSmellBlocking
+import attributes.flag.IsOpaque
 import block.GameBlock
 import constants.GameConfig
 import entity.*
@@ -242,13 +242,13 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 
     private fun isSmellBlockedAt(position: Position3D): Boolean {
         return fetchBlockAt(position).fold(whenEmpty = { false }, whenPresent = { block ->
-            block.entities.any { it.findAttribute(BlocksSmell::class).isPresent }
+            block.entities.any { it.findAttribute(IsSmellBlocking::class).isPresent }
         })
     }
 
     private fun isVisionBlockedAt(position: Position3D): Boolean {
         return fetchBlockAt(position).fold(whenEmpty = { false }, whenPresent = { block ->
-            block.entities.any { it.hasAttribute<Opaque>() }
+            block.entities.any { it.hasAttribute<IsOpaque>() }
         })
     }
 }

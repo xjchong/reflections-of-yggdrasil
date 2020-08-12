@@ -1,12 +1,14 @@
 package game
 
 import attributes.EntityTime
-import commands.Input
+import commands.ExecuteAiPlans
+import commands.ExecutePlayerInput
 import entity.AnyEntity
 import entity.getAttribute
 import entity.hasFacet
 import entity.time
-import facets.active.InputReceiving
+import facets.AiControllable
+import facets.PlayerControllable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -39,7 +41,7 @@ object GameEngine : Engine<GameContext>, CoroutineScope {
 
     @Synchronized
     override fun addEntity(entity: AnyEntity) {
-        if (!entity.hasBehaviors && !entity.hasFacet<InputReceiving>()) return
+        if (!entity.hasFacet<AiControllable>() && !entity.hasFacet<PlayerControllable>()) return
         entities.binaryInsert(entity)
     }
 
@@ -65,17 +67,18 @@ object GameEngine : Engine<GameContext>, CoroutineScope {
 
                 val firstEntity = entities.first()
 
-                if (firstEntity.hasFacet<InputReceiving>()) {
-                    if (firstEntity.executeCommand(Input(context, firstEntity, context.event)) == Pass) {
+                if (firstEntity.hasFacet<PlayerControllable>()) {
+                    if (firstEntity.executeCommand(ExecutePlayerInput(context, firstEntity, context.event)) == Pass) {
                         isUpdating.set(false)
                         return@launch
-                    } else if (!context.inBackground) {
-                        firstEntity.getAttribute(EntityTime::class)?.flagUpdatedAt(System.nanoTime())
-                        entities.reSortFirst()
                     }
                 } else {
-                    firstEntity.getAttribute(EntityTime::class)?.flagUpdatedAt(System.nanoTime())
                     firstEntity.update(context)
+                    firstEntity.executeCommand(ExecuteAiPlans(context, firstEntity))
+                }
+
+                if (!context.inBackground) {
+                    firstEntity.getAttribute(EntityTime::class)?.flagUpdatedAt(System.nanoTime())
                     entities.reSortFirst()
                 }
             } while (isPlayerNotFirst())
@@ -100,7 +103,7 @@ object GameEngine : Engine<GameContext>, CoroutineScope {
     @Synchronized
     private fun isPlayerNotFirst(): Boolean {
         val firstEntity = entities.first()
-        return firstEntity.hasFacet<InputReceiving>().not()
+        return firstEntity.hasFacet<PlayerControllable>().not()
     }
 
     @Synchronized

@@ -3,8 +3,7 @@ package attributes
 import org.hexworks.amethyst.api.Attribute
 
 
-class ShuffleBias(var type: ShuffleBiasType = EastShuffle) : Attribute {
-}
+class ShuffleBias(var type: ShuffleBiasType = EastShuffle) : Attribute
 
 
 sealed class ShuffleBiasType

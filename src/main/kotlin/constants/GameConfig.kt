@@ -37,7 +37,7 @@ object GameConfig {
      */
 
     const val TREASURE_PER_LEVEL = 10
-    const val CREATURES_PER_LEVEL = 30
+    const val CREATURES_PER_LEVEL = 40
     const val EQUIPMENT_PER_LEVEL = 4
 
     val WORLD_SIZE = Size3D.create(

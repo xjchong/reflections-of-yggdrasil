@@ -4,9 +4,9 @@ import attributes.*
 import builders.AnyEntityBuilder
 import constants.GameTile
 import entity.*
-import facets.passive.Droppable
-import facets.passive.Equippable
-import facets.passive.Takeable
+import facets.Droppable
+import facets.Equippable
+import facets.Takeable
 import models.BalancedWeaponCut
 import models.TechnicalWeaponBash
 import models.TechnicalWeaponCut
@@ -54,5 +54,9 @@ object WeaponFactory {
                     EntityTile(tile),
                     EntityPosition(),
                     EquippableDetails(equipType))
-            .withFacets(Droppable, Takeable, Equippable)
+            .withFacets(
+                Droppable,
+                Takeable,
+                Equippable
+            )
 }

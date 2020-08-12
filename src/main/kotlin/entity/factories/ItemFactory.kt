@@ -9,9 +9,9 @@ import constants.GameTile
 import entity.AnyEntity
 import entity.BatMeat
 import entity.SmallCoins
-import facets.passive.Consumable
-import facets.passive.Droppable
-import facets.passive.Takeable
+import facets.Consumable
+import facets.Droppable
+import facets.Takeable
 import models.Heal
 import models.Poison
 import models.StatusEffect
@@ -48,6 +48,10 @@ object ItemFactory {
                         StatusEffect(Heal, 20, 0.9),
                         StatusEffect(Poison, 5, 0.1)
                 ))
-        facets(Consumable, Droppable, Takeable)
+        facets(
+            Consumable,
+            Droppable,
+            Takeable
+        )
     }
 }

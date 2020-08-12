@@ -1,10 +1,10 @@
 package entity
 
 import attributes.*
-import attributes.flag.Obstacle
+import attributes.flag.IsObstacle
 import block.GameBlock
 import extensions.optional
-import facets.passive.Movable
+import facets.Movable
 import game.GameContext
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.base.BaseBehavior
@@ -50,11 +50,13 @@ fun AnyEntity.spendTime(amount: Long) {
 }
 
 // This can be updated depending on the entity, and what it is trying to pass.
-fun AnyEntity.canPass(block: GameBlock): Boolean {
+fun AnyEntity.canPass(block: GameBlock?): Boolean {
+    if (block == null) return false
+
     for (entity in block.entities) {
         if (entity.findFacet(Movable::class).isPresent
                 && entity.getAttribute(EntityPosition::class)?.lastPosition != entity.position) continue
-        if (entity.findAttribute(Obstacle::class).isPresent) return false
+        if (entity.findAttribute(IsObstacle::class).isPresent) return false
     }
 
     return true

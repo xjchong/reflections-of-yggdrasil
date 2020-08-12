@@ -6,8 +6,8 @@ import entity.tile
 import entity.whenFacetIs
 import extensions.create
 import extensions.withStyle
-import facets.passive.Consumable
-import facets.passive.Equippable
+import facets.Consumable
+import facets.Equippable
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.component.Component

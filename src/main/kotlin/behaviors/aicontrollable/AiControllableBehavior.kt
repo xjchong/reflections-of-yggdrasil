@@ -1,0 +1,45 @@
+package behaviors.aicontrollable
+
+import attributes.Considerations
+import attributes.Plans
+import behaviors.ForegroundBehavior
+import commands.PlannableCommand
+import considerations.Consideration
+import considerations.ConsiderationContext
+import entity.AnyEntity
+import entity.getAttribute
+import game.GameContext
+import models.Plan
+
+
+abstract class AiControllableBehavior : ForegroundBehavior(Plans::class) {
+
+    override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
+        val plans = entity.getAttribute(Plans::class) ?: return false
+        val considerations = entity.getAttribute(Considerations::class) ?: return false
+
+        return plans.addAll(getPlans(context, entity, considerations.getConsiderationsFor(this)))
+    }
+
+    abstract suspend fun getPlans(
+        context: GameContext,
+        entity: AnyEntity,
+        considerations: List<Consideration>
+    ): List<Plan>
+
+    protected suspend fun MutableList<Plan>.addPlan(
+        command: PlannableCommand,
+        considerations: List<Consideration>,
+        context: ConsiderationContext
+    ) {
+        var weight = 1.0
+
+        for (consideration in considerations) {
+            weight *= consideration.evaluate(context)
+
+            if (weight <= 0.0) break
+        }
+
+        if (weight > 0.0) add(Plan(command, weight))
+    }
+}

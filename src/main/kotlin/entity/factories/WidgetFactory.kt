@@ -1,17 +1,17 @@
 package entity.factories
 
 import attributes.*
-import attributes.flag.BlocksSmell
+import attributes.flag.IsSmellBlocking
 import attributes.flag.IsBarrier
-import attributes.flag.Obstacle
-import attributes.flag.Opaque
+import attributes.flag.IsObstacle
+import attributes.flag.IsOpaque
 import builders.newGameEntityOfType
 import constants.GameTile
 import entity.*
-import facets.passive.Attackable
-import facets.passive.Destroyable
-import facets.passive.Diggable
-import facets.passive.Openable
+import facets.Attackable
+import facets.Destroyable
+import facets.Diggable
+import facets.Openable
 import utilities.WeightedEntry
 
 
@@ -28,9 +28,9 @@ object WidgetFactory {
                         isOpen = isOpen))
 
         if (!isOpen) {
-            baseAttributes.add(Obstacle)
-            baseAttributes.add(Opaque)
-            baseAttributes.add(BlocksSmell)
+            baseAttributes.add(IsObstacle)
+            baseAttributes.add(IsOpaque)
+            baseAttributes.add(IsSmellBlocking)
         }
 
         attributes(*baseAttributes.toTypedArray())
@@ -57,17 +57,17 @@ object WidgetFactory {
                         WeightedEntry(10) { listOf(ArmorFactory.newRandomArmor()) },
                         WeightedEntry(30) { listOf<AnyEntity>() }
                 ),
-                Obstacle)
+                IsObstacle)
         facets(Attackable, Destroyable)
     }
 
     fun newWall(isDiggable: Boolean = true) = newGameEntityOfType(Wall) {
         attributes(
-                BlocksSmell,
+                IsSmellBlocking,
                 EntityPosition(),
                 EntityTile(GameTile.WALL),
-                Obstacle,
-                Opaque)
+                IsObstacle,
+                IsOpaque)
         if (isDiggable) facets(Diggable)
     }
 }

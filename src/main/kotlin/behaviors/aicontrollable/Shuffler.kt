@@ -1,0 +1,81 @@
+package behaviors.aicontrollable
+
+import attributes.*
+import commands.Move
+import considerations.Consideration
+import considerations.ConsiderationContext
+import entity.AnyEntity
+import entity.canPass
+import entity.getAttribute
+import entity.position
+import extensions.optional
+import game.GameContext
+import models.Plan
+import org.hexworks.zircon.api.data.Position3D
+
+object Shuffler : AiControllableBehavior() {
+
+    override suspend fun getPlans(
+        context: GameContext,
+        entity: AnyEntity,
+        considerations: List<Consideration>
+    ): List<Plan> {
+        val shuffleBias = entity.getAttribute(ShuffleBias::class) ?: return listOf()
+        val currentBiasType = shuffleBias.type
+        val fallbackBiasType = currentBiasType.randomlyRotated()
+        val considerationContext = ConsiderationContext(context, entity)
+        val command = Move(context, entity) {
+            var nextPosition =
+                getNextPositionForBias(
+                    currentBiasType,
+                    entity.position
+                )
+
+            for (nextBias in listOf(currentBiasType.flipped(), fallbackBiasType, fallbackBiasType.flipped())) {
+                if (entity.canPass(context.world.fetchBlockAt(nextPosition).optional)) break
+
+                shuffleBias.type = nextBias
+                nextPosition = getNextPositionForBias(
+                    nextBias,
+                    entity.position
+                )
+            }
+
+            nextPosition
+        }
+
+        val plans = mutableListOf<Plan>()
+
+        plans.addPlan(command, considerations, considerationContext)
+
+        return plans
+    }
+
+    private suspend fun getNextPositionForBias(shuffleBiasType: ShuffleBiasType, position: Position3D): Position3D {
+        return when(shuffleBiasType) {
+            EastShuffle -> position.withRelativeX(1)
+            SouthShuffle -> position.withRelativeY(1)
+            WestShuffle -> position.withRelativeX(-1)
+            NorthShuffle -> position.withRelativeY(-1)
+        }
+    }
+
+    private suspend fun ShuffleBiasType.flipped(): ShuffleBiasType {
+        return when (this) {
+            EastShuffle -> WestShuffle
+            SouthShuffle -> NorthShuffle
+            WestShuffle -> EastShuffle
+            NorthShuffle -> SouthShuffle
+        }
+    }
+
+    private suspend fun ShuffleBiasType.randomlyRotated(): ShuffleBiasType {
+        val coinToss = Math.random() < 0.5
+        return when (this) {
+            EastShuffle -> if (coinToss) SouthShuffle else NorthShuffle
+            SouthShuffle -> if (coinToss) WestShuffle else EastShuffle
+            WestShuffle -> if (coinToss) NorthShuffle else SouthShuffle
+            NorthShuffle -> if (coinToss) EastShuffle else WestShuffle
+        }
+    }
+}
