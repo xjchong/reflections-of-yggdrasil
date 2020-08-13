@@ -11,7 +11,6 @@ import entity.position
 import extensions.neighbors
 import game.GameContext
 import models.Plan
-import org.hexworks.zircon.api.data.Position3D
 
 
 object Explorer : AiControllableBehavior(MoveLog::class) {
@@ -27,7 +26,7 @@ object Explorer : AiControllableBehavior(MoveLog::class) {
                 entity.canPass(context, it)
             }.minBy {
                 moveLog.visited.getOrDefault(it, 0)
-            } ?: Position3D.unknown()
+            }
         }
 
         val command = Move(context, entity, nextPosition)

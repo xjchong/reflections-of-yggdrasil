@@ -32,14 +32,14 @@ object Fleer : AiControllableBehavior() {
         return plans
     }
 
-    private suspend fun AnyEntity.getFleePosition(context: GameContext, senses: Senses): Position3D {
+    private suspend fun AnyEntity.getFleePosition(context: GameContext, senses: Senses): Position3D? {
         val sensedEnemies = senses.sensedEntities.filter { isEnemiesWith(it) }
         val enemyPositions = sensedEnemies.map { it.position }.toSet()
         val avoidanceMap = DijkstraMapping.getAvoidanceMap(enemyPositions, senses.maxRange) {
             !canPass(context, it)
         }
 
-        var nextPosition = Position3D.unknown()
+        var nextPosition: Position3D? = null
         var lowestAvoidanceVal: Int? = null
 
         for (neighbor in position.neighbors()) {

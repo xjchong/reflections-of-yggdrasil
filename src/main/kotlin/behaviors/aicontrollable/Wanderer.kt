@@ -19,7 +19,7 @@ object Wanderer : AiControllableBehavior() {
     ): List<Plan> {
         val considerationContext = ConsiderationContext(context, entity)
         val command = Move(context, entity) {
-            entity.position.neighbors().first { entity.canPass(context, it) }
+            entity.position.neighbors().firstOrNull { entity.canPass(context, it) }
         }
 
         val plans = mutableListOf<Plan>()
