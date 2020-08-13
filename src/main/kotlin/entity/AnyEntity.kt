@@ -47,7 +47,7 @@ fun AnyEntity.canPass(context: GameContext, position: Position3D): Boolean {
     val block = context.world.fetchBlockAt(position).optional ?: return false
 
     for (entity in block.entities) {
-        if (entity.getAttribute(EntityPosition::class)?.staleness(context) ?: 0 > 1) continue
+        if (entity.getAttribute(EntityPosition::class)?.staleness(context) ?: 0 <= 1) continue
         if (entity.findAttribute(IsObstacle::class).isPresent) return false
     }
 
