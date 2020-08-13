@@ -8,7 +8,6 @@ import entity.AnyEntity
 import entity.canPass
 import entity.getAttribute
 import entity.position
-import extensions.optional
 import game.GameContext
 import models.Plan
 import org.hexworks.zircon.api.data.Position3D
@@ -32,7 +31,7 @@ object Shuffler : AiControllableBehavior() {
                 )
 
             for (nextBias in listOf(currentBiasType.flipped(), fallbackBiasType, fallbackBiasType.flipped())) {
-                if (entity.canPass(context.world.fetchBlockAt(nextPosition).optional)) break
+                if (entity.canPass(context, nextPosition)) break
 
                 shuffleBias.type = nextBias
                 nextPosition = getNextPositionForBias(

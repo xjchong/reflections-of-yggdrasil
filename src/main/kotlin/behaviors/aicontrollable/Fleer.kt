@@ -6,7 +6,6 @@ import considerations.Consideration
 import considerations.ConsiderationContext
 import entity.*
 import extensions.neighbors
-import extensions.optional
 import game.GameContext
 import models.Plan
 import org.hexworks.zircon.api.data.Position3D
@@ -37,7 +36,7 @@ object Fleer : AiControllableBehavior() {
         val sensedEnemies = senses.sensedEntities.filter { isEnemiesWith(it) }
         val enemyPositions = sensedEnemies.map { it.position }.toSet()
         val avoidanceMap = DijkstraMapping.getAvoidanceMap(enemyPositions, senses.maxRange) {
-            !canPass(context.world.fetchBlockAt(it).optional)
+            !canPass(context, it)
         }
 
         var nextPosition = Position3D.unknown()

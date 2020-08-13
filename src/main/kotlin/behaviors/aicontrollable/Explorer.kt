@@ -9,7 +9,6 @@ import entity.canPass
 import entity.getAttribute
 import entity.position
 import extensions.neighbors
-import extensions.optional
 import game.GameContext
 import models.Plan
 import org.hexworks.zircon.api.data.Position3D
@@ -25,7 +24,7 @@ object Explorer : AiControllableBehavior() {
         val moveLog = entity.getAttribute(MoveLog::class) ?: return listOf()
         val nextPosition = suspend {
             entity.position.neighbors().filter {
-                entity.canPass(context.world.fetchBlockAt(it).optional)
+                entity.canPass(context, it)
             }.minBy {
                 moveLog.visited.getOrDefault(it, 0)
             } ?: Position3D.unknown()

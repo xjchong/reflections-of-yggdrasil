@@ -1,10 +1,12 @@
 package block
 import GameColor
+import attributes.EntityPosition
 import attributes.Memory
 import attributes.flag.IsObstacle
 import constants.GameTile
 import entity.*
 import extensions.optional
+import game.World
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
 import org.hexworks.amethyst.api.entity.EntityType
@@ -90,14 +92,14 @@ class GameBlock(val position: Position3D,
         return currentEntities.remove(entity)
     }
 
-    @Synchronized fun transfer(entity: AnyEntity, currentBlock: GameBlock): Boolean {
+    @Synchronized fun transfer(entity: AnyEntity, currentBlock: GameBlock, world: World): Boolean {
         if (isObstructed) {
             return false
         }
 
         if (!currentBlock.removeEntity(entity)) return false
         currentEntities.add(entity)
-        entity.position = position
+        entity.getAttribute(EntityPosition::class)?.updatePosition(position, world.turn)
 
         return true
     }

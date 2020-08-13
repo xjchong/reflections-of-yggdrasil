@@ -2,9 +2,7 @@ package entity
 
 import attributes.*
 import attributes.flag.IsObstacle
-import block.GameBlock
 import extensions.optional
-import facets.Movable
 import game.GameContext
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.base.BaseBehavior
@@ -19,13 +17,8 @@ import kotlin.reflect.KClass
 
 typealias AnyEntity = Entity<EntityType, GameContext>
 
-var AnyEntity.position
-    get() = findAttribute(EntityPosition::class).get().position
-    set(value) {
-        findAttribute(EntityPosition::class).map {
-            it.position = value
-        }
-    }
+val AnyEntity.position
+    get() = getAttribute(EntityPosition::class)?.position ?: Position3D.unknown()
 
 val AnyEntity.tile: CharacterTile
     get() = this.findAttribute(EntityTile::class).get().tile
@@ -50,12 +43,11 @@ fun AnyEntity.spendTime(amount: Long) {
 }
 
 // This can be updated depending on the entity, and what it is trying to pass.
-fun AnyEntity.canPass(block: GameBlock?): Boolean {
-    if (block == null) return false
+fun AnyEntity.canPass(context: GameContext, position: Position3D): Boolean {
+    val block = context.world.fetchBlockAt(position).optional ?: return false
 
     for (entity in block.entities) {
-        if (entity.findFacet(Movable::class).isPresent
-                && entity.getAttribute(EntityPosition::class)?.lastPosition != entity.position) continue
+        if (entity.getAttribute(EntityPosition::class)?.staleness(context) ?: 0 > 1) continue
         if (entity.findAttribute(IsObstacle::class).isPresent) return false
     }
 

@@ -1,8 +1,9 @@
 package game
+import attributes.EntityPosition
 import attributes.OpenableDetails
 import attributes.SensoryMemory
-import attributes.flag.IsSmellBlocking
 import attributes.flag.IsOpaque
+import attributes.flag.IsSmellBlocking
 import block.GameBlock
 import constants.GameConfig
 import entity.*
@@ -34,12 +35,12 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     val turn: Long by turnProperty.asDelegate()
 
     init {
-        startingBlocks.forEach { (pos, block) ->
-            setBlockAt(pos, block)
+        startingBlocks.forEach { (position, block) ->
+            setBlockAt(position, block)
             block.turnProperty.updateFrom(turnProperty)
             block.entities.forEach {entity ->
                 engine.addEntity(entity)
-                entity.position = pos
+                entity.getAttribute(EntityPosition::class)?.updatePosition(position, turn)
             }
         }
     }
@@ -94,7 +95,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     fun addEntity(entity: AnyEntity, position: Position3D) {
         engine.addEntity(entity)
 
-        entity.position = position
+        entity.getAttribute(EntityPosition::class)?.updatePosition(position, turn)
         fetchBlockAt(position).map { block ->
             block.addEntity(entity)
         }
@@ -106,7 +107,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
 
         engine.removeEntity(entity)
-        entity.position = Position3D.unknown()
+        entity.getAttribute(EntityPosition::class)?.updatePosition(Position3D.unknown(), turn)
     }
 
     fun fetchEntitiesAt(position: Position3D): List<AnyEntity> {

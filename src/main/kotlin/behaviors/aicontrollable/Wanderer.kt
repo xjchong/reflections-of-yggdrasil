@@ -7,7 +7,6 @@ import entity.AnyEntity
 import entity.canPass
 import entity.position
 import extensions.neighbors
-import extensions.optional
 import game.GameContext
 import models.Plan
 
@@ -20,9 +19,7 @@ object Wanderer : AiControllableBehavior() {
     ): List<Plan> {
         val considerationContext = ConsiderationContext(context, entity)
         val command = Move(context, entity) {
-            entity.position.neighbors().first { potentialPos ->
-                entity.canPass(context.world.fetchBlockAt(potentialPos).optional)
-            }
+            entity.position.neighbors().first { entity.canPass(context, it) }
         }
 
         val plans = mutableListOf<Plan>()

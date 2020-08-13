@@ -27,7 +27,7 @@ object Movable : BaseFacet<GameContext>() {
 
             world.fetchBlockAt(nextPosition).ifPresent { block ->
                 val oldPosition = entity.position
-                if (block.transfer(entity, currentBlock)) {
+                if (block.transfer(entity, currentBlock, world)) {
                     if (!entity.hasFacet<PlayerControllable>()) {
                         world.motionBlur(oldPosition, entity.tile.foregroundColor)
                     }
