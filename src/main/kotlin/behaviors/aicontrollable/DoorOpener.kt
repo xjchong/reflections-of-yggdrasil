@@ -1,13 +1,14 @@
 package behaviors.aicontrollable
 
+import attributes.OpenableDetails
 import commands.Open
 import considerations.Consideration
 import considerations.ConsiderationContext
 import entity.AnyEntity
-import entity.hasFacet
+import entity.Door
+import entity.getAttribute
 import entity.position
 import extensions.neighbors
-import facets.Openable
 import game.GameContext
 import models.Plan
 
@@ -23,7 +24,7 @@ object DoorOpener : AiControllableBehavior() {
         val openables = neighborPositions.flatMap {
             context.world.fetchEntitiesAt(it)
         }.filter {
-            it.hasFacet<Openable>()
+            it.type == Door && it.getAttribute(OpenableDetails::class)?.isOpen == false
         }
 
         val plans = mutableListOf<Plan>()
