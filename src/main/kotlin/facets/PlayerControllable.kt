@@ -71,7 +71,7 @@ object PlayerControllable : BaseFacet<GameContext>() {
 
         autoRunDetails.visited.add(position)
 
-        if (executeCommand(Move(context, this) { initialMove }) == Pass) return Pass
+        if (Move(context, this) { initialMove }.execute() == Pass) return Pass
 
         asMutableEntity().apply {
             removeFacet(PlayerControllable)

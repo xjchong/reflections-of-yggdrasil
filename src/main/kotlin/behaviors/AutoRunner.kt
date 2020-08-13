@@ -45,11 +45,11 @@ object AutoRunner : ForegroundBehavior(AutoRunDetails::class) {
 
         // Execute a move in the correct direction.
         if (nextPossibleMoves.size == 1) {
-            if (entity.executeCommand(Move(context, entity) { nextPossibleMoves.first() }) == Pass) {
+            if (Move(context, entity) { nextPossibleMoves.first() }.execute() == Pass) {
                 return event.cancel()
             }
         } else if (nextPossibleMoves.size > 1 && details.initialDirection != Position3D.unknown()) {
-            if (entity.executeCommand(Move(context, entity) { entity.position.withRelative(details.initialDirection) }) == Pass) {
+            if (Move(context, entity) { entity.position.withRelative(details.initialDirection) }.execute() == Pass) {
                 return event.cancel()
             }
         } else { // Multiple possible moves, but our initial direction is unknown.
