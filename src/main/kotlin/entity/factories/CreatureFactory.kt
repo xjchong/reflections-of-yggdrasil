@@ -277,7 +277,7 @@ object CreatureFactory {
                 ),
                 Considerations(
                     hashMapOf(
-                        Attacker to listOf(ConstantConsideration(0.7)),
+                        Attacker to listOf(ConstantConsideration(0.6)),
                         Chaser to listOf(ConstantConsideration(0.4)),
                         Fleer to listOf(HealthConsideration(LinearCurve(-1.0, 1.0, 0.0))),
                         Wanderer to listOf(ConstantConsideration(0.2))
@@ -292,7 +292,7 @@ object CreatureFactory {
                 proliferation,
                 Senses(vision = 3, smell = 6)
             )
-            .withBehaviors(StatusUpdater, SensoryUser, Proliferator)
+            .withBehaviors(StatusUpdater, SensoryUser, Proliferator, Attacker, Chaser, Fleer, Wanderer)
             .withFacets(
                 AiControllable,
                 Attackable,
