@@ -8,6 +8,7 @@ import commands.Destroy
 import entity.AnyEntity
 import entity.getAttribute
 import entity.position
+import entity.spendTime
 import extensions.responseWhenIs
 import game.GameContext
 import models.AttackStrategy
@@ -69,6 +70,7 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
                 }
             }
 
+            attacker.spendTime(strategy.timeCost)
             Consumed
         }
     }

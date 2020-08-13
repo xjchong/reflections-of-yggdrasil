@@ -3,9 +3,9 @@ package facets
 import attributes.EntityTile
 import attributes.EntityTime
 import attributes.OpenableDetails
-import attributes.flag.IsSmellBlocking
 import attributes.flag.IsObstacle
 import attributes.flag.IsOpaque
+import attributes.flag.IsSmellBlocking
 import commands.Close
 import commands.Open
 import entity.AnyEntity
@@ -23,15 +23,31 @@ import org.hexworks.amethyst.api.entity.EntityType
 object Openable : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
+        val context = command.context
+        val source = command.source
         var response: Response = Pass
+        var timeCost = 0L
 
-        if (command.whenCommandIs(Open::class) { it.target.open(it.context, it.source) }) response = Consumed
-        else if (command.whenCommandIs(Close::class) { it.target.close(it.context, it.source) }) response = Consumed
+        when (command) {
+            is Open -> {
+                if (command.target.open(context, source)) {
+                    timeCost = EntityTime.OPEN
+                    response = Consumed
+                }
+            }
+            is Close -> {
+                if (command.target.close(context, source)) {
+                    timeCost = EntityTime.CLOSE
+                    response = Consumed
+                }
+            }
+        }
 
+        if (response == Consumed) source.spendTime(timeCost)
         return response
     }
 
-    private fun AnyEntity.open(context: GameContext, source: AnyEntity): Boolean {
+    private suspend fun AnyEntity.open(context: GameContext, source: AnyEntity): Boolean {
         val details = getAttribute(OpenableDetails::class) ?: return false
 
         if (details.isOpen) {
@@ -47,7 +63,7 @@ object Openable : BaseFacet<GameContext>() {
         return true
     }
 
-    private fun AnyEntity.close(context: GameContext, source: AnyEntity): Boolean {
+    private suspend fun AnyEntity.close(context: GameContext, source: AnyEntity): Boolean {
         val details = getAttribute(OpenableDetails::class) ?: return false
 
         if (!details.isOpen) {
@@ -63,7 +79,7 @@ object Openable : BaseFacet<GameContext>() {
         return true
     }
 
-    private fun AnyEntity.handleBarrierState() {
+    private suspend fun AnyEntity.handleBarrierState() {
         val details = getAttribute(OpenableDetails::class) ?: return
 
         with (this.asMutableEntity()) {

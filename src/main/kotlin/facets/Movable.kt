@@ -1,11 +1,9 @@
 package facets
 
+import attributes.EntityTime
 import attributes.MoveLog
 import commands.Move
-import entity.getAttribute
-import entity.hasFacet
-import entity.position
-import entity.tile
+import entity.*
 import events.Critical
 import extensions.optional
 import extensions.responseWhenIs
@@ -40,6 +38,7 @@ object Movable : BaseFacet<GameContext>() {
                 }
             }
 
+            if (result == Consumed) entity.spendTime(EntityTime.MOVE)
             result
         }
     }

@@ -10,4 +10,4 @@ data class Attack(
         override val source: AnyEntity,
         val target: AnyEntity,
         val strategy: AttackStrategy
-) : PlannableCommand(executor = target, timeCost = strategy.timeCost)
+) : PlannableCommand(executor = target)
