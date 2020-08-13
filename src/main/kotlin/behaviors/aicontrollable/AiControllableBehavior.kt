@@ -10,9 +10,12 @@ import entity.AnyEntity
 import entity.getAttribute
 import game.GameContext
 import models.Plan
+import org.hexworks.amethyst.api.Attribute
+import kotlin.reflect.KClass
 
 
-abstract class AiControllableBehavior : ForegroundBehavior(Plans::class) {
+abstract class AiControllableBehavior(vararg mandatoryAttribute: KClass<out Attribute>) :
+    ForegroundBehavior(*mandatoryAttribute, Plans::class) {
 
     override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
         val plans = entity.getAttribute(Plans::class) ?: return false

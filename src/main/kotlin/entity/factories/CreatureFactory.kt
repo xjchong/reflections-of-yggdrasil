@@ -192,6 +192,7 @@ object CreatureFactory {
                 hashMapOf(
                     Attacker to listOf(ConstantConsideration(0.7)),
                     Chaser to listOf(ConstantConsideration(0.5)),
+                    DoorOpener to listOf(ConstantConsideration(0.51)),
                     Explorer to listOf(ConstantConsideration(0.2)),
                     Fleer to listOf(HealthConsideration(LinearCurve(-1.0, 1.0, 0.0)))
                 )
@@ -209,7 +210,7 @@ object CreatureFactory {
         )
         .withBehaviors(
             StatusUpdater, SensoryUser,
-            Attacker, Chaser, Explorer, Fleer
+            Attacker, Chaser, DoorOpener, Explorer, Fleer
         )
         .withFacets(
             AiControllable,

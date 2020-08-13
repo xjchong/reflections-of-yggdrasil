@@ -14,7 +14,7 @@ import models.Plan
 import org.hexworks.zircon.api.data.Position3D
 
 
-object Explorer : AiControllableBehavior() {
+object Explorer : AiControllableBehavior(MoveLog::class) {
 
     override suspend fun getPlans(
         context: GameContext,
