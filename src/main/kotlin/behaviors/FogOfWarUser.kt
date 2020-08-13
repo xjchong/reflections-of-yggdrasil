@@ -1,11 +1,11 @@
 package behaviors
 
-import entity.AnyEntity
+import entity.GameEntity
 import game.GameContext
 
 object FogOfWarUser : ForegroundBehavior() {
 
-    override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
+    override suspend fun foregroundUpdate(entity: GameEntity, context: GameContext): Boolean {
         context.world.updateFowAt(entity)
         return true
     }

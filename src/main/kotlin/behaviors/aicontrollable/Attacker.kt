@@ -7,7 +7,7 @@ import commands.Attack
 import considerations.Consideration
 import considerations.ConsiderationContext
 import considerations.ConsiderationExtras
-import entity.AnyEntity
+import entity.GameEntity
 import entity.getAttribute
 import entity.isEnemiesWith
 import extensions.optional
@@ -18,7 +18,7 @@ object Attacker : AiControllableBehavior() {
 
     override suspend fun getPlans(
         context: GameContext,
-        entity: AnyEntity,
+        entity: GameEntity,
         considerations: List<Consideration>
     ): List<Plan> {
         val senses = entity.getAttribute(Senses::class) ?: return listOf()
@@ -31,7 +31,7 @@ object Attacker : AiControllableBehavior() {
 
         for (strategy in allAttackStrategies) {
             for (enemy in enemies) {
-                val command = Attack(context, entity, enemy, strategy)
+                val command = Attack(context, enemy, entity, strategy)
                 val considerationExtras = ConsiderationExtras(target = enemy, attackStrategy = strategy)
                 val considerationContext = ConsiderationContext(context, entity, considerationExtras)
 

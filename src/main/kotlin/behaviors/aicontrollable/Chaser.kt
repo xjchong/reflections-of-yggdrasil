@@ -5,7 +5,7 @@ import commands.Move
 import considerations.Consideration
 import considerations.ConsiderationContext
 import considerations.ConsiderationExtras
-import entity.AnyEntity
+import entity.GameEntity
 import entity.getAttribute
 import entity.isEnemiesWith
 import entity.position
@@ -17,7 +17,7 @@ object Chaser : AiControllableBehavior() {
 
     override suspend fun getPlans(
         context: GameContext,
-        entity: AnyEntity,
+        entity: GameEntity,
         considerations: List<Consideration>
     ): List<Plan> {
         val senses = entity.getAttribute(Senses::class) ?: return listOf()

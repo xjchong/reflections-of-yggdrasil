@@ -17,28 +17,28 @@ import org.hexworks.amethyst.api.entity.EntityType
 
 object Movable : BaseFacet<GameContext>() {
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenIs(Move::class) { (context, entity, position) ->
+        return command.responseWhenIs(Move::class) { (context, movable, nextPosition) ->
             var result: Response = Pass
             val world = context.world
-            val nextPosition = position() ?: return@responseWhenIs Pass
-            val currentBlock = world.fetchBlockAt(entity.position).optional ?: return@responseWhenIs Pass
+            val nextPosition = nextPosition() ?: return@responseWhenIs Pass
+            val currentBlock = world.fetchBlockAt(movable.position).optional ?: return@responseWhenIs Pass
 
             world.fetchBlockAt(nextPosition).ifPresent { block ->
-                val oldPosition = entity.position
-                if (block.transfer(entity, currentBlock, world)) {
-                    if (!entity.hasFacet<PlayerControllable>()) {
-                        world.motionBlur(oldPosition, entity.tile.foregroundColor)
+                val oldPosition = movable.position
+                if (block.transfer(movable, currentBlock, world)) {
+                    if (!movable.hasFacet<PlayerControllable>()) {
+                        world.motionBlur(oldPosition, movable.tile.foregroundColor)
                     }
 
-                    entity.getAttribute(MoveLog::class)?.logVisit(nextPosition)
+                    movable.getAttribute(MoveLog::class)?.logVisit(nextPosition)
 
                     result = Consumed
-                } else if (entity.findFacet(PlayerControllable::class).isPresent) {
-                    world.observeSceneBy(entity, "The $entity can't move there...", Critical)
+                } else if (movable.findFacet(PlayerControllable::class).isPresent) {
+                    world.observeSceneBy(movable, "The $movable can't move there...", Critical)
                 }
             }
 
-            if (result == Consumed) entity.spendTime(EntityTime.MOVE)
+            if (result == Consumed) movable.spendTime(EntityTime.MOVE)
             result
         }
     }

@@ -1,6 +1,6 @@
 package attributes
 
-import entity.AnyEntity
+import entity.GameEntity
 import org.hexworks.amethyst.api.Attribute
 
-class KillTarget(var target: AnyEntity? = null) : Attribute
+class KillTarget(var target: GameEntity? = null) : Attribute

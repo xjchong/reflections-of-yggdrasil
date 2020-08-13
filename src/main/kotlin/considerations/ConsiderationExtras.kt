@@ -1,10 +1,10 @@
 package considerations
 
-import entity.AnyEntity
+import entity.GameEntity
 import models.AttackStrategy
 
 
 data class ConsiderationExtras(
         val attackStrategy: AttackStrategy? = null,
-        val target: AnyEntity? = null
+        val target: GameEntity? = null
 )

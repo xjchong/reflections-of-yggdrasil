@@ -1,13 +1,13 @@
 package commands
 
-import entity.AnyEntity
+import entity.GameEntity
 import game.GameContext
 import models.AttackStrategy
 
 
 data class Attack(
         override val context: GameContext,
-        override val source: AnyEntity,
-        val target: AnyEntity,
+        val attackable: GameEntity,
+        val attacker: GameEntity,
         val strategy: AttackStrategy
-) : PlannableCommand(executor = target)
+) : GameCommand(attackable)

@@ -1,7 +1,7 @@
 package fragments
 
 import attributes.Inventory
-import entity.AnyEntity
+import entity.GameEntity
 import events.ExamineEvent
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.AttachedComponent
@@ -12,11 +12,11 @@ import org.hexworks.zircon.internal.Zircon
 import org.hexworks.zircon.internal.component.modal.EmptyModalResult
 
 class InventoryFragment(
-        private val inventory: Inventory,
-        private val width: Int,
-        private val onDrop: (AnyEntity) -> Unit,
-        private val onConsume: (AnyEntity) -> Unit,
-        private val onEquip: (AnyEntity) -> Unit
+    private val inventory: Inventory,
+    private val width: Int,
+    private val onDrop: (GameEntity) -> Unit,
+    private val onConsume: (GameEntity) -> Unit,
+    private val onEquip: (GameEntity) -> Unit
 ) : Fragment {
 
     var parentModal: Modal<EmptyModalResult>? = null
@@ -46,7 +46,7 @@ class InventoryFragment(
         returnModalFocus()
     }
 
-    private fun addInventoryRow(vBox: VBox, entity: AnyEntity) {
+    private fun addInventoryRow(vBox: VBox, entity: GameEntity) {
         val inventoryRow = InventoryRowFragment(width, entity)
         val attachedInventoryRow = vBox.addFragment(inventoryRow)
         attachedRows.add(attachedInventoryRow)

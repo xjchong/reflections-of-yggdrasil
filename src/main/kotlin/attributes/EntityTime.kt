@@ -12,6 +12,7 @@ class EntityTime(initialNextUpdateTime: Long = GameEngine.gameTime) : Attribute 
 
         const val CLOSE = DEFAULT
         const val CONSUME = DEFAULT
+        const val DIG = DEFAULT
         const val DROP = DEFAULT
         const val EQUIP = DEFAULT
         const val GUARD = DEFAULT

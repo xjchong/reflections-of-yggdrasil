@@ -11,9 +11,9 @@ import events.*
 import extensions.create
 import extensions.withStyle
 import fragments.DebugColorDialog
+import fragments.EntityInfoFragment
 import fragments.ExamineDialog
 import fragments.LogHistoryDialog
-import fragments.PlayerInfoFragment
 import game.Game
 import org.hexworks.cobalt.events.api.KeepSubscription
 import org.hexworks.zircon.api.ComponentDecorations.box
@@ -69,10 +69,10 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
                 .withAlignmentWithin(screen, ComponentAlignment.TOP_LEFT)
                 .build()
 
-        sidebar.addFragment(PlayerInfoFragment(
+        sidebar.addFragment(EntityInfoFragment(
                 width = sidebar.contentSize.width,
                 height = sidebar.contentSize.height,
-                player = game.player))
+                entity = game.player))
 
         screen.addComponent(sidebar)
     }

@@ -3,7 +3,7 @@ package game
 import attributes.EntityTime
 import commands.ExecuteAiPlans
 import commands.ExecutePlayerInput
-import entity.AnyEntity
+import entity.GameEntity
 import entity.getAttribute
 import entity.hasFacet
 import entity.time
@@ -31,22 +31,22 @@ object GameEngine : Engine<GameContext>, CoroutineScope {
     private val isUpdating: AtomicBoolean = AtomicBoolean(false) // Used in ensuring updates run sequentially.
 
     // Compare by the in game time, and then the real time of update to ensure correct entity order.
-    private val gameTimeComp = compareBy<AnyEntity> {
+    private val gameTimeComp = compareBy<GameEntity> {
         it.getAttribute(EntityTime::class)?.nextUpdateTime?.get() ?: Long.MAX_VALUE
     }.thenBy {
         it.getAttribute(EntityTime::class)?.lastUpdatedTime?.get() ?: Long.MAX_VALUE
     }
 
-    private val entities: MutableList<AnyEntity> = mutableListOf()
+    private val entities: MutableList<GameEntity> = mutableListOf()
 
     @Synchronized
-    override fun addEntity(entity: AnyEntity) {
+    override fun addEntity(entity: GameEntity) {
         if (!entity.hasFacet<AiControllable>() && !entity.hasFacet<PlayerControllable>()) return
         entities.binaryInsert(entity)
     }
 
     @Synchronized
-    override fun removeEntity(entity: AnyEntity) {
+    override fun removeEntity(entity: GameEntity) {
         entities.remove(entity)
     }
 
@@ -107,13 +107,13 @@ object GameEngine : Engine<GameContext>, CoroutineScope {
     }
 
     @Synchronized
-    private fun MutableList<AnyEntity>.reSortFirst() {
+    private fun MutableList<GameEntity>.reSortFirst() {
         val firstEntity = removeAt(0)
         binaryInsert(firstEntity)
     }
 
     @Synchronized
-    private fun MutableList<AnyEntity>.binaryInsert(entity: AnyEntity) {
+    private fun MutableList<GameEntity>.binaryInsert(entity: GameEntity) {
         val invertedInsertionPoint = binarySearch(entity, gameTimeComp)
         val actualInsertionPoint = -(invertedInsertionPoint + 1)
 

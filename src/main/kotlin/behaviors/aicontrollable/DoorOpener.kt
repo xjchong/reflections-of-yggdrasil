@@ -4,8 +4,8 @@ import attributes.OpenableDetails
 import commands.Open
 import considerations.Consideration
 import considerations.ConsiderationContext
-import entity.AnyEntity
 import entity.Door
+import entity.GameEntity
 import entity.getAttribute
 import entity.position
 import extensions.neighbors
@@ -17,7 +17,7 @@ object DoorOpener : AiControllableBehavior() {
 
     override suspend fun getPlans(
         context: GameContext,
-        entity: AnyEntity,
+        entity: GameEntity,
         considerations: List<Consideration>
     ): List<Plan> {
         val neighborPositions = entity.position.neighbors()
@@ -31,7 +31,7 @@ object DoorOpener : AiControllableBehavior() {
         val considerationContext = ConsiderationContext(context, entity)
 
         for (openable in openables) {
-            val command = Open(context, entity, openable)
+            val command = Open(context, openable, entity)
 
             plans.addPlan(command, considerations, considerationContext)
         }

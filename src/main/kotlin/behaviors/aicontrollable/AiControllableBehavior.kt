@@ -3,10 +3,10 @@ package behaviors.aicontrollable
 import attributes.Considerations
 import attributes.Plans
 import behaviors.ForegroundBehavior
-import commands.PlannableCommand
+import commands.GameCommand
 import considerations.Consideration
 import considerations.ConsiderationContext
-import entity.AnyEntity
+import entity.GameEntity
 import entity.getAttribute
 import game.GameContext
 import models.Plan
@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
 abstract class AiControllableBehavior(vararg mandatoryAttribute: KClass<out Attribute>) :
     ForegroundBehavior(*mandatoryAttribute, Plans::class) {
 
-    override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
+    override suspend fun foregroundUpdate(entity: GameEntity, context: GameContext): Boolean {
         val plans = entity.getAttribute(Plans::class) ?: return false
         val considerations = entity.getAttribute(Considerations::class) ?: return false
 
@@ -26,12 +26,12 @@ abstract class AiControllableBehavior(vararg mandatoryAttribute: KClass<out Attr
 
     abstract suspend fun getPlans(
         context: GameContext,
-        entity: AnyEntity,
+        entity: GameEntity,
         considerations: List<Consideration>
     ): List<Plan>
 
     protected suspend fun MutableList<Plan>.addPlan(
-        command: PlannableCommand,
+        command: GameCommand,
         considerations: List<Consideration>,
         context: ConsiderationContext
     ) {

@@ -55,7 +55,7 @@ object WidgetFactory {
                         WeightedEntry(50) { listOf(ItemFactory.newRandomTreasure()) },
                         WeightedEntry(10) { listOf(WeaponFactory.newRandomWeapon()) },
                         WeightedEntry(10) { listOf(ArmorFactory.newRandomArmor()) },
-                        WeightedEntry(30) { listOf<AnyEntity>() }
+                        WeightedEntry(30) { listOf<GameEntity>() }
                 ),
                 IsObstacle)
         facets(Attackable, Destroyable)

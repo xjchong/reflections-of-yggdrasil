@@ -23,8 +23,8 @@ object CreatureFactory {
      * UTILITY
      */
 
-    fun newRandomCreature(): AnyEntity {
-        return WeightedCollection<() -> AnyEntity>(
+    fun newRandomCreature(): GameEntity {
+        return WeightedCollection<() -> GameEntity>(
             WeightedEntry(9) { newBat() },
             WeightedEntry(7) { newCrab() },
             WeightedEntry(3) { newGoblin() },
@@ -116,7 +116,7 @@ object CreatureFactory {
             IsObstacle,
             LootTable(
                 WeightedEntry(70) { listOf(ItemFactory.newBatMeat()) },
-                WeightedEntry(30) { listOf<AnyEntity>() }
+                WeightedEntry(30) { listOf<GameEntity>() }
             ),
             KillTarget(),
             Plans(),
@@ -329,7 +329,7 @@ object CreatureFactory {
                 WeightedEntry(10) {
                     listOf(WeaponFactory.newRandomWeapon(), ArmorFactory.newRandomArmor())
                 },
-                WeightedEntry(20) { listOf<AnyEntity>() }
+                WeightedEntry(20) { listOf<GameEntity>() }
             ),
             Plans(),
             Senses(vision = 5))

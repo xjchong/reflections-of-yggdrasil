@@ -3,7 +3,7 @@ package behaviors
 import attributes.AutoRunDetails
 import attributes.Senses
 import commands.Move
-import entity.AnyEntity
+import entity.GameEntity
 import entity.getAttribute
 import entity.isEnemiesWith
 import entity.position
@@ -17,7 +17,7 @@ import org.hexworks.zircon.api.data.Position3D
 
 object AutoRunner : ForegroundBehavior(AutoRunDetails::class) {
 
-    override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
+    override suspend fun foregroundUpdate(entity: GameEntity, context: GameContext): Boolean {
         val event = context.event
         if (event !is AutoRunInputEvent) return false
 

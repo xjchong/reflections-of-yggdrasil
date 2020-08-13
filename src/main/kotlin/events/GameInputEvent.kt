@@ -1,6 +1,6 @@
 package events
 
-import entity.AnyEntity
+import entity.GameEntity
 import org.hexworks.zircon.api.data.Position3D
 
 
@@ -11,13 +11,13 @@ sealed class GameInputEvent {
 
 class AutoRunInputEvent(val relativePosition: Position3D, var onInterrupt: () -> Unit = {}) : GameInputEvent()
 
-class ConsumeInputEvent(val consumable: AnyEntity) : GameInputEvent()
+class ConsumeInputEvent(val consumable: GameEntity) : GameInputEvent()
 
 class ContextualInputEvent(val relativePosition: Position3D? = null) : GameInputEvent()
 
-class DropInputEvent(val droppable: AnyEntity) : GameInputEvent()
+class DropInputEvent(val droppable: GameEntity) : GameInputEvent()
 
-class EquipInputEvent(val equipment: AnyEntity) : GameInputEvent()
+class EquipInputEvent(val equipment: GameEntity) : GameInputEvent()
 
 class GuardInputEvent() : GameInputEvent()
 

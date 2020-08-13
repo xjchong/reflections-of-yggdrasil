@@ -17,7 +17,7 @@ import kotlin.random.Random
 
 object WeaponFactory {
 
-    fun newRandomWeapon(): AnyEntity {
+    fun newRandomWeapon(): GameEntity {
         return when(Random.nextInt(3)) {
             0 -> newRustyDagger()
             1 -> newWoodenStaff()

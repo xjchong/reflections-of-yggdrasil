@@ -2,7 +2,7 @@ package builders
 
 import GameColor
 import attributes.Inventory
-import entity.AnyEntity
+import entity.GameEntity
 import extensions.withStyle
 import fragments.InventoryFragment
 import org.hexworks.zircon.api.ComponentDecorations.box
@@ -26,9 +26,9 @@ class InventoryModalBuilder(private val screen: Screen) {
     }
 
     fun build(inventory: Inventory,
-              onDrop: (AnyEntity) -> Unit,
-              onConsume: (AnyEntity) -> Unit,
-              onEquip: (AnyEntity) -> Unit
+              onDrop: (GameEntity) -> Unit,
+              onConsume: (GameEntity) -> Unit,
+              onEquip: (GameEntity) -> Unit
     ): Modal<EmptyModalResult> {
         val panel = Components.panel()
                 .withSize(DIALOG_SIZE)

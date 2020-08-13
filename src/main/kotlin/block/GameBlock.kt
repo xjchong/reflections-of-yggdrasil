@@ -24,7 +24,7 @@ import kotlin.reflect.full.isSuperclassOf
 
 class GameBlock(val position: Position3D,
                 private var defaultTile: CharacterTile = GameTile.FLOOR,
-                private val currentEntities: MutableList<AnyEntity> = mutableListOf(),
+                private val currentEntities: MutableList<GameEntity> = mutableListOf(),
                 private var isRevealed: Boolean = false)
     : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
 
@@ -32,7 +32,7 @@ class GameBlock(val position: Position3D,
         const val MIN_MEMORY_FOGGINESS = 0.65
         const val MAX_MEMORY_FOGGINESS = 0.82
 
-        fun createWith(position: Position3D, entity: AnyEntity) = GameBlock(
+        fun createWith(position: Position3D, entity: GameEntity) = GameBlock(
                 position = position,
                 currentEntities = mutableListOf(entity)
         )
@@ -75,24 +75,24 @@ class GameBlock(val position: Position3D,
     val isUnoccupied: Boolean
         get() = currentEntities.isEmpty()
 
-    val obstacle: Maybe<AnyEntity>
+    val obstacle: Maybe<GameEntity>
         get() = Maybe.ofNullable(currentEntities.firstOrNull { it.hasAttribute<IsObstacle>() })
 
     val isObstructed: Boolean
         get() = obstacle.isPresent
 
-    val entities: Iterable<AnyEntity>
+    val entities: Iterable<GameEntity>
         get() = currentEntities.toList()
 
-    fun addEntity(entity: AnyEntity) {
+    fun addEntity(entity: GameEntity) {
         currentEntities.add(entity)
     }
 
-    fun removeEntity(entity: AnyEntity): Boolean {
+    fun removeEntity(entity: GameEntity): Boolean {
         return currentEntities.remove(entity)
     }
 
-    @Synchronized fun transfer(entity: AnyEntity, currentBlock: GameBlock, world: World): Boolean {
+    @Synchronized fun transfer(entity: GameEntity, currentBlock: GameBlock, world: World): Boolean {
         if (isObstructed) {
             return false
         }
@@ -120,8 +120,8 @@ class GameBlock(val position: Position3D,
         particleEffect = ParticleEffect(color, duration, alpha, shouldFade)
     }
 
-    inline fun <reified T: EntityType> hasType(noinline fn: ((AnyEntity) -> Boolean)? = null): Boolean {
-        val entity: AnyEntity = Maybe.ofNullable(entities.firstOrNull {
+    inline fun <reified T: EntityType> hasType(noinline fn: ((GameEntity) -> Boolean)? = null): Boolean {
+        val entity: GameEntity = Maybe.ofNullable(entities.firstOrNull {
             T::class.isSuperclassOf(it.type::class)
         }).optional ?: return false
 

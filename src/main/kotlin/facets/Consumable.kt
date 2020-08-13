@@ -24,7 +24,7 @@ object Consumable : BaseFacet<GameContext>(ConsumableDetails::class) {
             context.world.observeSceneBy(consumer, "The $consumer consumes the $consumable.")
 
             details?.effects?.forEach { effect ->
-                consumer.executeCommand(ApplyStatus(context, consumable, consumer, effect))
+                consumer.executeCommand(ApplyStatus(context, consumer, consumable, effect))
             }
 
             Consumed

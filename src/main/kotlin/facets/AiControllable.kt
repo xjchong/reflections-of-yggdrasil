@@ -4,7 +4,7 @@ import attributes.Considerations
 import attributes.EntityTime
 import attributes.Plans
 import commands.ExecuteAiPlans
-import entity.AnyEntity
+import entity.GameEntity
 import entity.getAttribute
 import entity.spendTime
 import extensions.responseWhenIs
@@ -32,7 +32,7 @@ object AiControllable : BaseFacet<GameContext>(Plans::class, Considerations::cla
         }
     }
 
-    private suspend fun AnyEntity.attemptPlan(plans: List<Plan>): Response {
+    private suspend fun GameEntity.attemptPlan(plans: List<Plan>): Response {
         val sortedPlans = sortPlans(plans)
         for (plan in sortedPlans) {
             if (plan.command.execute() == Consumed) return Consumed

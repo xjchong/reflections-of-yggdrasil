@@ -6,7 +6,7 @@ import attributes.EntityPosition
 import attributes.EntityTile
 import builders.newGameEntityOfType
 import constants.GameTile
-import entity.AnyEntity
+import entity.GameEntity
 import entity.BatMeat
 import entity.SmallCoins
 import facets.Consumable
@@ -20,7 +20,7 @@ import kotlin.random.Random
 
 object ItemFactory {
 
-    fun newRandomTreasure(): AnyEntity {
+    fun newRandomTreasure(): GameEntity {
         return newSmallCoins()
     }
 

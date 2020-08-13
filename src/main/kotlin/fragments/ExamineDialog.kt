@@ -1,7 +1,7 @@
 package fragments
 
 import GameColor
-import entity.AnyEntity
+import entity.GameEntity
 import entity.symbol
 import entity.tile
 import extensions.withStyle
@@ -13,7 +13,7 @@ import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.screen.Screen
 
-class ExamineDialog(screen: Screen, entity: AnyEntity) : Dialog(screen) {
+class ExamineDialog(screen: Screen, entity: GameEntity) : Dialog(screen) {
 
     companion object {
         val DIALOG_SIZE = Size.create(44, 15)

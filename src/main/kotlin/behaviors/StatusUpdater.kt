@@ -5,7 +5,7 @@ import attributes.CombatStats
 import attributes.KillTarget
 import attributes.StatusDetails
 import attributes.Vigilance
-import entity.AnyEntity
+import entity.GameEntity
 import entity.getAttribute
 import entity.position
 import events.Flavor
@@ -14,7 +14,7 @@ import models.Poison
 
 object StatusUpdater : ForegroundBehavior() {
 
-    override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
+    override suspend fun foregroundUpdate(entity: GameEntity, context: GameContext): Boolean {
         with (entity) {
             updateGuard()
             updatePoison(context)
@@ -24,13 +24,13 @@ object StatusUpdater : ForegroundBehavior() {
         return true
     }
 
-    private fun AnyEntity.updateGuard() {
+    private fun GameEntity.updateGuard() {
         val details = getAttribute(StatusDetails::class) ?: return
 
         details.guard = (details.guard - 1).coerceAtLeast(0)
     }
 
-    private fun AnyEntity.updatePoison(context: GameContext) {
+    private fun GameEntity.updatePoison(context: GameContext) {
         val details = getAttribute(StatusDetails::class) ?: return
         if (details.poison <= 0) return
 
@@ -45,7 +45,7 @@ object StatusUpdater : ForegroundBehavior() {
         }
     }
 
-    private fun AnyEntity.updateStamina() {
+    private fun GameEntity.updateStamina() {
         val combatStats = getAttribute(CombatStats::class) ?: return
 
         val regenAmount = when {

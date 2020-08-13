@@ -1,7 +1,7 @@
 package attributes
 
 import GameColor
-import entity.AnyEntity
+import entity.GameEntity
 import entity.getAttribute
 import entity.tile
 import extensions.create
@@ -17,80 +17,80 @@ import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.ComponentStyleSet
 import org.hexworks.zircon.api.component.Label
 
-class Equipments(initialMainHand: AnyEntity? = null,
-                 initialOffHand: AnyEntity? = null,
-                 initialNeck: AnyEntity? = null,
-                 initialMainFinger: AnyEntity? = null,
-                 initialOffFinger: AnyEntity? = null,
-                 initialWrists: AnyEntity? = null,
-                 initialHead: AnyEntity? = null,
-                 initialArms: AnyEntity? = null,
-                 initialBody: AnyEntity? = null,
-                 initialLegs: AnyEntity? = null
+class Equipments(initialMainHand: GameEntity? = null,
+                 initialOffHand: GameEntity? = null,
+                 initialNeck: GameEntity? = null,
+                 initialMainFinger: GameEntity? = null,
+                 initialOffFinger: GameEntity? = null,
+                 initialWrists: GameEntity? = null,
+                 initialHead: GameEntity? = null,
+                 initialArms: GameEntity? = null,
+                 initialBody: GameEntity? = null,
+                 initialLegs: GameEntity? = null
 ) : DisplayableAttribute {
 
-    private val mainHandProp: Property<Maybe<AnyEntity>> =
+    private val mainHandProp: Property<Maybe<GameEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialMainHand)) {
                 val details = it.optional?.details
                 details?.type == OneHanded || details?.type == TwoHanded
             }
 
-    private val offHandProp: Property<Maybe<AnyEntity>> =
+    private val offHandProp: Property<Maybe<GameEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialOffHand)) {
                 val type = it.optional?.details?.type
                 type == OneHanded || type == Offhand
             }
 
-    private val neckProp: Property<Maybe<AnyEntity>> =
+    private val neckProp: Property<Maybe<GameEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialNeck)) {
                 it.optional?.details?.type == Neck
             }
 
-    private val mainFingerProp: Property<Maybe<AnyEntity>> =
+    private val mainFingerProp: Property<Maybe<GameEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialMainFinger)) {
                 it.optional?.details?.type == Finger
             }
 
-    private val offFingerProp: Property<Maybe<AnyEntity>> =
+    private val offFingerProp: Property<Maybe<GameEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialOffFinger)) {
                 it.optional?.details?.type == Finger
             }
 
-    private val wristsProp: Property<Maybe<AnyEntity>> =
+    private val wristsProp: Property<Maybe<GameEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialWrists)) {
                 it.optional?.details?.type == Wrists
             }
 
-    private val headProp: Property<Maybe<AnyEntity>> =
+    private val headProp: Property<Maybe<GameEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialHead)) {
                 it.optional?.details?.type == Head
             }
 
-    private val armsProp: Property<Maybe<AnyEntity>> =
+    private val armsProp: Property<Maybe<GameEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialArms)) {
                 it.optional?.details?.type == Arms
             }
 
-    private val bodyProp: Property<Maybe<AnyEntity>> =
+    private val bodyProp: Property<Maybe<GameEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialBody)) {
                 it.optional?.details?.type == Body
             }
 
-    private val legsProp: Property<Maybe<AnyEntity>> =
+    private val legsProp: Property<Maybe<GameEntity>> =
             createPropertyFrom(Maybe.ofNullable(initialLegs)) {
                 it.optional?.details?.type == Legs
             }
 
-    val mainHand: Maybe<AnyEntity> by mainHandProp.asDelegate()
-    val offHand: Maybe<AnyEntity> by offHandProp.asDelegate()
-    val neck: Maybe<AnyEntity> by neckProp.asDelegate()
-    val leftFinger: Maybe<AnyEntity> by mainFingerProp.asDelegate()
-    val rightFinger: Maybe<AnyEntity> by offFingerProp.asDelegate()
-    val wrists: Maybe<AnyEntity> by wristsProp.asDelegate()
-    val head: Maybe<AnyEntity> by headProp.asDelegate()
-    val arms: Maybe<AnyEntity> by armsProp.asDelegate()
-    val body: Maybe<AnyEntity> by bodyProp.asDelegate()
-    val legs: Maybe<AnyEntity> by legsProp.asDelegate()
+    val mainHand: Maybe<GameEntity> by mainHandProp.asDelegate()
+    val offHand: Maybe<GameEntity> by offHandProp.asDelegate()
+    val neck: Maybe<GameEntity> by neckProp.asDelegate()
+    val leftFinger: Maybe<GameEntity> by mainFingerProp.asDelegate()
+    val rightFinger: Maybe<GameEntity> by offFingerProp.asDelegate()
+    val wrists: Maybe<GameEntity> by wristsProp.asDelegate()
+    val head: Maybe<GameEntity> by headProp.asDelegate()
+    val arms: Maybe<GameEntity> by armsProp.asDelegate()
+    val body: Maybe<GameEntity> by bodyProp.asDelegate()
+    val legs: Maybe<GameEntity> by legsProp.asDelegate()
 
     override fun toComponent(width: Int): Component {
         val textBoxBuilder = Components.textBox(width)
@@ -128,8 +128,8 @@ class Equipments(initialMainHand: AnyEntity? = null,
         return textBoxBuilder.build()
     }
 
-    fun equip(equipment: AnyEntity): AnyEntity? {
-        var unequipped: AnyEntity? = equipment
+    fun equip(equipment: GameEntity): GameEntity? {
+        var unequipped: GameEntity? = equipment
         val details = equipment.getAttribute(EquippableDetails::class)
 
         details?.let {
@@ -194,8 +194,8 @@ class Equipments(initialMainHand: AnyEntity? = null,
     private fun setupInfo(width: Int,
                           textBoxBuilder: TextBoxBuilder,
                           title: String,
-                          equipment: Maybe<AnyEntity>,
-                          equipmentProp: Property<Maybe<AnyEntity>>): List<Label> {
+                          equipment: Maybe<GameEntity>,
+                          equipmentProp: Property<Maybe<GameEntity>>): List<Label> {
         val charLabel = Components.label().withSize(2, 1).build()
         val nameLabel = Components.label().withSize(width - 11, 1).build()
         val infoLabels = listOf(charLabel, nameLabel)
@@ -211,7 +211,7 @@ class Equipments(initialMainHand: AnyEntity? = null,
         return infoLabels
     }
 
-    private fun updateInfo(infoLabels: List<Label>, equipment: Maybe<AnyEntity>) {
+    private fun updateInfo(infoLabels: List<Label>, equipment: Maybe<GameEntity>) {
         val (charLabel, nameLabel) = infoLabels
         val itemChar = equipment.optional?.tile?.character
 
@@ -222,6 +222,6 @@ class Equipments(initialMainHand: AnyEntity? = null,
         nameLabel.textProperty.value = equipment.optional?.name?.capitalize() ?: "-"
     }
 
-    private val AnyEntity.details: EquippableDetails?
+    private val GameEntity.details: EquippableDetails?
         get() = getAttribute(EquippableDetails::class)
 }

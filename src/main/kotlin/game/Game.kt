@@ -1,13 +1,12 @@
 package game
-import entity.Player
 import entity.GameEntity
 
 class Game(val world: World,
-           val player: GameEntity<Player>) {
+           val player: GameEntity) {
 
     companion object {
 
-        fun create(player: GameEntity<Player>, world: World) = Game(
+        fun create(player: GameEntity, world: World) = Game(
             world = world, player = player
         )
     }

@@ -19,21 +19,21 @@ import org.hexworks.amethyst.api.entity.EntityType
 object Destroyable : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenIs(Destroy::class) { (context, entity, cause) ->
-            context.world.observeSceneBy(entity, "The $entity is destroyed by $cause.", Notice)
+        return command.responseWhenIs(Destroy::class) { (context, destroyable, cause) ->
+            context.world.observeSceneBy(destroyable, "The $destroyable is destroyed by $cause.", Notice)
 
-            val inventory = entity.getAttribute(Inventory::class)
-            val lootTable = entity.getAttribute(LootTable::class)
+            val inventory = destroyable.getAttribute(Inventory::class)
+            val lootTable = destroyable.getAttribute(LootTable::class)
 
             inventory?.contents?.forEach { item ->
-                item.executeCommand(Drop(context, item, entity, entity.position))
+                item.executeCommand(Drop(context, item, destroyable, destroyable.position))
             }
 
             lootTable?.table?.sample()?.invoke()?.forEach { loot ->
-                loot.executeCommand(Drop(context, loot, entity, entity.position))
+                loot.executeCommand(Drop(context, loot, destroyable, destroyable.position))
             }
 
-            context.world.removeEntity(entity)
+            context.world.removeEntity(destroyable)
 
             Consumed
         }

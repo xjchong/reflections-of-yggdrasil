@@ -5,7 +5,7 @@ import attributes.*
 import commands.ApplyStatus
 import commands.Attack
 import commands.Destroy
-import entity.AnyEntity
+import entity.GameEntity
 import entity.getAttribute
 import entity.position
 import entity.spendTime
@@ -23,26 +23,26 @@ import org.hexworks.amethyst.api.entity.EntityType
 object Attackable : BaseFacet<GameContext>(CombatStats::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenIs(Attack::class) { (context, attacker, target, strategy) ->
-            if (!strategy.isInRange(attacker.position, target.position)) return@responseWhenIs Pass
+        return command.responseWhenIs(Attack::class) { (context, attackable, attacker, strategy) ->
+            if (!strategy.isInRange(attacker.position, attackable.position)) return@responseWhenIs Pass
             val attackerStats = attacker.getAttribute(CombatStats::class) ?: return@responseWhenIs Pass
-            val targetStats = target.getAttribute(CombatStats::class) ?: return@responseWhenIs Pass
+            val attackableStats = attackable.getAttribute(CombatStats::class) ?: return@responseWhenIs Pass
 
             attackerStats.dockStamina(strategy.staminaCost)
             val incomingDamage = strategy.rollDamage(attackerStats)
-            val finalDamage = target.applyResistances(strategy, incomingDamage)
+            val finalDamage = attackable.applyResistances(strategy, incomingDamage)
 
-            targetStats.run {
+            attackableStats.run {
                 dockHealth(finalDamage)
 
                 // Update focus targets of the combatants.
                 if (health > 0) {
-                    attacker.getAttribute(FocusTarget::class)?.updateTarget(target)
-                    attacker.getAttribute(KillTarget::class)?.target = target
+                    attacker.getAttribute(FocusTarget::class)?.updateTarget(attackable)
+                    attacker.getAttribute(KillTarget::class)?.target = attackable
                 }
 
-                target.getAttribute(KillTarget::class)?.target = attacker
-                target.getAttribute(FocusTarget::class)?.run {
+                attackable.getAttribute(KillTarget::class)?.target = attacker
+                attackable.getAttribute(FocusTarget::class)?.run {
                     if (!this.target.isPresent) {
                         updateTarget(attacker)
                     }
@@ -50,23 +50,23 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
 
                 context.world.observeSceneBy(
                     attacker,
-                    "The $attacker ${strategy.description} the $target for ${finalDamage}!"
+                    "The $attacker ${strategy.description} the $attackable for ${finalDamage}!"
                 )
 
                 if (health <= 0) {
-                    context.world.flash(target.position, GameColor.DESTROY_FLASH)
-                    target.executeCommand(Destroy(context, target, cause = "the $attacker"))
+                    context.world.flash(attackable.position, GameColor.DESTROY_FLASH)
+                    attackable.executeCommand(Destroy(context, attackable, cause = "the $attacker"))
                     attacker.getAttribute(KillTarget::class)?.target = null
                 } else {
-                    if (target.getAttribute(StatusDetails::class)?.guard ?: 0 > 0) {
-                        context.world.flash(target.position, GameColor.GUARD_FLASH)
+                    if (attackable.getAttribute(StatusDetails::class)?.guard ?: 0 > 0) {
+                        context.world.flash(attackable.position, GameColor.GUARD_FLASH)
                     } else {
-                        context.world.flash(target.position, GameColor.DAMAGE_FLASH)
+                        context.world.flash(attackable.position, GameColor.DAMAGE_FLASH)
                     }
                 }
 
                 for (statusEffect in strategy.statusEffects) {
-                    target.executeCommand(ApplyStatus(context, attacker, target, statusEffect))
+                    attackable.executeCommand(ApplyStatus(context, attacker, attackable, statusEffect))
                 }
             }
 
@@ -75,7 +75,7 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
         }
     }
 
-    private fun AnyEntity.applyResistances(strategy: AttackStrategy, incomingDamage: Int): Int {
+    private fun GameEntity.applyResistances(strategy: AttackStrategy, incomingDamage: Int): Int {
         val innateResistances = getAttribute(Resistances::class)?.resistances?.toList() ?: listOf()
         val equippedResistances = getAttribute(Equipments::class)?.resistances()?.toList() ?: listOf()
         val applicableResistances = (innateResistances + equippedResistances).filter {

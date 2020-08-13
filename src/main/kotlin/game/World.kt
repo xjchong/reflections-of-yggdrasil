@@ -28,7 +28,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
 ) {
 
     private val engine: GameEngine = GameEngine
-    private val sceneObservers: MutableSet<AnyEntity> = mutableSetOf()
+    private val sceneObservers: MutableSet<GameEntity> = mutableSetOf()
     private var lastSensedPositions: Set<Position3D> = setOf()
 
     private val turnProperty: Property<Long> = createPropertyFrom(0) // Represents how much game time has passed.
@@ -55,15 +55,15 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         engine.update(context)
     }
 
-    fun addSceneObserver(entity: AnyEntity) {
+    fun addSceneObserver(entity: GameEntity) {
         sceneObservers.add(entity)
     }
 
-    fun removeSceneObserver(entity: AnyEntity) {
+    fun removeSceneObserver(entity: GameEntity) {
         sceneObservers.remove(entity)
     }
 
-    fun observeSceneBy(entity: AnyEntity, message: String, eventType: GameLogEventType = Info) {
+    fun observeSceneBy(entity: GameEntity, message: String, eventType: GameLogEventType = Info) {
         for (observer in sceneObservers) {
             if (observer.sensedPositions.contains(entity.position)) {
                 GameLogEvent.log(message, eventType)
@@ -92,7 +92,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
      * Has no effect if this world already contains the
      * given [Entity].
      */
-    fun addEntity(entity: AnyEntity, position: Position3D) {
+    fun addEntity(entity: GameEntity, position: Position3D) {
         engine.addEntity(entity)
 
         entity.getAttribute(EntityPosition::class)?.updatePosition(position, turn)
@@ -101,7 +101,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         }
     }
 
-    fun removeEntity(entity: AnyEntity) {
+    fun removeEntity(entity: GameEntity) {
         fetchBlockAt(entity.position).map {
             it.removeEntity(entity)
         }
@@ -110,8 +110,8 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         entity.getAttribute(EntityPosition::class)?.updatePosition(Position3D.unknown(), turn)
     }
 
-    fun fetchEntitiesAt(position: Position3D): List<AnyEntity> {
-        val entities = mutableListOf<AnyEntity>()
+    fun fetchEntitiesAt(position: Position3D): List<GameEntity> {
+        val entities = mutableListOf<GameEntity>()
 
         fetchBlockAt(position).ifPresent { block ->
             entities.addAll(block.entities)
@@ -121,9 +121,9 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
     }
 
     fun addAtEmptyPosition(
-            entity: AnyEntity,
-            offset: Position3D = Position3D.defaultPosition(),
-            size: Size3D = actualSize): Boolean {
+        entity: GameEntity,
+        offset: Position3D = Position3D.defaultPosition(),
+        size: Size3D = actualSize): Boolean {
 
         return findEmptyLocationWithin(offset, size).fold(
             whenEmpty = { false },
@@ -159,7 +159,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         return position
     }
 
-    fun getMovementCost(entity: AnyEntity, from: Position3D, to: Position3D): Double {
+    fun getMovementCost(entity: GameEntity, from: Position3D, to: Position3D): Double {
         // TODO: Use entity properly to consider the movement cost.
         val block = fetchBlockAt(to).optional ?: return 999.0
         val isDiagonal = from.x != to.x && from.y != to.y
@@ -212,13 +212,13 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
         return visiblePositions
     }
 
-    fun remember(memory: SensoryMemory, rememberer: AnyEntity, block: GameBlock) {
+    fun remember(memory: SensoryMemory, rememberer: GameEntity, block: GameBlock) {
         if (!sceneObservers.contains(rememberer)) return
 
         block.rememberAs(memory.getMemoryAt(block.position))
     }
 
-    fun updateFowAt(entity: AnyEntity) {
+    fun updateFowAt(entity: GameEntity) {
         val nextHiddenPositions: MutableSet<Position3D> = lastSensedPositions.toMutableSet()
 
         entity.sensedPositions.forEach { sensedPosition ->

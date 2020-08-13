@@ -1,6 +1,6 @@
 package attributes
 
-import entity.AnyEntity
+import entity.GameEntity
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.zircon.api.data.Position3D
 import kotlin.math.max
@@ -12,7 +12,7 @@ class Senses(var vision: Int = 0, var smell: Int = 0) : Attribute {
         get() {
             return visiblePositions + smellablePositions
         }
-    var sensedEntities: List<AnyEntity> = listOf()
+    var sensedEntities: List<GameEntity> = listOf()
 
     val maxRange: Int
         get() = max(vision, smell)

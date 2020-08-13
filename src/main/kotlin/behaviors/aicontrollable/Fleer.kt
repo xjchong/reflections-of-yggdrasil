@@ -15,7 +15,7 @@ object Fleer : AiControllableBehavior() {
 
     override suspend fun getPlans(
         context: GameContext,
-        entity: AnyEntity,
+        entity: GameEntity,
         considerations: List<Consideration>
     ): List<Plan> {
         val senses = entity.getAttribute(Senses::class) ?: return listOf()
@@ -32,7 +32,7 @@ object Fleer : AiControllableBehavior() {
         return plans
     }
 
-    private suspend fun AnyEntity.getFleePosition(context: GameContext, senses: Senses): Position3D? {
+    private suspend fun GameEntity.getFleePosition(context: GameContext, senses: Senses): Position3D? {
         val sensedEnemies = senses.sensedEntities.filter { isEnemiesWith(it) }
         val enemyPositions = sensedEnemies.map { it.position }.toSet()
         val avoidanceMap = DijkstraMapping.getAvoidanceMap(enemyPositions, senses.maxRange) {

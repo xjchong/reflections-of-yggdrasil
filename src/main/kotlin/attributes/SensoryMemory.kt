@@ -1,6 +1,6 @@
 package attributes
 
-import entity.AnyEntity
+import entity.GameEntity
 import entity.tile
 import game.GameContext
 import org.hexworks.amethyst.api.Attribute
@@ -38,7 +38,7 @@ class SensoryMemory(
         const val MAX_STRENGTH_FACTOR: Double = 20.0
     }
 
-    fun remember(position: Position3D, turn: Long, entities: List<AnyEntity>) {
+    fun remember(position: Position3D, turn: Long, entities: List<GameEntity>) {
         val snapshots: MutableList<EntitySnapshot> = mutableListOf()
         val previousStrength = memories[position]?.strength ?: strength
         val nextStrength = ((1.0 - memorizationRate) * previousStrength) + (memorizationRate * strength * MAX_STRENGTH_FACTOR)
@@ -56,7 +56,7 @@ class SensoryMemory(
         return memories[position]
     }
 
-    private fun canAccept(target: AnyEntity): Boolean {
+    private fun canAccept(target: GameEntity): Boolean {
         if (excludedAttributes.isNotEmpty() || requiredAttributes.isNotEmpty()) {
             val targetAttributes = target.attributes.toSet()
 

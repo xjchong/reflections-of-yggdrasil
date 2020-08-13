@@ -1,7 +1,7 @@
 package fragments
 
 import GameColor
-import entity.AnyEntity
+import entity.GameEntity
 import entity.tile
 import entity.whenFacetIs
 import extensions.create
@@ -17,7 +17,7 @@ import org.hexworks.zircon.api.uievent.MouseEventType
 import org.hexworks.zircon.api.uievent.Processed
 import org.hexworks.zircon.api.uievent.StopPropagation
 
-class InventoryRowFragment(width: Int, entity: AnyEntity) : Fragment {
+class InventoryRowFragment(width: Int, entity: GameEntity) : Fragment {
 
     companion object {
         const val NAME_COLUMN_WIDTH = 15

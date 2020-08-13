@@ -1,11 +1,11 @@
 package commands
 
-import entity.AnyEntity
+import entity.GameEntity
 import game.GameContext
 
 
 data class Close(
         override val context: GameContext,
-        override val source: AnyEntity,
-        val target: AnyEntity
-) : PlannableCommand(executor = target)
+        val closeable: GameEntity,
+        val closer: GameEntity
+) : GameCommand(closeable)

@@ -65,7 +65,7 @@ object PlayerControllable : BaseFacet<GameContext>() {
         }
     }
 
-    private suspend fun AnyEntity.autoRun(context: GameContext, inputEvent: AutoRunInputEvent): Response {
+    private suspend fun GameEntity.autoRun(context: GameContext, inputEvent: AutoRunInputEvent): Response {
         val autoRunDetails = getAttribute(AutoRunDetails::class) ?: return Pass
         val initialMove = position.withRelative(inputEvent.relativePosition)
 
@@ -98,8 +98,8 @@ object PlayerControllable : BaseFacet<GameContext>() {
     }
 
     // Try any possible contextual actions. TODO: This should prompt for further instruction if multiple are possible.
-    private suspend fun AnyEntity.tryContextualActions(context: GameContext, position: Position3D,
-                                                       relativePosition: Position3D?): Boolean {
+    private suspend fun GameEntity.tryContextualActions(context: GameContext, position: Position3D,
+                                                        relativePosition: Position3D?): Boolean {
         val world = context.world
 
         if (relativePosition == null) {
@@ -133,7 +133,7 @@ object PlayerControllable : BaseFacet<GameContext>() {
         return false
     }
 
-    private suspend fun AnyEntity.tryTake(context: GameContext, position: Position3D): Response {
+    private suspend fun GameEntity.tryTake(context: GameContext, position: Position3D): Response {
         val world = context.world
         val block = world.fetchBlockAt(position).optional ?: return Pass
 
@@ -147,23 +147,23 @@ object PlayerControllable : BaseFacet<GameContext>() {
         return Pass
     }
 
-    private suspend fun AnyEntity.tryOpen(context: GameContext, entities: List<AnyEntity>): Boolean {
+    private suspend fun GameEntity.tryOpen(context: GameContext, entities: List<GameEntity>): Boolean {
         val openable = entities.firstOrNull { it.hasFacet<Openable>() } ?: return false
 
         if (openable.getAttribute(OpenableDetails::class)?.isOpen != false) return false
 
-        return openable.executeCommand(Open(context, this, openable)) == Consumed
+        return openable.executeCommand(Open(context, openable, this)) == Consumed
     }
 
-    private suspend fun AnyEntity.tryClose(context: GameContext, entities: List<AnyEntity>): Boolean {
-        val openable = entities.firstOrNull { it.hasFacet<Openable>() } ?: return false
+    private suspend fun GameEntity.tryClose(context: GameContext, entities: List<GameEntity>): Boolean {
+        val closeable = entities.firstOrNull { it.hasFacet<Openable>() } ?: return false
 
-        if (openable.getAttribute(OpenableDetails::class)?.isOpen != true) return false
+        if (closeable.getAttribute(OpenableDetails::class)?.isOpen != true) return false
 
-        return openable.executeCommand(Close(context, this, openable)) == Consumed
+        return closeable.executeCommand(Close(context, closeable, this)) == Consumed
     }
 
-    private suspend fun AnyEntity.tryAttack(context: GameContext, entities: List<AnyEntity>): Boolean {
+    private suspend fun GameEntity.tryAttack(context: GameContext, entities: List<GameEntity>): Boolean {
         val target = entities.firstOrNull { !isAlliedWith(it) } ?: return false
         val combatStats = getAttribute(CombatStats::class) ?: return false
         val innateStrategies = getAttribute(AttackStrategies::class)?.strategies ?: mutableListOf()
@@ -176,6 +176,6 @@ object PlayerControllable : BaseFacet<GameContext>() {
 
         if (!preferredAttackStrategy.isInRange(position, target.position)) return false
 
-        return Attack(context, this, target, preferredAttackStrategy).execute() == Consumed
+        return Attack(context, target, this, preferredAttackStrategy).execute() == Consumed
     }
 }

@@ -17,15 +17,15 @@ import org.hexworks.amethyst.api.entity.EntityType
 object Droppable : BaseFacet<GameContext>() {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
-        return command.responseWhenCommandIs(Drop::class) { (context, droppable, owner, idealPosition) ->
-            owner.getAttribute(Inventory::class)?.let { inventory -> inventory.remove(droppable) }
+        return command.responseWhenCommandIs(Drop::class) { (context, droppable, dropper, idealPosition) ->
+            dropper.getAttribute(Inventory::class)?.remove(droppable)
 
             with (context.world) {
                 var actualDropPosition = idealPosition
 
                 // Attempt to drop the entity somewhere unoccupied. Otherwise, just stack it at the original position.
                 fetchBlockAt(idealPosition).ifPresent { block ->
-                    if (block.entities.any { it != owner }) {
+                    if (block.entities.any { it != dropper }) {
                         for (neighborPos in idealPosition.neighbors()) {
                             val neighborBlock = fetchBlockAt(neighborPos).optional
 
@@ -39,8 +39,8 @@ object Droppable : BaseFacet<GameContext>() {
 
 
                 addEntity(droppable, actualDropPosition)
-                owner.spendTime(EntityTime.DROP)
-                observeSceneBy(owner, "The $owner drops the $droppable.")
+                dropper.spendTime(EntityTime.DROP)
+                observeSceneBy(dropper, "The $dropper drops the $droppable.")
             }
 
             Consumed

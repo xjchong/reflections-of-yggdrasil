@@ -4,7 +4,7 @@ import attributes.MoveLog
 import commands.Move
 import considerations.Consideration
 import considerations.ConsiderationContext
-import entity.AnyEntity
+import entity.GameEntity
 import entity.canPass
 import entity.getAttribute
 import entity.position
@@ -17,7 +17,7 @@ object Explorer : AiControllableBehavior(MoveLog::class) {
 
     override suspend fun getPlans(
         context: GameContext,
-        entity: AnyEntity,
+        entity: GameEntity,
         considerations: List<Consideration>
     ): List<Plan> {
         val moveLog = entity.getAttribute(MoveLog::class) ?: return listOf()

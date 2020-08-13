@@ -4,7 +4,7 @@ import attributes.*
 import commands.Move
 import considerations.Consideration
 import considerations.ConsiderationContext
-import entity.AnyEntity
+import entity.GameEntity
 import entity.canPass
 import entity.getAttribute
 import entity.position
@@ -16,7 +16,7 @@ object Shuffler : AiControllableBehavior() {
 
     override suspend fun getPlans(
         context: GameContext,
-        entity: AnyEntity,
+        entity: GameEntity,
         considerations: List<Consideration>
     ): List<Plan> {
         val shuffleBias = entity.getAttribute(ShuffleBias::class) ?: return listOf()
@@ -50,7 +50,7 @@ object Shuffler : AiControllableBehavior() {
         return plans
     }
 
-    private suspend fun getNextPositionForBias(shuffleBiasType: ShuffleBiasType, position: Position3D): Position3D {
+    private fun getNextPositionForBias(shuffleBiasType: ShuffleBiasType, position: Position3D): Position3D {
         return when(shuffleBiasType) {
             EastShuffle -> position.withRelativeX(1)
             SouthShuffle -> position.withRelativeY(1)
@@ -59,7 +59,7 @@ object Shuffler : AiControllableBehavior() {
         }
     }
 
-    private suspend fun ShuffleBiasType.flipped(): ShuffleBiasType {
+    private fun ShuffleBiasType.flipped(): ShuffleBiasType {
         return when (this) {
             EastShuffle -> WestShuffle
             SouthShuffle -> NorthShuffle
@@ -68,7 +68,7 @@ object Shuffler : AiControllableBehavior() {
         }
     }
 
-    private suspend fun ShuffleBiasType.randomlyRotated(): ShuffleBiasType {
+    private fun ShuffleBiasType.randomlyRotated(): ShuffleBiasType {
         val coinToss = Math.random() < 0.5
         return when (this) {
             EastShuffle -> if (coinToss) SouthShuffle else NorthShuffle

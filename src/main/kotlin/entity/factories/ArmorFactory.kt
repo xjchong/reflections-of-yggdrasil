@@ -37,8 +37,8 @@ object ArmorFactory {
     const val HUGE_RESISTANCE = 0.2
     const val IMMUNITY = 0.0
 
-    fun newRandomArmor(): AnyEntity {
-        val weightedCollection: WeightedCollection<() -> AnyEntity> = WeightedCollection(
+    fun newRandomArmor(): GameEntity {
+        val weightedCollection: WeightedCollection<() -> GameEntity> = WeightedCollection(
                 WeightedEntry(10) { newSimpleCap() },
                 WeightedEntry(5) { newFancyCap() },
                 WeightedEntry(2) { newAncientCap() },
@@ -85,8 +85,8 @@ object ArmorFactory {
         return sample()
     }
 
-    fun newRandomBody(): AnyEntity {
-        val weightedCollection: WeightedCollection<() -> AnyEntity> = WeightedCollection(
+    fun newRandomBody(): GameEntity {
+        val weightedCollection: WeightedCollection<() -> GameEntity> = WeightedCollection(
                 WeightedEntry(10) { newSimpleJacket() },
                 WeightedEntry(5) { newFancyJacket() },
                 WeightedEntry(2) { newAncientJacket() },

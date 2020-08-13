@@ -3,7 +3,7 @@ package behaviors.aicontrollable
 import commands.Move
 import considerations.Consideration
 import considerations.ConsiderationContext
-import entity.AnyEntity
+import entity.GameEntity
 import entity.canPass
 import entity.position
 import extensions.neighbors
@@ -14,7 +14,7 @@ object Wanderer : AiControllableBehavior() {
 
     override suspend fun getPlans(
         context: GameContext,
-        entity: AnyEntity,
+        entity: GameEntity,
         considerations: List<Consideration>
     ): List<Plan> {
         val considerationContext = ConsiderationContext(context, entity)

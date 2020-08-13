@@ -20,8 +20,8 @@ import org.hexworks.zircon.internal.Zircon
 
 class FocusTarget : DisplayableAttribute {
 
-    private val targetProperty: Property<Maybe<AnyEntity>> = createPropertyFrom(Maybe.empty())
-    var target: Maybe<AnyEntity> by targetProperty.asDelegate()
+    private val targetProperty: Property<Maybe<GameEntity>> = createPropertyFrom(Maybe.empty())
+    var target: Maybe<GameEntity> by targetProperty.asDelegate()
         private set
 
     private var attachedTargetRow: AttachedComponent? = null
@@ -43,7 +43,7 @@ class FocusTarget : DisplayableAttribute {
                 }
             }
 
-    fun updateTarget(newTarget: AnyEntity) {
+    fun updateTarget(newTarget: GameEntity) {
         targetProperty.updateValue(Maybe.of(newTarget))
     }
 
@@ -55,14 +55,13 @@ class FocusTarget : DisplayableAttribute {
         attachedTargetRow?.detach()
 
         target.ifPresent {
-            val newTargetRow = FocusTargetRow(hBox.width, it)
             attachedTargetRow = hBox.addFragment(FocusTargetRow(hBox.width, it))
         }
     }
 }
 
 
-class FocusTargetRow(width: Int, entity: AnyEntity) : Fragment {
+class FocusTargetRow(width: Int, entity: GameEntity) : Fragment {
 
     companion object {
         const val NAME_LENGTH = 10

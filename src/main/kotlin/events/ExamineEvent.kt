@@ -1,19 +1,19 @@
 package events
 
-import entity.AnyEntity
+import entity.GameEntity
 import org.hexworks.cobalt.events.api.Event
 import org.hexworks.zircon.internal.Zircon
 
 
 data class ExamineEvent(
-        val entity: AnyEntity,
-        val callback: () -> Unit = {}
+    val entity: GameEntity,
+    val callback: () -> Unit = {}
 ) : Event {
 
     companion object {
         val KEY = "ExamineEvent"
 
-        fun publish(entity: AnyEntity, callback: () -> Unit = {}) {
+        fun publish(entity: GameEntity, callback: () -> Unit = {}) {
             Zircon.eventBus.publish(ExamineEvent(entity, callback))
         }
     }

@@ -1,7 +1,7 @@
 package behaviors
 
 import attributes.FocusTarget
-import entity.AnyEntity
+import entity.GameEntity
 import entity.getAttribute
 import entity.position
 import entity.sensedPositions
@@ -10,7 +10,7 @@ import game.GameContext
 
 object FocusTargetUser : ForegroundBehavior(FocusTarget::class) {
 
-    override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
+    override suspend fun foregroundUpdate(entity: GameEntity, context: GameContext): Boolean {
         if (context.inBackground) return true
 
         val focusTarget = entity.getAttribute(FocusTarget::class) ?: return true

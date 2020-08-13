@@ -1,14 +1,14 @@
 package behaviors
 
 import attributes.Proliferation
-import entity.AnyEntity
+import entity.GameEntity
 import entity.position
 import game.GameContext
 import org.hexworks.zircon.api.data.Size3D
 
 object Proliferator : ForegroundBehavior(Proliferation::class) {
 
-    override suspend fun foregroundUpdate(entity: AnyEntity, context: GameContext): Boolean {
+    override suspend fun foregroundUpdate(entity: GameEntity, context: GameContext): Boolean {
         val world = context.world
         val proliferation = entity.findAttribute(Proliferation::class).get()
 

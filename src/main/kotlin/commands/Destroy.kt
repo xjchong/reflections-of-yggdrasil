@@ -1,11 +1,10 @@
 package commands
 
-import entity.AnyEntity
+import entity.GameEntity
 import game.GameContext
-import org.hexworks.amethyst.api.entity.EntityType
 
 data class Destroy(
         override val context: GameContext,
-        override val source: AnyEntity,
+        val destroyable: GameEntity,
         val cause: String = "natural causes."
-) : GameCommand<EntityType>
+) : GameCommand(destroyable)

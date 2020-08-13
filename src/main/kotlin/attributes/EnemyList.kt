@@ -1,7 +1,7 @@
 package attributes
 
 import GameColor
-import entity.AnyEntity
+import entity.GameEntity
 import entity.addTileModifiers
 import entity.removeTileModifiers
 import entity.tile
@@ -21,7 +21,7 @@ import org.hexworks.zircon.internal.Zircon
 
 class EnemyList : DisplayableAttribute {
 
-    val enemies: MutableList<AnyEntity> = mutableListOf()
+    val enemies: MutableList<GameEntity> = mutableListOf()
     private val enemyEntries: MutableList<EnemyListEntry> = mutableListOf()
     private var vBox: VBox? = null
 
@@ -32,7 +32,7 @@ class EnemyList : DisplayableAttribute {
                 vBox = this
             }
 
-    fun updateEnemies(newEnemies: List<AnyEntity>) {
+    fun updateEnemies(newEnemies: List<GameEntity>) {
         enemies.clear()
         enemies.addAll(newEnemies)
 
@@ -62,10 +62,10 @@ class EnemyList : DisplayableAttribute {
 }
 
 
-data class EnemyListEntry(var entity: AnyEntity, var attachedRow: AttachedComponent)
+data class EnemyListEntry(var entity: GameEntity, var attachedRow: AttachedComponent)
 
 
-class EnemyListRow(width: Int, entity: AnyEntity) : Fragment {
+class EnemyListRow(width: Int, entity: GameEntity) : Fragment {
 
     companion object {
         const val NAME_LENGTH = 10

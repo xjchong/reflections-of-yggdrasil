@@ -1,11 +1,10 @@
 package commands
 
-import entity.AnyEntity
+import entity.GameEntity
 import game.GameContext
-import org.hexworks.amethyst.api.entity.EntityType
 
 
 data class Guard(
         override val context: GameContext,
-        override val source: AnyEntity
-) : GameCommand<EntityType>
+        val guarder: GameEntity
+) : GameCommand(guarder)

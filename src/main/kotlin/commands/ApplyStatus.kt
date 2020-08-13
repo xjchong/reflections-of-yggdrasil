@@ -1,14 +1,13 @@
 package commands
 
-import entity.AnyEntity
+import entity.GameEntity
 import game.GameContext
 import models.StatusEffect
-import org.hexworks.amethyst.api.entity.EntityType
 
 
 data class ApplyStatus(
         override val context: GameContext,
-        override val source: AnyEntity,
-        override val target: AnyEntity,
+        val applicable: GameEntity,
+        val applier: GameEntity,
         val effect: StatusEffect
-) : EntityAction<EntityType, EntityType>
+) : GameCommand(applier)

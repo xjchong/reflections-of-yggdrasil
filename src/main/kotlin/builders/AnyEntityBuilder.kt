@@ -1,6 +1,6 @@
 package builders
 
-import entity.AnyEntity
+import entity.GameEntity
 import entity.NoType
 import game.GameContext
 import org.hexworks.amethyst.api.Attribute
@@ -19,19 +19,19 @@ data class AnyEntityBuilder(
         private var type: EntityType = NoType,
         private var attributes: LinkedHashSet<Attribute> = linkedSetOf(),
         private var behaviors: LinkedHashSet<Behavior<GameContext>> = linkedSetOf(),
-        private var facets: LinkedHashSet<BaseFacet<GameContext>> = linkedSetOf()) : Builder<AnyEntity> {
+        private var facets: LinkedHashSet<BaseFacet<GameContext>> = linkedSetOf()) : Builder<GameEntity> {
 
     companion object {
         fun newBuilder(type: EntityType) = AnyEntityBuilder(type)
     }
 
-    override fun build(): AnyEntity = newGameEntityOfType(type) {
+    override fun build(): GameEntity = newGameEntityOfType(type) {
         attributes(*this@AnyEntityBuilder.attributes.toTypedArray())
         behaviors(*this@AnyEntityBuilder.behaviors.toTypedArray())
         facets(*this@AnyEntityBuilder.facets.toTypedArray())
     }
 
-    override fun createCopy(): Builder<AnyEntity> = copy()
+    override fun createCopy(): Builder<GameEntity> = copy()
 
     fun withAddedAttributes(vararg attributes: Attribute) = also {
         this.attributes.addAll(attributes.toList())

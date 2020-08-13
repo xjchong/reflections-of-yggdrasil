@@ -2,7 +2,7 @@ package builders
 
 import block.GameBlock
 import block.GameBlockFactory
-import entity.AnyEntity
+import entity.GameEntity
 import entity.Door
 import entity.factories.WidgetFactory
 import extensions.adjacentNeighbors
@@ -120,7 +120,7 @@ class WorldBuilder(private val worldSize: Size3D) {
             regionIds[pos] = nextRegionId
         }
 
-        fun spreadWidget(candidates: Set<Position3D>, spreadChance: Double, decayRate: Double, builder: () -> AnyEntity) {
+        fun spreadWidget(candidates: Set<Position3D>, spreadChance: Double, decayRate: Double, builder: () -> GameEntity) {
             if (candidates.isEmpty()) return
 
             val nextCandidates = mutableSetOf<Position3D>()
