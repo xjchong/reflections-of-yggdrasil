@@ -1,30 +1,26 @@
 package behaviors
 
-import attributes.Proliferation
+import attributes.facet.ProliferatableDetails
+import behaviors.aicontrollable.AiControllableBehavior
+import commands.Proliferate
+import considerations.Consideration
+import considerations.ConsiderationContext
 import entity.GameEntity
-import entity.position
 import game.GameContext
-import org.hexworks.zircon.api.data.Size3D
+import models.Plan
 
-object Proliferator : ForegroundBehavior(Proliferation::class) {
+object Proliferator : AiControllableBehavior(ProliferatableDetails::class) {
 
-    override suspend fun foregroundUpdate(entity: GameEntity, context: GameContext): Boolean {
-        val world = context.world
-        val proliferation = entity.findAttribute(Proliferation::class).get()
+    override suspend fun getPlans(
+        context: GameContext,
+        entity: GameEntity,
+        considerations: List<Consideration>
+    ): List<Plan> {
+        val command = Proliferate(context, entity)
+        val plans = mutableListOf<Plan>()
 
-        with (proliferation) {
-            if (Math.random() < factor) {
-                world.findEmptyLocationWithin(
-                        offset = entity.position.withRelativeX(-1).withRelativeY(-1),
-                        size = Size3D.create(3, 3, 0)).map { location ->
-                    world.addEntity(proliferate(this), location)
-                    factor *= decayRate
-                }
+        plans.addPlan(command, considerations, ConsiderationContext(context, entity))
 
-                return true
-            }
-        }
-
-        return false
+        return plans
     }
 }

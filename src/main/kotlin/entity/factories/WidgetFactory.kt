@@ -1,6 +1,8 @@
 package entity.factories
 
 import attributes.*
+import attributes.facet.AttackableDetails
+import attributes.facet.OpenableDetails
 import attributes.flag.IsSmellBlocking
 import attributes.flag.IsBarrier
 import attributes.flag.IsObstacle
@@ -22,10 +24,12 @@ object WidgetFactory {
                 IsBarrier,
                 EntityPosition(),
                 EntityTile(if (isOpen) GameTile.OPEN_DOOR else GameTile.CLOSED_DOOR),
-                OpenableDetails(
-                        openAppearance = GameTile.OPEN_DOOR,
-                        closedAppearance = GameTile.CLOSED_DOOR,
-                        isOpen = isOpen))
+            OpenableDetails(
+                openAppearance = GameTile.OPEN_DOOR,
+                closedAppearance = GameTile.CLOSED_DOOR,
+                isOpen = isOpen
+            )
+        )
 
         if (!isOpen) {
             baseAttributes.add(IsObstacle)
@@ -45,12 +49,12 @@ object WidgetFactory {
 
     fun newPot() = newGameEntityOfType(Pot) {
         attributes(
-                CombatStats.create(
+                AttackableDetails.create(
                         1, 1, 1, 0
                 ),
                 EntityPosition(),
                 EntityTile(GameTile.POT),
-                FactionDetails(Widget),
+                Factions(Widget),
                 LootTable(
                         WeightedEntry(50) { listOf(ItemFactory.newRandomTreasure()) },
                         WeightedEntry(10) { listOf(WeaponFactory.newRandomWeapon()) },

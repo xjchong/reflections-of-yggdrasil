@@ -1,4 +1,4 @@
-package attributes
+package attributes.facet
 
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.zircon.api.data.CharacterTile

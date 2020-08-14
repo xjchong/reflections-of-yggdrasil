@@ -1,6 +1,6 @@
 package behaviors.aicontrollable
 
-import attributes.*
+import attributes.behavior.*
 import commands.Move
 import considerations.Consideration
 import considerations.ConsiderationContext
@@ -19,7 +19,7 @@ object Shuffler : AiControllableBehavior() {
         entity: GameEntity,
         considerations: List<Consideration>
     ): List<Plan> {
-        val shuffleBias = entity.getAttribute(ShuffleBias::class) ?: return listOf()
+        val shuffleBias = entity.getAttribute(ShufflerDetails::class) ?: return listOf()
         val currentBiasType = shuffleBias.type
         val fallbackBiasType = currentBiasType.randomlyRotated()
         val considerationContext = ConsiderationContext(context, entity)

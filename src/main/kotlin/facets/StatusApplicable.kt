@@ -1,9 +1,9 @@
 package facets
 
 import GameColor
-import attributes.CombatStats
+import attributes.facet.AttackableDetails
 import attributes.EntityTime
-import attributes.StatusDetails
+import attributes.facet.StatusApplicableDetails
 import commands.ApplyStatus
 import commands.Guard
 import entity.getAttribute
@@ -21,7 +21,7 @@ import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
-object StatusApplicable : BaseFacet<GameContext>(StatusDetails::class) {
+object StatusApplicable : BaseFacet<GameContext>(StatusApplicableDetails::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         var response: Response = Pass
@@ -41,7 +41,7 @@ object StatusApplicable : BaseFacet<GameContext>(StatusDetails::class) {
             is Guard -> {
                 val (context, guarder) = command
 
-                guarder.findAttribute(StatusDetails::class).ifPresent { statusDetails ->
+                guarder.findAttribute(StatusApplicableDetails::class).ifPresent { statusDetails ->
                     statusDetails.guard = 1
                     guarder.spendTime(EntityTime.GUARD)
                     context.world.flash(guarder.position, GameColor.GUARD_FLASH)
@@ -56,7 +56,7 @@ object StatusApplicable : BaseFacet<GameContext>(StatusDetails::class) {
 
     private fun applyHeal(command: ApplyStatus): Response {
         val (context, applicable, applier, effect) = command
-        val combatStats = applicable.getAttribute(CombatStats::class) ?: return Pass
+        val combatStats = applicable.getAttribute(AttackableDetails::class) ?: return Pass
 
         combatStats.gainHealth(effect.potency)
         context.world.observeSceneBy(applicable, "The $applier heals the $applicable for ${effect.potency}!", Special)
@@ -66,8 +66,8 @@ object StatusApplicable : BaseFacet<GameContext>(StatusDetails::class) {
 
     private fun applyPoison(command: ApplyStatus): Response {
         val (context, applicable, applier, effect) = command
-        val details = applicable.getAttribute(StatusDetails::class) ?: return Pass
-        val luck = applicable.getAttribute(CombatStats::class)?.luck ?: 0.0
+        val details = applicable.getAttribute(StatusApplicableDetails::class) ?: return Pass
+        val luck = applicable.getAttribute(AttackableDetails::class)?.luck ?: 0.0
 
         if (Math.random() < luck / 2) return Consumed
 

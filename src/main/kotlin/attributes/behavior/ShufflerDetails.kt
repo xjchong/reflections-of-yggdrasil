@@ -1,9 +1,9 @@
-package attributes
+package attributes.behavior
 
 import org.hexworks.amethyst.api.Attribute
 
 
-class ShuffleBias(var type: ShuffleBiasType = EastShuffle) : Attribute
+class ShufflerDetails(var type: ShuffleBiasType = EastShuffle) : Attribute
 
 
 sealed class ShuffleBiasType

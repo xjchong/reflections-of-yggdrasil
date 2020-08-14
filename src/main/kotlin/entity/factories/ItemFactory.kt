@@ -1,7 +1,7 @@
 package entity.factories
 
 import attributes.CoinValue
-import attributes.ConsumableDetails
+import attributes.facet.ConsumableDetails
 import attributes.EntityPosition
 import attributes.EntityTile
 import builders.newGameEntityOfType
@@ -44,10 +44,11 @@ object ItemFactory {
         attributes(
                 EntityPosition(),
                 EntityTile(GameTile.BAT_MEAT),
-                ConsumableDetails(
-                        StatusEffect(Heal, 20, 0.9),
-                        StatusEffect(Poison, 5, 0.1)
-                ))
+            ConsumableDetails(
+                StatusEffect(Heal, 20, 0.9),
+                StatusEffect(Poison, 5, 0.1)
+            )
+        )
         facets(
             Consumable,
             Droppable,

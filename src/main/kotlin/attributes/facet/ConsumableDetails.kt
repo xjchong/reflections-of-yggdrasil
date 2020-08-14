@@ -1,4 +1,4 @@
-package attributes
+package attributes.facet
 
 import models.StatusEffect
 import org.hexworks.amethyst.api.Attribute

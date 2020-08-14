@@ -1,12 +1,12 @@
-package attributes
+package attributes.facet
 
 import models.Plan
 import org.hexworks.amethyst.api.Attribute
 
-class Plans : Attribute {
+class AiControllablePlans : Attribute {
 
     private var mutablePlans = mutableListOf<Plan>()
-    val list
+    val plans
         get() = mutablePlans.toList()
 
     fun add(plan: Plan): Boolean {

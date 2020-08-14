@@ -1,6 +1,6 @@
 package facets
 
-import attributes.ConsumableDetails
+import attributes.facet.ConsumableDetails
 import attributes.EntityTime
 import commands.ApplyStatus
 import commands.Consume

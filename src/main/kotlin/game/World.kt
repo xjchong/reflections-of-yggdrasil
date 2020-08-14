@@ -1,6 +1,6 @@
 package game
 import attributes.EntityPosition
-import attributes.OpenableDetails
+import attributes.facet.OpenableDetails
 import attributes.SensoryMemory
 import attributes.flag.IsOpaque
 import attributes.flag.IsSmellBlocking

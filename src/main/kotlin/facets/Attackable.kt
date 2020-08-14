@@ -2,6 +2,8 @@ package facets
 
 import GameColor
 import attributes.*
+import attributes.facet.AttackableDetails
+import attributes.facet.StatusApplicableDetails
 import commands.ApplyStatus
 import commands.Attack
 import commands.Destroy
@@ -20,13 +22,13 @@ import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
 
-object Attackable : BaseFacet<GameContext>(CombatStats::class) {
+object Attackable : BaseFacet<GameContext>(AttackableDetails::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenIs(Attack::class) { (context, attackable, attacker, strategy) ->
             if (!strategy.isInRange(attacker.position, attackable.position)) return@responseWhenIs Pass
-            val attackerStats = attacker.getAttribute(CombatStats::class) ?: return@responseWhenIs Pass
-            val attackableStats = attackable.getAttribute(CombatStats::class) ?: return@responseWhenIs Pass
+            val attackerStats = attacker.getAttribute(AttackableDetails::class) ?: return@responseWhenIs Pass
+            val attackableStats = attackable.getAttribute(AttackableDetails::class) ?: return@responseWhenIs Pass
 
             attackerStats.dockStamina(strategy.staminaCost)
             val incomingDamage = strategy.rollDamage(attackerStats)
@@ -58,7 +60,7 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
                     attackable.executeCommand(Destroy(context, attackable, cause = "the $attacker"))
                     attacker.getAttribute(KillTarget::class)?.target = null
                 } else {
-                    if (attackable.getAttribute(StatusDetails::class)?.guard ?: 0 > 0) {
+                    if (attackable.getAttribute(StatusApplicableDetails::class)?.guard ?: 0 > 0) {
                         context.world.flash(attackable.position, GameColor.GUARD_FLASH)
                     } else {
                         context.world.flash(attackable.position, GameColor.DAMAGE_FLASH)
@@ -82,7 +84,7 @@ object Attackable : BaseFacet<GameContext>(CombatStats::class) {
             it.type == strategy.type
         }
 
-        val guard = getAttribute(StatusDetails::class)?.guard ?: 0
+        val guard = getAttribute(StatusApplicableDetails::class)?.guard ?: 0
         val guardModifier = if (guard > 0) 0.25 else 1.0
 
         val modifiedDamage = applicableResistances.fold(incomingDamage.toDouble()) { acc, resistance ->

@@ -1,6 +1,7 @@
 package entity.factories
 
 import attributes.*
+import attributes.facet.*
 import builders.AnyEntityBuilder
 import constants.GameTile
 import entity.*
@@ -407,7 +408,8 @@ object ArmorFactory {
             .withAttributes(
                     EntityTile(tile),
                     EntityPosition(),
-                    EquippableDetails(equipType))
+                EquippableDetails(equipType)
+            )
             .withFacets(
                 Droppable,
                 Takeable,

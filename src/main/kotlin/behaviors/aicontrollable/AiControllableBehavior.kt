@@ -1,7 +1,7 @@
 package behaviors.aicontrollable
 
-import attributes.Considerations
-import attributes.Plans
+import attributes.facet.AiControllableConsiderations
+import attributes.facet.AiControllablePlans
 import behaviors.ForegroundBehavior
 import commands.GameCommand
 import considerations.Consideration
@@ -15,11 +15,11 @@ import kotlin.reflect.KClass
 
 
 abstract class AiControllableBehavior(vararg mandatoryAttribute: KClass<out Attribute>) :
-    ForegroundBehavior(*mandatoryAttribute, Plans::class) {
+    ForegroundBehavior(*mandatoryAttribute, AiControllablePlans::class) {
 
     override suspend fun foregroundUpdate(entity: GameEntity, context: GameContext): Boolean {
-        val plans = entity.getAttribute(Plans::class) ?: return false
-        val considerations = entity.getAttribute(Considerations::class) ?: return false
+        val plans = entity.getAttribute(AiControllablePlans::class) ?: return false
+        val considerations = entity.getAttribute(AiControllableConsiderations::class) ?: return false
 
         return plans.addAll(getPlans(context, entity, considerations.getConsiderationsFor(this)))
     }

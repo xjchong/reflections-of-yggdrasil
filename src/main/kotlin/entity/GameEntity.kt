@@ -1,6 +1,7 @@
 package entity
 
 import attributes.*
+import attributes.facet.AttackableDetails
 import attributes.flag.IsObstacle
 import extensions.optional
 import game.GameContext
@@ -41,7 +42,7 @@ val GameEntity.sensedPositions: Set<Position3D>
     }
 
 fun GameEntity.spendTime(amount: Long) {
-    val speed = getAttribute(CombatStats::class)?.speed ?: 1.0
+    val speed = getAttribute(AttackableDetails::class)?.speed ?: 1.0
     getAttribute(EntityTime::class)?.spendTime((amount / speed).toLong())
 }
 
@@ -59,20 +60,20 @@ fun GameEntity.canPass(context: GameContext, position: Position3D): Boolean {
 
 fun GameEntity.isAlliedWith(entity: GameEntity): Boolean {
     if (this.id == entity.id) return true
-    if (entity.getAttribute(CombatStats::class) == null) return true
+    if (entity.getAttribute(AttackableDetails::class) == null) return true
 
-    val factionDetails = getAttribute(FactionDetails::class) ?: return false
-    val otherFaction = entity.getAttribute(FactionDetails::class)?.ownFaction
+    val factionDetails = getAttribute(Factions::class) ?: return false
+    val otherFaction = entity.getAttribute(Factions::class)?.ownFaction
 
     return factionDetails.alliedFactions.contains(otherFaction)
 }
 
 fun GameEntity.isEnemiesWith(entity: GameEntity): Boolean {
     if (this.id == entity.id) return false
-    if (entity.getAttribute(CombatStats::class) == null) return false
+    if (entity.getAttribute(AttackableDetails::class) == null) return false
 
-    val factionDetails = getAttribute(FactionDetails::class) ?: return true
-    val otherFaction = entity.getAttribute(FactionDetails::class)?.ownFaction
+    val factionDetails = getAttribute(Factions::class) ?: return true
+    val otherFaction = entity.getAttribute(Factions::class)?.ownFaction
 
     return !factionDetails.alliedFactions.contains(otherFaction)
             && !factionDetails.neutralFactions.contains(otherFaction)

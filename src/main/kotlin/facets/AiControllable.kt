@@ -1,8 +1,8 @@
 package facets
 
-import attributes.Considerations
+import attributes.facet.AiControllableConsiderations
 import attributes.EntityTime
-import attributes.Plans
+import attributes.facet.AiControllablePlans
 import commands.ExecuteAiPlans
 import entity.GameEntity
 import entity.getAttribute
@@ -18,13 +18,13 @@ import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
 
-object AiControllable : BaseFacet<GameContext>(Plans::class, Considerations::class) {
+object AiControllable : BaseFacet<GameContext>(AiControllablePlans::class, AiControllableConsiderations::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenIs(ExecuteAiPlans::class) { (context, entity) ->
             if (context.inBackground) return@responseWhenIs Pass
-            val plans = entity.getAttribute(Plans::class) ?: return@responseWhenIs Pass
-            val response = entity.attemptPlan(plans.list)
+            val plans = entity.getAttribute(AiControllablePlans::class) ?: return@responseWhenIs Pass
+            val response = entity.attemptPlan(plans.plans)
 
             plans.clear()
 

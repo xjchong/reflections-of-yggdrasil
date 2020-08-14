@@ -1,9 +1,9 @@
 package behaviors
 
 import GameColor
-import attributes.CombatStats
+import attributes.facet.AttackableDetails
 import attributes.KillTarget
-import attributes.StatusDetails
+import attributes.facet.StatusApplicableDetails
 import attributes.Vigilance
 import entity.GameEntity
 import entity.getAttribute
@@ -25,18 +25,18 @@ object StatusUpdater : ForegroundBehavior() {
     }
 
     private fun GameEntity.updateGuard() {
-        val details = getAttribute(StatusDetails::class) ?: return
+        val details = getAttribute(StatusApplicableDetails::class) ?: return
 
         details.guard = (details.guard - 1).coerceAtLeast(0)
     }
 
     private fun GameEntity.updatePoison(context: GameContext) {
-        val details = getAttribute(StatusDetails::class) ?: return
+        val details = getAttribute(StatusApplicableDetails::class) ?: return
         if (details.poison <= 0) return
 
         details.poison = (details.poison - 1).coerceAtLeast(0)
 
-        getAttribute(CombatStats::class)?.let {
+        getAttribute(AttackableDetails::class)?.let {
             val damage = Poison.damage
 
             context.world.observeSceneBy(this, "The $this takes $damage poison damage...", Flavor)
@@ -46,7 +46,7 @@ object StatusUpdater : ForegroundBehavior() {
     }
 
     private fun GameEntity.updateStamina() {
-        val combatStats = getAttribute(CombatStats::class) ?: return
+        val combatStats = getAttribute(AttackableDetails::class) ?: return
 
         val regenAmount = when {
             getAttribute(KillTarget::class)?.target != null -> 2 // Entities with an active target.

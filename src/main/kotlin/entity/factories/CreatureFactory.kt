@@ -1,6 +1,10 @@
 package entity.factories
 
 import attributes.*
+import attributes.behavior.AutoRunnerDetails
+import attributes.behavior.AutoTakerDetails
+import attributes.behavior.ShufflerDetails
+import attributes.facet.*
 import attributes.flag.IsObstacle
 import behaviors.*
 import behaviors.aicontrollable.*
@@ -40,16 +44,15 @@ object CreatureFactory {
 
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(
-            FactionDetails(Adventurer),
+            Factions(Adventurer),
             AttackStrategies(WeakPunchAttack()),
-            AutoRunDetails(),
-            AutoTakeDetails(CoinValue::class),
+            AutoRunnerDetails(),
+            AutoTakerDetails(CoinValue::class),
             CoinPouch.create(50),
             EnemyList(),
             EntityPosition(),
             EntityTile(GameTile.PLAYER),
             EntityTime(),
-            Goals(),
             FocusTarget(),
             Equipments(
                 initialMainHand = WeaponFactory.newClub(),
@@ -57,12 +60,12 @@ object CreatureFactory {
             ),
             Inventory(10),
             IsObstacle,
-            StatusDetails(),
+            StatusApplicableDetails(),
             Vigilance.create(10),
             Senses(vision = 6),
             SensoryMemory(excludedFacets = mutableSetOf(Movable)),
 
-            CombatStats.create(
+            AttackableDetails.create(
                 maxHealth = 100,
                 maxStamina = 100,
                 power = .33,
@@ -95,15 +98,15 @@ object CreatureFactory {
 
     fun newBat() = AnyEntityBuilder.newBuilder(Bat)
         .withAttributes(
-            FactionDetails(Monster, alliedFactions = setOf(Monster)),
+            Factions(Monster, alliedFactions = setOf(Monster)),
             AttackStrategies(BiteAttack()),
-            CombatStats.create(
+            AttackableDetails.create(
                 maxHealth = 60,
                 maxStamina = 50,
                 power = 0.1,
                 tech = 0.2
             ),
-            Considerations(
+            AiControllableConsiderations(
                 hashMapOf(
                     Attacker to listOf(ConstantConsideration(0.3)),
                     Fleer to listOf(HealthConsideration(LinearCurve(-1.0, 1.0, 0.0))),
@@ -119,7 +122,7 @@ object CreatureFactory {
                 WeightedEntry(30) { listOf<GameEntity>() }
             ),
             KillTarget(),
-            Plans(),
+            AiControllablePlans(),
             Senses(vision = 3)
         )
         .withBehaviors(SensoryUser, Attacker, Fleer, Wanderer)
@@ -133,14 +136,14 @@ object CreatureFactory {
 
     fun newCrab() = AnyEntityBuilder.newBuilder(Crab)
         .withAttributes(
-            FactionDetails(Monster, alliedFactions = setOf(Monster)),
+            Factions(Monster, alliedFactions = setOf(Monster)),
             AttackStrategies(ClawAttack()),
-            CombatStats.create(
+            AttackableDetails.create(
                 maxHealth = 60,
                 maxStamina = 80,
                 power = 0.2
             ),
-            Considerations(
+            AiControllableConsiderations(
                 hashMapOf(
                     Attacker to listOf(ConstantConsideration(0.7)),
                     Shuffler to listOf(ConstantConsideration(0.3))
@@ -151,13 +154,13 @@ object CreatureFactory {
             EntityTime(),
             IsObstacle,
             KillTarget(),
-            Plans(),
+            AiControllablePlans(),
             Resistances(
                 Resistance(Cut, 1.0, 0.2),
                 Resistance(Stab, 0.5, 0.5),
                 Resistance(Bash, 1.0, 1.5)
             ),
-            ShuffleBias(),
+            ShufflerDetails(),
             Senses(vision = 2)
         )
         .withBehaviors(SensoryUser, Attacker, Shuffler)
@@ -172,7 +175,7 @@ object CreatureFactory {
     fun newGoblin() = AnyEntityBuilder.newBuilder(Goblin)
         .withAttributes(
             AttackStrategies(PunchAttack()),
-            CombatStats.create(
+            AttackableDetails.create(
                 maxHealth = 90,
                 maxStamina = 100,
                 power = 0.3,
@@ -187,8 +190,8 @@ object CreatureFactory {
             ),
             IsObstacle,
             MoveLog(),
-            FactionDetails(Monster, alliedFactions = setOf(Monster)),
-            Considerations(
+            Factions(Monster, alliedFactions = setOf(Monster)),
+            AiControllableConsiderations(
                 hashMapOf(
                     Attacker to listOf(ConstantConsideration(0.7)),
                     Chaser to listOf(ConstantConsideration(0.51)),
@@ -205,7 +208,7 @@ object CreatureFactory {
                     listOf(WeaponFactory.newRandomWeapon(), ArmorFactory.newRandomArmor())
                 }
             ),
-            Plans(),
+            AiControllablePlans(),
             Senses(vision = 6)
         )
         .withBehaviors(
@@ -220,10 +223,14 @@ object CreatureFactory {
         )
         .build()
 
-    fun newFungus(proliferation: Proliferation = Proliferation(0.02, 0.6) { newFungus(it) }) =
+    fun newFungus(proliferation: ProliferatableDetails = ProliferatableDetails(
+        0.02,
+        0.6
+    ) { newFungus(it) }
+    ) =
         AnyEntityBuilder.newBuilder(Fungus)
             .withAttributes(
-                FactionDetails(Monster, alliedFactions = setOf(Monster)),
+                Factions(Monster, alliedFactions = setOf(Monster)),
                 AttackStrategies(
                     SporeAttack(
                         listOf(
@@ -231,22 +238,23 @@ object CreatureFactory {
                         )
                     )
                 ),
-                CombatStats.create(
+                AttackableDetails.create(
                     maxHealth = 20,
                     maxStamina = 1,
                     stamina = 0,
                     power = 0.1
                 ),
-                Considerations(
+                AiControllableConsiderations(
                     hashMapOf(
-                        Attacker to listOf(ConstantConsideration(0.7))
+                        Attacker to listOf(ConstantConsideration(0.5)),
+                        Proliferator to listOf(ConstantConsideration(0.5))
                     )
                 ),
                 EntityPosition(),
                 EntityTile(GameTile.FUNGUS),
                 EntityTime(),
                 IsObstacle,
-                Plans(),
+                AiControllablePlans(),
                 proliferation,
                 Senses(vision = 2)
             )
@@ -254,15 +262,20 @@ object CreatureFactory {
             .withFacets(
                 AiControllable,
                 Attackable,
-                Destroyable
+                Destroyable,
+                Proliferatable
             )
             .build()
 
 
-    fun newRat(proliferation: Proliferation = Proliferation(0.02, 0.7) { newRat(it) }) =
+    fun newRat(proliferation: ProliferatableDetails = ProliferatableDetails(
+        0.02,
+        0.7
+    ) { newRat(it) }
+    ) =
         AnyEntityBuilder.newBuilder(Rat)
             .withAttributes(
-                FactionDetails(Monster, alliedFactions = setOf(Monster)),
+                Factions(Monster, alliedFactions = setOf(Monster)),
                 AttackStrategies(
                     WeakBiteAttack(
                         listOf(
@@ -270,17 +283,18 @@ object CreatureFactory {
                         )
                     )
                 ),
-                CombatStats.create(
+                AttackableDetails.create(
                     maxHealth = 40,
                     maxStamina = 10,
                     power = 0.1,
                     tech = 0.1
                 ),
-                Considerations(
+                AiControllableConsiderations(
                     hashMapOf(
                         Attacker to listOf(ConstantConsideration(0.6)),
                         Chaser to listOf(ConstantConsideration(0.4)),
                         Fleer to listOf(HealthConsideration(LinearCurve(-1.0, 1.0, 0.0))),
+                        Proliferator to listOf(ConstantConsideration(0.2)),
                         Wanderer to listOf(ConstantConsideration(0.2))
                     )
                 ),
@@ -289,7 +303,7 @@ object CreatureFactory {
                 EntityTime(),
                 IsObstacle,
                 KillTarget(),
-                Plans(),
+                AiControllablePlans(),
                 proliferation,
                 Senses(vision = 3, smell = 6)
             )
@@ -298,7 +312,8 @@ object CreatureFactory {
                 AiControllable,
                 Attackable,
                 Destroyable,
-                Movable
+                Movable,
+                Proliferatable
             )
             .build()
 
@@ -308,13 +323,13 @@ object CreatureFactory {
             EntityPosition(),
             EntityTile(GameTile.ZOMBIE),
             EntityTime(),
-            CombatStats.create(
+            AttackableDetails.create(
                 maxHealth = 80,
                 maxStamina = 50,
                 power = 0.4,
                 speed = 0.75
             ),
-            Considerations(
+            AiControllableConsiderations(
                 hashMapOf(
                     Attacker to listOf(ConstantConsideration(0.7)),
                     Chaser to listOf(ConstantConsideration(0.5)),
@@ -331,7 +346,7 @@ object CreatureFactory {
                 },
                 WeightedEntry(20) { listOf<GameEntity>() }
             ),
-            Plans(),
+            AiControllablePlans(),
             Senses(vision = 5))
         .withBehaviors(StatusUpdater, SensoryUser, Attacker, Chaser, Wanderer)
         .withFacets(

@@ -1,6 +1,7 @@
 package attributes
 
 import GameColor
+import attributes.facet.*
 import entity.GameEntity
 import entity.getAttribute
 import entity.tile

@@ -1,6 +1,6 @@
 package behaviors.aicontrollable
 
-import attributes.OpenableDetails
+import attributes.facet.OpenableDetails
 import commands.Close
 import considerations.Consideration
 import considerations.ConsiderationContext

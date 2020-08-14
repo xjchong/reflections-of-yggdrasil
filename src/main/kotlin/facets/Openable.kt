@@ -1,7 +1,7 @@
 package facets
 
 import attributes.EntityTime
-import attributes.OpenableDetails
+import attributes.facet.OpenableDetails
 import attributes.flag.IsObstacle
 import attributes.flag.IsOpaque
 import attributes.flag.IsSmellBlocking

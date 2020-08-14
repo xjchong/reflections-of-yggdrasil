@@ -1,10 +1,10 @@
-package attributes
+package attributes.behavior
 
 import block.GameBlock
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.zircon.api.data.Position3D
 
-class AutoRunDetails : Attribute {
+class AutoRunnerDetails : Attribute {
 
     var shouldRun = false
     var expectedBoringFloorNeighborCount = 0

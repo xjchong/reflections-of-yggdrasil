@@ -1,11 +1,11 @@
-package attributes
+package attributes.facet
 
+import behaviors.aicontrollable.AiControllableBehavior
 import considerations.Consideration
 import org.hexworks.amethyst.api.Attribute
-import behaviors.aicontrollable.AiControllableBehavior
 
 
-class Considerations(
+class AiControllableConsiderations(
     private val considerationsMap: HashMap<AiControllableBehavior, List<Consideration>> = hashMapOf()
 ) : Attribute {
 

@@ -1,6 +1,6 @@
 package models
 
-import attributes.CombatStats
+import attributes.facet.AttackableDetails
 import attributes.EntityTime
 import org.hexworks.zircon.api.data.Position3D
 import kotlin.math.absoluteValue
@@ -34,7 +34,7 @@ abstract class AttackStrategy(val description: String,
         return max((attackerPos.x - targetPos.x).absoluteValue, (attackerPos.y - targetPos.y).absoluteValue) in range
     }
 
-    fun averageDamage(combatStats: CombatStats): Int {
+    fun averageDamage(combatStats: AttackableDetails): Int {
         val critDamageChance = critChance(combatStats)
         val rawDamageChance = 1.0 - critDamageChance
 
@@ -43,7 +43,7 @@ abstract class AttackStrategy(val description: String,
                 .coerceAtLeast(1)
     }
 
-    fun rollDamage(combatStats: CombatStats): Int {
+    fun rollDamage(combatStats: AttackableDetails): Int {
         var finalDamage = rawDamage(combatStats)
 
         if (Math.random() < critChance(combatStats) && combatStats.stamina > 0) {
@@ -55,18 +55,18 @@ abstract class AttackStrategy(val description: String,
         return finalDamage.toInt().coerceAtLeast(1)
     }
 
-    private fun rawDamage(combatStats: CombatStats): Double {
+    private fun rawDamage(combatStats: AttackableDetails): Double {
         val powerDamage = combatStats.power * attackEfficiency.powerEfficiency * 100
         val techDamage = combatStats.tech * attackEfficiency.techEfficiency * 100
 
         return powerDamage + techDamage
     }
 
-    private fun critDamage(combatStats: CombatStats): Double {
+    private fun critDamage(combatStats: AttackableDetails): Double {
         return rawDamage(combatStats) * (1.0 + ((maxCritBonus - 1.0) * combatStats.power))
     }
 
-    private fun critChance(combatStats: CombatStats): Double {
+    private fun critChance(combatStats: AttackableDetails): Double {
         return maxCritChance * combatStats.tech
     }
 }

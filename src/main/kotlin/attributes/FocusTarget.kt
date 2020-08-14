@@ -1,6 +1,7 @@
 package attributes
 
 import GameColor
+import attributes.facet.AttackableDetails
 import entity.*
 import events.ExamineEvent
 import extensions.create
@@ -78,7 +79,7 @@ class FocusTargetRow(width: Int, entity: GameEntity) : Fragment {
                         .withSize(NAME_LENGTH, 1)
                         .withText(entity.name.capitalize()))
 
-                val combatStats = entity.getAttribute(CombatStats::class)
+                val combatStats = entity.getAttribute(AttackableDetails::class)
 
                 if (combatStats != null) {
                     val barLength = ((width - NAME_LENGTH) / 2) - 2

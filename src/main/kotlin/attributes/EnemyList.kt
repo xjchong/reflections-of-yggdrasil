@@ -1,6 +1,7 @@
 package attributes
 
 import GameColor
+import attributes.facet.AttackableDetails
 import entity.GameEntity
 import entity.addTileModifiers
 import entity.removeTileModifiers
@@ -75,7 +76,7 @@ class EnemyListRow(width: Int, entity: GameEntity) : Fragment {
             .withSize(width, 1)
             .build().apply {
                 val barLength = ((width - NAME_LENGTH) / 2) - 2
-                val combatStats = entity.findAttribute(CombatStats::class).get()
+                val combatStats = entity.findAttribute(AttackableDetails::class).get()
 
                 val leftCapLabel = Components.label()
                         .withSize(1, 1)

@@ -1,6 +1,7 @@
-package attributes
+package attributes.facet
 
 import GameColor
+import attributes.DisplayableAttribute
 import extensions.withStyle
 import org.hexworks.cobalt.databinding.api.binding.bindPlusWith
 import org.hexworks.cobalt.databinding.api.extension.createPropertyFrom
@@ -17,7 +18,7 @@ import org.hexworks.zircon.api.uievent.MouseEventType
 import org.hexworks.zircon.api.uievent.Processed
 
 
-class CombatStats(
+class AttackableDetails(
         private val maxHealthProperty: Property<Int>,
         private val healthProperty: Property<Int> = createPropertyFrom(maxHealthProperty.value),
         private val maxStaminaProperty: Property<Int>,
@@ -42,16 +43,16 @@ class CombatStats(
         fun create(maxHealth: Int, health: Int = maxHealth,
                    maxStamina: Int, stamina: Int = maxStamina,
                    power: Double = 0.0, tech: Double = 0.0, luck: Double = 0.0, speed: Double = 1.0) =
-                CombatStats(
-                        maxHealthProperty = createPropertyFrom(maxHealth),
-                        healthProperty = createPropertyFrom(health),
-                        maxStaminaProperty = createPropertyFrom(maxStamina),
-                        staminaProperty = createPropertyFrom(stamina),
-                        powerProperty = createPropertyFrom(power),
-                        techProperty = createPropertyFrom(tech),
-                        luckProperty = createPropertyFrom(luck),
-                        speedProperty = createPropertyFrom(speed)
-                )
+            AttackableDetails(
+                maxHealthProperty = createPropertyFrom(maxHealth),
+                healthProperty = createPropertyFrom(health),
+                maxStaminaProperty = createPropertyFrom(maxStamina),
+                staminaProperty = createPropertyFrom(stamina),
+                powerProperty = createPropertyFrom(power),
+                techProperty = createPropertyFrom(tech),
+                luckProperty = createPropertyFrom(luck),
+                speedProperty = createPropertyFrom(speed)
+            )
     }
 
     override fun toComponent(width: Int): Component = Components.vbox()

@@ -1,6 +1,9 @@
 package entity.factories
 
 import attributes.*
+import attributes.facet.EquippableDetails
+import attributes.facet.EquippableType
+import attributes.facet.OneHanded
 import builders.AnyEntityBuilder
 import constants.GameTile
 import entity.*
@@ -53,7 +56,8 @@ object WeaponFactory {
             .withAttributes(
                     EntityTile(tile),
                     EntityPosition(),
-                    EquippableDetails(equipType))
+                EquippableDetails(equipType)
+            )
             .withFacets(
                 Droppable,
                 Takeable,

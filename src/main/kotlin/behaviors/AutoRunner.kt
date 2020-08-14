@@ -1,6 +1,6 @@
 package behaviors
 
-import attributes.AutoRunDetails
+import attributes.behavior.AutoRunnerDetails
 import attributes.Senses
 import commands.Move
 import entity.GameEntity
@@ -15,14 +15,14 @@ import org.hexworks.amethyst.api.Pass
 import org.hexworks.zircon.api.data.Position3D
 
 
-object AutoRunner : ForegroundBehavior(AutoRunDetails::class) {
+object AutoRunner : ForegroundBehavior(AutoRunnerDetails::class) {
 
     override suspend fun foregroundUpdate(entity: GameEntity, context: GameContext): Boolean {
         val event = context.event
         if (event !is AutoRunInputEvent) return false
 
         val senses = entity.getAttribute(Senses::class)
-        val details = entity.getAttribute(AutoRunDetails::class) ?: return event.cancel()
+        val details = entity.getAttribute(AutoRunnerDetails::class) ?: return event.cancel()
 
         // Check if missing any needed attributes.
         if (!details.shouldRun) return event.cancel()

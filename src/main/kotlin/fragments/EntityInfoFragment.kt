@@ -1,7 +1,7 @@
 package fragments
 
 import attributes.CoinPouch
-import attributes.CombatStats
+import attributes.facet.AttackableDetails
 import attributes.Equipments
 import entity.GameEntity
 import entity.getAttribute
@@ -35,7 +35,7 @@ class EntityInfoFragment(
                         .commitInlineElements()
                         .build())
 
-                entity.findAttribute(CombatStats::class).ifPresent {
+                entity.findAttribute(AttackableDetails::class).ifPresent {
                     addComponent(it.toComponent(width))
                 }
                 entity.findAttribute(Equipments::class).ifPresent {

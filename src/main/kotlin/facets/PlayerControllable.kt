@@ -1,6 +1,9 @@
 package facets
 
 import attributes.*
+import attributes.behavior.AutoRunnerDetails
+import attributes.facet.AttackableDetails
+import attributes.facet.OpenableDetails
 import commands.*
 import entity.*
 import events.*
@@ -66,7 +69,7 @@ object PlayerControllable : BaseFacet<GameContext>() {
     }
 
     private suspend fun GameEntity.autoRun(context: GameContext, inputEvent: AutoRunInputEvent): Response {
-        val autoRunDetails = getAttribute(AutoRunDetails::class) ?: return Pass
+        val autoRunDetails = getAttribute(AutoRunnerDetails::class) ?: return Pass
         val initialMove = position.withRelative(inputEvent.relativePosition)
 
         autoRunDetails.visited.add(position)
@@ -165,7 +168,7 @@ object PlayerControllable : BaseFacet<GameContext>() {
 
     private suspend fun GameEntity.tryAttack(context: GameContext, entities: List<GameEntity>): Boolean {
         val target = entities.firstOrNull { !isAlliedWith(it) } ?: return false
-        val combatStats = getAttribute(CombatStats::class) ?: return false
+        val combatStats = getAttribute(AttackableDetails::class) ?: return false
         val innateStrategies = getAttribute(AttackStrategies::class)?.strategies ?: mutableListOf()
         val mainHand = getAttribute(Equipments::class)?.mainHand?.optional
         val mainHandStrategies: List<AttackStrategy> =
