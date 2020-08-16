@@ -1,7 +1,8 @@
 package models
 
-import attributes.facet.AttackableDetails
 import attributes.EntityTime
+import attributes.facet.AttackableDetails
+import entity.GameEntity
 import org.hexworks.zircon.api.data.Position3D
 import kotlin.math.absoluteValue
 import kotlin.math.max
@@ -71,6 +72,10 @@ abstract class AttackStrategy(val description: String,
     }
 }
 
+class ThrowAttack(throwable: GameEntity,
+                  type: AttackType,
+                  attackEfficiency: AttackEfficiency = AttackEfficiency(0.2, 0.2))
+    : AttackStrategy("throws the $throwable at", attackEfficiency, type, AVERAGE_STAM_COST)
 
 data class SporeAttack(override val statusEffects: List<StatusEffect> = listOf())
     : AttackStrategy("spores", AttackEfficiency(0.1, 0.1), Bash, VERY_LOW_STAM_COST)
