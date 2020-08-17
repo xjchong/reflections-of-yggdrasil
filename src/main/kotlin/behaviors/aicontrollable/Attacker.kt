@@ -10,6 +10,7 @@ import considerations.ConsiderationExtras
 import entity.GameEntity
 import entity.getAttribute
 import entity.isEnemiesWith
+import entity.position
 import extensions.optional
 import game.GameContext
 import models.Plan
@@ -31,6 +32,7 @@ object Attacker : AiControllableBehavior() {
 
         for (strategy in allAttackStrategies) {
             for (enemy in enemies) {
+                if (!strategy.isInRange(entity.position, enemy.position)) continue
                 val command = Attack(context, enemy, entity, strategy)
                 val considerationExtras = ConsiderationExtras(target = enemy, attackStrategy = strategy)
                 val considerationContext = ConsiderationContext(context, entity, considerationExtras)

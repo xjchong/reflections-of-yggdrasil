@@ -41,6 +41,13 @@ val GameEntity.sensedPositions: Set<Position3D>
         return senses.sensedPositions
     }
 
+val GameEntity.sensedEntities: List<GameEntity>
+    get() {
+        val senses = getAttribute(Senses::class) ?: return listOf()
+
+        return senses.sensedEntities
+    }
+
 fun GameEntity.spendTime(amount: Long) {
     val speed = getAttribute(AttackableDetails::class)?.speed ?: 1.0
     getAttribute(EntityTime::class)?.spendTime((amount / speed).toLong())

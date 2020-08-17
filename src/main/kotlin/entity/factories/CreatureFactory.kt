@@ -188,6 +188,9 @@ object CreatureFactory {
                 initialMainHand = WeaponFactory.newRandomWeapon(),
                 initialBody = ArmorFactory.newRandomBody()
             ),
+            Inventory(5).apply {
+                add(WeaponFactory.newRustyDagger())
+            },
             IsObstacle,
             MoveLog(),
             Factions(Monster, alliedFactions = setOf(Monster)),
@@ -197,7 +200,8 @@ object CreatureFactory {
                     Chaser to listOf(ConstantConsideration(0.51)),
                     DoorOpener to listOf(ConstantConsideration(0.5)),
                     Explorer to listOf(ConstantConsideration(0.2)),
-                    Fleer to listOf(HealthConsideration(LinearCurve(-1.0, 1.0, 0.0)))
+                    Fleer to listOf(HealthConsideration(LinearCurve(-1.0, 1.0, 0.0))),
+                    Thrower to listOf(ConstantConsideration(0.7))
                 )
             ),
             KillTarget(),
@@ -213,7 +217,7 @@ object CreatureFactory {
         )
         .withBehaviors(
             StatusUpdater, SensoryUser,
-            Attacker, Chaser, DoorOpener, Explorer, Fleer
+            Attacker, Chaser, DoorOpener, Explorer, Fleer, Thrower
         )
         .withFacets(
             AiControllable,

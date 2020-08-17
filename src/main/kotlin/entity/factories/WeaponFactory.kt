@@ -1,6 +1,8 @@
 package entity.factories
 
-import attributes.*
+import attributes.AttackStrategies
+import attributes.EntityPosition
+import attributes.EntityTile
 import attributes.facet.EquippableDetails
 import attributes.facet.EquippableType
 import attributes.facet.OneHanded
@@ -10,6 +12,7 @@ import entity.*
 import facets.Droppable
 import facets.Equippable
 import facets.Takeable
+import facets.Throwable
 import models.BalancedWeaponCut
 import models.TechnicalWeaponBash
 import models.TechnicalWeaponCut
@@ -21,7 +24,7 @@ import kotlin.random.Random
 object WeaponFactory {
 
     fun newRandomWeapon(): GameEntity {
-        return when(Random.nextInt(3)) {
+        return when (Random.nextInt(3)) {
             0 -> newRustyDagger()
             1 -> newWoodenStaff()
             else -> newIronSword()
@@ -33,29 +36,31 @@ object WeaponFactory {
      */
 
     fun newRustyDagger() = newWeaponBuilder(OneHanded, Dagger, GameTile.DAGGER)
-            .withAddedAttributes(AttackStrategies(TechnicalWeaponCut()))
-            .build()
+        .withAddedAttributes(AttackStrategies(TechnicalWeaponCut()))
+        .withAddedFacets(Throwable)
+        .build()
 
     fun newWoodenStaff() = newWeaponBuilder(OneHanded, Staff, GameTile.STAFF)
-            .withAddedAttributes(AttackStrategies(TechnicalWeaponBash()))
-            .build()
+        .withAddedAttributes(AttackStrategies(TechnicalWeaponBash()))
+        .build()
 
     fun newIronSword() = newWeaponBuilder(OneHanded, Sword, GameTile.SWORD)
-            .withAddedAttributes(AttackStrategies(BalancedWeaponCut()))
-            .build()
+        .withAddedAttributes(AttackStrategies(BalancedWeaponCut()))
+        .build()
 
     fun newClub() = newWeaponBuilder(OneHanded, Club, GameTile.CLUB)
-            .withAddedAttributes(AttackStrategies(VeryTechnicalWeaponBash()))
-            .build()
+        .withAddedAttributes(AttackStrategies(VeryTechnicalWeaponBash()))
+        .build()
 
     /**
      * HELPERS
      */
 
-    private fun newWeaponBuilder(equipType: EquippableType, type: EntityType, tile: CharacterTile) = AnyEntityBuilder.newBuilder(type)
+    private fun newWeaponBuilder(equipType: EquippableType, type: EntityType, tile: CharacterTile) =
+        AnyEntityBuilder.newBuilder(type)
             .withAttributes(
-                    EntityTile(tile),
-                    EntityPosition(),
+                EntityTile(tile),
+                EntityPosition(),
                 EquippableDetails(equipType)
             )
             .withFacets(

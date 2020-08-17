@@ -75,7 +75,10 @@ abstract class AttackStrategy(val description: String,
 class ThrowAttack(throwable: GameEntity,
                   type: AttackType,
                   attackEfficiency: AttackEfficiency = AttackEfficiency(0.2, 0.2))
-    : AttackStrategy("throws the $throwable at", attackEfficiency, type, AVERAGE_STAM_COST)
+    : AttackStrategy("throws the $throwable at", attackEfficiency, type, AVERAGE_STAM_COST) {
+    override val minRange: Int = 1
+    override val maxRange: Int = 8
+}
 
 data class SporeAttack(override val statusEffects: List<StatusEffect> = listOf())
     : AttackStrategy("spores", AttackEfficiency(0.1, 0.1), Bash, VERY_LOW_STAM_COST)

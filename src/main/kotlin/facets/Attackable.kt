@@ -1,7 +1,10 @@
 package facets
 
 import GameColor
-import attributes.*
+import attributes.Equipments
+import attributes.FocusTarget
+import attributes.KillTarget
+import attributes.Resistances
 import attributes.facet.AttackableDetails
 import attributes.facet.StatusApplicableDetails
 import commands.ApplyStatus

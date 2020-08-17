@@ -1,14 +1,12 @@
 package facets
 
 import attributes.AttackStrategies
+import attributes.EntityTime
 import attributes.facet.AttackableDetails
 import attributes.flag.IsObstacle
 import commands.Attack
 import commands.Throw
-import entity.GameEntity
-import entity.getAttribute
-import entity.hasAttribute
-import entity.tile
+import entity.*
 import extensions.optional
 import extensions.responseWhenIs
 import game.GameContext
@@ -33,7 +31,8 @@ object Throwable : BaseFacet<GameContext>() {
             val throwableStrategy = ThrowAttack(throwable, attackType)
             val world = context.world
 
-            world.observeSceneBy(thrower, "The $thrower throws the $throwable...")
+            // TODO: Fix how this spends double time on attack (time to throw, time to attack)
+            thrower.spendTime(EntityTime.DEFAULT)
 
             for (position in path) {
                 val currentBlock = world.fetchBlockAt(position).optional ?: continue
@@ -43,7 +42,7 @@ object Throwable : BaseFacet<GameContext>() {
 
                 for (entity in entities) {
                     if (!entity.hasAttribute<IsObstacle>()) continue
-                    if (entity.executeCommand(Attack(context, entity, throwable, throwableStrategy)) == Pass) continue
+                    if (entity.executeCommand(Attack(context, entity, thrower, throwableStrategy)) == Pass) continue
 
                     world.removeEntity(throwable)
                     return@responseWhenIs Consumed
