@@ -201,7 +201,7 @@ object CreatureFactory {
                     DoorOpener to listOf(ConstantConsideration(0.5)),
                     Explorer to listOf(ConstantConsideration(0.2)),
                     Fleer to listOf(HealthConsideration(LinearCurve(-1.0, 1.0, 0.0))),
-                    Thrower to listOf(ConstantConsideration(0.7))
+                    Thrower to listOf(ConstantConsideration(0.51))
                 )
             ),
             KillTarget(),

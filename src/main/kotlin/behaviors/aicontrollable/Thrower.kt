@@ -20,8 +20,9 @@ object Thrower : AiControllableBehavior() {
         entity: GameEntity,
         considerations: List<Consideration>
     ): List<Plan> {
-        val inventory = entity.getAttribute(Inventory::class)?.contents ?: listOf()
-        val throwables = inventory.filter { it.hasFacet<Throwable>() }
+        val inventory = entity.getAttribute(Inventory::class)
+        val inventoryContents = inventory?.contents ?: listOf()
+        val throwables = inventoryContents.filter { it.hasFacet<Throwable>() }
         val enemies = entity.sensedEntities.filter { entity.isEnemiesWith(it) }
         val plans = mutableListOf<Plan>()
 
@@ -34,7 +35,9 @@ object Thrower : AiControllableBehavior() {
                 val extras = ConsiderationExtras(strategy, enemy)
                 val considerationContext = ConsiderationContext(context, entity, extras)
 
-                plans.addPlan(command, considerations, considerationContext)
+                plans.addPlan(command, considerations, considerationContext) {
+                    inventory?.remove(throwable)
+                }
             }
         }
 

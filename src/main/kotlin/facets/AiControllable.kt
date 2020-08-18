@@ -1,7 +1,7 @@
 package facets
 
-import attributes.facet.AiControllableConsiderations
 import attributes.EntityTime
+import attributes.facet.AiControllableConsiderations
 import attributes.facet.AiControllablePlans
 import commands.ExecuteAiPlans
 import entity.GameEntity
@@ -35,7 +35,10 @@ object AiControllable : BaseFacet<GameContext>(AiControllablePlans::class, AiCon
     private suspend fun GameEntity.attemptPlan(plans: List<Plan>): Response {
         val sortedPlans = sortPlans(plans)
         for (plan in sortedPlans) {
-            if (plan.command.execute() == Consumed) return Consumed
+            if (plan.command.execute() == Consumed) {
+                plan.onConsumed()
+                return Consumed
+            }
         }
 
         spendTime(EntityTime.WAIT)

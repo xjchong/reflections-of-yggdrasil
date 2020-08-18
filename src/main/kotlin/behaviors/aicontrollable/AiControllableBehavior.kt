@@ -33,7 +33,8 @@ abstract class AiControllableBehavior(vararg mandatoryAttribute: KClass<out Attr
     protected suspend fun MutableList<Plan>.addPlan(
         command: GameCommand,
         considerations: List<Consideration>,
-        context: ConsiderationContext
+        context: ConsiderationContext,
+        onConsume: suspend () -> Unit = {}
     ) {
         var weight = 1.0
 
@@ -43,6 +44,6 @@ abstract class AiControllableBehavior(vararg mandatoryAttribute: KClass<out Attr
             if (weight <= 0.0) break
         }
 
-        if (weight > 0.0) add(Plan(command, weight))
+        if (weight > 0.0) add(Plan(command, weight, onConsume))
     }
 }
