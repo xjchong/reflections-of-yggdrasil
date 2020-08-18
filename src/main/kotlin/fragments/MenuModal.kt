@@ -45,7 +45,9 @@ class MenuModal(
             .withParentSize(screen.size)
             .withComponent(panel)
             .withColorTheme(GameColor.TRANSPARENT_THEME)
-            .build()
+            .build().apply {
+                onClosed { tableDelegate = null }
+            }
 
         panel.addFragment(table)
         panel.addComponent(closeButton)
