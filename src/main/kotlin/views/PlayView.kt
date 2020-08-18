@@ -5,15 +5,15 @@ import attributes.EnemyList
 import attributes.FocusTarget
 import block.GameBlock
 import builders.GameBuilder
-import builders.InventoryModalBuilder
 import constants.GameConfig
 import events.*
 import extensions.create
 import extensions.withStyle
-import fragments.DebugColorDialog
-import fragments.EntityInfoFragment
-import fragments.ExamineDialog
-import fragments.LogHistoryDialog
+import fragments.*
+import fragments.equipments.EquipmentsTable
+import fragments.equipments.EquipmentsTableDelegate
+import fragments.inventory.InventoryTable
+import fragments.inventory.InventoryTableDelegate
 import game.Game
 import org.hexworks.cobalt.events.api.KeepSubscription
 import org.hexworks.zircon.api.ComponentDecorations.box
@@ -35,12 +35,13 @@ import org.hexworks.zircon.internal.Zircon
 import utilities.DebugConfig
 
 class CustomGameArea(
-        visibleSize: Size3D, actualSize: Size3D
+    visibleSize: Size3D, actualSize: Size3D
 ) : BaseGameArea<Tile, Block<Tile>>(
-        initialVisibleSize = visibleSize, initialActualSize = actualSize
+    initialVisibleSize = visibleSize, initialActualSize = actualSize
 )
 
-class PlayView constructor(private val tileGrid: TileGrid, private val game: Game = GameBuilder.defaultGame()) : BaseView(tileGrid) {
+class PlayView constructor(private val tileGrid: TileGrid, private val game: Game = GameBuilder.defaultGame()) :
+    BaseView(tileGrid) {
 
     private val pressedKeys: MutableSet<KeyCode> = mutableSetOf()
     private val logHistory: MutableList<ParagraphBuilder> = mutableListOf() // TODO: Make a separate log object.
@@ -57,6 +58,7 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
         setupInputHandlers()
 
         subscribeToInventoryMenuEvent()
+        subscribeToEquipmentsMenuEvent()
         subscribeToExamineEvent()
 
         screen.theme = GameConfig.THEME
@@ -64,31 +66,34 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
 
     private fun setupSideBar() {
         val sidebar = Components.panel()
-                .withSize(GameConfig.SIDEBAR_WIDTH,GameConfig.WINDOW_HEIGHT - GameConfig.ENMITY_LIST_HEIGHT)
-                .withDecorations(box(boxType = BoxType.SINGLE))
-                .withAlignmentWithin(screen, ComponentAlignment.TOP_LEFT)
-                .build()
+            .withSize(GameConfig.SIDEBAR_WIDTH, GameConfig.WINDOW_HEIGHT - GameConfig.ENMITY_LIST_HEIGHT)
+            .withDecorations(box(boxType = BoxType.SINGLE))
+            .withAlignmentWithin(screen, ComponentAlignment.TOP_LEFT)
+            .build()
 
-        sidebar.addFragment(EntityInfoFragment(
+        sidebar.addFragment(
+            EntityInfoFragment(
                 width = sidebar.contentSize.width,
                 height = sidebar.contentSize.height,
-                entity = game.player))
+                entity = game.player
+            )
+        )
 
         screen.addComponent(sidebar)
     }
 
     private fun setupLogArea() {
         val logAreaContainer = Components.panel()
-                .withSize(GameConfig.LOG_WIDTH, GameConfig.LOG_HEIGHT)
-                .withDecorations(box(BoxType.SINGLE, title = "Log"))
-                .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
-                .build()
+            .withSize(GameConfig.LOG_WIDTH, GameConfig.LOG_HEIGHT)
+            .withDecorations(box(BoxType.SINGLE, title = "Log"))
+            .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
+            .build()
 
         val logArea = Components.logArea()
-                .withSize(GameConfig.LOG_WIDTH - 2, GameConfig.LOG_HEIGHT - 2)
-                .withStyle(GameColor.FOREGROUND, GameColor.BACKGROUND)
-                .withAlignmentWithin(logAreaContainer, ComponentAlignment.CENTER)
-                .build()
+            .withSize(GameConfig.LOG_WIDTH - 2, GameConfig.LOG_HEIGHT - 2)
+            .withStyle(GameColor.FOREGROUND, GameColor.BACKGROUND)
+            .withAlignmentWithin(logAreaContainer, ComponentAlignment.CENTER)
+            .build()
 
         logAreaContainer.addComponent(logArea)
 
@@ -105,8 +110,8 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
             }
 
             val paragraphBuilder = ParagraphBuilder.newBuilder()
-                    .withStyle(logColor, TileColor.transparent())
-                    .withText(event.message)
+                .withStyle(logColor, TileColor.transparent())
+                .withText(event.message)
 
             logArea.addParagraph(paragraphBuilder, withNewLine = false)
             logHistory.add(paragraphBuilder)
@@ -138,10 +143,10 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
         val targetBarWidth = GameConfig.WINDOW_WIDTH - GameConfig.SIDEBAR_WIDTH
 
         val targetBar = Components.panel()
-                .withSize(targetBarWidth, GameConfig.TARGET_BAR_HEIGHT)
-                .withDecorations(box(title = "Target", boxType = BoxType.SINGLE))
-                .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
-                .build()
+            .withSize(targetBarWidth, GameConfig.TARGET_BAR_HEIGHT)
+            .withDecorations(box(title = "Target", boxType = BoxType.SINGLE))
+            .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
+            .build()
 
         targetBar.moveDownBy(GameConfig.LOG_HEIGHT)
         targetBar.addComponent(game.player.findAttribute(FocusTarget::class).get().toComponent(targetBarWidth))
@@ -151,10 +156,10 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
 
     private fun setupEnemyList() {
         val enemyList = Components.panel()
-                .withSize(GameConfig.SIDEBAR_WIDTH, GameConfig.ENMITY_LIST_HEIGHT)
-                .withDecorations(box(title = "Enemies", boxType = BoxType.SINGLE))
-                .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_LEFT)
-                .build()
+            .withSize(GameConfig.SIDEBAR_WIDTH, GameConfig.ENMITY_LIST_HEIGHT)
+            .withDecorations(box(title = "Enemies", boxType = BoxType.SINGLE))
+            .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_LEFT)
+            .build()
 
         enemyList.addComponent(game.player.findAttribute(EnemyList::class).get().toComponent(GameConfig.SIDEBAR_WIDTH))
 
@@ -163,10 +168,10 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
 
     private fun setupGameComponent() {
         val gameComponent = Components.gameComponent<Tile, GameBlock>()
-                .withGameArea(game.world)
-                .withSize(game.world.visibleSize.to2DSize())
-                .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_RIGHT)
-                .build()
+            .withGameArea(game.world)
+            .withSize(game.world.visibleSize.to2DSize())
+            .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_RIGHT)
+            .build()
 
         screen.addComponent(gameComponent)
     }
@@ -258,7 +263,8 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
 
                 KeyCode.SPACE -> ContextualInputEvent()
                 KeyCode.KEY_G -> TakeInputEvent()
-                KeyCode.KEY_I, KeyCode.KEY_C  -> InventoryInputEvent()
+                KeyCode.KEY_C -> InventoryInputEvent()
+                KeyCode.KEY_E -> EquipmentsInputEvent()
                 else -> null
             } ?: return@handleKeyboardEvents Pass
 
@@ -275,9 +281,36 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
     private fun subscribeToInventoryMenuEvent() {
         Zircon.eventBus.subscribeTo<InventoryMenuEvent>(key = InventoryMenuEvent.KEY) { event ->
             val (inventory, onDrop, onConsume, onEquip) = event
-            val inventoryModal = InventoryModalBuilder(screen).build(inventory, onDrop, onConsume, onEquip)
+            val inventoryTable = InventoryTable(inventory.size)
+            val inventoryModal = MenuModal(screen, inventoryTable, "Inventory", KeyCode.KEY_C)
+            val inventoryTableDelegate = InventoryTableDelegate(inventory, onDrop, onConsume, onEquip) { item ->
+                Zircon.eventBus.publish(ExamineEvent(item) {
+                    inventoryModal.requestFocus()
+                })
+            }
+
+            inventoryModal.tableDelegate = inventoryTableDelegate
 
             screen.openModal(inventoryModal)
+
+            KeepSubscription
+        }
+    }
+
+    private fun subscribeToEquipmentsMenuEvent() {
+        Zircon.eventBus.subscribeTo<EquipmentsMenuEvent>(key = EquipmentsMenuEvent.KEY) { event ->
+            val (equipments, onUnequip) = event
+            val equipmentsTable = EquipmentsTable(9)
+            val equipmentsModal = MenuModal(screen, equipmentsTable, "Equipment", KeyCode.KEY_E)
+            val equipmentsTableDelegate = EquipmentsTableDelegate(equipments, onUnequip) { equipment ->
+                Zircon.eventBus.publish(ExamineEvent(equipment) {
+                    equipmentsModal.requestFocus()
+                })
+            }
+
+            equipmentsTable.delegate = equipmentsTableDelegate
+
+            screen.openModal(equipmentsModal)
 
             KeepSubscription
         }

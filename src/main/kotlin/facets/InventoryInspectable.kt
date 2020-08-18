@@ -17,7 +17,7 @@ import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
 
-object InventoryInspectable : BaseFacet<GameContext>() {
+object InventoryInspectable : BaseFacet<GameContext>(Inventory::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenIs(InspectInventory::class) { (context, inventoryOwner) ->

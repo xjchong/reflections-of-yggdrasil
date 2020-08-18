@@ -1,6 +1,8 @@
 package facets
 
-import attributes.*
+import attributes.AttackStrategies
+import attributes.EntityTime
+import attributes.Equipments
 import attributes.behavior.AutoRunnerDetails
 import attributes.facet.AttackableDetails
 import attributes.facet.OpenableDetails
@@ -41,6 +43,7 @@ object PlayerControllable : BaseFacet<GameContext>() {
                     }
                     is DropInputEvent -> event.droppable.run { executeCommand(Drop(context, this, entity, position)) }
                     is EquipInputEvent -> event.equipment.run { executeCommand(Equip(context, this, entity)) }
+                    is EquipmentsInputEvent -> entity.executeCommand(InspectEquipments(context, entity))
                     is GuardInputEvent -> entity.executeCommand(Guard(context, entity))
                     is InventoryInputEvent -> entity.executeCommand(InspectInventory(context, entity))
                     is MoveInputEvent -> {

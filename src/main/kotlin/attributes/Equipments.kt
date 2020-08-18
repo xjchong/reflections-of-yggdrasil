@@ -30,6 +30,8 @@ class Equipments(
     initialLegs: GameEntity? = null
 ) : DisplayableAttribute {
 
+    val dataTimestamp: Property<Long> = createPropertyFrom(System.currentTimeMillis())
+
     private val mainHandProp: Property<Maybe<GameEntity>> =
         createPropertyFrom(Maybe.ofNullable(initialMainHand)) {
             val details = it.optional?.details
@@ -96,8 +98,10 @@ class Equipments(
     var legs: Maybe<GameEntity> by legsProp.asDelegate()
         private set
 
-    private val equipped: List<Maybe<GameEntity>>
-        get() = listOf(mainHand, offHand, head, arms, body, legs, neck, wrists, finger)
+    val equipped: List<Maybe<GameEntity>>
+        get() = listOf(mainHand, offHand, head, arms, body, legs, neck, wrists, finger).filter {
+            it.isPresent
+        }
 
     override fun toComponent(width: Int): Component {
         val textBoxBuilder = Components.textBox(width)
@@ -135,7 +139,6 @@ class Equipments(
     fun equip(equipment: GameEntity): GameEntity? {
         val details = equipment.getAttribute(EquippableDetails::class) ?: return equipment
         var unequipped: GameEntity? = null
-
 
         when (details.type) {
             OneHanded, TwoHanded -> {
@@ -176,6 +179,8 @@ class Equipments(
             }
         }
 
+        updateDataTimestamp()
+
         return unequipped
     }
 
@@ -194,6 +199,8 @@ class Equipments(
             finger.optional?.id -> finger = Maybe.empty()
             else -> return null
         }
+
+        updateDataTimestamp()
 
         return equipment
     }
@@ -250,6 +257,10 @@ class Equipments(
         charLabel.textProperty.value =
             if (itemChar != null) itemChar.toString() else "" // Don't fold this expression, as nullChar.toString == "n"
         nameLabel.textProperty.value = equipment.optional?.name?.capitalize() ?: "-"
+    }
+
+    private fun updateDataTimestamp() {
+        dataTimestamp.updateValue(System.currentTimeMillis())
     }
 
     private val GameEntity.details: EquippableDetails?

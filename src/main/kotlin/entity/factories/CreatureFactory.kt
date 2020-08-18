@@ -84,10 +84,11 @@ object CreatureFactory {
             AutoRunner
         )
         facets(
-            PlayerControllable,
             Attackable,
+            EquipmentsInspectable,
             InventoryInspectable,
             Movable,
+            PlayerControllable,
             StatusApplicable
         )
     }

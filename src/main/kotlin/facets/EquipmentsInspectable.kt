@@ -9,6 +9,7 @@ import entity.position
 import events.EquipmentsMenuEvent
 import extensions.responseWhenIs
 import game.GameContext
+import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
@@ -16,7 +17,7 @@ import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
-object EquipmentsInspectable : BaseFacet<GameContext>() {
+object EquipmentsInspectable : BaseFacet<GameContext>(Equipments::class) {
 
     override suspend fun executeCommand(command: Command<out EntityType, GameContext>): Response {
         return command.responseWhenIs(InspectEquipments::class) { (context, equipmentsOwner) ->
@@ -29,7 +30,9 @@ object EquipmentsInspectable : BaseFacet<GameContext>() {
                 context.world.observeSceneBy(equipmentsOwner, "The $equipmentsOwner unequips the $unequipped.")
 
                 if (inventory == null || !inventory.add(unequipped)) {
-                    unequipped.executeCommand(Drop(context, unequipped, equipmentsOwner, equipmentsOwner.position))
+                    runBlocking {
+                        unequipped.executeCommand(Drop(context, unequipped, equipmentsOwner, equipmentsOwner.position))
+                    }
                 }
             })
 

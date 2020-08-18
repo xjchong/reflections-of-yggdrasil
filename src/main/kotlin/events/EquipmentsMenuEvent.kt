@@ -8,13 +8,13 @@ import org.hexworks.zircon.internal.Zircon
 
 data class EquipmentsMenuEvent(
     val equipments: Equipments,
-    val onUnequip: suspend (GameEntity) -> Unit
+    val onUnequip: (GameEntity) -> Unit
 ) : Event {
 
     companion object {
         const val KEY = "EquipmentsMenuEvent"
 
-        fun publish(equipments: Equipments, onUnequip: suspend (GameEntity) -> Unit) {
+        fun publish(equipments: Equipments, onUnequip: (GameEntity) -> Unit) {
             Zircon.eventBus.publish(EquipmentsMenuEvent(equipments, onUnequip))
         }
     }

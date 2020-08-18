@@ -15,7 +15,7 @@ class InventoryTableDelegate(
 ) : TableFragmentDelegate() {
 
     init {
-        inventory.currentHash.onChange {
+        inventory.dataTimestamp.onChange {
             notifyDataChanged()
         }
     }
@@ -26,10 +26,7 @@ class InventoryTableDelegate(
 
     override fun itemForRow(row: Int): TableRow {
         val inventoryItem = inventory.contents.getOrNull(row) ?: NoType.create()
-        val rowFragment = InventoryRow(
-            InventoryTable.width,
-            inventoryItem
-        )
+        val rowFragment = InventoryRow(InventoryTable.width, inventoryItem)
 
         with(rowFragment) {
             dropButton.onActivated { onDrop(inventoryItem) }

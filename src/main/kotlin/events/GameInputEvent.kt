@@ -19,6 +19,8 @@ class DropInputEvent(val droppable: GameEntity) : GameInputEvent()
 
 class EquipInputEvent(val equipment: GameEntity) : GameInputEvent()
 
+class EquipmentsInputEvent(override val type: GameUpdateMode = Background) : GameInputEvent()
+
 class GuardInputEvent() : GameInputEvent()
 
 class InventoryInputEvent(override val type: GameUpdateMode = Background) : GameInputEvent()
