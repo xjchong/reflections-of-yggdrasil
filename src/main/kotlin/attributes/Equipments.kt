@@ -18,80 +18,86 @@ import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.ComponentStyleSet
 import org.hexworks.zircon.api.component.Label
 
-class Equipments(initialMainHand: GameEntity? = null,
-                 initialOffHand: GameEntity? = null,
-                 initialNeck: GameEntity? = null,
-                 initialMainFinger: GameEntity? = null,
-                 initialOffFinger: GameEntity? = null,
-                 initialWrists: GameEntity? = null,
-                 initialHead: GameEntity? = null,
-                 initialArms: GameEntity? = null,
-                 initialBody: GameEntity? = null,
-                 initialLegs: GameEntity? = null
+class Equipments(
+    initialMainHand: GameEntity? = null,
+    initialOffHand: GameEntity? = null,
+    initialNeck: GameEntity? = null,
+    initialFinger: GameEntity? = null,
+    initialWrists: GameEntity? = null,
+    initialHead: GameEntity? = null,
+    initialArms: GameEntity? = null,
+    initialBody: GameEntity? = null,
+    initialLegs: GameEntity? = null
 ) : DisplayableAttribute {
 
     private val mainHandProp: Property<Maybe<GameEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialMainHand)) {
-                val details = it.optional?.details
-                details?.type == OneHanded || details?.type == TwoHanded
-            }
+        createPropertyFrom(Maybe.ofNullable(initialMainHand)) {
+            val details = it.optional?.details
+            it.isEmpty() || details?.type == OneHanded || details?.type == TwoHanded
+        }
 
     private val offHandProp: Property<Maybe<GameEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialOffHand)) {
-                val type = it.optional?.details?.type
-                type == OneHanded || type == Offhand
-            }
+        createPropertyFrom(Maybe.ofNullable(initialOffHand)) {
+            val type = it.optional?.details?.type
+            it.isEmpty() || type == OneHanded || type == Offhand
+        }
 
     private val neckProp: Property<Maybe<GameEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialNeck)) {
-                it.optional?.details?.type == Neck
-            }
+        createPropertyFrom(Maybe.ofNullable(initialNeck)) {
+            it.isEmpty() || it.optional?.details?.type == Neck
+        }
 
-    private val mainFingerProp: Property<Maybe<GameEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialMainFinger)) {
-                it.optional?.details?.type == Finger
-            }
-
-    private val offFingerProp: Property<Maybe<GameEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialOffFinger)) {
-                it.optional?.details?.type == Finger
-            }
+    private val fingerProp: Property<Maybe<GameEntity>> =
+        createPropertyFrom(Maybe.ofNullable(initialFinger)) {
+            it.isEmpty() || it.optional?.details?.type == Finger
+        }
 
     private val wristsProp: Property<Maybe<GameEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialWrists)) {
-                it.optional?.details?.type == Wrists
-            }
+        createPropertyFrom(Maybe.ofNullable(initialWrists)) {
+            it.isEmpty() || it.optional?.details?.type == Wrists
+        }
 
     private val headProp: Property<Maybe<GameEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialHead)) {
-                it.optional?.details?.type == Head
-            }
+        createPropertyFrom(Maybe.ofNullable(initialHead)) {
+            it.isEmpty() || it.optional?.details?.type == Head
+        }
 
     private val armsProp: Property<Maybe<GameEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialArms)) {
-                it.optional?.details?.type == Arms
-            }
+        createPropertyFrom(Maybe.ofNullable(initialArms)) {
+            it.isEmpty() || it.optional?.details?.type == Arms
+        }
 
     private val bodyProp: Property<Maybe<GameEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialBody)) {
-                it.optional?.details?.type == Body
-            }
+        createPropertyFrom(Maybe.ofNullable(initialBody)) {
+            it.isEmpty() || it.optional?.details?.type == Body
+        }
 
     private val legsProp: Property<Maybe<GameEntity>> =
-            createPropertyFrom(Maybe.ofNullable(initialLegs)) {
-                it.optional?.details?.type == Legs
-            }
+        createPropertyFrom(Maybe.ofNullable(initialLegs)) {
+            it.isEmpty() || it.optional?.details?.type == Legs
+        }
 
-    val mainHand: Maybe<GameEntity> by mainHandProp.asDelegate()
-    val offHand: Maybe<GameEntity> by offHandProp.asDelegate()
-    val neck: Maybe<GameEntity> by neckProp.asDelegate()
-    val leftFinger: Maybe<GameEntity> by mainFingerProp.asDelegate()
-    val rightFinger: Maybe<GameEntity> by offFingerProp.asDelegate()
-    val wrists: Maybe<GameEntity> by wristsProp.asDelegate()
-    val head: Maybe<GameEntity> by headProp.asDelegate()
-    val arms: Maybe<GameEntity> by armsProp.asDelegate()
-    val body: Maybe<GameEntity> by bodyProp.asDelegate()
-    val legs: Maybe<GameEntity> by legsProp.asDelegate()
+    var mainHand: Maybe<GameEntity> by mainHandProp.asDelegate()
+        private set
+    var offHand: Maybe<GameEntity> by offHandProp.asDelegate()
+        private set
+    var neck: Maybe<GameEntity> by neckProp.asDelegate()
+        private set
+    var finger: Maybe<GameEntity> by fingerProp.asDelegate()
+        private set
+    var wrists: Maybe<GameEntity> by wristsProp.asDelegate()
+        private set
+    var head: Maybe<GameEntity> by headProp.asDelegate()
+        private set
+    var arms: Maybe<GameEntity> by armsProp.asDelegate()
+        private set
+    var body: Maybe<GameEntity> by bodyProp.asDelegate()
+        private set
+    var legs: Maybe<GameEntity> by legsProp.asDelegate()
+        private set
+
+    private val equipped: List<Maybe<GameEntity>>
+        get() = listOf(mainHand, offHand, head, arms, body, legs, neck, wrists, finger)
 
     override fun toComponent(width: Int): Component {
         val textBoxBuilder = Components.textBox(width)
@@ -120,55 +126,90 @@ class Equipments(initialMainHand: GameEntity? = null,
         val wristsInfo = setupInfo(width, textBoxBuilder, "Wrists:", wrists, wristsProp)
         wristsProp.onChange { updateInfo(wristsInfo, wrists) }
 
-        val mainFingerInfo = setupInfo(width, textBoxBuilder, "L.Ring:", leftFinger, mainFingerProp)
-        mainFingerProp.onChange { updateInfo(mainFingerInfo, leftFinger) }
-
-        val offFingerInfo = setupInfo(width, textBoxBuilder, "R.Ring:", rightFinger, offFingerProp)
-        offFingerProp.onChange { updateInfo(offFingerInfo, rightFinger) }
+        val fingerInfo = setupInfo(width, textBoxBuilder, "Ring:", finger, fingerProp)
+        fingerProp.onChange { updateInfo(fingerInfo, finger) }
 
         return textBoxBuilder.build()
     }
 
     fun equip(equipment: GameEntity): GameEntity? {
-        var unequipped: GameEntity? = equipment
-        val details = equipment.getAttribute(EquippableDetails::class)
+        val details = equipment.getAttribute(EquippableDetails::class) ?: return equipment
+        var unequipped: GameEntity? = null
 
-        details?.let {
-            when (it.type) {
-                OneHanded, TwoHanded -> {
-                    unequipped = mainHand.optional
-                    mainHandProp.value = Maybe.of(equipment)
-                }
-                Head -> {
-                    unequipped = head.optional
-                    headProp.value = Maybe.of(equipment)
-                }
-                Body -> {
-                    unequipped = body.optional
-                    bodyProp.value = Maybe.of(equipment)
-                }
-                Arms -> {
-                    unequipped = arms.optional
-                    armsProp.value = Maybe.of(equipment)
-                }
-                Legs -> {
-                    unequipped = legs.optional
-                    legsProp.value = Maybe.of(equipment)
-                }
+
+        when (details.type) {
+            OneHanded, TwoHanded -> {
+                unequipped = unequip(mainHand.optional)
+                mainHand = Maybe.of(equipment)
+            }
+            Offhand -> {
+                unequipped = unequip(offHand.optional)
+                offHand = Maybe.of(equipment)
+            }
+            Head -> {
+                unequipped = unequip(head.optional)
+                head = Maybe.of(equipment)
+            }
+            Body -> {
+                unequipped = unequip(body.optional)
+                body = Maybe.of(equipment)
+            }
+            Arms -> {
+                unequipped = unequip(arms.optional)
+                arms = Maybe.of(equipment)
+            }
+            Legs -> {
+                unequipped = unequip(legs.optional)
+                legs = Maybe.of(equipment)
+            }
+            Neck -> {
+                unequipped = unequip(neck.optional)
+                neck = Maybe.of(equipment)
+            }
+            Wrists -> {
+                unequipped = unequip(wrists.optional)
+                wrists = Maybe.of(equipment)
+            }
+            Finger -> {
+                unequipped = unequip(finger.optional)
+                finger = Maybe.of(equipment)
             }
         }
 
         return unequipped
     }
 
-    fun resistances(): List<Resistance> {
+    fun unequip(equipment: GameEntity?): GameEntity? {
+        if (equipment == null) return null
+
+        when (equipment.id) {
+            mainHand.optional?.id -> mainHand = Maybe.empty()
+            offHand.optional?.id -> offHand = Maybe.empty()
+            head.optional?.id -> head = Maybe.empty()
+            arms.optional?.id -> arms = Maybe.empty()
+            body.optional?.id -> body = Maybe.empty()
+            legs.optional?.id -> legs = Maybe.empty()
+            neck.optional?.id -> neck = Maybe.empty()
+            wrists.optional?.id -> wrists = Maybe.empty()
+            finger.optional?.id -> finger = Maybe.empty()
+            else -> return null
+        }
+
+        return equipment
+    }
+
+    fun resistances(type: Any? = null): List<Resistance> {
         val resistances = mutableListOf<Resistance>()
 
-        listOf(mainHand, offHand,
-            head, body, arms, legs,
-            neck, leftFinger, rightFinger, wrists).forEach { equipment ->
-            equipment.ifPresent {
-                val equipmentResistances: List<Resistance> = it.getAttribute(Resistances::class)?.resistances ?: listOf()
+        equipped.forEach {
+            it.ifPresent { equipment ->
+                val equipmentResistances: MutableList<Resistance> =
+                    equipment.getAttribute(Resistances::class)?.resistances ?: mutableListOf()
+
+                if (type != null) {
+                    equipmentResistances.retainAll { it.type == type }
+                }
+
                 resistances.addAll(equipmentResistances)
             }
         }
@@ -176,27 +217,13 @@ class Equipments(initialMainHand: GameEntity? = null,
         return resistances
     }
 
-    fun resistancesFor(type: Any): List<Resistance> {
-        val resistances: MutableList<Resistance> = mutableListOf()
-
-        listOf(mainHand, offHand,
-                head, body, arms, legs,
-                neck, leftFinger, rightFinger, wrists).forEach { equipment ->
-            equipment.ifPresent {
-                val equipmentResistances: List<Resistance> = it.getAttribute(Resistances::class)?.resistances ?: listOf()
-
-                resistances.addAll(equipmentResistances.filter { it.type == type })
-            }
-        }
-
-        return resistances
-    }
-
-    private fun setupInfo(width: Int,
-                          textBoxBuilder: TextBoxBuilder,
-                          title: String,
-                          equipment: Maybe<GameEntity>,
-                          equipmentProp: Property<Maybe<GameEntity>>): List<Label> {
+    private fun setupInfo(
+        width: Int,
+        textBoxBuilder: TextBoxBuilder,
+        title: String,
+        equipment: Maybe<GameEntity>,
+        equipmentProp: Property<Maybe<GameEntity>>
+    ): List<Label> {
         val charLabel = Components.label().withSize(2, 1).build()
         val nameLabel = Components.label().withSize(width - 11, 1).build()
         val infoLabels = listOf(charLabel, nameLabel)
@@ -204,10 +231,10 @@ class Equipments(initialMainHand: GameEntity? = null,
         updateInfo(infoLabels, equipment)
 
         textBoxBuilder
-                .addInlineComponent(charLabel)
-                .addInlineComponent(Components.header().withSize(8, 1).withText(title).build())
-                .addInlineComponent(nameLabel)
-                .commitInlineElements()
+            .addInlineComponent(charLabel)
+            .addInlineComponent(Components.header().withSize(8, 1).withText(title).build())
+            .addInlineComponent(nameLabel)
+            .commitInlineElements()
 
         return infoLabels
     }
@@ -217,9 +244,11 @@ class Equipments(initialMainHand: GameEntity? = null,
         val itemChar = equipment.optional?.tile?.character
 
         charLabel.componentStyleSet = ComponentStyleSet.create(
-                equipment.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
-                backgroundColor = TileColor.transparent())
-        charLabel.textProperty.value = if (itemChar != null) itemChar.toString() else "" // Don't fold this expression, as nullChar.toString == "n"
+            equipment.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
+            backgroundColor = TileColor.transparent()
+        )
+        charLabel.textProperty.value =
+            if (itemChar != null) itemChar.toString() else "" // Don't fold this expression, as nullChar.toString == "n"
         nameLabel.textProperty.value = equipment.optional?.name?.capitalize() ?: "-"
     }
 

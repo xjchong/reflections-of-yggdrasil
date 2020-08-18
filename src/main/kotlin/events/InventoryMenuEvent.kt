@@ -14,7 +14,7 @@ data class InventoryMenuEvent(
 ) : Event {
 
     companion object {
-        val KEY = "InventoryMenuEvent"
+        const val KEY = "InventoryMenuEvent"
 
         fun publish(inventory: Inventory, onDrop: (GameEntity) -> Unit,
                     onConsume: (GameEntity) -> Unit, onEquip: (GameEntity) -> Unit) {
@@ -24,6 +24,5 @@ data class InventoryMenuEvent(
         }
     }
 
-    override val emitter: Any
-        get() = this
+    override val emitter: Any = this
 }
