@@ -3,8 +3,10 @@ package builders
 import GameColor
 import attributes.Inventory
 import entity.GameEntity
+import events.ExamineEvent
 import extensions.withStyle
-import fragments.InventoryFragment
+import fragments.inventory.InventoryTable
+import fragments.inventory.InventoryTableDelegate
 import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.ComponentDecorations.shadow
 import org.hexworks.zircon.api.Components
@@ -16,6 +18,7 @@ import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.api.uievent.KeyCode
 import org.hexworks.zircon.api.uievent.KeyboardEventType
 import org.hexworks.zircon.api.uievent.Processed
+import org.hexworks.zircon.internal.Zircon
 import org.hexworks.zircon.internal.component.modal.EmptyModalResult
 
 
@@ -36,11 +39,6 @@ class InventoryModalBuilder(private val screen: Screen) {
                 .withDecorations(box(title = "Inventory"), shadow())
                 .build()
 
-        val inventoryFragment = InventoryFragment(
-                inventory,
-                DIALOG_SIZE.width - 3,
-                onDrop, onConsume, onEquip)
-
         val closeButton = Components.button()
                 .withText("Close")
                 .withAlignmentWithin(panel, ComponentAlignment.BOTTOM_LEFT)
@@ -57,10 +55,24 @@ class InventoryModalBuilder(private val screen: Screen) {
             Processed
         }
 
-        panel.addFragment(inventoryFragment)
+        val inventoryTableDelegate = InventoryTableDelegate(
+            inventory,
+            onDrop,
+            onConsume,
+            onEquip
+        ) { item ->
+            Zircon.eventBus.publish(ExamineEvent(item) {
+                modal.requestFocus()
+            })
+        }
+
+        val inventoryTable = InventoryTable(inventory.size)
+        inventoryTable.delegate = inventoryTableDelegate
+        inventoryTable.parentModal = modal
+
+        panel.addFragment(inventoryTable)
         panel.addComponent(closeButton)
 
-        inventoryFragment.parentModal = modal
         modal.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, _ ->
             when (event.code) {
                 KeyCode.KEY_I, KeyCode.KEY_C, KeyCode.ESCAPE -> modal.close(EmptyModalResult)

@@ -1,41 +1,47 @@
 package entity
 
+import builders.newGameEntityOfType
 import org.hexworks.amethyst.api.base.BaseEntityType
 
+
 object NoType : BaseEntityType(
-        name = "no type"
-)
+    name = "no type"
+) {
+    fun create(): GameEntity {
+        return newGameEntityOfType(this, {})
+    }
+}
 
 /**
  * CREATURE
  */
 
 object Bat : BaseEntityType(
-        name = "bat"
+    name = "bat"
 )
 
 object Crab : BaseEntityType(
-        name = "crab"
+    name = "crab"
 )
 
 object Goblin : BaseEntityType(
-        name = "goblin"
+    name = "goblin"
 )
 
 object Fungus : BaseEntityType(
-        name = "fungus"
+    name = "fungus"
 )
 
 object Player : BaseEntityType(
-        name = "player"
+    name = "player"
 )
 
 object Rat : BaseEntityType(
-        name = "rat"
+    name = "rat"
 )
 
 object Zombie : BaseEntityType(
-        name = "zombie"
+    name = "zombie"
 )
 
 /**
@@ -43,8 +49,8 @@ object Zombie : BaseEntityType(
  */
 
 object BatMeat : BaseEntityType(
-        name = "bat meat",
-        description = "Stringy bat meat. It is an acquired taste."
+    name = "bat meat",
+    description = "Stringy bat meat. It is an acquired taste."
 )
 
 /**
@@ -52,7 +58,7 @@ object BatMeat : BaseEntityType(
  */
 
 object SmallCoins : BaseEntityType(
-        name = "small pile of coins"
+    name = "small pile of coins"
 )
 
 /**
@@ -60,19 +66,19 @@ object SmallCoins : BaseEntityType(
  */
 
 object Door : BaseEntityType(
-        name = "door"
+    name = "door"
 )
 
 object Grass : BaseEntityType(
-        name = "grass"
+    name = "grass"
 )
 
 object Pot : BaseEntityType(
-        name = "pot"
+    name = "pot"
 )
 
 object Wall : BaseEntityType(
-        name = "wall"
+    name = "wall"
 )
 
 /**
@@ -80,23 +86,23 @@ object Wall : BaseEntityType(
  */
 
 object Dagger : BaseEntityType(
-        name = "rusty dagger",
-        description = "A small, rusty dagger made of some metal alloy."
+    name = "rusty dagger",
+    description = "A small, rusty dagger made of some metal alloy."
 )
 
 object Sword : BaseEntityType(
-        name = "iron sword",
-        description = "A shiny sword made of iron. It is a two-hand weapon"
+    name = "iron sword",
+    description = "A shiny sword made of iron. It is a two-hand weapon"
 )
 
 object Staff : BaseEntityType(
-        name = "wooden staff",
-        description = "A wooden staff made of birch. It has seen some use"
+    name = "wooden staff",
+    description = "A wooden staff made of birch. It has seen some use"
 )
 
 object Club : BaseEntityType(
-        name = "club",
-        description = "A wooden club. It doesn't give you an edge over your opponent (haha)."
+    name = "club",
+    description = "A wooden club. It doesn't give you an edge over your opponent (haha)."
 )
 
 
@@ -107,151 +113,151 @@ object Club : BaseEntityType(
 // HEAD
 
 object SimpleCap : BaseEntityType(
-        name = "simple cap"
+    name = "simple cap"
 )
 
 object FancyCap : BaseEntityType(
-        name = "fancy cap"
+    name = "fancy cap"
 )
 
 object AncientCap : BaseEntityType(
-        name = "ancient cap"
+    name = "ancient cap"
 )
 
 object SimpleHelm : BaseEntityType(
-        name = "simple helm"
+    name = "simple helm"
 )
 
 object FancyHelm : BaseEntityType(
-        name = "fancy helm"
+    name = "fancy helm"
 )
 
 object AncientHelm : BaseEntityType(
-        name = "ancient helm"
+    name = "ancient helm"
 )
 
 object SimpleSallet : BaseEntityType(
-        name = "simple sallet"
+    name = "simple sallet"
 )
 
 object FancySallet : BaseEntityType(
-        name = "fancy sallet"
+    name = "fancy sallet"
 )
 
 object AncientSallet : BaseEntityType(
-        name = "ancient sallet"
+    name = "ancient sallet"
 )
 
 // BODY
 
 object SimpleJacket : BaseEntityType(
-        name = "simple jacket"
+    name = "simple jacket"
 )
 
 object FancyJacket : BaseEntityType(
-        name = "fancy jacket"
+    name = "fancy jacket"
 )
 
 object AncientJacket : BaseEntityType(
-        name = "ancient jacket"
+    name = "ancient jacket"
 )
 
 object SimpleHauberk : BaseEntityType(
-        name = "simple hauberk"
+    name = "simple hauberk"
 )
 
 object FancyHauberk : BaseEntityType(
-        name = "fancy hauberk"
+    name = "fancy hauberk"
 )
 
 object AncientHauberk : BaseEntityType(
-        name = "ancient hauberk"
+    name = "ancient hauberk"
 )
 
 object SimpleCuirass : BaseEntityType(
-        name = "simple cuirass"
+    name = "simple cuirass"
 )
 
 object FancyCuirass : BaseEntityType(
-        name = "fancy cuirass"
+    name = "fancy cuirass"
 )
 
 object AncientCuirass : BaseEntityType(
-        name = "ancient cuirass"
+    name = "ancient cuirass"
 )
 
 // ARMS
 
 object SimpleGloves : BaseEntityType(
-        name = "simple gloves"
+    name = "simple gloves"
 )
 
 object FancyGloves : BaseEntityType(
-        name = "fancy gloves"
+    name = "fancy gloves"
 )
 
 object AncientGloves : BaseEntityType(
-        name = "ancient gloves"
+    name = "ancient gloves"
 )
 
 object SimpleBracers : BaseEntityType(
-        name = "simple bracers"
+    name = "simple bracers"
 )
 
 object FancyBracers : BaseEntityType(
-        name = "fancy bracers"
+    name = "fancy bracers"
 )
 
 object AncientBracers : BaseEntityType(
-        name = "ancient bracers"
+    name = "ancient bracers"
 )
 
 object SimpleGauntlets : BaseEntityType(
-        name = "simple gauntlets"
+    name = "simple gauntlets"
 )
 
 object FancyGauntlets : BaseEntityType(
-        name = "fancy gauntlets"
+    name = "fancy gauntlets"
 )
 
 object AncientGauntlets : BaseEntityType(
-        name = "ancient gauntlets"
+    name = "ancient gauntlets"
 )
 
 // LEGS
 
 object SimpleShoes : BaseEntityType(
-        name = "simple shoes"
+    name = "simple shoes"
 )
 
 object FancyShoes : BaseEntityType(
-        name = "fancy shoes"
+    name = "fancy shoes"
 )
 
 object AncientShoes : BaseEntityType(
-        name = "ancient shoes"
+    name = "ancient shoes"
 )
 
 object SimpleBoots : BaseEntityType(
-        name = "simple boots"
+    name = "simple boots"
 )
 
 object FancyBoots : BaseEntityType(
-        name = "fancy boots"
+    name = "fancy boots"
 )
 
 object AncientBoots : BaseEntityType(
-        name = "ancient boots"
+    name = "ancient boots"
 )
 
 object SimpleGreaves : BaseEntityType(
-        name = "simple greaves"
+    name = "simple greaves"
 )
 
 object FancyGreaves : BaseEntityType(
-        name = "fancy greaves"
+    name = "fancy greaves"
 )
 
 object AncientGreaves : BaseEntityType(
-        name = "ancient greaves"
+    name = "ancient greaves"
 )

@@ -16,11 +16,15 @@ data class InventoryMenuEvent(
     companion object {
         const val KEY = "InventoryMenuEvent"
 
-        fun publish(inventory: Inventory, onDrop: (GameEntity) -> Unit,
-                    onConsume: (GameEntity) -> Unit, onEquip: (GameEntity) -> Unit) {
-           Zircon.eventBus.publish(InventoryMenuEvent(
-                   inventory, onDrop, onConsume, onEquip
-           ))
+        fun publish(
+            inventory: Inventory,
+            onDrop: (GameEntity) -> Unit,
+            onConsume: (GameEntity) -> Unit,
+            onEquip: (GameEntity) -> Unit
+        ) {
+            Zircon.eventBus.publish(
+                InventoryMenuEvent(inventory, onDrop, onConsume, onEquip)
+            )
         }
     }
 

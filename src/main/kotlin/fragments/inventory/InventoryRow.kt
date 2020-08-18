@@ -1,4 +1,4 @@
-package fragments
+package fragments.inventory
 
 import GameColor
 import entity.GameEntity
@@ -8,16 +8,16 @@ import extensions.create
 import extensions.withStyle
 import facets.Consumable
 import facets.Equippable
+import fragments.TableRow
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.ComponentStyleSet
-import org.hexworks.zircon.api.component.Fragment
 import org.hexworks.zircon.api.uievent.MouseEventType
 import org.hexworks.zircon.api.uievent.Processed
 import org.hexworks.zircon.api.uievent.StopPropagation
 
-class InventoryRowFragment(width: Int, entity: GameEntity) : Fragment {
+class InventoryRow(width: Int, item: GameEntity) : TableRow(width, 1) {
 
     companion object {
         const val NAME_COLUMN_WIDTH = 15
@@ -35,7 +35,7 @@ class InventoryRowFragment(width: Int, entity: GameEntity) : Fragment {
             .withText("Equip")
             .build()
 
-    var onExamine: (() -> Unit)? = null
+    var onExamine: ((GameEntity) -> Unit)? = null
 
     /**
      * This unfortunate variable is used to prevent the mouse release event from triggering when something like
@@ -50,14 +50,14 @@ class InventoryRowFragment(width: Int, entity: GameEntity) : Fragment {
             .build().apply {
                 addComponent(Components.label()
                         .withSize(1, 1)
-                        .withStyle(entity.tile.foregroundColor, TileColor.transparent())
-                        .withText(entity.tile.character.toString()))
+                        .withStyle(item.tile.foregroundColor, TileColor.transparent())
+                        .withText(item.tile.character.toString()))
                 addComponent(Components.label()
                         .withSize(NAME_COLUMN_WIDTH, 1)
-                        .withText(entity.name.capitalize()))
+                        .withText(item.name.capitalize()))
                 addComponent(dropButton)
-                entity.whenFacetIs<Consumable> { addComponent(consumeButton) }
-                entity.whenFacetIs<Equippable> { addComponent(equipButton) }
+                item.whenFacetIs<Consumable> { addComponent(consumeButton) }
+                item.whenFacetIs<Equippable> { addComponent(equipButton) }
 
                 handleMouseEvents(MouseEventType.MOUSE_ENTERED) { _, _ ->
                     componentStyleSet = ComponentStyleSet.create(GameColor.FOREGROUND, GameColor.SECONDARY_BACKGROUND)
@@ -73,7 +73,7 @@ class InventoryRowFragment(width: Int, entity: GameEntity) : Fragment {
                 }
                 handleMouseEvents(MouseEventType.MOUSE_RELEASED) { _, _ ->
                     if (didMouseMoveAfterInit) {
-                        onExamine?.invoke()
+                        onExamine?.invoke(item)
                     }
                     StopPropagation
                 }
