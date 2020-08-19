@@ -9,6 +9,7 @@ import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.component.Container
 import org.hexworks.zircon.api.data.Size
+import org.hexworks.zircon.api.graphics.Symbols
 import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.api.uievent.KeyCode
 
@@ -74,7 +75,13 @@ class DebugColorDialog(screen: Screen) : Dialog(screen, closeKey = KeyCode.BACK_
 
 
     private fun addColorComponent(textBoxBuilder: TextBoxBuilder, color: TileColor) {
-        val labelWidth = (textBoxBuilder.size.width - 1) / 3
+        val labelWidth = (textBoxBuilder.size.width - 2) / 3
+
+        val swatchLabel = Components.label()
+                .withSize(1, 1)
+                .withText("${Symbols.BLOCK_SOLID}")
+                .withStyle(color)
+                .build()
 
         val redLabel = Components.label()
                 .withSize(labelWidth, 1)
@@ -95,6 +102,7 @@ class DebugColorDialog(screen: Screen) : Dialog(screen, closeKey = KeyCode.BACK_
                 .build()
 
         textBoxBuilder
+                .addInlineComponent(swatchLabel)
                 .addInlineComponent(redLabel)
                 .addInlineComponent(greenLabel)
                 .addInlineComponent(blueLabel)

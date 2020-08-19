@@ -43,14 +43,14 @@ object GameTile {
      * WIDGET
      */
 
-    val FLOOR = newCharacterTile(Symbols.INTERPUNCT, GameColor.GREY)
+    val FLOOR = newCharacterTile(Symbols.INTERPUNCT, GameColor.LIGHT_GREY)
     val GRASS: CharacterTile
         get() = newCharacterTile('\"', GameColor.DARK_GREEN.withVariance())
     val POT = newCharacterTile(Symbols.SIGMA_LOWERCASE, GameColor.DARK_YELLOW)
     val WALL: CharacterTile
-        get() = newCharacterTile('#', GameColor.GREY.withVariance())
-    val CLOSED_DOOR = newCharacterTile('+', GameColor.GREY, GameColor.BROWN)
-    val OPEN_DOOR = newCharacterTile('\'', GameColor.GREY, GameColor.BROWN)
+        get() = newCharacterTile('#', GameColor.LIGHT_GREY.withVariance())
+    val CLOSED_DOOR = newCharacterTile('+', GameColor.LIGHT_GREY, GameColor.DARK_BROWN)
+    val OPEN_DOOR = newCharacterTile('\'', GameColor.LIGHT_GREY, GameColor.DARK_BROWN)
     val UNREVEALED = newCharacterTile(' ', GameColor.BLACK, GameColor.BLACK)
 
     /**
@@ -62,7 +62,7 @@ object GameTile {
     val GOBLIN = newCharacterTile('g', GameColor.DARK_RED)
     val FUNGUS = newCharacterTile(',', GameColor.GREEN)
     val PLAYER = newCharacterTile('@', GameColor.YELLOW)
-    val RAT = newCharacterTile('r', GameColor.LIGHT_GREY)
+    val RAT = newCharacterTile('r', GameColor.WHITE)
     val ZOMBIE = newCharacterTile('z', GameColor.DARK_CYAN)
 
     /**
