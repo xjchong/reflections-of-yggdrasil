@@ -1,15 +1,12 @@
 package facets
 
 import attributes.Equipments
-import attributes.Inventory
-import commands.Drop
 import commands.InspectEquipments
 import entity.getAttribute
-import entity.position
 import events.EquipmentsMenuEvent
+import events.UnequipInputEvent
 import extensions.responseWhenIs
 import game.GameContext
-import kotlinx.coroutines.runBlocking
 import org.hexworks.amethyst.api.Command
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
@@ -24,16 +21,7 @@ object EquipmentsInspectable : BaseFacet<GameContext>(Equipments::class) {
             val equipments = equipmentsOwner.getAttribute(Equipments::class) ?: return@responseWhenIs Pass
 
             EquipmentsMenuEvent.publish(equipments, onUnequip = {
-                val unequipped = equipments.unequip(it) ?: return@publish
-                val inventory = equipmentsOwner.getAttribute(Inventory::class)
-
-                context.world.observeSceneBy(equipmentsOwner, "The $equipmentsOwner unequips the $unequipped.")
-
-                if (inventory == null || !inventory.add(unequipped)) {
-                    runBlocking {
-                        unequipped.executeCommand(Drop(context, unequipped, equipmentsOwner, equipmentsOwner.position))
-                    }
-                }
+                context.world.update(UnequipInputEvent(it))
             })
 
             Consumed

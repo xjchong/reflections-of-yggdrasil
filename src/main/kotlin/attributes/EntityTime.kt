@@ -20,6 +20,7 @@ class EntityTime(initialNextUpdateTime: Long = GameEngine.gameTime) : Attribute 
         const val OPEN = DEFAULT
         const val PROLIFERATE = DEFAULT
         const val TAKE = DEFAULT
+        const val UNEQUIP = EQUIP
         const val WAIT = DEFAULT
     }
 

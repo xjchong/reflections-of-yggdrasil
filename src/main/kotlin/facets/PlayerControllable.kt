@@ -42,7 +42,7 @@ object PlayerControllable : BaseFacet<GameContext>() {
                         }
                     }
                     is DropInputEvent -> event.droppable.run { executeCommand(Drop(context, this, entity, position)) }
-                    is EquipInputEvent -> event.equipment.run { executeCommand(Equip(context, this, entity)) }
+                    is EquipInputEvent -> event.equippable.run { executeCommand(Equip(context, this, entity)) }
                     is EquipmentsInputEvent -> entity.executeCommand(InspectEquipments(context, entity))
                     is GuardInputEvent -> entity.executeCommand(Guard(context, entity))
                     is InventoryInputEvent -> entity.executeCommand(InspectInventory(context, entity))
@@ -60,6 +60,7 @@ object PlayerControllable : BaseFacet<GameContext>() {
                         }
                     }
                     is TakeInputEvent -> entity.tryTake(context, position)
+                    is UnequipInputEvent -> event.equippable.run { executeCommand(Unequip(context, this, entity)) }
                     is WaitInputEvent -> {
                         entity.spendTime(EntityTime.WAIT)
                         Consumed

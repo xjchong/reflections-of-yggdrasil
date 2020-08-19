@@ -17,7 +17,7 @@ class ContextualInputEvent(val relativePosition: Position3D? = null) : GameInput
 
 class DropInputEvent(val droppable: GameEntity) : GameInputEvent()
 
-class EquipInputEvent(val equipment: GameEntity) : GameInputEvent()
+class EquipInputEvent(val equippable: GameEntity) : GameInputEvent()
 
 class EquipmentsInputEvent(override val type: GameUpdateMode = Background) : GameInputEvent()
 
@@ -28,6 +28,8 @@ class InventoryInputEvent(override val type: GameUpdateMode = Background) : Game
 class MoveInputEvent(val relativePosition: Position3D) : GameInputEvent()
 
 class TakeInputEvent() : GameInputEvent()
+
+class UnequipInputEvent(val equippable: GameEntity) : GameInputEvent()
 
 class WaitInputEvent() : GameInputEvent()
 
