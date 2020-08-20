@@ -13,7 +13,7 @@ import builders.newGameEntityOfType
 import considerations.ConstantConsideration
 import considerations.HealthConsideration
 import considerations.LinearCurve
-import constants.GameTile
+import constants.GameTileRepo
 import entity.*
 import facets.*
 import models.*
@@ -51,7 +51,7 @@ object CreatureFactory {
             CoinPouch.create(50),
             EnemyList(),
             EntityPosition(),
-            EntityTile(GameTile.PLAYER),
+            EntityTile(GameTileRepo.PLAYER),
             EntityTime(),
             FocusTarget(),
             Equipments(
@@ -115,7 +115,7 @@ object CreatureFactory {
                 )
             ),
             EntityPosition(),
-            EntityTile(GameTile.BAT),
+            EntityTile(GameTileRepo.BAT),
             EntityTime(),
             IsObstacle,
             LootTable(
@@ -151,7 +151,7 @@ object CreatureFactory {
                 )
             ),
             EntityPosition(),
-            EntityTile(GameTile.CRAB),
+            EntityTile(GameTileRepo.CRAB),
             EntityTime(),
             IsObstacle,
             KillTarget(),
@@ -183,7 +183,7 @@ object CreatureFactory {
                 tech = 0.05
             ),
             EntityPosition(),
-            EntityTile(GameTile.GOBLIN),
+            EntityTile(GameTileRepo.GOBLIN),
             EntityTime(),
             Equipments(
                 initialMainHand = WeaponFactory.newRandomWeapon(),
@@ -256,7 +256,7 @@ object CreatureFactory {
                     )
                 ),
                 EntityPosition(),
-                EntityTile(GameTile.FUNGUS),
+                EntityTile(GameTileRepo.FUNGUS),
                 EntityTime(),
                 IsObstacle,
                 AiControllablePlans(),
@@ -304,7 +304,7 @@ object CreatureFactory {
                     )
                 ),
                 EntityPosition(),
-                EntityTile(GameTile.RAT),
+                EntityTile(GameTileRepo.RAT),
                 EntityTime(),
                 IsObstacle,
                 KillTarget(),
@@ -326,7 +326,7 @@ object CreatureFactory {
         .withAttributes(
             AttackStrategies(WeakBiteAttack(), WeakClawAttack()),
             EntityPosition(),
-            EntityTile(GameTile.ZOMBIE),
+            EntityTile(GameTileRepo.ZOMBIE),
             EntityTime(),
             AttackableDetails.create(
                 maxHealth = 80,

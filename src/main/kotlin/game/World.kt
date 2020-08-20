@@ -1,7 +1,7 @@
 package game
 import attributes.EntityPosition
-import attributes.facet.OpenableDetails
 import attributes.SensoryMemory
+import attributes.facet.OpenableDetails
 import attributes.flag.IsOpaque
 import attributes.flag.IsSmellBlocking
 import block.GameBlock
@@ -42,6 +42,7 @@ class World(startingBlocks: Map<Position3D, GameBlock>, visibleSize: Size3D, act
                 engine.addEntity(entity)
                 entity.getAttribute(EntityPosition::class)?.updatePosition(position, turn)
             }
+            block.setNeighborsFrom(startingBlocks)
         }
     }
 

@@ -73,8 +73,8 @@ class FocusTargetRow(width: Int, entity: GameEntity) : Fragment {
             .build().apply {
                 addComponent(Components.label()
                         .withSize(2, 1)
-                        .withStyle(entity.tile.foregroundColor, TileColor.transparent())
-                        .withText(entity.tile.character.toString()))
+                        .withStyle(entity.characterTile.foregroundColor, TileColor.transparent())
+                        .withText(entity.characterTile.character.toString()))
                 addComponent(Components.header()
                         .withSize(NAME_LENGTH, 1)
                         .withText(entity.name.capitalize()))

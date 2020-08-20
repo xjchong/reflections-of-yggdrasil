@@ -3,12 +3,12 @@ package entity.factories
 import attributes.*
 import attributes.facet.AttackableDetails
 import attributes.facet.OpenableDetails
-import attributes.flag.IsSmellBlocking
 import attributes.flag.IsBarrier
 import attributes.flag.IsObstacle
 import attributes.flag.IsOpaque
+import attributes.flag.IsSmellBlocking
 import builders.newGameEntityOfType
-import constants.GameTile
+import constants.GameTileRepo
 import entity.*
 import facets.Attackable
 import facets.Destroyable
@@ -23,10 +23,10 @@ object WidgetFactory {
         val baseAttributes = mutableListOf(
                 IsBarrier,
                 EntityPosition(),
-                EntityTile(if (isOpen) GameTile.OPEN_DOOR else GameTile.CLOSED_DOOR),
+                EntityTile(if (isOpen) GameTileRepo.OPEN_DOOR else GameTileRepo.CLOSED_DOOR),
             OpenableDetails(
-                openAppearance = GameTile.OPEN_DOOR,
-                closedAppearance = GameTile.CLOSED_DOOR,
+                openAppearance = GameTileRepo.OPEN_DOOR,
+                closedAppearance = GameTileRepo.CLOSED_DOOR,
                 isOpen = isOpen
             )
         )
@@ -44,7 +44,7 @@ object WidgetFactory {
     fun newGrass() = newGameEntityOfType(Grass) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTile.GRASS))
+                EntityTile(GameTileRepo.GRASS))
     }
 
     fun newPot() = newGameEntityOfType(Pot) {
@@ -53,7 +53,7 @@ object WidgetFactory {
                         1, 1, 1, 0
                 ),
                 EntityPosition(),
-                EntityTile(GameTile.POT),
+                EntityTile(GameTileRepo.POT),
                 Factions(Widget),
                 LootTable(
                         WeightedEntry(50) { listOf(ItemFactory.newRandomTreasure()) },
@@ -69,7 +69,7 @@ object WidgetFactory {
         attributes(
                 IsSmellBlocking,
                 EntityPosition(),
-                EntityTile(GameTile.WALL),
+                EntityTile(GameTileRepo.WALL),
                 IsObstacle,
                 IsOpaque)
         if (isDiggable) facets(Diggable)

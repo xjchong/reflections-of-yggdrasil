@@ -38,7 +38,7 @@ object Throwable : BaseFacet<GameContext>() {
                 val currentBlock = world.fetchBlockAt(position).optional ?: continue
                 val nextBlock = context.world.fetchBlockAt(position).optional ?: continue
                 val entities = nextBlock.entities
-                world.flash(position, throwable.tile.foregroundColor)
+                world.flash(position, throwable.characterTile.foregroundColor)
 
                 for (entity in entities) {
                     if (!entity.hasAttribute<IsObstacle>()) continue

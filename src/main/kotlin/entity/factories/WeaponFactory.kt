@@ -3,11 +3,12 @@ package entity.factories
 import attributes.AttackStrategies
 import attributes.EntityPosition
 import attributes.EntityTile
+import block.GameTile
 import attributes.facet.EquippableDetails
 import attributes.facet.EquippableType
 import attributes.facet.OneHanded
 import builders.AnyEntityBuilder
-import constants.GameTile
+import constants.GameTileRepo
 import entity.*
 import facets.Droppable
 import facets.Equippable
@@ -18,7 +19,6 @@ import models.TechnicalWeaponBash
 import models.TechnicalWeaponCut
 import models.VeryTechnicalWeaponBash
 import org.hexworks.amethyst.api.entity.EntityType
-import org.hexworks.zircon.api.data.CharacterTile
 import kotlin.random.Random
 
 object WeaponFactory {
@@ -35,20 +35,20 @@ object WeaponFactory {
      * TO BE DEPRECATED
      */
 
-    fun newRustyDagger() = newWeaponBuilder(OneHanded, Dagger, GameTile.DAGGER)
+    fun newRustyDagger() = newWeaponBuilder(OneHanded, Dagger, GameTileRepo.DAGGER)
         .withAddedAttributes(AttackStrategies(TechnicalWeaponCut()))
         .withAddedFacets(Throwable)
         .build()
 
-    fun newWoodenStaff() = newWeaponBuilder(OneHanded, Staff, GameTile.STAFF)
+    fun newWoodenStaff() = newWeaponBuilder(OneHanded, Staff, GameTileRepo.STAFF)
         .withAddedAttributes(AttackStrategies(TechnicalWeaponBash()))
         .build()
 
-    fun newIronSword() = newWeaponBuilder(OneHanded, Sword, GameTile.SWORD)
+    fun newIronSword() = newWeaponBuilder(OneHanded, Sword, GameTileRepo.SWORD)
         .withAddedAttributes(AttackStrategies(BalancedWeaponCut()))
         .build()
 
-    fun newClub() = newWeaponBuilder(OneHanded, Club, GameTile.CLUB)
+    fun newClub() = newWeaponBuilder(OneHanded, Club, GameTileRepo.CLUB)
         .withAddedAttributes(AttackStrategies(VeryTechnicalWeaponBash()))
         .build()
 
@@ -56,7 +56,7 @@ object WeaponFactory {
      * HELPERS
      */
 
-    private fun newWeaponBuilder(equipType: EquippableType, type: EntityType, tile: CharacterTile) =
+    private fun newWeaponBuilder(equipType: EquippableType, type: EntityType, tile: GameTile) =
         AnyEntityBuilder.newBuilder(type)
             .withAttributes(
                 EntityTile(tile),

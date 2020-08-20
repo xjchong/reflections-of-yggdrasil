@@ -5,7 +5,7 @@ import attributes.facet.AttackableDetails
 import entity.GameEntity
 import entity.addTileModifiers
 import entity.removeTileModifiers
-import entity.tile
+import entity.characterTile
 import events.ExamineEvent
 import extensions.create
 import extensions.withStyle
@@ -88,8 +88,8 @@ class EnemyListRow(width: Int, entity: GameEntity) : Fragment {
 
                 addComponent(Components.label()
                         .withSize(2, 1)
-                        .withStyle(entity.tile.foregroundColor, TileColor.transparent())
-                        .withText(entity.tile.character.toString()))
+                        .withStyle(entity.characterTile.foregroundColor, TileColor.transparent())
+                        .withText(entity.characterTile.character.toString()))
                 addComponent(Components.header()
                         .withSize(NAME_LENGTH, 1)
                         .withText(entity.name.capitalize()))

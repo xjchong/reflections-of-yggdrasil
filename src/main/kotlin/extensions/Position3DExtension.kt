@@ -2,6 +2,15 @@ package extensions
 
 import org.hexworks.zircon.api.data.Position3D
 
+val Position3D.east: Position3D
+    get() = withRelativeX(1)
+val Position3D.south: Position3D
+    get() = withRelativeY(1)
+val Position3D.west: Position3D
+    get() = withRelativeX(-1)
+val Position3D.north: Position3D
+    get() = withRelativeY(-1)
+
 fun Position3D.neighbors(shouldShuffle: Boolean = true): List<Position3D> {
     val neighborPositions = (-1..1).flatMap { x ->
         (-1..1).map { y ->

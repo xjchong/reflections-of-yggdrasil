@@ -27,7 +27,7 @@ object Movable : BaseFacet<GameContext>() {
                 val oldPosition = movable.position
                 if (block.transfer(movable, currentBlock, world)) {
                     if (!movable.hasFacet<PlayerControllable>()) {
-                        world.motionBlur(oldPosition, movable.tile.foregroundColor)
+                        world.motionBlur(oldPosition, movable.characterTile.foregroundColor)
                     }
 
                     movable.getAttribute(MoveLog::class)?.logVisit(nextPosition)

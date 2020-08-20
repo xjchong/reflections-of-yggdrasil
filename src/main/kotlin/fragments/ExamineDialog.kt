@@ -3,7 +3,7 @@ package fragments
 import GameColor
 import entity.GameEntity
 import entity.symbol
-import entity.tile
+import entity.characterTile
 import extensions.withStyle
 import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.ComponentDecorations.shadow
@@ -27,7 +27,7 @@ class ExamineDialog(screen: Screen, entity: GameEntity) : Dialog(screen) {
                 addComponent(Components.textBox(DIALOG_SIZE.width - 3)
                         .addInlineComponent(Components.label()
                                 .withText(entity.symbol)
-                                .withStyle(entity.tile.foregroundColor)
+                                .withStyle(entity.characterTile.foregroundColor)
                                 .withSize(2, 1)
                                 .build())
                         .addInlineComponent(Components.header()

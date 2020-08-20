@@ -2,18 +2,15 @@ package entity.factories
 
 import attributes.*
 import attributes.facet.*
+import block.GameTile
 import builders.AnyEntityBuilder
-import constants.GameTile
+import constants.GameTileRepo
 import entity.*
 import facets.Droppable
 import facets.Equippable
 import facets.Takeable
-import models.Bash
-import models.Cut
-import models.Resistance
-import models.Stab
+import models.*
 import org.hexworks.amethyst.api.entity.EntityType
-import org.hexworks.zircon.api.data.CharacterTile
 import utilities.WeightedCollection
 import utilities.WeightedEntry
 
@@ -106,7 +103,7 @@ object ArmorFactory {
 
     // HEAD
 
-    fun newSimpleCap() = newArmorBuilder(Head, SimpleCap, GameTile.COMMON_LIGHT_ARMOR)
+    fun newSimpleCap() = newArmorBuilder(Head, SimpleCap, GameTileRepo.COMMON_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, RELIABLE, SMALL_RESISTANCE),
@@ -114,7 +111,7 @@ object ArmorFactory {
                             Resistance(Bash, RELIABLE, TINY_RESISTANCE)))
             .build()
 
-    fun newFancyCap() = newArmorBuilder(Head, FancyCap, GameTile.UNCOMMON_LIGHT_ARMOR)
+    fun newFancyCap() = newArmorBuilder(Head, FancyCap, GameTileRepo.UNCOMMON_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, RELIABLE, MODERATE_RESISTANCE),
@@ -122,7 +119,7 @@ object ArmorFactory {
                             Resistance(Bash, RELIABLE, SMALL_RESISTANCE)))
             .build()
 
-    fun newAncientCap() = newArmorBuilder(Head, AncientCap, GameTile.RARE_LIGHT_ARMOR)
+    fun newAncientCap() = newArmorBuilder(Head, AncientCap, GameTileRepo.RARE_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, RELIABLE, LARGE_RESISTANCE),
@@ -130,7 +127,7 @@ object ArmorFactory {
                             Resistance(Bash, RELIABLE, MODERATE_RESISTANCE)))
             .build()
 
-    fun newSimpleHelm() = newArmorBuilder(Head, SimpleHelm, GameTile.COMMON_MEDIUM_ARMOR)
+    fun newSimpleHelm() = newArmorBuilder(Head, SimpleHelm, GameTileRepo.COMMON_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, RELIABLE, SMALL_RESISTANCE),
@@ -138,7 +135,7 @@ object ArmorFactory {
                             Resistance(Bash, RELIABLE, SMALL_RESISTANCE)))
             .build()
 
-    fun newFancyHelm() = newArmorBuilder(Head, FancyHelm, GameTile.UNCOMMON_MEDIUM_ARMOR)
+    fun newFancyHelm() = newArmorBuilder(Head, FancyHelm, GameTileRepo.UNCOMMON_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, RELIABLE, MODERATE_RESISTANCE),
@@ -146,7 +143,7 @@ object ArmorFactory {
                             Resistance(Bash, RELIABLE, MODERATE_RESISTANCE)))
             .build()
 
-    fun newAncientHelm() = newArmorBuilder(Head, AncientHelm, GameTile.RARE_MEDIUM_ARMOR)
+    fun newAncientHelm() = newArmorBuilder(Head, AncientHelm, GameTileRepo.RARE_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, RELIABLE, LARGE_RESISTANCE),
@@ -154,7 +151,7 @@ object ArmorFactory {
                             Resistance(Bash, RELIABLE, LARGE_RESISTANCE)))
             .build()
 
-    fun newSimpleSallet() = newArmorBuilder(Head, SimpleSallet, GameTile.COMMON_HEAVY_ARMOR)
+    fun newSimpleSallet() = newArmorBuilder(Head, SimpleSallet, GameTileRepo.COMMON_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, RELIABLE, MODERATE_RESISTANCE),
@@ -162,7 +159,7 @@ object ArmorFactory {
                             Resistance(Bash, RELIABLE, SMALL_RESISTANCE)))
             .build()
 
-    fun newFancySallet() = newArmorBuilder(Head, FancySallet, GameTile.UNCOMMON_HEAVY_ARMOR)
+    fun newFancySallet() = newArmorBuilder(Head, FancySallet, GameTileRepo.UNCOMMON_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, RELIABLE, LARGE_RESISTANCE),
@@ -170,7 +167,7 @@ object ArmorFactory {
                             Resistance(Bash, RELIABLE, MODERATE_RESISTANCE)))
             .build()
 
-    fun newAncientSallet() = newArmorBuilder(Head, AncientSallet, GameTile.RARE_HEAVY_ARMOR)
+    fun newAncientSallet() = newArmorBuilder(Head, AncientSallet, GameTileRepo.RARE_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, RELIABLE, HUGE_RESISTANCE),
@@ -180,7 +177,7 @@ object ArmorFactory {
 
     // BODY
 
-    fun newSimpleJacket() = newArmorBuilder(Body, SimpleJacket, GameTile.COMMON_LIGHT_ARMOR)
+    fun newSimpleJacket() = newArmorBuilder(Body, SimpleJacket, GameTileRepo.COMMON_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_RELIABLE, SMALL_RESISTANCE),
@@ -188,7 +185,7 @@ object ArmorFactory {
                             Resistance(Bash, VERY_RELIABLE, TINY_RESISTANCE)))
             .build()
 
-    fun newFancyJacket() = newArmorBuilder(Body, FancyJacket, GameTile.UNCOMMON_LIGHT_ARMOR)
+    fun newFancyJacket() = newArmorBuilder(Body, FancyJacket, GameTileRepo.UNCOMMON_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_RELIABLE, MODERATE_RESISTANCE),
@@ -196,7 +193,7 @@ object ArmorFactory {
                             Resistance(Bash, VERY_RELIABLE, SMALL_RESISTANCE)))
             .build()
 
-    fun newAncientJacket() = newArmorBuilder(Body, AncientJacket, GameTile.RARE_LIGHT_ARMOR)
+    fun newAncientJacket() = newArmorBuilder(Body, AncientJacket, GameTileRepo.RARE_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_RELIABLE, LARGE_RESISTANCE),
@@ -204,7 +201,7 @@ object ArmorFactory {
                             Resistance(Bash, VERY_RELIABLE, MODERATE_RESISTANCE)))
             .build()
 
-    fun newSimpleHauberk() = newArmorBuilder(Body, SimpleHauberk, GameTile.COMMON_MEDIUM_ARMOR)
+    fun newSimpleHauberk() = newArmorBuilder(Body, SimpleHauberk, GameTileRepo.COMMON_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_RELIABLE, SMALL_RESISTANCE),
@@ -212,7 +209,7 @@ object ArmorFactory {
                             Resistance(Bash, VERY_RELIABLE, SMALL_RESISTANCE)))
             .build()
 
-    fun newFancyHauberk() = newArmorBuilder(Body, FancyHauberk, GameTile.UNCOMMON_MEDIUM_ARMOR)
+    fun newFancyHauberk() = newArmorBuilder(Body, FancyHauberk, GameTileRepo.UNCOMMON_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_RELIABLE, MODERATE_RESISTANCE),
@@ -220,7 +217,7 @@ object ArmorFactory {
                             Resistance(Bash, VERY_RELIABLE, MODERATE_RESISTANCE)))
             .build()
 
-    fun newAncientHauberk() = newArmorBuilder(Body, AncientHauberk, GameTile.RARE_MEDIUM_ARMOR)
+    fun newAncientHauberk() = newArmorBuilder(Body, AncientHauberk, GameTileRepo.RARE_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_RELIABLE, LARGE_RESISTANCE),
@@ -228,7 +225,7 @@ object ArmorFactory {
                             Resistance(Bash, VERY_RELIABLE, LARGE_RESISTANCE)))
             .build()
 
-    fun newSimpleCuirass() = newArmorBuilder(Body, SimpleCuirass, GameTile.COMMON_HEAVY_ARMOR)
+    fun newSimpleCuirass() = newArmorBuilder(Body, SimpleCuirass, GameTileRepo.COMMON_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_RELIABLE, MODERATE_RESISTANCE),
@@ -236,7 +233,7 @@ object ArmorFactory {
                             Resistance(Bash, VERY_RELIABLE, SMALL_RESISTANCE)))
             .build()
 
-    fun newFancyCuirass() = newArmorBuilder(Body, FancyCuirass, GameTile.UNCOMMON_HEAVY_ARMOR)
+    fun newFancyCuirass() = newArmorBuilder(Body, FancyCuirass, GameTileRepo.UNCOMMON_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_RELIABLE, LARGE_RESISTANCE),
@@ -244,7 +241,7 @@ object ArmorFactory {
                             Resistance(Bash, VERY_RELIABLE, MODERATE_RESISTANCE)))
             .build()
 
-    fun newAncientCuirass() = newArmorBuilder(Body, AncientCuirass, GameTile.RARE_HEAVY_ARMOR)
+    fun newAncientCuirass() = newArmorBuilder(Body, AncientCuirass, GameTileRepo.RARE_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, VERY_RELIABLE, HUGE_RESISTANCE),
@@ -254,7 +251,7 @@ object ArmorFactory {
 
     // HANDS
 
-    fun newSimpleGloves() = newArmorBuilder(Arms, SimpleGloves, GameTile.COMMON_LIGHT_ARMOR)
+    fun newSimpleGloves() = newArmorBuilder(Arms, SimpleGloves, GameTileRepo.COMMON_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, SMALL_RESISTANCE),
@@ -262,7 +259,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, TINY_RESISTANCE)))
             .build()
 
-    fun newFancyGloves() = newArmorBuilder(Arms, FancyGloves, GameTile.UNCOMMON_LIGHT_ARMOR)
+    fun newFancyGloves() = newArmorBuilder(Arms, FancyGloves, GameTileRepo.UNCOMMON_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, MODERATE_RESISTANCE),
@@ -270,7 +267,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, SMALL_RESISTANCE)))
             .build()
 
-    fun newAncientGloves() = newArmorBuilder(Arms, AncientGloves, GameTile.RARE_LIGHT_ARMOR)
+    fun newAncientGloves() = newArmorBuilder(Arms, AncientGloves, GameTileRepo.RARE_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, LARGE_RESISTANCE),
@@ -278,7 +275,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, MODERATE_RESISTANCE)))
             .build()
 
-    fun newSimpleBracers() = newArmorBuilder(Arms, SimpleBracers, GameTile.COMMON_MEDIUM_ARMOR)
+    fun newSimpleBracers() = newArmorBuilder(Arms, SimpleBracers, GameTileRepo.COMMON_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, SMALL_RESISTANCE),
@@ -286,7 +283,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, SMALL_RESISTANCE)))
             .build()
 
-    fun newFancyBracers() = newArmorBuilder(Arms, FancyBracers, GameTile.UNCOMMON_MEDIUM_ARMOR)
+    fun newFancyBracers() = newArmorBuilder(Arms, FancyBracers, GameTileRepo.UNCOMMON_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, MODERATE_RESISTANCE),
@@ -294,7 +291,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, MODERATE_RESISTANCE)))
             .build()
 
-    fun newAncientBracers() = newArmorBuilder(Arms, AncientBracers, GameTile.RARE_MEDIUM_ARMOR)
+    fun newAncientBracers() = newArmorBuilder(Arms, AncientBracers, GameTileRepo.RARE_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, LARGE_RESISTANCE),
@@ -302,7 +299,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, LARGE_RESISTANCE)))
             .build()
 
-    fun newSimpleGauntlets() = newArmorBuilder(Arms, SimpleGauntlets, GameTile.COMMON_HEAVY_ARMOR)
+    fun newSimpleGauntlets() = newArmorBuilder(Arms, SimpleGauntlets, GameTileRepo.COMMON_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, MODERATE_RESISTANCE),
@@ -310,7 +307,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, SMALL_RESISTANCE)))
             .build()
 
-    fun newFancyGauntlets() = newArmorBuilder(Arms, FancyGauntlets, GameTile.UNCOMMON_HEAVY_ARMOR)
+    fun newFancyGauntlets() = newArmorBuilder(Arms, FancyGauntlets, GameTileRepo.UNCOMMON_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, LARGE_RESISTANCE),
@@ -318,7 +315,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, MODERATE_RESISTANCE)))
             .build()
 
-    fun newAncientGauntlets() = newArmorBuilder(Arms, AncientGauntlets, GameTile.RARE_HEAVY_ARMOR)
+    fun newAncientGauntlets() = newArmorBuilder(Arms, AncientGauntlets, GameTileRepo.RARE_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, HUGE_RESISTANCE),
@@ -328,7 +325,7 @@ object ArmorFactory {
 
     // LEGS
 
-    fun newSimpleShoes() = newArmorBuilder(Legs, SimpleShoes, GameTile.COMMON_LIGHT_ARMOR)
+    fun newSimpleShoes() = newArmorBuilder(Legs, SimpleShoes, GameTileRepo.COMMON_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, SMALL_RESISTANCE),
@@ -336,7 +333,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, TINY_RESISTANCE)))
             .build()
 
-    fun newFancyShoes() = newArmorBuilder(Legs, FancyShoes, GameTile.UNCOMMON_LIGHT_ARMOR)
+    fun newFancyShoes() = newArmorBuilder(Legs, FancyShoes, GameTileRepo.UNCOMMON_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, MODERATE_RESISTANCE),
@@ -344,7 +341,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, SMALL_RESISTANCE)))
             .build()
 
-    fun newAncientShoes() = newArmorBuilder(Legs, AncientShoes, GameTile.RARE_LIGHT_ARMOR)
+    fun newAncientShoes() = newArmorBuilder(Legs, AncientShoes, GameTileRepo.RARE_LIGHT_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, LARGE_RESISTANCE),
@@ -352,7 +349,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, MODERATE_RESISTANCE)))
             .build()
 
-    fun newSimpleBoots() = newArmorBuilder(Legs, SimpleBoots, GameTile.COMMON_MEDIUM_ARMOR)
+    fun newSimpleBoots() = newArmorBuilder(Legs, SimpleBoots, GameTileRepo.COMMON_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, SMALL_RESISTANCE),
@@ -360,7 +357,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, SMALL_RESISTANCE)))
             .build()
 
-    fun newFancyBoots() = newArmorBuilder(Legs, FancyBoots, GameTile.UNCOMMON_MEDIUM_ARMOR)
+    fun newFancyBoots() = newArmorBuilder(Legs, FancyBoots, GameTileRepo.UNCOMMON_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, MODERATE_RESISTANCE),
@@ -368,7 +365,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, MODERATE_RESISTANCE)))
             .build()
 
-    fun newAncientBoots() = newArmorBuilder(Legs, AncientBoots, GameTile.RARE_MEDIUM_ARMOR)
+    fun newAncientBoots() = newArmorBuilder(Legs, AncientBoots, GameTileRepo.RARE_MEDIUM_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, LARGE_RESISTANCE),
@@ -376,7 +373,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, LARGE_RESISTANCE)))
             .build()
 
-    fun newSimpleGreaves() = newArmorBuilder(Legs, SimpleGreaves, GameTile.COMMON_HEAVY_ARMOR)
+    fun newSimpleGreaves() = newArmorBuilder(Legs, SimpleGreaves, GameTileRepo.COMMON_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, MODERATE_RESISTANCE),
@@ -384,7 +381,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, SMALL_RESISTANCE)))
             .build()
 
-    fun newFancyGreaves() = newArmorBuilder(Legs, FancyGreaves, GameTile.UNCOMMON_HEAVY_ARMOR)
+    fun newFancyGreaves() = newArmorBuilder(Legs, FancyGreaves, GameTileRepo.UNCOMMON_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, LARGE_RESISTANCE),
@@ -392,7 +389,7 @@ object ArmorFactory {
                             Resistance(Bash, OCCASIONAL, MODERATE_RESISTANCE)))
             .build()
 
-    fun newAncientGreaves() = newArmorBuilder(Legs, AncientGreaves, GameTile.RARE_HEAVY_ARMOR)
+    fun newAncientGreaves() = newArmorBuilder(Legs, AncientGreaves, GameTileRepo.RARE_HEAVY_ARMOR)
             .withAddedAttributes(
                     Resistances(
                             Resistance(Cut, OCCASIONAL, HUGE_RESISTANCE),
@@ -404,7 +401,7 @@ object ArmorFactory {
      * HELPERS
      */
 
-    private fun newArmorBuilder(equipType: EquippableType, type: EntityType, tile: CharacterTile) = AnyEntityBuilder.newBuilder(type)
+    private fun newArmorBuilder(equipType: EquippableType, type: EntityType, tile: GameTile) = AnyEntityBuilder.newBuilder(type)
             .withAttributes(
                     EntityTile(tile),
                     EntityPosition(),

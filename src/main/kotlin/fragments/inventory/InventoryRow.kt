@@ -2,7 +2,7 @@ package fragments.inventory
 
 import GameColor
 import entity.GameEntity
-import entity.tile
+import entity.characterTile
 import entity.whenFacetIs
 import extensions.create
 import extensions.withStyle
@@ -50,8 +50,8 @@ class InventoryRow(width: Int, item: GameEntity) : TableRow(width, 1) {
             .build().apply {
                 addComponent(Components.label()
                         .withSize(1, 1)
-                        .withStyle(item.tile.foregroundColor, TileColor.transparent())
-                        .withText(item.tile.character.toString()))
+                        .withStyle(item.characterTile.foregroundColor, TileColor.transparent())
+                        .withText(item.characterTile.character.toString()))
                 addComponent(Components.label()
                         .withSize(NAME_COLUMN_WIDTH, 1)
                         .withText(item.name.capitalize()))

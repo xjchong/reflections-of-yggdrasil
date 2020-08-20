@@ -1,10 +1,10 @@
 package block
-import GameColor
 import attributes.EntityPosition
 import attributes.Memory
 import attributes.flag.IsObstacle
-import constants.GameTile
+import constants.GameTileRepo
 import entity.*
+import extensions.adjacentNeighbors
 import extensions.optional
 import game.World
 import kotlinx.collections.immutable.PersistentMap
@@ -15,7 +15,6 @@ import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.data.BlockTileType
-import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
@@ -23,10 +22,10 @@ import utilities.DebugConfig
 import kotlin.reflect.full.isSuperclassOf
 
 class GameBlock(val position: Position3D,
-                private var defaultTile: CharacterTile = GameTile.FLOOR,
+                private var defaultTile: GameTile = GameTileRepo.FLOOR,
                 private val currentEntities: MutableList<GameEntity> = mutableListOf(),
                 private var isRevealed: Boolean = false)
-    : BaseBlock<Tile>(defaultTile, persistentMapOf()) {
+    : BaseBlock<Tile>(defaultTile.characterTile, persistentMapOf()) {
 
     companion object {
         const val MIN_MEMORY_FOGGINESS = 0.65
@@ -40,32 +39,39 @@ class GameBlock(val position: Position3D,
 
     private var memory: Memory? = null
     private var particleEffect: ParticleEffect? = null
+    val hasMemory
+        get() = memory != null
 
     val turnProperty: Property<Long> = createPropertyFrom(0)
     private val turn: Long by turnProperty.asDelegate()
 
+    private val mutableNeighbors: MutableMap<Position3D, GameBlock?> = mutableMapOf()
+    val neighbors
+        get() = mutableNeighbors.toMap()
+    private val autoTileContext
+        get() = AutoTileContext(position, neighbors.filter {
+            it.value?.hasMemory == true
+        })
+
     override var tiles: PersistentMap<BlockTileType, Tile> = persistentMapOf()
         get() {
-            val entityTiles = entities.map { it.tile }
-            val contentTile = when {
-                entityTiles.contains(GameTile.PLAYER) -> GameTile.PLAYER
-                entityTiles.isNotEmpty() -> entityTiles.last()
-                else -> defaultTile
-            }
-
-            val topTile = when {
-                (isRevealed || DebugConfig.shouldRevealWorld) -> GameTile.EMPTY.withBackgroundColor(
-                        particleEffect?.color ?: TileColor.transparent()
-                )
-                else -> getMemoryTile()
+            val entityTiles = entities.map { it.gameTile }
+            val contentTile = if (isRevealed || DebugConfig.shouldRevealWorld) {
+                when {
+                    hasType<Player>() -> GameTileRepo.PLAYER
+                    entityTiles.isNotEmpty() -> entityTiles.last()
+                    else -> defaultTile
+                }.tile(autoTileContext)
+            } else {
+                getMemoryTile()
             }
 
             if (particleEffect?.update() == false) particleEffect = null
 
             return persistentMapOf(
-                Pair(BlockTileType.TOP, topTile),
+                Pair(BlockTileType.TOP, getFogTile()),
                 Pair(BlockTileType.CONTENT, contentTile),
-                Pair(BlockTileType.BOTTOM, GameTile.FLOOR)
+                Pair(BlockTileType.BOTTOM, GameTileRepo.FLOOR.tile())
             )
         }
 
@@ -120,6 +126,12 @@ class GameBlock(val position: Position3D,
         particleEffect = ParticleEffect(color, duration, alpha, shouldFade)
     }
 
+    fun setNeighborsFrom(blocks: Map<Position3D, GameBlock>) {
+        for (neighborPos in position.adjacentNeighbors(false)) {
+            mutableNeighbors[neighborPos] = blocks[neighborPos]
+        }
+    }
+
     inline fun <reified T: EntityType> hasType(noinline fn: ((GameEntity) -> Boolean)? = null): Boolean {
         val entity: GameEntity = Maybe.ofNullable(entities.firstOrNull {
             T::class.isSuperclassOf(it.type::class)
@@ -128,24 +140,24 @@ class GameBlock(val position: Position3D,
         return if (fn == null) true else fn(entity)
     }
 
-    private fun getMemoryTile(): CharacterTile {
-        var memoryTile: CharacterTile = GameTile.UNREVEALED
+    private fun getMemoryTile(): Tile {
+        var memoryTile = GameTileRepo.UNREVEALED.tile()
 
         memory?.let {
             val snapshot = it.snapshots.lastOrNull()
-            val tile = snapshot?.tile ?: GameTile.FLOOR
-
-            val fogginess = (MIN_MEMORY_FOGGINESS
-                    + ((turn - it.turn) * MIN_MEMORY_FOGGINESS / it.strength))
-                    .coerceAtMost(MAX_MEMORY_FOGGINESS)
-            val foregroundInterpolator = tile.foregroundColor.interpolateTo(GameColor.BACKGROUND)
-            val backgroundInterpolator = tile.backgroundColor.interpolateTo(GameColor.BACKGROUND)
+            val tile = (snapshot?.tile ?: GameTileRepo.FLOOR).tile(autoTileContext)
 
             memoryTile = tile
-                    .withForegroundColor(foregroundInterpolator.getColorAtRatio(fogginess))
-                    .withBackgroundColor(backgroundInterpolator.getColorAtRatio(fogginess))
         }
 
         return memoryTile
+    }
+
+    private fun getFogTile(): Tile {
+        return if (isRevealed || DebugConfig.shouldRevealWorld) {
+            Tile.empty().withBackgroundColor(particleEffect?.color ?: TileColor.transparent())
+        } else {
+            GameTileRepo.FOG.tile()
+        }
     }
 }

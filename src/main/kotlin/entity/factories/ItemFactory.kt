@@ -1,13 +1,13 @@
 package entity.factories
 
 import attributes.CoinValue
-import attributes.facet.ConsumableDetails
 import attributes.EntityPosition
 import attributes.EntityTile
+import attributes.facet.ConsumableDetails
 import builders.newGameEntityOfType
-import constants.GameTile
-import entity.GameEntity
+import constants.GameTileRepo
 import entity.BatMeat
+import entity.GameEntity
 import entity.SmallCoins
 import facets.Consumable
 import facets.Droppable
@@ -32,7 +32,7 @@ object ItemFactory {
         attributes(
                 CoinValue(Random.nextInt(5, 20)),
                 EntityPosition(),
-                EntityTile(GameTile.EN))
+                EntityTile(GameTileRepo.EN))
         facets(Takeable, Droppable)
     }
 
@@ -43,7 +43,7 @@ object ItemFactory {
     fun newBatMeat() = newGameEntityOfType(BatMeat) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTile.BAT_MEAT),
+                EntityTile(GameTileRepo.BAT_MEAT),
             ConsumableDetails(
                 StatusEffect(Heal, 20, 0.9),
                 StatusEffect(Poison, 5, 0.1)

@@ -8,9 +8,9 @@ import attributes.flag.IsSmellBlocking
 import commands.Close
 import commands.Open
 import entity.GameEntity
+import entity.gameTile
 import entity.getAttribute
 import entity.spendTime
-import entity.tile
 import events.Notice
 import game.GameContext
 import org.hexworks.amethyst.api.Command
@@ -41,7 +41,7 @@ object Openable : BaseFacet<GameContext>() {
 
         details.isOpen = true
         openable.handleBarrierState()
-        openable.tile = details.openAppearance
+        openable.gameTile = details.openAppearance
         opener.spendTime(EntityTime.OPEN)
 
         return Consumed
@@ -58,7 +58,7 @@ object Openable : BaseFacet<GameContext>() {
 
         details.isOpen = false
         closeable.handleBarrierState()
-        closeable.tile = details.closedAppearance
+        closeable.gameTile = details.closedAppearance
         closer.spendTime(EntityTime.CLOSE)
 
         return Consumed

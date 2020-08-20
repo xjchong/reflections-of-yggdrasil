@@ -2,7 +2,7 @@ package fragments.equipments
 
 import GameColor
 import entity.GameEntity
-import entity.tile
+import entity.characterTile
 import extensions.create
 import extensions.withStyle
 import fragments.TableRow
@@ -32,8 +32,8 @@ class EquipmentRow(width: Int, equipment: GameEntity) : TableRow(width, 1) {
         .build().apply {
             val iconLabel = Components.label()
                 .withSize(1, 1)
-                .withStyle(equipment.tile.foregroundColor, TileColor.transparent())
-                .withText(equipment.tile.character.toString())
+                .withStyle(equipment.characterTile.foregroundColor, TileColor.transparent())
+                .withText(equipment.characterTile.character.toString())
 
             val nameLabel = Components.label()
                 .withSize(NAME_COLUMN_WIDTH, 1)

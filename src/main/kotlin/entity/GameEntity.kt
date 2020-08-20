@@ -5,6 +5,7 @@ import attributes.facet.AttackableDetails
 import attributes.flag.IsObstacle
 import extensions.optional
 import game.GameContext
+import block.GameTile
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.base.BaseFacet
@@ -21,14 +22,20 @@ typealias GameEntity = Entity<EntityType, GameContext>
 val GameEntity.position
     get() = getAttribute(EntityPosition::class)?.position ?: Position3D.unknown()
 
-var GameEntity.tile: CharacterTile
-    get() = this.findAttribute(EntityTile::class).get().tile
+var GameEntity.gameTile: GameTile
+    get() = this.findAttribute(EntityTile::class).get().gameTile
     set(value) {
-        getAttribute(EntityTile::class)?.tile = value
+        getAttribute(EntityTile::class)?.gameTile = value
+    }
+
+var GameEntity.characterTile: CharacterTile
+    get() = this.findAttribute(EntityTile::class).get().gameTile.characterTile
+    set(value) {
+        getAttribute(EntityTile::class)?.gameTile?.characterTile = value
     }
 
 val GameEntity.symbol: String
-    get() = tile.character.toString()
+    get() = characterTile.character.toString()
 
 val GameEntity.time: Long
     get() = getAttribute(EntityTime::class)?.nextUpdateTime?.get() ?: Long.MAX_VALUE
@@ -88,13 +95,13 @@ fun GameEntity.isEnemiesWith(entity: GameEntity): Boolean {
 
 fun GameEntity.addTileModifiers(vararg modifiers: Modifier) {
     getAttribute(EntityTile::class)?.run {
-        tile = tile.withAddedModifiers(*modifiers)
+        gameTile.characterTile = gameTile.characterTile.withAddedModifiers(*modifiers)
     }
 }
 
 fun GameEntity.removeTileModifiers(vararg modifiers: Modifier) {
     getAttribute(EntityTile::class)?.run {
-        tile = tile.withRemovedModifiers(*modifiers)
+        gameTile.characterTile = gameTile.characterTile.withRemovedModifiers(*modifiers)
     }
 }
 

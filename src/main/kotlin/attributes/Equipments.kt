@@ -4,7 +4,7 @@ import GameColor
 import attributes.facet.*
 import entity.GameEntity
 import entity.getAttribute
-import entity.tile
+import entity.characterTile
 import extensions.create
 import extensions.optional
 import models.Resistance
@@ -248,10 +248,10 @@ class Equipments(
 
     private fun updateInfo(infoLabels: List<Label>, equipment: Maybe<GameEntity>) {
         val (charLabel, nameLabel) = infoLabels
-        val itemChar = equipment.optional?.tile?.character
+        val itemChar = equipment.optional?.characterTile?.character
 
         charLabel.componentStyleSet = ComponentStyleSet.create(
-            equipment.optional?.tile?.foregroundColor ?: GameColor.BACKGROUND,
+            equipment.optional?.characterTile?.foregroundColor ?: GameColor.BACKGROUND,
             backgroundColor = TileColor.transparent()
         )
         charLabel.textProperty.value =

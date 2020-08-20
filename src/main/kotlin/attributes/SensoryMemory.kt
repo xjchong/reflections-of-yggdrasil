@@ -1,17 +1,17 @@
 package attributes
 
 import entity.GameEntity
-import entity.tile
+import entity.gameTile
 import game.GameContext
+import block.GameTile
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.amethyst.api.system.Behavior
 import org.hexworks.amethyst.api.system.Facet
-import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.Position3D
 import kotlin.reflect.KClass
 
-data class EntitySnapshot(val type: EntityType, val tile: CharacterTile)
+data class EntitySnapshot(val type: EntityType, val tile: GameTile)
 
 data class Memory(val turn: Long, val strength: Double, val snapshots: List<EntitySnapshot>)
 
@@ -45,7 +45,7 @@ class SensoryMemory(
 
         entities.forEach {
             if (canAccept(it)) {
-                snapshots.add(EntitySnapshot(it.type, it.tile.withNoModifiers()))
+                snapshots.add(EntitySnapshot(it.type, it.gameTile))
             }
         }
 
