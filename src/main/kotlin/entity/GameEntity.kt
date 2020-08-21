@@ -3,9 +3,9 @@ package entity
 import attributes.*
 import attributes.facet.AttackableDetails
 import attributes.flag.IsObstacle
+import block.GameTile
 import extensions.optional
 import game.GameContext
-import block.GameTile
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.base.BaseFacet
@@ -95,13 +95,23 @@ fun GameEntity.isEnemiesWith(entity: GameEntity): Boolean {
 
 fun GameEntity.addTileModifiers(vararg modifiers: Modifier) {
     getAttribute(EntityTile::class)?.run {
-        gameTile.characterTile = gameTile.characterTile.withAddedModifiers(*modifiers)
+        val newGameTile = GameTile(
+                gameTile.characterTile.withAddedModifiers(*modifiers),
+                gameTile.graphics,
+                gameTile.autoTile
+        )
+        gameTile = newGameTile
     }
 }
 
 fun GameEntity.removeTileModifiers(vararg modifiers: Modifier) {
     getAttribute(EntityTile::class)?.run {
-        gameTile.characterTile = gameTile.characterTile.withRemovedModifiers(*modifiers)
+        val newGameTile = GameTile(
+                gameTile.characterTile.withRemovedModifiers(*modifiers),
+                gameTile.graphics,
+                gameTile.autoTile
+        )
+        gameTile = newGameTile
     }
 }
 
