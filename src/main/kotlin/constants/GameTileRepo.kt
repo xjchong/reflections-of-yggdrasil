@@ -130,7 +130,7 @@ object GameTileRepo {
         return Tile.newBuilder()
                 .withTileset(
                         GraphicalTilesetResources.loadTilesetFromFilesystem(
-                                16, 16, "src/main/resources/walls_16x16.zip"
+                                16, 16, "src/main/resources/widgets.zip"
                         )
                 )
                 .withName(name)
