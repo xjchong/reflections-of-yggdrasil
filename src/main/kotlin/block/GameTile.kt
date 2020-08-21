@@ -3,6 +3,7 @@ package block
 import org.hexworks.zircon.api.data.CharacterTile
 import org.hexworks.zircon.api.data.GraphicalTile
 import org.hexworks.zircon.api.data.Tile
+import utilities.DebugConfig
 
 class GameTile(
         var characterTile: CharacterTile,
@@ -16,6 +17,8 @@ class GameTile(
     }
 
     fun tile(autoTileContext: AutoTileContext? = null): Tile {
+        if (!DebugConfig.shouldUseGraphics) return characterTile
+
         return if (autoTile != null && autoTileContext != null) {
             graphicForCurrentTime(autoTile.graphics(autoTileContext)) ?: characterTile
         } else if (graphics.isNotEmpty()) {

@@ -249,6 +249,11 @@ class PlayView constructor(private val tileGrid: TileGrid, private val game: Gam
                 return@handleKeyboardEvents Processed
             }
 
+            if (keyEvent.code == KeyCode.KEY_W) {
+                DebugConfig.apply { shouldUseGraphics = !shouldUseGraphics }
+                return@handleKeyboardEvents Processed
+            }
+
             if (keyEvent.code == GameConfig.LOG_KEY) {
                 screen.openModal(LogHistoryDialog(screen, logHistory))
                 return@handleKeyboardEvents Processed
