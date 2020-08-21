@@ -28,22 +28,27 @@ object GameTileRepo {
     val POT = newGameTile(Symbols.SIGMA_LOWERCASE, GameColor.DARK_YELLOW)
     val WALL: GameTile
         get() = {
-            val defaultWallTile = newGraphicalTile("Normal dungeon wall 1")
-            val southWallTile = newGraphicalTile("Normal dungeon wall 2")
             GameTile(
                     newCharacterTile('#', GameColor.LIGHT_GREY.withVariance()),
-                    mutableListOf(defaultWallTile),
+                    mutableListOf(newGraphicalTile("center wall")),
                     AutoTile(
                             Wall,
-                            center = listOf(defaultWallTile),
-                            southEastCorner = listOf(southWallTile),
-                            southPoint = listOf(southWallTile),
-                            southWestCorner = listOf(southWallTile),
-                            southEdge = listOf(southWallTile),
-                            eastWestLine = listOf(southWallTile),
-                            westPoint = listOf(southWallTile),
-                            eastPoint = listOf(southWallTile),
-                            island = listOf(southWallTile)
+                            center = listOf(newGraphicalTile("center wall")),
+                            island = listOf(newGraphicalTile("island wall")),
+                            southPoint = listOf(newGraphicalTile("southPoint wall")),
+                            eastPoint = listOf(newGraphicalTile("eastPoint wall")),
+                            southEastCorner = listOf(newGraphicalTile("southEastCorner wall")),
+                            westPoint = listOf(newGraphicalTile("westPoint wall")),
+                            southWestCorner = listOf(newGraphicalTile("southWestCorner wall")),
+                            eastWestLine = listOf(newGraphicalTile("eastWestLine wall")),
+                            southEdge = listOf(newGraphicalTile("southEdge wall")),
+                            northPoint = listOf(newGraphicalTile("northPoint wall")),
+                            northSouthLine = listOf(newGraphicalTile("northSouthLine wall")),
+                            northEastCorner = listOf(newGraphicalTile("northEastCorner wall")),
+                            eastEdge = listOf(newGraphicalTile("eastEdge wall")),
+                            northWestCorner = listOf(newGraphicalTile("northWestCorner wall")),
+                            westEdge = listOf(newGraphicalTile("westEdge wall")),
+                            northEdge = listOf(newGraphicalTile("northEdge wall"))
                     )
             )
         }()
@@ -123,7 +128,11 @@ object GameTileRepo {
 
     private fun newGraphicalTile(name: String): GraphicalTile {
         return Tile.newBuilder()
-                .withTileset(GraphicalTilesetResources.nethack16x16())
+                .withTileset(
+                        GraphicalTilesetResources.loadTilesetFromFilesystem(
+                                16, 16, "src/main/resources/walls_16x16.zip"
+                        )
+                )
                 .withName(name)
                 .buildGraphicalTile()
     }

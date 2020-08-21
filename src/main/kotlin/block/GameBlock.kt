@@ -50,7 +50,7 @@ class GameBlock(val position: Position3D,
         get() = mutableNeighbors.toMap()
     private val autoTileContext
         get() = AutoTileContext(position, neighbors.filter {
-            it.value?.hasMemory == true
+            if (DebugConfig.shouldRevealWorld) true else it.value?.hasMemory == true
         })
 
     override var tiles: PersistentMap<BlockTileType, Tile> = persistentMapOf()
