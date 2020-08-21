@@ -26,34 +26,39 @@ object GameTileRepo {
     val GRASS: GameTile
         get() = newGameTile('\"', GameColor.DARK_GREEN.withVariance())
     val POT = newGameTile(Symbols.SIGMA_LOWERCASE, GameColor.DARK_YELLOW)
-    val WALL: GameTile
-        get() = {
-            GameTile(
-                    newCharacterTile('#', GameColor.LIGHT_GREY.withVariance()),
-                    mutableListOf(newGraphicalTile("center wall")),
-                    AutoTile(
-                            Wall,
-                            center = listOf(newGraphicalTile("center wall")),
-                            island = listOf(newGraphicalTile("island wall")),
-                            southPoint = listOf(newGraphicalTile("southPoint wall")),
-                            eastPoint = listOf(newGraphicalTile("eastPoint wall")),
-                            southEastCorner = listOf(newGraphicalTile("southEastCorner wall")),
-                            westPoint = listOf(newGraphicalTile("westPoint wall")),
-                            southWestCorner = listOf(newGraphicalTile("southWestCorner wall")),
-                            eastWestLine = listOf(newGraphicalTile("eastWestLine wall")),
-                            southEdge = listOf(newGraphicalTile("southEdge wall")),
-                            northPoint = listOf(newGraphicalTile("northPoint wall")),
-                            northSouthLine = listOf(newGraphicalTile("northSouthLine wall")),
-                            northEastCorner = listOf(newGraphicalTile("northEastCorner wall")),
-                            eastEdge = listOf(newGraphicalTile("eastEdge wall")),
-                            northWestCorner = listOf(newGraphicalTile("northWestCorner wall")),
-                            westEdge = listOf(newGraphicalTile("westEdge wall")),
-                            northEdge = listOf(newGraphicalTile("northEdge wall"))
-                    )
+
+    val WALL = GameTile(
+            newCharacterTile('#', GameColor.LIGHT_GREY.withVariance()),
+            mutableListOf(newGraphicalTile("center wall")),
+            AutoTile(
+                    listOf(Wall),
+                    center = listOf(newGraphicalTile("center wall")),
+                    island = listOf(newGraphicalTile("island wall")),
+                    southPoint = listOf(newGraphicalTile("southPoint wall")),
+                    eastPoint = listOf(newGraphicalTile("eastPoint wall")),
+                    southEastCorner = listOf(newGraphicalTile("southEastCorner wall")),
+                    westPoint = listOf(newGraphicalTile("westPoint wall")),
+                    southWestCorner = listOf(newGraphicalTile("southWestCorner wall")),
+                    eastWestLine = listOf(newGraphicalTile("eastWestLine wall")),
+                    southEdge = listOf(newGraphicalTile("southEdge wall")),
+                    northPoint = listOf(newGraphicalTile("northPoint wall")),
+                    northSouthLine = listOf(newGraphicalTile("northSouthLine wall")),
+                    northEastCorner = listOf(newGraphicalTile("northEastCorner wall")),
+                    eastEdge = listOf(newGraphicalTile("eastEdge wall")),
+                    northWestCorner = listOf(newGraphicalTile("northWestCorner wall")),
+                    westEdge = listOf(newGraphicalTile("westEdge wall")),
+                    northEdge = listOf(newGraphicalTile("northEdge wall"))
             )
-        }()
-    val CLOSED_DOOR = newGameTile('+', GameColor.LIGHT_GREY, GameColor.DARK_BROWN)
-    val OPEN_DOOR = newGameTile('\'', GameColor.LIGHT_GREY, GameColor.DARK_BROWN)
+    )
+
+    val CLOSED_DOOR = GameTile(
+            newCharacterTile('+', GameColor.LIGHT_GREY, GameColor.DARK_BROWN),
+            mutableListOf(newGraphicalTile("closed door")))
+
+    val OPEN_DOOR = GameTile(
+            newCharacterTile('\'', GameColor.LIGHT_GREY, GameColor.DARK_BROWN),
+            mutableListOf(newGraphicalTile("open door")))
+
     val UNREVEALED = newGameTile(' ', GameColor.BLACK, GameColor.BLACK)
 
     /**
@@ -143,7 +148,6 @@ object GameTileRepo {
     ): GameTile {
         return GameTile(newCharacterTile(character, foregroundColor, backgroundColor))
     }
-
 
     fun dijkstraTile(value: Int, position: Position3D): CharacterTile {
         val charCode = when (value) {

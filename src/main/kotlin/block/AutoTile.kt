@@ -12,7 +12,7 @@ import org.hexworks.zircon.api.data.Position3D
  * An [AutoTile] determines which graphical tiles to display given an autotile context and a bitmapping strategy.
  * The reason there are lists for each configuration is to allow for animated tiles.
  *
- * Below are the possible configurations for tiles. Filled neighbours are those with the same [type] as this [AutoTile].
+ * Below are the possible configurations for tiles. Filled neighbours are those with the same [types] as this [AutoTile].
  * '#' represents
  *
  *  ... .#. ... ##.
@@ -33,7 +33,7 @@ import org.hexworks.zircon.api.data.Position3D
  *
  */
 data class AutoTile(
-        val type: EntityType,
+        val types: List<EntityType>,
         val center: List<GraphicalTile>, // F
         val island: List<GraphicalTile> = center, // 0
         val southPoint: List<GraphicalTile> = center, // 1
@@ -56,16 +56,16 @@ data class AutoTile(
         val (position, neighbors) = context
         var bitValue = 0
 
-        if (neighbors[position.north]?.entities?.any { it.type == type } != false) {
+        if (neighbors[position.north]?.entities?.any { types.contains(it.type) } != false) {
             bitValue += 1
         }
-        if (neighbors[position.west]?.entities?.any { it.type == type } != false) {
+        if (neighbors[position.west]?.entities?.any { types.contains(it.type) } != false) {
             bitValue += 2
         }
-        if (neighbors[position.east]?.entities?.any { it.type == type } != false) {
+        if (neighbors[position.east]?.entities?.any { types.contains(it.type) } != false) {
             bitValue += 4
         }
-        if (neighbors[position.south]?.entities?.any { it.type == type } != false) {
+        if (neighbors[position.south]?.entities?.any { types.contains(it.type) } != false) {
             bitValue += 8
         }
 
