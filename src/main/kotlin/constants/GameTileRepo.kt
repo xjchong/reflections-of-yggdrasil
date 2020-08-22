@@ -59,7 +59,10 @@ object GameTileRepo {
             )
     )
 
-    val POT = newGameTile(Symbols.SIGMA_LOWERCASE, GameColor.DARK_YELLOW)
+    val POT = GameTile(
+            newCharacterTile(Symbols.SIGMA_LOWERCASE, GameColor.DARK_YELLOW),
+            mutableListOf(newGraphicalTile("pot"))
+    )
 
     val WALL = GameTile(
             newCharacterTile('#', GameColor.LIGHT_GREY.withVariance()),
@@ -119,7 +122,10 @@ object GameTileRepo {
      * TREASURE
      */
 
-    val EN = newGameTile('$', GameColor.CYAN)
+    val EN = GameTile(
+            newCharacterTile('$', GameColor.CYAN),
+            mutableListOf(newGraphicalTile("coins"))
+    )
 
     /**
      * WEAPONS

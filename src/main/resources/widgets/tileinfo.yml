@@ -54,4 +54,6 @@ files:
       - name: westEdge grass
       - name: northEdge grass
       - name: center grass # row 3 end
+      - name: pot
+      - name: coins
 
