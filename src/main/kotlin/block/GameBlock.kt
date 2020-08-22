@@ -71,7 +71,7 @@ class GameBlock(val position: Position3D,
             return persistentMapOf(
                 Pair(BlockTileType.TOP, getFogTile()),
                 Pair(BlockTileType.CONTENT, contentTile),
-                Pair(BlockTileType.BOTTOM, GameTileRepo.FLOOR.tile())
+                Pair(BlockTileType.BOTTOM, defaultTile.tile())
             )
         }
 
@@ -145,7 +145,7 @@ class GameBlock(val position: Position3D,
 
         memory?.let {
             val snapshot = it.snapshots.lastOrNull()
-            val tile = (snapshot?.tile ?: GameTileRepo.FLOOR).tile(autoTileContext)
+            val tile = (snapshot?.tile ?: defaultTile).tile(autoTileContext)
 
             memoryTile = tile
         }

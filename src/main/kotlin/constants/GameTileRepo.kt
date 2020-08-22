@@ -3,6 +3,7 @@ package constants
 import GameColor
 import block.AutoTile
 import block.GameTile
+import entity.Grass
 import entity.Wall
 import org.hexworks.zircon.api.GraphicalTilesetResources
 import org.hexworks.zircon.api.color.TileColor
@@ -12,6 +13,7 @@ import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.graphics.Symbols
 import withVariance
+import kotlin.random.Random
 
 
 object GameTileRepo {
@@ -21,10 +23,42 @@ object GameTileRepo {
      */
 
     val EMPTY = GameTile(Tile.empty())
-    val FLOOR = newGameTile(Symbols.INTERPUNCT, GameColor.LIGHT_GREY)
+    val FLOOR
+        get() = {
+            val variant = Random.nextInt(8)
+
+            GameTile(
+                    newCharacterTile(Symbols.INTERPUNCT, GameColor.LIGHT_GREY),
+                    mutableListOf(newGraphicalTile("floor $variant"))
+            )
+        }()
+
     val FOG = newGameTile(' ', TileColor.transparent(), GameColor.BACKGROUND.withAlpha(128))
-    val GRASS: GameTile
-        get() = newGameTile('\"', GameColor.DARK_GREEN.withVariance())
+
+    val GRASS = GameTile(
+            newCharacterTile('\"', GameColor.DARK_GREEN.withVariance()),
+            mutableListOf(newGraphicalTile("center grass")),
+            AutoTile(
+                    listOf(Grass),
+                    center = listOf(newGraphicalTile("center grass")),
+                    island = listOf(newGraphicalTile("island grass")),
+                    southPoint = listOf(newGraphicalTile("southPoint grass")),
+                    eastPoint = listOf(newGraphicalTile("eastPoint grass")),
+                    southEastCorner = listOf(newGraphicalTile("southEastCorner grass")),
+                    westPoint = listOf(newGraphicalTile("westPoint grass")),
+                    southWestCorner = listOf(newGraphicalTile("southWestCorner grass")),
+                    eastWestLine = listOf(newGraphicalTile("eastWestLine grass")),
+                    southEdge = listOf(newGraphicalTile("southEdge grass")),
+                    northPoint = listOf(newGraphicalTile("northPoint grass")),
+                    northSouthLine = listOf(newGraphicalTile("northSouthLine grass")),
+                    northEastCorner = listOf(newGraphicalTile("northEastCorner grass")),
+                    eastEdge = listOf(newGraphicalTile("eastEdge grass")),
+                    northWestCorner = listOf(newGraphicalTile("northWestCorner grass")),
+                    westEdge = listOf(newGraphicalTile("westEdge grass")),
+                    northEdge = listOf(newGraphicalTile("northEdge grass"))
+            )
+    )
+
     val POT = newGameTile(Symbols.SIGMA_LOWERCASE, GameColor.DARK_YELLOW)
 
     val WALL = GameTile(
@@ -53,11 +87,13 @@ object GameTileRepo {
 
     val CLOSED_DOOR = GameTile(
             newCharacterTile('+', GameColor.LIGHT_GREY, GameColor.DARK_BROWN),
-            mutableListOf(newGraphicalTile("closed door")))
+            mutableListOf(newGraphicalTile("closed door"))
+    )
 
     val OPEN_DOOR = GameTile(
             newCharacterTile('\'', GameColor.LIGHT_GREY, GameColor.DARK_BROWN),
-            mutableListOf(newGraphicalTile("open door")))
+            mutableListOf(newGraphicalTile("open door"))
+    )
 
     val UNREVEALED = newGameTile(' ', GameColor.BLACK, GameColor.BLACK)
 
@@ -135,7 +171,7 @@ object GameTileRepo {
         return Tile.newBuilder()
                 .withTileset(
                         GraphicalTilesetResources.loadTilesetFromFilesystem(
-                                16, 16, "src/main/resources/widgets.zip"
+                                16, 16, "src/main/resources/widgets/widgets.zip"
                         )
                 )
                 .withName(name)

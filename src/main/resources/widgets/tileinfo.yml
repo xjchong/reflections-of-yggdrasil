@@ -1,0 +1,57 @@
+# Auto tiling walls (4 bit tiling)
+---
+name: ReflectionsOfYggdrasil
+size: 16
+files:
+  - name: widgets.png
+    tilesPerRow: 16
+    tiles:
+      - name: island wall
+      - name: southPoint wall
+      - name: eastPoint wall
+      - name: southEastCorner wall
+      - name: westPoint wall
+      - name: southWestCorner wall
+      - name: eastWestLine wall
+      - name: southEdge wall
+      - name: northPoint wall
+      - name: northSouthLine wall
+      - name: northEastCorner wall
+      - name: eastEdge wall
+      - name: northWestCorner wall
+      - name: westEdge wall
+      - name: northEdge wall
+      - name: center wall # row 1 end
+      - name: closed door
+      - name: open door
+      - name: floor 0
+      - name: floor 1
+      - name: floor 2
+      - name: floor 3
+      - name: floor 4
+      - name: floor 5
+      - name: floor 6
+      - name: floor 7
+      - name: center grass
+      - name: south grass
+      - name: blank
+      - name: blank
+      - name: blank
+      - name: blank # row 2 end
+      - name: island grass
+      - name: southPoint grass
+      - name: eastPoint grass
+      - name: southEastCorner grass
+      - name: westPoint grass
+      - name: southWestCorner grass
+      - name: eastWestLine grass
+      - name: southEdge grass
+      - name: northPoint grass
+      - name: northSouthLine grass
+      - name: northEastCorner grass
+      - name: eastEdge grass
+      - name: northWestCorner grass
+      - name: westEdge grass
+      - name: northEdge grass
+      - name: center grass # row 3 end
+
