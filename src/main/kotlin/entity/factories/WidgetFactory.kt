@@ -3,10 +3,7 @@ package entity.factories
 import attributes.*
 import attributes.facet.AttackableDetails
 import attributes.facet.OpenableDetails
-import attributes.flag.IsBarrier
-import attributes.flag.IsObstacle
-import attributes.flag.IsOpaque
-import attributes.flag.IsSmellBlocking
+import attributes.flag.*
 import builders.newGameEntityOfType
 import constants.GameTileRepo
 import entity.*
@@ -44,7 +41,9 @@ object WidgetFactory {
     fun newGrass() = newGameEntityOfType(Grass) {
         attributes(
                 EntityPosition(),
-                EntityTile(GameTileRepo.GRASS))
+                EntityTile(GameTileRepo.GRASS),
+                IsTerrain
+        )
     }
 
     fun newPot() = newGameEntityOfType(Pot) {

@@ -2,6 +2,7 @@ package block
 import attributes.EntityPosition
 import attributes.Memory
 import attributes.flag.IsObstacle
+import attributes.flag.IsTerrain
 import constants.GameTileRepo
 import entity.*
 import extensions.adjacentNeighbors
@@ -55,11 +56,23 @@ class GameBlock(val position: Position3D,
 
     override var tiles: PersistentMap<BlockTileType, Tile> = persistentMapOf()
         get() {
-            val entityTiles = entities.map { it.gameTile }
+            val partitionedEntities = entities.partition { it.hasAttribute<IsTerrain>() }
+            val terrainEntities = partitionedEntities.first
+            val thingEntities = partitionedEntities.second
+
             val contentTile = if (isRevealed || DebugConfig.shouldRevealWorld) {
                 when {
                     hasType<Player>() -> GameTileRepo.PLAYER
-                    entityTiles.isNotEmpty() -> entityTiles.last()
+                    thingEntities.isNotEmpty() -> thingEntities.last().gameTile
+                    else -> GameTile.empty
+                }.tile(autoTileContext)
+            } else {
+                getMemoryTile()
+            }
+
+            val bottomTile = if (isRevealed || DebugConfig.shouldRevealWorld) {
+                when {
+                    terrainEntities.isNotEmpty() -> terrainEntities.last().gameTile
                     else -> defaultTile
                 }.tile(autoTileContext)
             } else {
@@ -69,9 +82,9 @@ class GameBlock(val position: Position3D,
             if (particleEffect?.update() == false) particleEffect = null
 
             return persistentMapOf(
-                Pair(BlockTileType.TOP, getFogTile()),
+                Pair(BlockTileType.TOP, getTopTile()),
                 Pair(BlockTileType.CONTENT, contentTile),
-                Pair(BlockTileType.BOTTOM, defaultTile.tile())
+                Pair(BlockTileType.BOTTOM, bottomTile)
             )
         }
 
@@ -153,7 +166,7 @@ class GameBlock(val position: Position3D,
         return memoryTile
     }
 
-    private fun getFogTile(): Tile {
+    private fun getTopTile(): Tile {
         return if (isRevealed || DebugConfig.shouldRevealWorld) {
             Tile.empty().withBackgroundColor(particleEffect?.color ?: TileColor.transparent())
         } else {
