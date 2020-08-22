@@ -1,0 +1,10 @@
+# Auto tiling walls (4 bit tiling)
+---
+name: ReflectionsOfYggdrasil
+size: 16
+files:
+  - name: creatures.png
+    tilesPerRow: 16
+    tiles:
+      - name: player 0
+      - name: player 1

@@ -29,7 +29,7 @@ object GameTileRepo {
 
             GameTile(
                     newCharacterTile(Symbols.INTERPUNCT, GameColor.LIGHT_GREY),
-                    mutableListOf(newGraphicalTile("floor $variant"))
+                    mutableListOf(newWidgetGraphicTile("floor $variant"))
             )
         }()
 
@@ -37,65 +37,65 @@ object GameTileRepo {
 
     val GRASS = GameTile(
             newCharacterTile('\"', GameColor.DARK_GREEN.withVariance()),
-            mutableListOf(newGraphicalTile("center grass")),
+            mutableListOf(newWidgetGraphicTile("center grass")),
             AutoTile(
                     listOf(Grass),
-                    center = listOf(newGraphicalTile("center grass")),
-                    island = listOf(newGraphicalTile("island grass")),
-                    southPoint = listOf(newGraphicalTile("southPoint grass")),
-                    eastPoint = listOf(newGraphicalTile("eastPoint grass")),
-                    southEastCorner = listOf(newGraphicalTile("southEastCorner grass")),
-                    westPoint = listOf(newGraphicalTile("westPoint grass")),
-                    southWestCorner = listOf(newGraphicalTile("southWestCorner grass")),
-                    eastWestLine = listOf(newGraphicalTile("eastWestLine grass")),
-                    southEdge = listOf(newGraphicalTile("southEdge grass")),
-                    northPoint = listOf(newGraphicalTile("northPoint grass")),
-                    northSouthLine = listOf(newGraphicalTile("northSouthLine grass")),
-                    northEastCorner = listOf(newGraphicalTile("northEastCorner grass")),
-                    eastEdge = listOf(newGraphicalTile("eastEdge grass")),
-                    northWestCorner = listOf(newGraphicalTile("northWestCorner grass")),
-                    westEdge = listOf(newGraphicalTile("westEdge grass")),
-                    northEdge = listOf(newGraphicalTile("northEdge grass"))
+                    center = listOf(newWidgetGraphicTile("center grass")),
+                    island = listOf(newWidgetGraphicTile("island grass")),
+                    southPoint = listOf(newWidgetGraphicTile("southPoint grass")),
+                    eastPoint = listOf(newWidgetGraphicTile("eastPoint grass")),
+                    southEastCorner = listOf(newWidgetGraphicTile("southEastCorner grass")),
+                    westPoint = listOf(newWidgetGraphicTile("westPoint grass")),
+                    southWestCorner = listOf(newWidgetGraphicTile("southWestCorner grass")),
+                    eastWestLine = listOf(newWidgetGraphicTile("eastWestLine grass")),
+                    southEdge = listOf(newWidgetGraphicTile("southEdge grass")),
+                    northPoint = listOf(newWidgetGraphicTile("northPoint grass")),
+                    northSouthLine = listOf(newWidgetGraphicTile("northSouthLine grass")),
+                    northEastCorner = listOf(newWidgetGraphicTile("northEastCorner grass")),
+                    eastEdge = listOf(newWidgetGraphicTile("eastEdge grass")),
+                    northWestCorner = listOf(newWidgetGraphicTile("northWestCorner grass")),
+                    westEdge = listOf(newWidgetGraphicTile("westEdge grass")),
+                    northEdge = listOf(newWidgetGraphicTile("northEdge grass"))
             )
     )
 
     val POT = GameTile(
             newCharacterTile(Symbols.SIGMA_LOWERCASE, GameColor.DARK_YELLOW),
-            mutableListOf(newGraphicalTile("pot"))
+            mutableListOf(newWidgetGraphicTile("pot"))
     )
 
     val WALL = GameTile(
             newCharacterTile('#', GameColor.LIGHT_GREY.withVariance()),
-            mutableListOf(newGraphicalTile("center wall")),
+            mutableListOf(newWidgetGraphicTile("center wall")),
             AutoTile(
                     listOf(Wall),
-                    center = listOf(newGraphicalTile("center wall")),
-                    island = listOf(newGraphicalTile("island wall")),
-                    southPoint = listOf(newGraphicalTile("southPoint wall")),
-                    eastPoint = listOf(newGraphicalTile("eastPoint wall")),
-                    southEastCorner = listOf(newGraphicalTile("southEastCorner wall")),
-                    westPoint = listOf(newGraphicalTile("westPoint wall")),
-                    southWestCorner = listOf(newGraphicalTile("southWestCorner wall")),
-                    eastWestLine = listOf(newGraphicalTile("eastWestLine wall")),
-                    southEdge = listOf(newGraphicalTile("southEdge wall")),
-                    northPoint = listOf(newGraphicalTile("northPoint wall")),
-                    northSouthLine = listOf(newGraphicalTile("northSouthLine wall")),
-                    northEastCorner = listOf(newGraphicalTile("northEastCorner wall")),
-                    eastEdge = listOf(newGraphicalTile("eastEdge wall")),
-                    northWestCorner = listOf(newGraphicalTile("northWestCorner wall")),
-                    westEdge = listOf(newGraphicalTile("westEdge wall")),
-                    northEdge = listOf(newGraphicalTile("northEdge wall"))
+                    center = listOf(newWidgetGraphicTile("center wall")),
+                    island = listOf(newWidgetGraphicTile("island wall")),
+                    southPoint = listOf(newWidgetGraphicTile("southPoint wall")),
+                    eastPoint = listOf(newWidgetGraphicTile("eastPoint wall")),
+                    southEastCorner = listOf(newWidgetGraphicTile("southEastCorner wall")),
+                    westPoint = listOf(newWidgetGraphicTile("westPoint wall")),
+                    southWestCorner = listOf(newWidgetGraphicTile("southWestCorner wall")),
+                    eastWestLine = listOf(newWidgetGraphicTile("eastWestLine wall")),
+                    southEdge = listOf(newWidgetGraphicTile("southEdge wall")),
+                    northPoint = listOf(newWidgetGraphicTile("northPoint wall")),
+                    northSouthLine = listOf(newWidgetGraphicTile("northSouthLine wall")),
+                    northEastCorner = listOf(newWidgetGraphicTile("northEastCorner wall")),
+                    eastEdge = listOf(newWidgetGraphicTile("eastEdge wall")),
+                    northWestCorner = listOf(newWidgetGraphicTile("northWestCorner wall")),
+                    westEdge = listOf(newWidgetGraphicTile("westEdge wall")),
+                    northEdge = listOf(newWidgetGraphicTile("northEdge wall"))
             )
     )
 
     val CLOSED_DOOR = GameTile(
             newCharacterTile('+', GameColor.LIGHT_GREY, GameColor.DARK_BROWN),
-            mutableListOf(newGraphicalTile("closed door"))
+            mutableListOf(newWidgetGraphicTile("closed door"))
     )
 
     val OPEN_DOOR = GameTile(
             newCharacterTile('\'', GameColor.LIGHT_GREY, GameColor.DARK_BROWN),
-            mutableListOf(newGraphicalTile("open door"))
+            mutableListOf(newWidgetGraphicTile("open door"))
     )
 
     val UNREVEALED = newGameTile(' ', GameColor.BLACK, GameColor.BLACK)
@@ -108,7 +108,15 @@ object GameTileRepo {
     val CRAB = newGameTile('c', GameColor.ORANGE)
     val GOBLIN = newGameTile('g', GameColor.DARK_RED)
     val FUNGUS = newGameTile(',', GameColor.GREEN)
-    val PLAYER = newGameTile('@', GameColor.YELLOW)
+
+    val PLAYER = GameTile(
+            newCharacterTile('@', GameColor.YELLOW),
+            mutableListOf(
+                    newCreatureGraphicTile("player 0"),
+                    newCreatureGraphicTile("player 1")
+            )
+    )
+
     val RAT = newGameTile('r', GameColor.WHITE)
     val ZOMBIE = newGameTile('z', GameColor.DARK_CYAN)
 
@@ -124,7 +132,7 @@ object GameTileRepo {
 
     val EN = GameTile(
             newCharacterTile('$', GameColor.CYAN),
-            mutableListOf(newGraphicalTile("coins"))
+            mutableListOf(newWidgetGraphicTile("coins"))
     )
 
     /**
@@ -173,11 +181,19 @@ object GameTileRepo {
                 .buildCharacterTile()
     }
 
-    private fun newGraphicalTile(name: String): GraphicalTile {
+    private fun newCreatureGraphicTile(name: String): GraphicalTile {
+        return newGraphicTile("src/main/resources/creatures/creatures.zip", name)
+    }
+
+    private fun newWidgetGraphicTile(name: String): GraphicalTile {
+        return newGraphicTile("src/main/resources/widgets/widgets.zip", name)
+    }
+
+    private fun newGraphicTile(path: String, name: String): GraphicalTile {
         return Tile.newBuilder()
                 .withTileset(
                         GraphicalTilesetResources.loadTilesetFromFilesystem(
-                                16, 16, "src/main/resources/widgets/widgets.zip"
+                                16, 16, path
                         )
                 )
                 .withName(name)
